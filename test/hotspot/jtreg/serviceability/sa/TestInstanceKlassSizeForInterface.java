@@ -154,9 +154,7 @@ public class TestInstanceKlassSizeForInterface {
 
         if (args == null || args.length == 0) {
             try {
-                List<String> vmArgs = new ArrayList<String>();
-                vmArgs.addAll(Utils.getVmOptions());
-
+                List<String> vmArgs = Arrays.asList(Utils.getTestJavaOpts());
                 theApp = new LingeredAppWithInterface();
                 LingeredApp.startApp(vmArgs, theApp);
                 createAnotherToAttach(instanceKlassNames,
