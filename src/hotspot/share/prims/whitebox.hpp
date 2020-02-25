@@ -68,6 +68,9 @@ class WhiteBox : public AllStatic {
     JNINativeMethod* method_array, int method_count);
   static void register_extended(JNIEnv* env, jclass wbclass, JavaThread* thread);
   static bool compile_method(Method* method, int comp_level, int bci, Thread* THREAD);
+#ifdef LINUX
+  static bool validate_cgroup(const char* proc_cgroups, const char* proc_self_cgroup, const char* proc_self_mountinfo, u1* cg_flags);
+#endif
 };
 
 #endif // SHARE_VM_PRIMS_WHITEBOX_HPP
