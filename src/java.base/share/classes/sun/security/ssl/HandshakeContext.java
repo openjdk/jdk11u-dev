@@ -103,8 +103,8 @@ abstract class HandshakeContext implements ConnectionContext {
     SSLSessionImpl                          resumingSession;
 
     final Queue<Map.Entry<Byte, ByteBuffer>> delegatedActions;
-    volatile boolean                        taskDelegated = false;
-    volatile Exception                      delegatedThrown = null;
+    volatile boolean                        taskDelegated;
+    volatile Exception                      delegatedThrown;
 
     ProtocolVersion                         negotiatedProtocol;
     CipherSuite                             negotiatedCipherSuite;
