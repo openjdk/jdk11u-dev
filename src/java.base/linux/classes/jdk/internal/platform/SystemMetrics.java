@@ -22,10 +22,11 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package jdk.internal.platform;
 
-public class SystemMetrics {
-    public static Metrics instance() {
-        return CgroupMetrics.getInstance();
-    }
-}
+#import "ButtonAccessibility.h"
+
+@interface RadiobuttonAccessibility : ButtonAccessibility <NSAccessibilityRadioButton> {
+
+};
+- (id)accessibilityValue;
+@end
