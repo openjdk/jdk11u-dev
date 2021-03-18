@@ -23,20 +23,15 @@
  * questions.
  */
 
-#ifndef JAVA_COMPONENT_ACCESSIBILITY
-#define JAVA_COMPONENT_ACCESSIBILITY
+#import "IgnoreAccessibility.h"
 
-#import "JavaComponentAccessibility.h"
-#import "JavaAccessibilityUtilities.h"
-
-@interface CommonComponentAccessibility : JavaComponentAccessibility <NSAccessibilityElement> {
-
+/*
+ * Indicates that component does not participate in accessibility exchange
+ */
+@implementation IgnoreAccessibility
+- (BOOL)isAccessibilityElement
+{
+    return NO;
 }
-+ (void) initializeRolesMap;
-+ (JavaComponentAccessibility * _Nullable) getComponentAccessibility:(NSString * _Nonnull)role;
-- (NSRect)accessibilityFrame;
-- (nullable id)accessibilityParent;
-- (BOOL)performAccessibleAction:(int)index;
-@end
 
-#endif
+@end
