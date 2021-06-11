@@ -139,12 +139,162 @@ bool G1ParScanThreadState::verify_task(StarTask ref) const {
 }
 #endif // ASSERT
 
-void G1ParScanThreadState::trim_queue() {
+template <class T> void G1ParScanThreadState::do_oop_evac(T* p) {
+  // Reference should not be NULL here as such are never pushed to the task queue.
+  oop obj = RawAccess<IS_NOT_NULL>::oop_load(p);
+
+  // Although we never intentionally push references outside of the collection
+  // set, due to (benign) races in the claim mechanism during RSet scanning more
+  // than one thread might claim the same card. So the same card may be
+  // processed multiple times, and so we might get references into old gen here.
+  // So we need to redo this check.
+  const InCSetState in_cset_state = _g1h->in_cset_state(obj);
+  if (in_cset_state.is_in_cset()) {
+    markOop m = obj->mark_raw();
+    if (m->is_marked()) {
+      obj = (oop) m->decode_pointer();
+    } else {
+      obj = do_copy_to_survivor_space(in_cset_state, obj, m);
+    }
+    RawAccess<IS_NOT_NULL>::oop_store(p, obj);
+  } else if (in_cset_state.is_humongous()) {
+    _g1h->set_humongous_is_live(obj);
+  } else {
+    assert(in_cset_state.is_default(),
+           "In_cset_state must be NotInCSet here, but is " CSETSTATE_FORMAT, in_cset_state.value());
+  }
+
+  assert(obj != NULL, "Must be");
+  if (!HeapRegion::is_in_same_region(p, obj)) {
+    HeapRegion* from = _g1h->heap_region_containing(p);
+    update_rs(from, p, obj);
+  }
+}
+
+void G1ParScanThreadState::do_oop_partial_array(oop* p) {
+  assert(has_partial_array_mask(p), "invariant");
+  oop from_obj = clear_partial_array_mask(p);
+
+  assert(_g1h->is_in_reserved(from_obj), "must be in heap.");
+  assert(from_obj->is_objArray(), "must be obj array");
+  objArrayOop from_obj_array = objArrayOop(from_obj);
+  // The from-space object contains the real length.
+  int length                 = from_obj_array->length();
+
+  assert(from_obj->is_forwarded(), "must be forwarded");
+  oop to_obj                 = from_obj->forwardee();
+  assert(from_obj != to_obj, "should not be chunking self-forwarded objects");
+  objArrayOop to_obj_array   = objArrayOop(to_obj);
+  // We keep track of the next start index in the length field of the
+  // to-space object.
+  int next_index             = to_obj_array->length();
+  assert(0 <= next_index && next_index < length,
+         "invariant, next index: %d, length: %d", next_index, length);
+
+  int start                  = next_index;
+  int end                    = length;
+  int remainder              = end - start;
+  // We'll try not to push a range that's smaller than ParGCArrayScanChunk.
+  if (remainder > 2 * ParGCArrayScanChunk) {
+    end = start + ParGCArrayScanChunk;
+    to_obj_array->set_length(end);
+    // Push the remainder before we process the range in case another
+    // worker has run out of things to do and can steal it.
+    oop* from_obj_p = set_partial_array_mask(from_obj);
+    push_on_queue(from_obj_p);
+  } else {
+    assert(length == end, "sanity");
+    // We'll process the final range for this object. Restore the length
+    // so that the heap remains parsable in case of evacuation failure.
+    to_obj_array->set_length(end);
+  }
+  _scanner.set_region(_g1h->heap_region_containing(to_obj));
+  // Process indexes [start,end). It will also process the header
+  // along with the first chunk (i.e., the chunk with start == 0).
+  // Note that at this point the length field of to_obj_array is not
+  // correct given that we are using it to keep track of the next
+  // start index. oop_iterate_range() (thankfully!) ignores the length
+  // field and only relies on the start / end parameters.  It does
+  // however return the size of the object which will be incorrect. So
+  // we have to ignore it even if we wanted to use it.
+  to_obj_array->oop_iterate_range(&_scanner, start, end);
+}
+
+void G1ParScanThreadState::dispatch_reference(StarTask ref) {
+  assert(verify_task(ref), "sanity");
+  if (ref.is_narrow()) {
+    narrowOop* ref_to_scan = (narrowOop*)ref;
+    assert(!has_partial_array_mask(ref_to_scan), "NarrowOop* elements should never be partial arrays.");
+    do_oop_evac(ref_to_scan);
+  } else {
+    oop* ref_to_scan = (oop*)ref;
+    if (!has_partial_array_mask(ref_to_scan)) {
+      do_oop_evac(ref_to_scan);
+    } else {
+      do_oop_partial_array(ref_to_scan);
+    }
+  }
+}
+
+// Process tasks until overflow queue is empty and local queue
+// contains no more than threshold entries.  NOINLINE to prevent
+// inlining into steal_and_trim_queue.
+ATTRIBUTE_FLATTEN NOINLINE
+void G1ParScanThreadState::trim_queue_to_threshold(uint threshold) {
   StarTask ref;
   do {
-    // Fully drain the queue.
-    trim_queue_to_threshold(0);
-  } while (!_refs->is_empty());
+    while (_refs->pop_overflow(ref)) {
+      if (!_refs->try_push_to_taskqueue(ref)) {
+        dispatch_reference(ref);
+      }
+    }
+
+    while (_refs->pop_local(ref, threshold)) {
+      dispatch_reference(ref);
+    }
+  } while (!_refs->overflow_empty());
+}
+
+ATTRIBUTE_FLATTEN
+void G1ParScanThreadState::steal_and_trim_queue(RefToScanQueueSet *task_queues) {
+  StarTask stolen_task;
+  while (task_queues->steal(_worker_id, &_hash_seed, stolen_task)) {
+    assert(verify_task(stolen_task), "sanity");
+    dispatch_reference(stolen_task);
+    // Processing stolen task may have added tasks to our queue.
+    trim_queue();
+  }
+}
+
+NOINLINE
+HeapWord* G1ParScanThreadState::allocate_copy_slow(InCSetState const state,
+                                                   InCSetState* dest_state,
+                                                   oop old,
+                                                   size_t word_sz,
+                                                   uint age) {
+  HeapWord* obj_ptr = NULL;
+  // Try slow-path allocation unless we're allocating old and old is already full.
+  if (!(dest_state->is_old() && _old_gen_is_full)) {
+    bool plab_refill_failed = false;
+    obj_ptr = _plab_allocator->allocate_direct_or_new_plab(*dest_state, word_sz, &plab_refill_failed);
+    if (obj_ptr == NULL) {
+      obj_ptr = allocate_in_next_plab(state, dest_state, word_sz, plab_refill_failed);
+    }
+  }
+  if (obj_ptr != NULL) {
+    if (_g1h->_gc_tracer_stw->should_report_promotion_events()) {
+      // The events are checked individually as part of the actual commit
+      report_promotion_event(*dest_state, old, word_sz, age, obj_ptr);
+    }
+  }
+  return obj_ptr;
+}
+
+NOINLINE
+void G1ParScanThreadState::undo_allocation(InCSetState dest_state,
+                                           HeapWord* obj_ptr,
+                                           size_t word_sz) {
+  _plab_allocator->undo_allocation(dest_state, obj_ptr, word_sz);
 }
 
 HeapWord* G1ParScanThreadState::allocate_in_next_plab(InCSetState const state,
@@ -211,41 +361,36 @@ void G1ParScanThreadState::report_promotion_event(InCSetState const dest_state,
   }
 }
 
-oop G1ParScanThreadState::copy_to_survivor_space(InCSetState const state,
-                                                 oop const old,
-                                                 markOop const old_mark) {
+// Private inline function, for direct internal use and providing the
+// implementation of the public not-inline function.
+oop G1ParScanThreadState::do_copy_to_survivor_space(InCSetState const state,
+                                                    oop const old,
+                                                    markOop const old_mark) {
+  assert(state.is_in_cset(),
+         "Unexpected region attr type: " CSETSTATE_FORMAT, state.value());
+
   const size_t word_sz = old->size();
   HeapRegion* const from_region = _g1h->heap_region_containing(old);
-  // +1 to make the -1 indexes valid...
-  const int young_index = from_region->young_index_in_cset()+1;
-  assert( (from_region->is_young() && young_index >  0) ||
-         (!from_region->is_young() && young_index == 0), "invariant" );
+  {
+    // +1 to make the -1 indexes valid...
+    const int young_index = from_region->young_index_in_cset()+1;
+    assert( (from_region->is_young() && young_index >  0) ||
+           (!from_region->is_young() && young_index == 0), "invariant" );
+    _surviving_young_words[young_index] += word_sz;
+  }
 
   uint age = 0;
   InCSetState dest_state = next_state(state, old_mark, age);
-  // The second clause is to prevent premature evacuation failure in case there
-  // is still space in survivor, but old gen is full.
-  if (_old_gen_is_full && dest_state.is_old()) {
-    return handle_evacuation_failure_par(old, old_mark);
-  }
   HeapWord* obj_ptr = _plab_allocator->plab_allocate(dest_state, word_sz);
 
   // PLAB allocations should succeed most of the time, so we'll
   // normally check against NULL once and that's it.
   if (obj_ptr == NULL) {
-    bool plab_refill_failed = false;
-    obj_ptr = _plab_allocator->allocate_direct_or_new_plab(dest_state, word_sz, &plab_refill_failed);
+    obj_ptr = allocate_copy_slow(state, &dest_state, old, word_sz, age);
     if (obj_ptr == NULL) {
-      obj_ptr = allocate_in_next_plab(state, &dest_state, word_sz, plab_refill_failed);
-      if (obj_ptr == NULL) {
-        // This will either forward-to-self, or detect that someone else has
-        // installed a forwarding pointer.
-        return handle_evacuation_failure_par(old, old_mark);
-      }
-    }
-    if (_g1h->_gc_tracer_stw->should_report_promotion_events()) {
-      // The events are checked individually as part of the actual commit
-      report_promotion_event(dest_state, old, word_sz, age, obj_ptr);
+      // This will either forward-to-self, or detect that someone else has
+      // installed a forwarding pointer.
+      return handle_evacuation_failure_par(old, old_mark);
     }
   }
 
@@ -302,8 +447,6 @@ oop G1ParScanThreadState::copy_to_survivor_space(InCSetState const state,
                                              obj);
     }
 
-    _surviving_young_words[young_index] += word_sz;
-
     if (obj->is_objArray() && arrayOop(obj)->length() >= ParGCArrayScanChunk) {
       // We keep track of the next start index in the length field of
       // the to-space object. The actual length can be found in the
@@ -318,9 +461,17 @@ oop G1ParScanThreadState::copy_to_survivor_space(InCSetState const state,
     }
     return obj;
   } else {
-    _plab_allocator->undo_allocation(dest_state, obj_ptr, word_sz);
+    undo_allocation(dest_state, obj_ptr, word_sz);
     return forward_ptr;
   }
+}
+
+// Public not-inline entry point.
+ATTRIBUTE_FLATTEN
+oop G1ParScanThreadState::copy_to_survivor_space(InCSetState state,
+                                                 oop old,
+                                                 markOop old_mark) {
+  return do_copy_to_survivor_space(state, old, old_mark);
 }
 
 G1ParScanThreadState* G1ParScanThreadStateSet::state_for_worker(uint worker_id) {
@@ -353,6 +504,7 @@ void G1ParScanThreadStateSet::flush() {
   _flushed = true;
 }
 
+NOINLINE
 oop G1ParScanThreadState::handle_evacuation_failure_par(oop old, markOop m) {
   assert(_g1h->is_in_cset(old), "Object " PTR_FORMAT " should be in the CSet", p2i(old));
 
