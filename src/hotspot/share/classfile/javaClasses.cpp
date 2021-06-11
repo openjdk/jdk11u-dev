@@ -4022,13 +4022,18 @@ int  java_lang_ClassLoader::unnamedModule_offset = -1;
 
 ClassLoaderData* java_lang_ClassLoader::loader_data(oop loader) {
   assert(loader != NULL && oopDesc::is_oop(loader), "loader must be oop");
-  return HeapAccess<>::load_at(loader, _loader_data_offset);
+  return HeapAccess<MO_ACQUIRE>::load_at(loader, _loader_data_offset);
+}
+
+ClassLoaderData* java_lang_ClassLoader::loader_data_raw(oop loader) {
+  assert(loader != NULL && oopDesc::is_oop(loader), "loader must be oop");
+  return RawAccess<>::load_at(loader, _loader_data_offset);
 }
 
 void java_lang_ClassLoader::set_loader_data(oop loader, ClassLoaderData* new_data) {
   assert(loader != NULL, "loader must not be NULL");
   assert(oopDesc::is_oop(loader), "loader must be oop");
-  HeapAccess<>::store_at(loader, _loader_data_offset, new_data);
+  HeapAccess<MO_RELEASE>::store_at(loader, _loader_data_offset, new_data);
 }
 
 #define CLASSLOADER_FIELDS_DO(macro) \

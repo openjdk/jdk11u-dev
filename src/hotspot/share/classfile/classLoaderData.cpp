@@ -1045,7 +1045,7 @@ ClassLoaderData* ClassLoaderDataGraph::add_to_graph(Handle loader, bool is_anony
 
   if (!is_anonymous) {
     MutexLocker ml(ClassLoaderDataGraph_lock);
-    cld = java_lang_ClassLoader::loader_data(loader());
+    cld = java_lang_ClassLoader::loader_data_raw(loader());
     if (cld != NULL) {
       return cld;
     }
