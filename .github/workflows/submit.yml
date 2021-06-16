@@ -164,13 +164,6 @@ jobs:
           path: ~/jtreg/
         if: steps.jtreg_restore.outcome == 'failure'
 
-      - name: Checkout gtest sources
-        uses: actions/checkout@v2
-        with:
-          repository: "google/googletest"
-          ref: "release-${{ fromJson(needs.prerequisites.outputs.dependencies).GTEST_VERSION }}"
-          path: gtest
-
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -186,7 +179,6 @@ jobs:
           --with-version-build=0
           --with-boot-jdk=${HOME}/bootjdk/${BOOT_JDK_VERSION}
           --with-jtreg=${HOME}/jtreg
-          --with-gtest=${GITHUB_WORKSPACE}/gtest
           --with-default-make-target="product-bundles test-bundles"
           --with-zlib=system
           --enable-jtreg-failure-handler
@@ -622,13 +614,6 @@ jobs:
           path: ~/jtreg/
         if: steps.jtreg_restore.outcome == 'failure'
 
-      - name: Checkout gtest sources
-        uses: actions/checkout@v2
-        with:
-          repository: "google/googletest"
-          ref: "release-${{ fromJson(needs.prerequisites.outputs.dependencies).GTEST_VERSION }}"
-          path: gtest
-
       # Roll in the multilib environment and its dependencies.
       # Some multilib libraries do not have proper inter-dependencies, so we have to
       # install their dependencies manually. Additionally, upgrading apt solves
@@ -651,7 +636,6 @@ jobs:
           --with-version-build=0
           --with-boot-jdk=${HOME}/bootjdk/${BOOT_JDK_VERSION}
           --with-jtreg=${HOME}/jtreg
-          --with-gtest=${GITHUB_WORKSPACE}/gtest
           --with-default-make-target="product-bundles test-bundles"
           --with-zlib=system
           --enable-jtreg-failure-handler
@@ -997,13 +981,6 @@ jobs:
           Get-ChildItem "$HOME\bootjdk\$env:BOOT_JDK_VERSION\*\*" | Move-Item -Destination "$HOME\bootjdk\$env:BOOT_JDK_VERSION"
         if: steps.bootjdk.outputs.cache-hit != 'true'
 
-      - name: Checkout gtest sources
-        uses: actions/checkout@v2
-        with:
-          repository: "google/googletest"
-          ref: "release-${{ fromJson(needs.prerequisites.outputs.dependencies).GTEST_VERSION }}"
-          path: gtest
-
       - name: Restore jtreg artifact
         id: jtreg_restore
         uses: actions/download-artifact@v2
@@ -1031,7 +1008,6 @@ jobs:
           $env:Path = $env:Path -split ";" -match "C:\\Windows|PowerShell|cygwin" -join ";" ;
           $env:BOOT_JDK = cygpath "$HOME/bootjdk/$env:BOOT_JDK_VERSION" ;
           $env:JT_HOME = cygpath "$HOME/jtreg" ;
-          $env:GTEST = cygpath "$env:GITHUB_WORKSPACE/gtest" ;
           & bash configure
           --with-conf-name=windows-x64
           --with-msvc-toolset-version=14.28
@@ -1040,7 +1016,6 @@ jobs:
           --with-version-build=0
           --with-boot-jdk="$env:BOOT_JDK"
           --with-jtreg="$env:JT_HOME"
-          --with-gtest="$env:GTEST"
           --with-default-make-target="product-bundles test-bundles"
           --enable-jtreg-failure-handler
         working-directory: jdk
@@ -1324,13 +1299,6 @@ jobs:
           path: ~/jtreg/
         if: steps.jtreg_restore.outcome == 'failure'
 
-      - name: Checkout gtest sources
-        uses: actions/checkout@v2
-        with:
-          repository: "google/googletest"
-          ref: "release-${{ fromJson(needs.prerequisites.outputs.dependencies).GTEST_VERSION }}"
-          path: gtest
-
       - name: Install dependencies
         run: brew install make
 
@@ -1346,7 +1314,6 @@ jobs:
           --with-version-build=0
           --with-boot-jdk=${HOME}/bootjdk/${BOOT_JDK_VERSION}/Contents/Home
           --with-jtreg=${HOME}/jtreg
-          --with-gtest=${GITHUB_WORKSPACE}/gtest
           --with-default-make-target="product-bundles test-bundles"
           --with-zlib=system
           --enable-jtreg-failure-handler
@@ -1426,13 +1393,6 @@ jobs:
           path: ~/jtreg/
         if: steps.jtreg_restore.outcome == 'failure'
 
-      - name: Checkout gtest sources
-        uses: actions/checkout@v2
-        with:
-          repository: "google/googletest"
-          ref: "release-${{ fromJson(needs.prerequisites.outputs.dependencies).GTEST_VERSION }}"
-          path: gtest
-
       - name: Install dependencies
         run: brew install make
 
@@ -1449,7 +1409,6 @@ jobs:
           --with-version-build=0
           --with-boot-jdk=${HOME}/bootjdk/${BOOT_JDK_VERSION}/Contents/Home
           --with-jtreg=${HOME}/jtreg
-          --with-gtest=${GITHUB_WORKSPACE}/gtest
           --with-default-make-target="product-bundles test-bundles"
           --with-zlib=system
           --enable-jtreg-failure-handler
