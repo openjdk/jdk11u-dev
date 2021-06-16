@@ -74,23 +74,28 @@ jobs:
           key: jtreg-${{ env.JTREG_REF }}-v1
         if: steps.check_submit.outputs.should_run != 'false'
 
+      - name: Remove jtreg
+        id: remove-jtreg
+        run: rm -rf ${HOME}/jtreg
+        if: steps.check_submit.outputs.should_run != 'false'
+
       - name: Checkout the jtreg source
         uses: actions/checkout@v2
         with:
           repository: "openjdk/jtreg"
           ref: ${{ env.JTREG_REF }}
           path: jtreg
-        if: steps.check_submit.outputs.should_run != 'false' && steps.jtreg.outputs.cache-hit != 'true'
+        if: steps.check_submit.outputs.should_run != 'false'
 
       - name: Build jtreg
         run: bash make/build.sh --jdk ${JAVA_HOME_8_X64}
         working-directory: jtreg
-        if: steps.check_submit.outputs.should_run != 'false' && steps.jtreg.outputs.cache-hit != 'true'
+        if: steps.check_submit.outputs.should_run != 'false'
 
       - name: Move jtreg image to destination folder
         run: mv build/images/jtreg ~/
         working-directory: jtreg
-        if: steps.check_submit.outputs.should_run != 'false' && steps.jtreg.outputs.cache-hit != 'true'
+        if: steps.check_submit.outputs.should_run != 'false'
 
       - name: Store jtreg for use by later steps
         uses: actions/upload-artifact@v2
@@ -159,6 +164,11 @@ jobs:
           name: transient_jtreg_${{ needs.prerequisites.outputs.bundle_id }}
           path: ~/jtreg/
         if: steps.jtreg_restore.outcome == 'failure'
+
+      - name: Check jtreg
+        run: |
+          chmod a+rx -R ${HOME}/jtreg/
+          ${HOME}/jtreg/bin/jtreg -version
 
       - name: Install dependencies
         run: |
