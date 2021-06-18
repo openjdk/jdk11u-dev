@@ -346,6 +346,7 @@ public class CheckGraalIntrinsics extends GraalTest {
                             "java/lang/StringLatin1.equals([B[B)Z",
                             "java/lang/StringLatin1.indexOf([BI[BII)I",
                             "java/lang/StringLatin1.indexOf([B[B)I",
+                            "java/lang/StringLatin1.indexOfChar([BIII)I",
                             "java/lang/StringLatin1.inflate([BI[BII)V",
                             "java/lang/StringLatin1.inflate([BI[CII)V",
                             "java/lang/StringUTF16.compress([BI[BII)I",
