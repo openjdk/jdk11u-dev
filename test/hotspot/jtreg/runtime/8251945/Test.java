@@ -44,11 +44,11 @@ public final class Test
 {
     private static final int ITERATIONS = Integer.getInteger("iterations", 10000);
     private volatile ClassLoader nextLoader;
-    
+
     public static void main(final String[] args) {
         new Test().crash();
     }
-    
+
     public void crash() {
         final byte[] runnableClass = loadBytecode("Test$TestRunnable");
         final byte[] eventClass = loadBytecode("Test$TestRunnable$RunnableEvent");
@@ -63,7 +63,7 @@ public final class Test
         }
         threadPool.shutdown();
     }
-    
+
     Runnable loadTestRunnable(final ClassLoader classLoader) {
         try {
             return (Runnable)Class.forName("Test$TestRunnable", true, classLoader).asSubclass(Runnable.class).getConstructor((Class<?>[])new Class[0]).newInstance(new Object[0]);
@@ -72,7 +72,7 @@ public final class Test
             throw new RuntimeException("could not load runnable", e);
         }
     }
-    
+
     private static byte[] loadBytecode(final String className) {
         final String resource = toResourceName(className);
         final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -101,19 +101,19 @@ public final class Test
         }
         return buffer.toByteArray();
     }
-    
+
     private static String toResourceName(final String className) {
         return className.replace('.', '/') + ".class";
     }
-    
+
     final class LoadingRunnable implements Runnable
     {
         private final CyclicBarrier barrier;
-        
+
         LoadingRunnable(final CyclicBarrier barrier) {
             this.barrier = barrier;
         }
-        
+
         @Override
         public void run() {
             int itr = 0;
@@ -129,7 +129,7 @@ public final class Test
             }
         }
     }
-    
+
     static final class PredefinedClassLoader extends ClassLoader
     {
         private final byte[] runnableClass;
@@ -140,7 +140,7 @@ public final class Test
             this.runnableClass = runnableClass;
             this.eventClass = eventClass;
         }
-        
+
         @Override
         protected Class<?> loadClass(final String className, final boolean resolve) throws ClassNotFoundException {
             final Class<?> loadedClass = this.findLoadedClass(className);
@@ -186,19 +186,18 @@ public final class Test
             event.end();
             event.commit();
         }
-        
+
         public static class RunnableEvent extends Event
         {
             private String runnableClassName;
-            
+
             String getRunnableClassName() {
                 return this.runnableClassName;
             }
-            
+
             void setRunnableClassName(final String operationName) {
                 this.runnableClassName = operationName;
             }
         }
     }
 }
-
