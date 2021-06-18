@@ -1050,7 +1050,7 @@ ClassLoaderData* ClassLoaderDataGraph::add_to_graph(Handle loader, bool is_anony
       return cld;
     }
     cld = new ClassLoaderData(loader, is_anonymous);
-    java_lang_ClassLoader::set_loader_data(loader(), cld);
+    java_lang_ClassLoader::release_set_loader_data(loader(), cld);
   } else {
     cld = new ClassLoaderData(loader, is_anonymous);
   }
