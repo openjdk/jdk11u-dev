@@ -1260,6 +1260,9 @@ public:
   void string_indexof_char(Register str1, Register cnt1,
                            Register ch, Register result,
                            Register tmp1, Register tmp2, Register tmp3);
+  void stringL_indexof_char(Register str1, Register cnt1,
+                            Register ch, Register result,
+                            Register tmp1, Register tmp2, Register tmp3);
   void fast_log(FloatRegister vtmp0, FloatRegister vtmp1, FloatRegister vtmp2,
                 FloatRegister vtmp3, FloatRegister vtmp4, FloatRegister vtmp5,
                 FloatRegister tmpC1, FloatRegister tmpC2, FloatRegister tmpC3,
