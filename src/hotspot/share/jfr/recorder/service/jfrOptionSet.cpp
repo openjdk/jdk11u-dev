@@ -393,9 +393,8 @@ static julong divide_with_user_unit(Argument& memory_argument, julong value) {
 
 static const char higher_than_msg[] = "This value is higher than the maximum size limited ";
 static const char lower_than_msg[] = "This value is lower than the minimum size required ";
-template <typename Argument, bool lower>
+template <typename Argument, char const *msg>
 static void log_out_of_range_value(Argument& memory_argument, julong min_value) {
-  const char* msg = lower ? lower_than_msg : higher_than_msg;
   if (memory_argument.value()._size != memory_argument.value()._val) {
     // has multiplier
     log_error(arguments) (
@@ -618,7 +617,7 @@ template <typename Argument>
 static bool ensure_gteq(Argument& memory_argument, const jlong value) {
   if ((jlong)memory_argument.value()._size < value) {
     log_set_value(memory_argument);
-    log_out_of_range_value<Argument, true>(memory_argument, value);
+    log_out_of_range_value<Argument, lower_than_msg>(memory_argument, value);
     return false;
   }
   return true;
@@ -653,7 +652,7 @@ template <typename Argument>
 static bool ensure_lteq(Argument& memory_argument, const jlong value) {
   if ((jlong)memory_argument.value()._size > value) {
     log_set_value(memory_argument);
-    log_out_of_range_value<Argument, false>(memory_argument, value);
+    log_out_of_range_value<Argument, higher_than_msg>(memory_argument, value);
     return false;
   }
   return true;
