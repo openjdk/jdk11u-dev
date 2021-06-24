@@ -289,6 +289,11 @@ jobs:
           path: ~/jtreg/
         if: steps.jtreg_restore.outcome == 'failure'
 
+      - name: Check jtreg
+        run: |
+          chmod a+rx -R ${HOME}/jtreg/
+          ${HOME}/jtreg/bin/jtreg -version
+
       - name: Restore build artifacts
         id: build_restore
         uses: actions/download-artifact@v2
@@ -620,6 +625,11 @@ jobs:
           path: ~/jtreg/
         if: steps.jtreg_restore.outcome == 'failure'
 
+      - name: Check jtreg
+        run: |
+          chmod a+rx -R ${HOME}/jtreg/
+          ${HOME}/jtreg/bin/jtreg -version
+
       # Roll in the multilib environment and its dependencies.
       # Some multilib libraries do not have proper inter-dependencies, so we have to
       # install their dependencies manually. Additionally, upgrading apt solves
@@ -746,6 +756,11 @@ jobs:
           name: transient_jtreg_${{ needs.prerequisites.outputs.bundle_id }}
           path: ~/jtreg/
         if: steps.jtreg_restore.outcome == 'failure'
+
+      - name: Check jtreg
+        run: |
+          chmod a+rx -R ${HOME}/jtreg/
+          ${HOME}/jtreg/bin/jtreg -version
 
       - name: Restore build artifacts
         id: build_restore
@@ -914,6 +929,11 @@ jobs:
           path: ~/jtreg/
         if: steps.jtreg_restore.outcome == 'failure'
 
+      - name: Check jtreg
+        run: |
+          chmod a+rx -R ${HOME}/jtreg/
+          ${HOME}/jtreg/bin/jtreg -version
+
       - name: Ensure a specific version of MSVC is installed
         run: >
           Start-Process -FilePath 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe' -Wait -NoNewWindow -ArgumentList
@@ -1054,6 +1074,11 @@ jobs:
           name: transient_jtreg_${{ needs.prerequisites.outputs.bundle_id }}
           path: ~/jtreg/
         if: steps.jtreg_restore.outcome == 'failure'
+
+      - name: Check jtreg
+        run: |
+          chmod a+rx -R ${HOME}/jtreg/
+          ${HOME}/jtreg/bin/jtreg -version
 
       - name: Restore build artifacts
         id: build_restore
@@ -1217,6 +1242,11 @@ jobs:
           path: ~/jtreg/
         if: steps.jtreg_restore.outcome == 'failure'
 
+      - name: Check jtreg
+        run: |
+          chmod a+rx -R ${HOME}/jtreg/
+          ${HOME}/jtreg/bin/jtreg -version
+
       - name: Install dependencies
         run: brew install make
 
@@ -1335,6 +1365,11 @@ jobs:
           name: transient_jtreg_${{ needs.prerequisites.outputs.bundle_id }}
           path: ~/jtreg/
         if: steps.jtreg_restore.outcome == 'failure'
+
+      - name: Check jtreg
+        run: |
+          chmod a+rx -R ${HOME}/jtreg/
+          ${HOME}/jtreg/bin/jtreg -version
 
       - name: Restore build artifacts
         id: build_restore
