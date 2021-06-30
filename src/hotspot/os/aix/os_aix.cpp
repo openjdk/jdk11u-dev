@@ -1974,10 +1974,10 @@ static char* reserve_shmated_memory (
   // We must prevent anyone from attaching too close to the
   // BRK because that may cause malloc OOM.
   if (requested_addr != NULL && is_close_to_brk((address)requested_addr)) {
-    trcVerbose("Wish address " PTR_FORMAT " is too close to the BRK segment. "
-      "Will attach anywhere.", p2i(requested_addr));
-    // Act like the OS refused to attach there.
-    requested_addr = NULL;
+    trcVerbose("Wish address " PTR_FORMAT " is too close to the BRK segment.", p2i(requested_addr));
+    // Since we treat an attach to the wrong address as an error later anyway,
+    // we return NULL here
+    return NULL;
   }
 
   // For old AS/400's (V5R4 and older) we should not even be here - System V shared memory is not
@@ -2108,10 +2108,10 @@ static char* reserve_mmaped_memory(size_t bytes, char* requested_addr, size_t al
   // We must prevent anyone from attaching too close to the
   // BRK because that may cause malloc OOM.
   if (requested_addr != NULL && is_close_to_brk((address)requested_addr)) {
-    trcVerbose("Wish address " PTR_FORMAT " is too close to the BRK segment. "
-      "Will attach anywhere.", p2i(requested_addr));
-    // Act like the OS refused to attach there.
-    requested_addr = NULL;
+    trcVerbose("Wish address " PTR_FORMAT " is too close to the BRK segment.", p2i(requested_addr));
+    // Since we treat an attach to the wrong address as an error later anyway,
+    // we return NULL here
+    return NULL;
   }
 
   // Specify one or the other but not both.
