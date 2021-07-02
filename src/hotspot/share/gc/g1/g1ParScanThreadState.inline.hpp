@@ -41,7 +41,7 @@ template <class T> void G1ParScanThreadState::do_oop_evac(T* p) {
   // So we need to redo this check.
   const InCSetState in_cset_state = _g1h->in_cset_state(obj);
   if (in_cset_state.is_in_cset()) {
-    markOop m = obj->mark_raw();
+    markOop m = obj->mark();
     if (m->is_marked()) {
       obj = (oop) m->decode_pointer();
     } else {

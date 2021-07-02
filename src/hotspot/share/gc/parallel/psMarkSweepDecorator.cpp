@@ -113,8 +113,8 @@ void PSMarkSweepDecorator::precompact() {
   const intx interval = PrefetchScanIntervalInBytes;
 
   while (q < t) {
-    assert(oop(q)->mark_raw()->is_marked() || oop(q)->mark_raw()->is_unlocked() ||
-           oop(q)->mark_raw()->has_bias_pattern(),
+    assert(oop(q)->mark()->is_marked() || oop(q)->mark()->is_unlocked() ||
+           oop(q)->mark()->has_bias_pattern(),
            "these are the only valid states during a mark sweep");
     if (oop(q)->is_gc_marked()) {
       /* prefetch beyond q */
@@ -151,7 +151,7 @@ void PSMarkSweepDecorator::precompact() {
       } else {
         // if the object isn't moving we can just set the mark to the default
         // mark and handle it specially later on.
-        oop(q)->init_mark_raw();
+        oop(q)->init_mark();
         assert(oop(q)->forwardee() == NULL, "should be forwarded to NULL");
       }
 
@@ -211,7 +211,7 @@ void PSMarkSweepDecorator::precompact() {
           } else {
             // if the object isn't moving we can just set the mark to the default
             // mark and handle it specially later on.
-            oop(q)->init_mark_raw();
+            oop(q)->init_mark();
             assert(oop(q)->forwardee() == NULL, "should be forwarded to NULL");
           }
 
@@ -259,7 +259,7 @@ bool PSMarkSweepDecorator::insert_deadspace(size_t& allowed_deadspace_words,
   if (allowed_deadspace_words >= deadlength) {
     allowed_deadspace_words -= deadlength;
     CollectedHeap::fill_with_object(q, deadlength);
-    oop(q)->set_mark_raw(oop(q)->mark_raw()->set_marked());
+    oop(q)->set_mark(oop(q)->mark()->set_marked());
     assert((int) deadlength == oop(q)->size(), "bad filler object size");
     // Recall that we required "q == compaction_top".
     return true;
@@ -350,7 +350,7 @@ void PSMarkSweepDecorator::compact(bool mangle_free_space ) {
       q = t;
     } else {
       // $$$ Funky
-      q = (HeapWord*) oop(_first_dead)->mark_raw()->decode_pointer();
+      q = (HeapWord*) oop(_first_dead)->mark()->decode_pointer();
     }
   }
 
@@ -361,7 +361,7 @@ void PSMarkSweepDecorator::compact(bool mangle_free_space ) {
     if (!oop(q)->is_gc_marked()) {
       // mark is pointer to next marked oop
       debug_only(prev_q = q);
-      q = (HeapWord*) oop(q)->mark_raw()->decode_pointer();
+      q = (HeapWord*) oop(q)->mark()->decode_pointer();
       assert(q > prev_q, "we should be moving forward through memory");
     } else {
       // prefetch beyond q
@@ -377,7 +377,7 @@ void PSMarkSweepDecorator::compact(bool mangle_free_space ) {
       // copy object and reinit its mark
       assert(q != compaction_top, "everything in this pass should be moving");
       Copy::aligned_conjoint_words(q, compaction_top, size);
-      oop(compaction_top)->init_mark_raw();
+      oop(compaction_top)->init_mark();
       assert(oop(compaction_top)->klass() != NULL, "should have a class");
 
       debug_only(prev_q = q);

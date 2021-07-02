@@ -54,10 +54,10 @@ void PromotionInfo::promoted_oops_iterate(OopClosureType* cl) {
     }
     if (curObj->hasDisplacedMark()) {
       /* restore displaced header */
-      oop(curObj)->set_mark_raw(nextDisplacedHeader());
+      oop(curObj)->set_mark(nextDisplacedHeader());
     } else {
       /* restore prototypical header */
-      oop(curObj)->init_mark_raw();
+      oop(curObj)->init_mark();
     }
     /* The "promoted_mark" should now not be set */
     assert(!curObj->hasPromotedMark(),

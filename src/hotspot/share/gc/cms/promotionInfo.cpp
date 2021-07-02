@@ -93,7 +93,7 @@ void PromotionInfo::track(PromotedObject* trackOop) {
 
 void PromotionInfo::track(PromotedObject* trackOop, Klass* klassOfOop) {
   // make a copy of header as it may need to be spooled
-  markOop mark = oop(trackOop)->mark_raw();
+  markOop mark = oop(trackOop)->mark();
   trackOop->clear_next();
   if (mark->must_be_preserved_for_cms_scavenge(klassOfOop)) {
     // save non-prototypical header, and mark oop
@@ -233,7 +233,7 @@ void PromotionInfo::verify() const {
   // 2. each promoted object lies in this space
   debug_only(
     PromotedObject* junk = NULL;
-    assert(junk->next_addr() == (void*)(oop(junk)->mark_addr_raw()),
+    assert(junk->next_addr() == (void*)(oop(junk)->mark_addr()),
            "Offset of PromotedObject::_next is expected to align with "
            "  the OopDesc::_mark within OopDesc");
   )

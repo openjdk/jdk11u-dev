@@ -64,21 +64,18 @@ class oopDesc {
 
  public:
   inline markOop  mark()          const;
-  inline markOop  mark_raw()      const;
-  inline markOop* mark_addr_raw() const;
+  inline markOop* mark_addr() const;
 
   inline void set_mark(volatile markOop m);
-  inline void set_mark_raw(volatile markOop m);
-  static inline void set_mark_raw(HeapWord* mem, markOop m);
+  static inline void set_mark(HeapWord* mem, markOop m);
 
   inline void release_set_mark(markOop m);
   inline markOop cas_set_mark(markOop new_mark, markOop old_mark);
-  inline markOop cas_set_mark_raw(markOop new_mark, markOop old_mark, atomic_memory_order order = memory_order_conservative);
+  inline markOop cas_set_mark(markOop new_mark, markOop old_mark, atomic_memory_order order);
 
   // Used only to re-initialize the mark word (e.g., of promoted
   // objects during a GC) -- requires a valid klass pointer
   inline void init_mark();
-  inline void init_mark_raw();
 
   inline Klass* klass() const;
   inline Klass* klass_or_null() const volatile;
@@ -129,11 +126,10 @@ class oopDesc {
 
  public:
   // field addresses in oop
-  inline void* field_addr(int offset)     const;
-  inline void* field_addr_raw(int offset) const;
+  inline void* field_addr(int offset) const;
 
   // Need this as public for garbage collection.
-  template <class T> inline T* obj_field_addr_raw(int offset) const;
+  template <class T> inline T* obj_field_addr(int offset) const;
 
   template <typename T> inline size_t field_offset(T* p) const;
 
@@ -245,7 +241,6 @@ class oopDesc {
   inline bool is_locked()   const;
   inline bool is_unlocked() const;
   inline bool has_bias_pattern() const;
-  inline bool has_bias_pattern_raw() const;
 
   // asserts and guarantees
   static bool is_oop(oop obj, bool ignore_mark_word = false);
@@ -316,9 +311,9 @@ class oopDesc {
   unsigned int new_hash(juint seed);
 
   // marks are forwarded to stack when object is locked
-  inline bool    has_displaced_mark_raw() const;
-  inline markOop displaced_mark_raw() const;
-  inline void    set_displaced_mark_raw(markOop m);
+  inline bool    has_displaced_mark() const;
+  inline markOop displaced_mark() const;
+  inline void    set_displaced_mark(markOop m);
 
   static bool has_klass_gap();
 

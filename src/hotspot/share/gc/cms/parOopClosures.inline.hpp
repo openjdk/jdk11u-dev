@@ -45,7 +45,7 @@ template <class T> inline void ParScanWeakRefClosure::do_oop_work(T* p) {
     // ParScanClosure::do_oop_work).
     Klass* objK = obj->klass();
     OrderAccess::loadload();
-    markOop m = obj->mark_raw();
+    markOop m = obj->mark();
     oop new_obj;
     if (m->is_marked()) { // Contains forwarding pointer.
       new_obj = ParNewGeneration::real_forwardee(obj);
@@ -110,7 +110,7 @@ inline void ParScanClosure::do_oop_work(T* p,
       // forwarded.
       Klass* objK = obj->klass();
       OrderAccess::loadload();
-      markOop m = obj->mark_raw();
+      markOop m = obj->mark();
       oop new_obj;
       if (m->is_marked()) { // Contains forwarding pointer.
         new_obj = ParNewGeneration::real_forwardee(obj);

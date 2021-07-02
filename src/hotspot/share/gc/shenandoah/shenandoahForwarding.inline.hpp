@@ -39,7 +39,7 @@ inline HeapWord* ShenandoahForwarding::get_forwardee_raw_unchecked(oop obj) {
   // On this path, we can encounter the "marked" object, but with NULL
   // fwdptr. That object is still not forwarded, and we need to return
   // the object itself.
-  markOop mark = obj->mark_raw();
+  markOop mark = obj->mark();
   if (mark->is_marked()) {
     HeapWord* fwdptr = (HeapWord*) mark->clear_lock_bits();
     if (fwdptr != NULL) {
@@ -54,7 +54,7 @@ inline oop ShenandoahForwarding::get_forwardee_mutator(oop obj) {
   shenandoah_assert_correct(NULL, obj);
   assert(Thread::current()->is_Java_thread(), "Must be a mutator thread");
 
-  markOop mark = obj->mark_raw();
+  markOop mark = obj->mark();
   if (mark->is_marked()) {
     HeapWord* fwdptr = (HeapWord*)mark->clear_lock_bits();
     assert(fwdptr != NULL, "Forwarding pointer is never null here");
@@ -70,17 +70,17 @@ inline oop ShenandoahForwarding::get_forwardee(oop obj) {
 }
 
 inline bool ShenandoahForwarding::is_forwarded(oop obj) {
-  return obj->mark_raw()->is_marked();
+  return obj->mark()->is_marked();
 }
 
 inline oop ShenandoahForwarding::try_update_forwardee(oop obj, oop update) {
-  markOop old_mark = obj->mark_raw();
+  markOop old_mark = obj->mark();
   if (old_mark->is_marked()) {
     return (oop) old_mark->clear_lock_bits();
   }
 
   markOop new_mark = markOopDesc::encode_pointer_as_mark(update);
-  markOop prev_mark = obj->cas_set_mark_raw(new_mark, old_mark);
+  markOop prev_mark = obj->cas_set_mark(new_mark, old_mark, memory_order_conservative);
   if (prev_mark == old_mark) {
     return update;
   } else {

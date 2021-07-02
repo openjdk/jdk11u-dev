@@ -41,7 +41,6 @@ class objArrayOopDesc : public arrayOopDesc {
   friend class G1ParScanPartialArrayClosure;
 
   template <class T> T* obj_at_addr(int index) const;
-  template <class T> T* obj_at_addr_raw(int index) const;
 
   template <class T>
   static ptrdiff_t obj_at_offset(int index) {
@@ -82,7 +81,6 @@ private:
 
   // base is the address following the header.
   HeapWord* base() const;
-  HeapWord* base_raw() const;
 
   // Accessing
   oop obj_at(int index) const;

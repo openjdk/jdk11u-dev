@@ -39,14 +39,15 @@ class FakeOop {
   oopDesc _oop;
 
 public:
-  FakeOop() : _oop() { _oop.set_mark_raw(originalMark()); }
+  FakeOop() : _oop() { _oop.set_mark(originalMark()); }
 
   oop get_oop() { return &_oop; }
-  markOop mark() { return _oop.mark_raw(); }
-  void set_mark(markOop m) { _oop.set_mark_raw(m); }
+
+  markOop mark() { return _oop.mark(); }
+  void set_mark(markOop m) { _oop.set_mark(m); }
   void forward_to(oop obj) {
     markOop m = markOopDesc::encode_pointer_as_mark(obj);
-    _oop.set_mark_raw(m);
+    _oop.set_mark(m);
   }
 
   static markOop originalMark() { return markOop(markOopDesc::lock_mask_in_place); }

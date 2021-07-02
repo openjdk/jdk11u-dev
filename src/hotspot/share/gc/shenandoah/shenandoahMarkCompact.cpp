@@ -313,7 +313,7 @@ public:
     // Object fits into current region, record new location:
     assert(_compact_point + obj_size <= _to_region->end(), "must fit");
     shenandoah_assert_not_forwarded(NULL, p);
-    _preserved_marks->push_if_necessary(p, p->mark_raw());
+    _preserved_marks->push_if_necessary(p, p->mark());
     p->forward_to(oop(_compact_point));
     _compact_point += obj_size;
   }
@@ -420,7 +420,7 @@ void ShenandoahMarkCompact::calculate_target_humongous_objects() {
 
       if (start >= to_begin && start != r->index()) {
         // Fits into current window, and the move is non-trivial. Record the move then, and continue scan.
-        _preserved_marks->get(0)->push_if_necessary(old_obj, old_obj->mark_raw());
+        _preserved_marks->get(0)->push_if_necessary(old_obj, old_obj->mark());
         old_obj->forward_to(oop(heap->get_region(start)->bottom()));
         to_end = start;
         continue;
@@ -793,7 +793,7 @@ public:
       HeapWord* compact_to = (HeapWord*) p->forwardee();
       Copy::aligned_conjoint_words(compact_from, compact_to, size);
       oop new_obj = oop(compact_to);
-      new_obj->init_mark_raw();
+      new_obj->init_mark();
     }
   }
 };
@@ -908,7 +908,7 @@ void ShenandoahMarkCompact::compact_humongous_objects() {
                                    words_size);
 
       oop new_obj = oop(heap->get_region(new_start)->bottom());
-      new_obj->init_mark_raw();
+      new_obj->init_mark();
 
       {
         for (size_t c = old_start; c <= old_end; c++) {

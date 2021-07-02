@@ -424,7 +424,7 @@ HeapWord* CompactibleFreeListSpace::forward(oop q, size_t size,
   } else {
     // if the object isn't moving we can just set the mark to the default
     // mark and handle it specially later on.
-    q->init_mark_raw();
+    q->init_mark();
     assert(q->forwardee() == NULL, "should be forwarded to NULL");
   }
 

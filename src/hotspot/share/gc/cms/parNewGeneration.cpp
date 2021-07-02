@@ -1099,7 +1099,7 @@ oop ParNewGeneration::copy_to_survivor_space(ParScanThreadState* par_scan_state,
   // a forwarding pointer by a parallel thread.  So we must save the mark
   // word in a local and then analyze it.
   oopDesc dummyOld;
-  dummyOld.set_mark_raw(m);
+  dummyOld.set_mark(m);
   assert(!dummyOld.is_forwarded(),
          "should not be called with forwarding pointer mark word.");
 
@@ -1147,7 +1147,7 @@ oop ParNewGeneration::copy_to_survivor_space(ParScanThreadState* par_scan_state,
     assert(CMSHeap::heap()->is_in_reserved(new_obj), "illegal forwarding pointer value.");
     forward_ptr = old->forward_to_atomic(new_obj);
     // Restore the mark word copied above.
-    new_obj->set_mark_raw(m);
+    new_obj->set_mark(m);
     // Increment age if obj still in new generation
     new_obj->incr_age();
     par_scan_state->age_table()->add(new_obj, sz);

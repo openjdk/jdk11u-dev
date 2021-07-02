@@ -397,10 +397,10 @@ void MemAllocator::mem_clear(HeapWord* mem) const {
 oop MemAllocator::finish(HeapWord* mem) const {
   assert(mem != NULL, "NULL object pointer");
   if (UseBiasedLocking) {
-    oopDesc::set_mark_raw(mem, _klass->prototype_header());
+    oopDesc::set_mark(mem, _klass->prototype_header());
   } else {
     // May be bootstrapping
-    oopDesc::set_mark_raw(mem, markOopDesc::prototype());
+    oopDesc::set_mark(mem, markOopDesc::prototype());
   }
   // Need a release store to ensure array/class length, mark word, and
   // object zeroing are visible before setting the klass non-NULL, for
