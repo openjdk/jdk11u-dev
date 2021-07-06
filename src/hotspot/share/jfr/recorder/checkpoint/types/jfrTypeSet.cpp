@@ -303,7 +303,7 @@ static void do_klass(Klass* klass) {
 static traceid primitive_id(KlassPtr array_klass) {
   if (array_klass == NULL) {
     // The first klass id is reserved for the void.class.
-    return MaxJfrEventId + 100;
+    return MaxJfrEventId + 101;
   }
   // Derive the traceid for a primitive mirror from its associated array klass (+1).
   return JfrTraceId::get(array_klass) + 1;
@@ -989,7 +989,6 @@ static size_t teardown() {
     assert(_writer != NULL, "invariant");
     ClearKlassAndMethods clear(_writer);
     _artifacts->iterate_klasses(clear);
-    JfrTypeSet::clear();
     _clear_artifacts = true;
     ++checkpoint_id;
   } else {

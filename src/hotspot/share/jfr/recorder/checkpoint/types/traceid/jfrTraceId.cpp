@@ -52,7 +52,7 @@ static traceid atomic_inc(traceid volatile* const dest) {
 }
 
 static traceid next_class_id() {
-  static volatile traceid class_id_counter = MaxJfrEventId + 101; // + 100 is for the void.class primitive
+  static volatile traceid class_id_counter = MaxJfrEventId + 101; // + 101 is for the void.class primitive
   return atomic_inc(&class_id_counter) << TRACE_ID_SHIFT;
 }
 
@@ -200,7 +200,7 @@ static traceid load_primitive(const oop mirror) {
   traceid id;
   if (tak == NULL) {
     // The first klass id is reserved for the void.class
-    id = MaxJfrEventId + 100;
+    id = MaxJfrEventId + 101;
   } else {
     id = JfrTraceId::get(tak) + 1;
   }
