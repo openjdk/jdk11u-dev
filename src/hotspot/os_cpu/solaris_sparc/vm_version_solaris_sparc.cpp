@@ -358,7 +358,7 @@ void VM_Version::platform_features() {
 #endif
 
 #ifndef AV_SPARC_FJATHHPC
-#define AV_SPARC_FJATHHPC     0x00001000 // Fujitsu HPC (Athena) instrs 
+#define AV_SPARC_FJATHHPC     0x00001000 // Fujitsu HPC (Athena) instrs
 #endif
 
   if (av & AV_SPARC_ASI_BLK_INIT) features |= ISA_blk_init_msk;
