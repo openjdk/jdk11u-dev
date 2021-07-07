@@ -3213,7 +3213,7 @@ JNI_ENTRY(void, jni_ReleasePrimitiveArrayCritical(JNIEnv *env, jarray array, voi
 HOTSPOT_JNI_RELEASEPRIMITIVEARRAYCRITICAL_RETURN();
 JNI_END
 
-// Determine if a copy of string value should be returned
+// If a copy of string value should be returned instead
 static bool copy_string_value(oop str) {
   return java_lang_String::is_latin1(str) ||
          // To prevent deduplication from replacing the value array while setting up or in
@@ -3259,8 +3259,13 @@ JNI_ENTRY(const jchar*, jni_GetStringCritical(JNIEnv *env, jstring string, jbool
     ret = NEW_C_HEAP_ARRAY_RETURN_NULL(jchar, s_len + 1, mtInternal);  // add one for zero termination
     /* JNI Specification states return NULL on OOM */
     if (ret != NULL) {
-      for (int i = 0; i < s_len; i++) {
-        ret[i] = ((jchar) s_value->byte_at(i)) & 0xff;
+      bool is_latin1 = java_lang_String::is_latin1(s);
+      if (is_latin1) {
+        for (int i = 0; i < s_len; i++) {
+          ret[i] = ((jchar) s_value->byte_at(i)) & 0xff;
+        }
+      } else {
+        memcpy(ret, s_value->char_at_addr(0), s_len * sizeof(jchar));
       }
       ret[s_len] = 0;
     }
