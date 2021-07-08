@@ -337,7 +337,7 @@ void ShenandoahBarrierSetAssembler::load_reference_barrier_not_null(MacroAssembl
 
   Address gc_state(thread, in_bytes(ShenandoahThreadLocalData::gc_state_offset()));
   __ testb(gc_state, ShenandoahHeap::HAS_FORWARDED);
-  __ jccb(Assembler::zero, done);
+  __ jcc(Assembler::zero, done);
 
   save_machine_state(masm, /* handle_gpr = */ false, /* handle_fp = */ true);
 
