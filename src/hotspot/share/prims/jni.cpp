@@ -3214,13 +3214,13 @@ HOTSPOT_JNI_RELEASEPRIMITIVEARRAYCRITICAL_RETURN();
 JNI_END
 
 // If a copy of string value should be returned instead
-static bool copy_string_value(oop str) {
+static bool should_copy_string_value(oop str) {
   return java_lang_String::is_latin1(str) ||
-         // To prevent deduplication from replacing the value array while setting up or in
-         // the critical section. That would lead to the release operation
-         // unpinning the wrong object.
-         (Universe::heap()->supports_object_pinning() &&
-          StringDedup::is_enabled());
+    // To prevent deduplication from replacing the value array while setting up or in
+    // the critical section. That would lead to the release operation
+    // unpinning the wrong object.
+    (Universe::heap()->supports_object_pinning() &&
+     StringDedup::is_enabled());
 }
 
 static typeArrayOop lock_gc_or_pin_string_value(JavaThread* thread, oop str) {
@@ -3248,7 +3248,7 @@ JNI_ENTRY(const jchar*, jni_GetStringCritical(JNIEnv *env, jstring string, jbool
   HOTSPOT_JNI_GETSTRINGCRITICAL_ENTRY(env, string, (uintptr_t *) isCopy);
   oop s = JNIHandles::resolve_non_null(string);
   jchar* ret;
-  if (!copy_string_value(s)) {
+  if (!should_copy_string_value(s)) {
     typeArrayOop s_value = lock_gc_or_pin_string_value(thread, s);
     ret = (jchar*) s_value->base(T_CHAR);
     if (isCopy != NULL) *isCopy = JNI_FALSE;
@@ -3281,7 +3281,7 @@ JNI_ENTRY(void, jni_ReleaseStringCritical(JNIEnv *env, jstring str, const jchar 
   HOTSPOT_JNI_RELEASESTRINGCRITICAL_ENTRY(env, str, (uint16_t *) chars);
   // The str and chars arguments are ignored for UTF16 strings
   oop s = JNIHandles::resolve_non_null(str);
-  if (copy_string_value(s)) {
+  if (should_copy_string_value(s)) {
     // For copied string value, free jchar array allocated by earlier call to GetStringCritical.
     // This assumes that ReleaseStringCritical bookends GetStringCritical.
     FREE_C_HEAP_ARRAY(jchar, chars);
