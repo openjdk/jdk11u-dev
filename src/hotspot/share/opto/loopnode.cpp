@@ -3060,6 +3060,7 @@ void PhaseIdealLoop::build_and_optimize(LoopOptsMode mode) {
   if( SplitIfBlocks && do_split_ifs ) {
     visited.Clear();
     split_if_with_blocks( visited, nstack, mode == LoopOptsLastRound );
+    if (C->failing()) return;
     NOT_PRODUCT( if( VerifyLoopOptimizations ) verify(); );
     if (mode == LoopOptsLastRound) {
       C->set_major_progress();

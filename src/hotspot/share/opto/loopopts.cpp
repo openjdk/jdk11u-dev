@@ -1076,6 +1076,11 @@ static bool merge_point_safe(Node* region) {
 // For inner loop uses move it to the preheader area.
 Node *PhaseIdealLoop::place_near_use(Node *useblock) const {
   IdealLoopTree *u_loop = get_loop( useblock );
+  if (!u_loop->_head->is_Loop()) {
+    // detected broken graph due to infinite loop
+    C->record_method_not_compilable("infinite loop");
+    return useblock;
+  }
   if (u_loop->_irreducible) {
     return useblock;
   }
@@ -1398,6 +1403,7 @@ void PhaseIdealLoop::split_if_with_blocks_post(Node *n, bool last_round) {
             // Find control for 'x' next to use but not inside inner loops.
             // For inner loop uses get the preheader area.
             x_ctrl = place_near_use(x_ctrl);
+            if (C->failing()) return;
 
             if (n->is_Load()) {
               // For loads, add a control edge to a CFG node outside of the loop
@@ -1508,6 +1514,7 @@ void PhaseIdealLoop::split_if_with_blocks(VectorSet &visited, Node_Stack &nstack
       if (cnt != 0 && !n->is_Con()) {
         assert(has_node(n), "no dead nodes");
         split_if_with_blocks_post( n, last_round );
+        if (C->failing()) return;
       }
       if (nstack.is_empty()) {
         // Finished all nodes on stack.
