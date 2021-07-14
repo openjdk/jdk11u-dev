@@ -3219,8 +3219,7 @@ static bool should_copy_string_value(oop str) {
     // To prevent deduplication from replacing the value array while setting up or in
     // the critical section. That would lead to the release operation
     // unpinning the wrong object.
-    (Universe::heap()->supports_object_pinning() &&
-     StringDedup::is_enabled());
+    (Universe::heap()->supports_object_pinning() && StringDedup::is_enabled());
 }
 
 static typeArrayOop lock_gc_or_pin_string_value(JavaThread* thread, oop str) {
@@ -3248,18 +3247,14 @@ JNI_ENTRY(const jchar*, jni_GetStringCritical(JNIEnv *env, jstring string, jbool
   HOTSPOT_JNI_GETSTRINGCRITICAL_ENTRY(env, string, (uintptr_t *) isCopy);
   oop s = JNIHandles::resolve_non_null(string);
   jchar* ret;
-  if (!should_copy_string_value(s)) {
-    typeArrayOop s_value = lock_gc_or_pin_string_value(thread, s);
-    ret = (jchar*) s_value->base(T_CHAR);
-    if (isCopy != NULL) *isCopy = JNI_FALSE;
-  } else {
-    // Inflate latin1 encoded string to UTF16
+  if (should_copy_string_value(s)) {
     typeArrayOop s_value = java_lang_String::value(s);
     int s_len = java_lang_String::length(s);
     ret = NEW_C_HEAP_ARRAY_RETURN_NULL(jchar, s_len + 1, mtInternal);  // add one for zero termination
     /* JNI Specification states return NULL on OOM */
     if (ret != NULL) {
       bool is_latin1 = java_lang_String::is_latin1(s);
+      // Inflate latin1 encoded string to UTF16
       if (is_latin1) {
         for (int i = 0; i < s_len; i++) {
           ret[i] = ((jchar) s_value->byte_at(i)) & 0xff;
@@ -3270,6 +3265,10 @@ JNI_ENTRY(const jchar*, jni_GetStringCritical(JNIEnv *env, jstring string, jbool
       ret[s_len] = 0;
     }
     if (isCopy != NULL) *isCopy = JNI_TRUE;
+  } else {
+    typeArrayOop s_value = lock_gc_or_pin_string_value(thread, s);
+    ret = (jchar*) s_value->base(T_CHAR);
+    if (isCopy != NULL) *isCopy = JNI_FALSE;
   }
  HOTSPOT_JNI_GETSTRINGCRITICAL_RETURN((uint16_t *) ret);
   return ret;
