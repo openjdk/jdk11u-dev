@@ -43,6 +43,10 @@
 #define ATTRIBUTE_ALIGNED(x)
 #endif
 
+#ifndef ATTRIBUTE_FLATTEN
+#define ATTRIBUTE_FLATTEN
+#endif
+
 // This file holds all globally used constants & types, class (forward)
 // declarations and a few frequently used utility functions.
 

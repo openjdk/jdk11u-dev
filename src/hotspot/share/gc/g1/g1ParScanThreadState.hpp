@@ -165,6 +165,20 @@ private:
 
   inline void do_oop_partial_array(oop* p);
 
+  HeapWord* allocate_copy_slow(InCSetState const state,
+                               InCSetState* dest_state,
+                               oop old,
+                               size_t word_sz,
+                               uint age);
+
+  void undo_allocation(InCSetState dest_state,
+                       HeapWord* obj_ptr,
+                       size_t word_sz);
+
+  inline oop do_copy_to_survivor_space(InCSetState state,
+                                       oop old,
+                                       markOop old_mark);
+
   // This method is applied to the fields of the objects that have just been copied.
   template <class T> inline void do_oop_evac(T* p);
 
@@ -191,20 +205,19 @@ private:
                               oop const old, size_t word_sz, uint age,
                               HeapWord * const obj_ptr) const;
 
+  void trim_queue_to_threshold(uint threshold);
+
   inline bool needs_partial_trimming() const;
-  inline bool is_partially_trimmed() const;
 
-  inline void trim_queue_to_threshold(uint threshold);
 public:
-  oop copy_to_survivor_space(InCSetState const state, oop const obj, markOop const old_mark);
+  oop copy_to_survivor_space(InCSetState state, oop obj, markOop old_mark);
 
-  void trim_queue();
-  void trim_queue_partially();
+  inline void trim_queue();
+  inline void trim_queue_partially();
+  void steal_and_trim_queue(RefToScanQueueSet *task_queues);
 
   Tickspan trim_ticks() const;
   void reset_trim_ticks();
-
-  inline void steal_and_trim_queue(RefToScanQueueSet *task_queues);
 
   // An attempt to evacuate "obj" has failed; take necessary steps.
   oop handle_evacuation_failure_par(oop obj, markOop m);
