@@ -90,7 +90,7 @@ public class ShortECDSA {
             System.out.println("Length: " + sig.length);
             //System.out.println(HexFormat.ofDelimiter(":").formatHex(sig));
             for (int i = 0; i < sig.length; ++i) {
-              System.out.print(String.format(i == 0 ? "%02x" : ":%02x", sig[i]));
+                System.out.print(String.format(i == 0 ? "%02x" : ":%02x", sig[i]));
             }
             System.out.println();
             throw new RuntimeException("Failed");
