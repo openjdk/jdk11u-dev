@@ -64,7 +64,8 @@ public class RemovingUnixDomainSocketTest {
             "jcmd  stderr: [" + out.getStderr() + "]\n" +
             "jcmd  exitValue = " + out.getExitValue());
 
-        out.stderrShouldBeEmptyIgnoreVMWarnings();
+        out.shouldHaveExitValue(0)
+           .stderrShouldBeEmptyIgnoreVMWarnings();
     }
 
     public static void main(String... args) throws Exception {
