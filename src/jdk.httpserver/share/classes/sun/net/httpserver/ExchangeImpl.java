@@ -201,6 +201,7 @@ class ExchangeImpl {
     public void sendResponseHeaders (int rCode, long contentLen)
     throws IOException
     {
+        final Logger logger = server.getLogger();
         if (sentHeaders) {
             throw new IOException ("headers already sent");
         }
@@ -220,7 +221,6 @@ class ExchangeImpl {
             ||(rCode == 304))          /* not modified */
         {
             if (contentLen != -1) {
-                Logger logger = server.getLogger();
                 String msg = "sendResponseHeaders: rCode = "+ rCode
                     + ": forcing contentLen = -1";
                 logger.log (Level.WARNING, msg);
@@ -234,7 +234,6 @@ class ExchangeImpl {
              * through this API, but should instead manually set the required
              * headers.*/
             if (contentLen >= 0) {
-                final Logger logger = server.getLogger();
                 String msg =
                     "sendResponseHeaders: being invoked with a content length for a HEAD request";
                 logger.log (Level.WARNING, msg);
@@ -266,6 +265,7 @@ class ExchangeImpl {
         tmpout.flush() ;
         tmpout = null;
         sentHeaders = true;
+        logger.log(Level.TRACE, "Sent headers: noContentToSend=" + noContentToSend);
         if (noContentToSend) {
             WriteFinishedEvent e = new WriteFinishedEvent (this);
             server.addEvent (e);
