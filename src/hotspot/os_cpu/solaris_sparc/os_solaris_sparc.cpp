@@ -439,8 +439,12 @@ JVM_handle_solaris_signal(int sig, siginfo_t* info, void* ucVoid,
     }
 
 
-    if (thread->thread_state() == _thread_in_vm) {
+    if (thread->thread_state() == _thread_in_vm ||
+        thread->thread_state() == _thread_in_native) {
       if (sig == SIGBUS && thread->doing_unsafe_access()) {
+        if (UnsafeCopyMemory::contains_pc(pc)) {
+          npc = UnsafeCopyMemory::page_error_continue_pc(pc);
+        }
         stub = SharedRuntime::handle_unsafe_access(thread, npc);
       }
     }
@@ -479,7 +483,11 @@ JVM_handle_solaris_signal(int sig, siginfo_t* info, void* ucVoid,
         // Do not crash the VM in such a case.
         CodeBlob* cb = CodeCache::find_blob_unsafe(pc);
         CompiledMethod* nm = cb->as_compiled_method_or_null();
-        if (nm != NULL && nm->has_unsafe_access()) {
+        bool is_unsafe_arraycopy = (thread->doing_unsafe_access() && UnsafeCopyMemory::contains_pc(pc));
+        if ((nm != NULL && nm->has_unsafe_access()) || is_unsafe_arraycopy) {
+          if (is_unsafe_arraycopy) {
+            npc = UnsafeCopyMemory::page_error_continue_pc(pc);
+          }
           stub = SharedRuntime::handle_unsafe_access(thread, npc);
         }
       }

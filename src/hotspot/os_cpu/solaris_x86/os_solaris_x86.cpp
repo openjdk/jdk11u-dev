@@ -526,9 +526,13 @@ JVM_handle_solaris_signal(int sig, siginfo_t* info, void* ucVoid,
       stub = VM_Version::cpuinfo_cont_addr();
     }
 
-    if (thread->thread_state() == _thread_in_vm) {
+    if (thread->thread_state() == _thread_in_vm ||
+         thread->thread_state() == _thread_in_native) {
       if (sig == SIGBUS && info->si_code == BUS_OBJERR && thread->doing_unsafe_access()) {
         address next_pc = Assembler::locate_next_instruction(pc);
+        if (UnsafeCopyMemory::contains_pc(pc)) {
+          next_pc = UnsafeCopyMemory::page_error_continue_pc(pc);
+        }
         stub = SharedRuntime::handle_unsafe_access(thread, next_pc);
       }
     }
@@ -545,8 +549,12 @@ JVM_handle_solaris_signal(int sig, siginfo_t* info, void* ucVoid,
         CodeBlob* cb = CodeCache::find_blob_unsafe(pc);
         if (cb != NULL) {
           CompiledMethod* nm = cb->as_compiled_method_or_null();
-          if (nm != NULL && nm->has_unsafe_access()) {
+          bool is_unsafe_arraycopy = thread->doing_unsafe_access() && UnsafeCopyMemory::contains_pc(pc);
+          if ((nm != NULL && nm->has_unsafe_access()) || is_unsafe_arraycopy)) {
             address next_pc = Assembler::locate_next_instruction(pc);
+            if (is_unsafe_arraycopy) {
+              next_pc = UnsafeCopyMemory::page_error_continue_pc(pc);
+            }
             stub = SharedRuntime::handle_unsafe_access(thread, next_pc);
           }
         }

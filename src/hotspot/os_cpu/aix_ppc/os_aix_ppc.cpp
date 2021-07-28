@@ -461,9 +461,13 @@ JVM_handle_aix_signal(int sig, siginfo_t* info, void* ucVoid, int abort_if_unrec
         stub = pc + 4;  // continue with next instruction.
         goto run_stub;
       }
-      else if (thread->thread_state() == _thread_in_vm &&
+      else if ((thread->thread_state() == _thread_in_vm ||
+                thread->thread_state() == _thread_in_native) &&
                sig == SIGBUS && thread->doing_unsafe_access()) {
         address next_pc = pc + 4;
+        if (UnsafeCopyMemory::contains_pc(pc)) {
+          next_pc = UnsafeCopyMemory::page_error_continue_pc(pc);
+        }
         next_pc = SharedRuntime::handle_unsafe_access(thread, next_pc);
         os::Aix::ucontext_set_pc(uc, next_pc);
         return 1;

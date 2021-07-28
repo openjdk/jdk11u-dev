@@ -207,7 +207,8 @@ JVM_handle_linux_signal(int sig,
     /*if (thread->thread_state() == _thread_in_Java) {
       ShouldNotCallThis();
     }
-    else*/ if (thread->thread_state() == _thread_in_vm &&
+    else*/ if ((thread->thread_state() == _thread_in_vm ||
+               thread->thread_state() == _thread_in_native) &&
                sig == SIGBUS && thread->doing_unsafe_access()) {
       ShouldNotCallThis();
     }
