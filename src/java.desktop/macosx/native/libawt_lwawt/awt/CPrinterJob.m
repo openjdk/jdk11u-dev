@@ -358,7 +358,7 @@ static void nsPrintInfoToJavaPrinterJob(JNIEnv* env, NSPrintInfo* src, jobject d
     DECLARE_METHOD(jm_setCopiesAttribute, sjc_CPrinterJob, "setCopiesAttribute", "(I)V");
     DECLARE_METHOD(jm_setCollated, sjc_CPrinterJob, "setCollated", "(Z)V");
     DECLARE_METHOD(jm_setPageRangeAttribute, sjc_CPrinterJob, "setPageRangeAttribute", "(IIZ)V");
-    DELCARE_METHOD(jm_setPrintToFile, sjc_CPrinterJob, "setPrintToFile", "(Z)V");
+    DECLARE_METHOD(jm_setPrintToFile, sjc_CPrinterJob, "setPrintToFile", "(Z)V");
 
     NSPrintJobDispositionValue jobDisposition = [src jobDisposition];
     if (jobDisposition == NSPrintSaveJob) {
