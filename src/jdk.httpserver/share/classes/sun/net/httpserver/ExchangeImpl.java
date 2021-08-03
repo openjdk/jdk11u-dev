@@ -260,6 +260,7 @@ class ExchangeImpl {
                 o.setWrappedStream (new FixedLengthOutputStream (this, ros, contentLen));
             }
         }
+        // JDK-8266761 removes one line from JDK-8218554, here, but the latter is not backported.
         write (rspHdrs, tmpout);
         this.rspContentLen = contentLen;
         tmpout.flush() ;
