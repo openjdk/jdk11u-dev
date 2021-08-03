@@ -414,7 +414,7 @@ class DumpWriter : public StackObj {
   void write_internal(void* s, size_t len);
 
  public:
-  DumpWriter(const char* path);
+  DumpWriter(const char* path, bool overwrite);
   ~DumpWriter();
 
   void close();
@@ -443,8 +443,8 @@ class DumpWriter : public StackObj {
   void finish_dump_segment();
 };
 
-DumpWriter::DumpWriter(const char* path) : _fd(-1), _bytes_written(0), _pos(0),
-                                           _in_dump_segment(false), _error(NULL) {
+DumpWriter::DumpWriter(const char* path, bool overwrite) : _fd(-1), _bytes_written(0), _pos(0),
+                                                           _in_dump_segment(false), _error(NULL) {
   // try to allocate an I/O buffer of io_buffer_size. If there isn't
   // sufficient memory then reduce size until we can allocate something.
   _size = io_buffer_max_size;
@@ -458,7 +458,7 @@ DumpWriter::DumpWriter(const char* path) : _fd(-1), _bytes_written(0), _pos(0),
   if (_buffer == NULL) {
     set_error("Could not allocate buffer memory for heap dump");
   } else {
-    _fd = os::create_binary_file(path, false);    // don't replace existing file
+    _fd = os::create_binary_file(path, overwrite);    // don't replace existing file
 
     // if the open failed we record the error
     if (_fd < 0) {
@@ -1911,7 +1911,7 @@ void VM_HeapDumper::dump_stack_traces() {
 }
 
 // dump the heap to given path.
-int HeapDumper::dump(const char* path) {
+int HeapDumper::dump(const char* path, bool overwrite) {
   assert(path != NULL && strlen(path) > 0, "path missing");
 
   // print message in interactive case
@@ -1921,7 +1921,7 @@ int HeapDumper::dump(const char* path) {
   }
 
   // create the dump writer. If the file can be opened then bail
-  DumpWriter writer(path);
+  DumpWriter writer(path, overwrite);
   if (writer.error() != NULL) {
     set_error(writer.error());
     if (print_to_tty()) {
