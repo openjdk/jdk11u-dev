@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (C) 2021 THL A29 Limited, a Tencent company. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,24 +21,32 @@
  * questions.
  */
 
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Set;
+/**
+ * @test
+ * @bug 8268362
+ * @requires vm.compiler2.enabled & vm.debug
+ * @summary C2 using negative array length as index, using array allocation length.
+ *          This assertion is triggered by 8267904.
+ * @run main/othervm compiler.arraycopy.TestNegArrayLengthAsIndex2
+ */
 
-import jdk.javadoc.doclet.Doclet;
-import jdk.javadoc.doclet.Reporter;
-import jdk.javadoc.doclet.DocletEnvironment;
+package compiler.arraycopy;
+public class TestNegArrayLengthAsIndex2 {
 
-public class X {
-    public static boolean run(DocletEnvironment root) {
-        System.out.println("X.start");
-        return true;
+    public static void main(String[] args) throws Exception {
+        for (int i = 0; i < 10000; i++) {
+            foo();
+        }
     }
-    public Set<Doclet.Option> getSupportedOptions() {
-        return Collections.emptySet();
-    }
 
-    public void init(Locale locale, Reporter reporter) {
-        return;
+    static int foo() {
+        int minusOne = -1;
+        int[] a = null;
+        try {
+            a = new int[minusOne];
+        } catch (NegativeArraySizeException e) {
+           return 0;
+        }
+        return a[minusOne - 1];
     }
 }

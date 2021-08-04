@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2019, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -406,7 +406,7 @@ class DumpWriter : public StackObj {
   void write_internal(void* s, size_t len);
 
  public:
-  DumpWriter(const char* path);
+  DumpWriter(const char* path, bool overwrite);
   ~DumpWriter();
 
   void close();
@@ -444,7 +444,7 @@ class DumpWriter : public StackObj {
   void write_id(u4 x);
 };
 
-DumpWriter::DumpWriter(const char* path) {
+DumpWriter::DumpWriter(const char* path, bool overwrite) {
   // try to allocate an I/O buffer of io_buffer_size. If there isn't
   // sufficient memory then reduce size until we can allocate something.
   _size = io_buffer_size;
@@ -459,7 +459,7 @@ DumpWriter::DumpWriter(const char* path) {
   _error = NULL;
   _bytes_written = 0L;
   _dump_start = (jlong)-1;
-  _fd = os::create_binary_file(path, false);    // don't replace existing file
+  _fd = os::create_binary_file(path, overwrite);
 
   // if the open failed we record the error
   if (_fd < 0) {
@@ -683,6 +683,16 @@ class DumperSupport : AllStatic {
 
   // fixes up the current dump record and writes HPROF_HEAP_DUMP_END record
   static void end_of_dump(DumpWriter* writer);
+
+  static oop mask_dormant_archived_object(oop o) {
+    if (o != NULL && o->klass()->java_mirror() == NULL) {
+      // Ignore this object since the corresponding java mirror is not loaded.
+      // Might be a dormant archive object.
+      return NULL;
+    } else {
+      return o;
+    }
+  }
 };
 
 // write a header of the given type
@@ -758,6 +768,13 @@ void DumperSupport::dump_field_value(DumpWriter* writer, char type, oop obj, int
     case JVM_SIGNATURE_CLASS :
     case JVM_SIGNATURE_ARRAY : {
       oop o = obj->obj_field_access<ON_UNKNOWN_OOP_REF | AS_NO_KEEPALIVE>(offset);
+      if (o != NULL && log_is_enabled(Debug, cds, heap) && mask_dormant_archived_object(o) == NULL) {
+        ResourceMark rm;
+        log_debug(cds, heap)("skipped dormant archived object " INTPTR_FORMAT " (%s) referenced by " INTPTR_FORMAT " (%s)",
+                             p2i(o), o->klass()->external_name(),
+                             p2i(obj), obj->klass()->external_name());
+      }
+      o = mask_dormant_archived_object(o);
       assert(oopDesc::is_oop_or_null(o), "Expected an oop or NULL at " PTR_FORMAT, p2i(o));
       writer->write_objectID(o);
       break;
@@ -955,11 +972,6 @@ void DumperSupport::dump_instance_field_descriptors(DumpWriter* writer, Klass* k
 // creates HPROF_GC_INSTANCE_DUMP record for the given object
 void DumperSupport::dump_instance(DumpWriter* writer, oop o) {
   Klass* k = o->klass();
-  if (k->java_mirror() == NULL) {
-    // Ignoring this object since the corresponding java mirror is not loaded.
-    // Might be a dormant archive object.
-    return;
-  }
 
   writer->write_u1(HPROF_GC_INSTANCE_DUMP);
   writer->write_objectID(o);
@@ -1145,6 +1157,13 @@ void DumperSupport::dump_object_array(DumpWriter* writer, objArrayOop array) {
   // [id]* elements
   for (int index = 0; index < length; index++) {
     oop o = array->obj_at(index);
+    if (o != NULL && log_is_enabled(Debug, cds, heap) && mask_dormant_archived_object(o) == NULL) {
+      ResourceMark rm;
+      log_debug(cds, heap)("skipped dormant archived object " INTPTR_FORMAT " (%s) referenced by " INTPTR_FORMAT " (%s)",
+                           p2i(o), o->klass()->external_name(),
+                           p2i(array), array->klass()->external_name());
+    }
+    o = mask_dormant_archived_object(o);
     writer->write_objectID(o);
   }
 }
@@ -1422,6 +1441,11 @@ void HeapObjectDumper::do_object(oop o) {
     if (!java_lang_Class::is_primitive(o)) {
       return;
     }
+  }
+
+  if (DumperSupport::mask_dormant_archived_object(o) == NULL) {
+    log_debug(cds, heap)("skipped dormant archived object " INTPTR_FORMAT " (%s)", p2i(o), o->klass()->external_name());
+    return;
   }
 
   if (o->is_instance()) {
@@ -1935,7 +1959,7 @@ void VM_HeapDumper::dump_stack_traces() {
 }
 
 // dump the heap to given path.
-int HeapDumper::dump(const char* path) {
+int HeapDumper::dump(const char* path, bool overwrite) {
   assert(path != NULL && strlen(path) > 0, "path missing");
 
   // print message in interactive case
@@ -1945,7 +1969,7 @@ int HeapDumper::dump(const char* path) {
   }
 
   // create the dump writer. If the file can be opened then bail
-  DumpWriter writer(path);
+  DumpWriter writer(path, overwrite);
   if (!writer.is_open()) {
     set_error(writer.error());
     if (print_to_tty()) {
