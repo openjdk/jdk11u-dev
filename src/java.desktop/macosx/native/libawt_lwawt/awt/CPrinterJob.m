@@ -371,12 +371,15 @@ static void nsPrintInfoToJavaPrinterJob(JNIEnv* env, NSPrintInfo* src, jobject d
 
     if (src.jobDisposition == NSPrintSaveJob) {
         (*env)->CallVoidMethod(env, dstPrinterJob, jm_setPrintToFile, true);
+        CHECK_EXCEPTION();
         NSURL *url = [printingDictionary objectForKey:NSPrintJobSavingURL];
         NSString *nsStr = [url absoluteString];
-        jstring str = JNFNSToJavaString(env, nsStr);
+        jstring str = NSStringToJavaString(env, nsStr);
         (*env)->CallVoidMethod(env, dstPrinterJob, jm_setDestinationFile, str);
+        CHECK_EXCEPTION();
     } else {
         (*env)->CallVoidMethod(env, dstPrinterJob, jm_setPrintToFile, false);
+        CHECK_EXCEPTION();
     }
 
     NSNumber* nsCopies = [printingDictionary objectForKey:NSPrintCopies];
