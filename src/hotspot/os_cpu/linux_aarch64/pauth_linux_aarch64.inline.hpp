@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, Arm Limited. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -19,26 +19,24 @@
  * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
  * or visit www.oracle.com if you need additional information or have any
  * questions.
+ *
  */
 
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Set;
+#ifndef OS_CPU_LINUX_AARCH64_PAUTH_LINUX_AARCH64_INLINE_HPP
+#define OS_CPU_LINUX_AARCH64_PAUTH_LINUX_AARCH64_INLINE_HPP
 
-import jdk.javadoc.doclet.Doclet;
-import jdk.javadoc.doclet.Reporter;
-import jdk.javadoc.doclet.DocletEnvironment;
+// Only the PAC instructions in the NOP space can be used. This ensures the
+// binaries work on systems without PAC. Write these instructions using their
+// alternate "hint" instructions to ensure older compilers can still be used.
 
-public class X {
-    public static boolean run(DocletEnvironment root) {
-        System.out.println("X.start");
-        return true;
-    }
-    public Set<Doclet.Option> getSupportedOptions() {
-        return Collections.emptySet();
-    }
+#define XPACLRI "hint #0x7;"
 
-    public void init(Locale locale, Reporter reporter) {
-        return;
-    }
+inline address pauth_strip_pointer(address ptr) {
+  register address result __asm__("x30") = ptr;
+  asm (XPACLRI : "+r"(result));
+  return result;
 }
+
+#undef XPACLRI
+
+#endif // OS_CPU_LINUX_AARCH64_PAUTH_LINUX_AARCH64_INLINE_HPP

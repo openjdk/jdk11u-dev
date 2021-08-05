@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, Arm Limited. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,15 +22,14 @@
  *
  */
 
-#include "precompiled.hpp"
-#include "oops/access.inline.hpp"
-#include "oops/accessDecorators.hpp"
+#ifndef CPU_AARCH64_PAUTH_AARCH64_INLINE_HPP
+#define CPU_AARCH64_PAUTH_AARCH64_INLINE_HPP
 
-// This macro allows instantiating selected accesses to be usable from the
-// access.hpp file, to break dependencies to the access.inline.hpp file.
-#define INSTANTIATE_HPP_ACCESS(decorators, T, barrier_type)  \
-  template struct RuntimeDispatch<DecoratorFixup<decorators>::value, T, barrier_type>
+#include OS_CPU_HEADER_INLINE(pauth)
 
-namespace AccessInternal {
-  INSTANTIATE_HPP_ACCESS(INTERNAL_EMPTY, oop, BARRIER_EQUALS);
+inline bool pauth_ptr_is_raw(address ptr) {
+  // Confirm none of the high bits are set in the pointer.
+  return ptr == pauth_strip_pointer(ptr);
 }
+
+#endif // CPU_AARCH64_PAUTH_AARCH64_INLINE_HPP
