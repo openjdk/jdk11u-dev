@@ -486,10 +486,11 @@ static void javaPrinterJobToNSPrintInfo(JNIEnv* env, jobject srcPrinterJob, jobj
         javaPageFormatToNSPrintInfo(env, NULL, page, dst);
     }
 
-    jstring dest = JNFCallObjectMethod(env, srcPrinterJob, jm_getDestinationFile);
+    jstring dest = (*env)->CallObjectMethod(env, srcPrinterJob, jm_getDestinationFile);
+    CHECK_EXCEPTION();
     if (dest != NULL) {
        [dst setJobDisposition:NSPrintSaveJob];
-       NSString *nsDestStr = JNFJavaToNSString(env, dest);
+       NSString *nsDestStr = JavaStringToNSString(env, dest);
        NSURL *nsURL = [NSURL fileURLWithPath:nsDestStr isDirectory:NO];
        [printingDictionary setObject:nsURL forKey:NSPrintJobSavingURL];
     } else {
