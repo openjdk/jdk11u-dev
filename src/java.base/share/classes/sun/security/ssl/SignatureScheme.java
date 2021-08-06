@@ -468,13 +468,15 @@ enum SignatureScheme {
 
         PrivateKey signingKey = x509Possession.popPrivateKey;
         String keyAlgorithm = signingKey.getAlgorithm();
-        int keySize;
+        int keySize = Integer.MAX_VALUE;
         // Only need to check RSA algorithm at present.
         if (keyAlgorithm.equalsIgnoreCase("RSA") ||
                 keyAlgorithm.equalsIgnoreCase("RSASSA-PSS")) {
             keySize = KeyUtil.getKeySize(signingKey);
-        } else {
-            keySize = Integer.MAX_VALUE;
+            if (keySize  == -1) {
+                // Allow to process custom RSA private key implementation
+                keySize = Integer.MAX_VALUE;
+            }
         }
         for (SignatureScheme ss : schemes) {
             if (ss.isAvailable && (keySize >= ss.minimalKeySize) &&
