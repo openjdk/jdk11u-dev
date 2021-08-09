@@ -23,6 +23,7 @@
  */
 
 #include <stdlib.h>
+#include <stdint.h>
 #include "immediate_aarch64.hpp"
 
 // there are at most 2^13 possible logical immediate encodings

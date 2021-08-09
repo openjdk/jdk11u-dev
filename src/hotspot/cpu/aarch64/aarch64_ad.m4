@@ -263,7 +263,10 @@ UBFIZ_INSN(L, L, ubfiz,  63, long, exact_log2_long, immL_bitmask)
 UBFIZ_INSN(I, L, ubfizw, 31, int,  exact_log2,      immI_bitmask,           ConvI2L)
 UBFIZ_INSN(L, I, ubfiz,  63, long, exact_log2_long, immL_positive_bitmaskI, ConvL2I)
 
-define(`BFX1_INSN', `// If there is a convert $1 to $2 block between and And$1 and a LShift$2, we can also match ubfiz
+define(`BFX1_INSN', `// This pattern is automatically generated from aarch64_ad.m4
+// DO NOT EDIT ANYTHING IN THIS SECTION OF THE FILE
+
+// If there is a convert $1 to $2 block between and And$1 and a LShift$2, we can also match ubfiz
 instruct ubfiz$1Conv$3$9(iReg$2NoSp dst, iReg$1`'ORL2I($1) src, immI lshift, $8 mask)
 %{
   match(Set dst (LShift$2 (Conv$3 (And$1 src mask)) lshift));
