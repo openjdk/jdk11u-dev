@@ -132,14 +132,14 @@ void entry(CodeBuffer *cb) {
     __ subs(r4, r1, 698u);                             //        subs        x4, x1, #698
 
 // LogicalImmOp
-    __ andw(r28, r19, 4294709247ul);                   //        and        w28, w19, #0xfffc0fff
-    __ orrw(r27, r5, 536870910ul);                     //        orr        w27, w5, #0x1ffffffe
-    __ eorw(r30, r20, 4294840319ul);                   //        eor        w30, w20, #0xfffe0fff
-    __ andsw(r22, r26, 4294959615ul);                  //        ands        w22, w26, #0xffffe1ff
-    __ andr(r5, r7, 4194300ul);                        //        and        x5, x7, #0x3ffffc
-    __ orr(r13, r7, 18014398509481728ul);              //        orr        x13, x7, #0x3fffffffffff00
-    __ eor(r7, r9, 18442240474082197503ul);            //        eor        x7, x9, #0xfff0000000003fff
-    __ ands(r3, r0, 18374686479671656447ul);           //        ands        x3, x0, #0xff00000000007fff
+    __ andw(r28, r19, 4294709247ull);                  //        and        w28, w19, #0xfffc0fff
+    __ orrw(r27, r5, 536870910ull);                    //        orr        w27, w5, #0x1ffffffe
+    __ eorw(r30, r20, 4294840319ull);                  //        eor        w30, w20, #0xfffe0fff
+    __ andsw(r22, r26, 4294959615ull);                 //        ands        w22, w26, #0xffffe1ff
+    __ andr(r5, r7, 4194300ull);                       //        and        x5, x7, #0x3ffffc
+    __ orr(r13, r7, 18014398509481728ull);             //        orr        x13, x7, #0x3fffffffffff00
+    __ eor(r7, r9, 18442240474082197503ull);           //        eor        x7, x9, #0xfff0000000003fff
+    __ ands(r3, r0, 18374686479671656447ull);          //        ands        x3, x0, #0xff00000000007fff
 
 // AbsOp
     __ b(__ pc());                                     //        b        .
