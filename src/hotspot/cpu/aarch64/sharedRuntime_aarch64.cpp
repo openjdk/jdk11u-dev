@@ -1498,7 +1498,8 @@ nmethod* SharedRuntime::generate_native_wrapper(MacroAssembler* masm,
 
   // Generate stack overflow check
   if (UseStackBanging) {
-    __ bang_stack_with_offset(JavaThread::stack_shadow_zone_size());
+    assert(JavaThread::stack_shadow_zone_size() == (unsigned long)(int)JavaThread::stack_shadow_zone_size(), "must be same");
+    __ bang_stack_with_offset((int)JavaThread::stack_shadow_zone_size());
   } else {
     Unimplemented();
   }
@@ -2446,7 +2447,7 @@ void SharedRuntime::generate_deopt_blob() {
   __ sub(sp, sp, r19);
 
   // Push interpreter frames in a loop
-  __ mov(rscratch1, (address)0xDEADDEAD);        // Make a recognizable pattern
+  __ mov(rscratch1, (uint64_t)0xDEADDEAD);        // Make a recognizable pattern
   __ mov(rscratch2, rscratch1);
   Label loop;
   __ bind(loop);
