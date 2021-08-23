@@ -452,7 +452,7 @@ class ArgumentPusher : public SignatureIterator {
     iterate();
   }
 
-  inline void do_object() {       _jca->push_oop(next_object()); }
+  inline void do_object() { _jca->push_oop(next_object()); }
 
   inline void do_bool()   { if (!is_return_type()) _jca->push_int((jboolean) next_arg(T_BOOLEAN)); }
   inline void do_char()   { if (!is_return_type()) _jca->push_int((jchar) next_arg(T_CHAR)); }
@@ -467,7 +467,7 @@ class ArgumentPusher : public SignatureIterator {
   inline void do_object(int begin, int end) { if (!is_return_type()) do_object(); }
   inline void do_array(int begin, int end)  { if (!is_return_type()) do_object(); }
 
-  inline void do_void()                     { }
+  inline void do_void() { }
 };
 
 
