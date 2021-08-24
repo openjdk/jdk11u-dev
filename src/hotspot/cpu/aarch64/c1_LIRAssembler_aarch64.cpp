@@ -2042,7 +2042,7 @@ void LIR_Assembler::comp_fl2i(LIR_Code code, LIR_Opr left, LIR_Opr right, LIR_Op
   } else if (code == lir_cmp_l2i) {
     Label done;
     __ cmp(left->as_register_lo(), right->as_register_lo());
-    __ mov(dst->as_register(), (u_int64_t)-1L);
+    __ mov(dst->as_register(), (uint64_t)-1L);
     __ br(Assembler::LT, done);
     __ csinc(dst->as_register(), zr, zr, Assembler::EQ);
     __ bind(done);
@@ -2851,7 +2851,7 @@ void LIR_Assembler::emit_profile_type(LIR_OpProfileType* op) {
         }
 #endif
         // first time here. Set profile type.
-        __ ldr(tmp, mdo_addr);
+        __ str(tmp, mdo_addr);
       } else {
         assert(ciTypeEntries::valid_ciklass(current_klass) != NULL &&
                ciTypeEntries::valid_ciklass(current_klass) != exact_klass, "inconsistent");
