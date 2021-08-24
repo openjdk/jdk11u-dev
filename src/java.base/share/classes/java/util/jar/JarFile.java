@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -153,6 +153,8 @@ class JarFile extends ZipFile {
     private static final boolean MULTI_RELEASE_ENABLED;
     private static final boolean MULTI_RELEASE_FORCED;
     private static final ThreadLocal<Boolean> isInitializing = new ThreadLocal<>();
+    // The maximum size of array to allocate. Some VMs reserve some header words in an array.
+    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 
     private SoftReference<Manifest> manRef;
     private JarEntry manEntry;
@@ -420,7 +422,13 @@ class JarFile extends ZipFile {
                 if (verify) {
                     byte[] b = getBytes(manEntry);
                     if (!jvInitialized) {
-                        jv = new JarVerifier(b);
+                        if (JUZFA.getManifestNum(this) == 1) {
+                            jv = new JarVerifier(manEntry.getName(), b);
+                        } else {
+                            if (JarVerifier.debug != null) {
+                                JarVerifier.debug.println("Multiple MANIFEST.MF found. Treat JAR file as unsigned");
+                            }
+                        }
                     }
                     man = new Manifest(jv, new ByteArrayInputStream(b));
                 } else {
@@ -798,7 +806,11 @@ class JarFile extends ZipFile {
      */
     private byte[] getBytes(ZipEntry ze) throws IOException {
         try (InputStream is = super.getInputStream(ze)) {
-            int len = (int)ze.getSize();
+            long uncompressedSize = ze.getSize();
+            if (uncompressedSize > MAX_ARRAY_SIZE) {
+                throw new OutOfMemoryError("Required array size too large");
+            }
+            int len = (int)uncompressedSize;
             int bytesRead;
             byte[] b;
             // trust specified entry sizes when reasonably small
