@@ -415,7 +415,7 @@ class ArgumentPusher : public SignatureIterator {
   jlong _argument;
   bool _pushed;
 
-  jlong next_arg(BasicType expectedType) {
+  jlong next_arg() {
     guarantee(!_pushed, "one argument");
     _pushed = true;
     return _argument;
@@ -444,7 +444,7 @@ class ArgumentPusher : public SignatureIterator {
   }
 
  public:
-  ArgumentPusher(Symbol* signature, JavaCallArguments*  jca, jlong argument, bool is_static) : SignatureIterator(signature) {
+  ArgumentPusher(Symbol* signature, JavaCallArguments*  jca, jlong argument) : SignatureIterator(signature) {
     this->_return_type = T_ILLEGAL;
     _jca = jca;
     _argument = argument;
@@ -454,13 +454,13 @@ class ArgumentPusher : public SignatureIterator {
 
   inline void do_object() { _jca->push_oop(next_object()); }
 
-  inline void do_bool()   { if (!is_return_type()) _jca->push_int((jboolean) next_arg(T_BOOLEAN)); }
-  inline void do_char()   { if (!is_return_type()) _jca->push_int((jchar) next_arg(T_CHAR)); }
-  inline void do_short()  { if (!is_return_type()) _jca->push_int((jint)  next_arg(T_SHORT)); }
-  inline void do_byte()   { if (!is_return_type()) _jca->push_int((jbyte) next_arg(T_BYTE)); }
-  inline void do_int()    { if (!is_return_type()) _jca->push_int((jint)  next_arg(T_INT)); }
+  inline void do_bool()   { if (!is_return_type()) _jca->push_int((jboolean) next_arg()); }
+  inline void do_char()   { if (!is_return_type()) _jca->push_int((jchar) next_arg()); }
+  inline void do_short()  { if (!is_return_type()) _jca->push_int((jint)  next_arg()); }
+  inline void do_byte()   { if (!is_return_type()) _jca->push_int((jbyte) next_arg()); }
+  inline void do_int()    { if (!is_return_type()) _jca->push_int((jint)  next_arg()); }
 
-  inline void do_long()   { if (!is_return_type()) _jca->push_long((jlong) next_arg(T_LONG)); }
+  inline void do_long()   { if (!is_return_type()) _jca->push_long((jlong) next_arg()); }
   inline void do_float()  { if (!is_return_type()) _jca->push_float(next_float()); }
   inline void do_double() { if (!is_return_type()) _jca->push_double(next_double()); }
 
@@ -482,19 +482,20 @@ JRT_ENTRY(jlong, JVMCIRuntime::invoke_static_method_one_arg(JavaThread* thread, 
 
   Symbol* signature = mh->signature();
   JavaCallArguments jca(mh->size_of_parameters());
-  ArgumentPusher jap(signature, &jca, argument, mh->is_static());
-  JavaValue result(jap.get_ret_type());
+  ArgumentPusher jap(signature, &jca, argument);
+  BasicType return_type = jap.get_ret_type();
+  JavaValue result(return_type);
   JavaCalls::call(&result, mh, &jca, CHECK_0);
 
-  if (jap.get_ret_type() == T_VOID) {
+  if (return_type == T_VOID) {
     return 0;
-  } else if (jap.get_ret_type() == T_OBJECT || jap.get_ret_type() == T_ARRAY) {
+  } else if (return_type == T_OBJECT || return_type == T_ARRAY) {
     thread->set_vm_result((oop) result.get_jobject());
     return 0;
   } else {
     jvalue *value = (jvalue *) result.get_value_addr();
     // Narrow the value down if required (Important on big endian machines)
-    switch (jap.get_ret_type()) {
+    switch (return_type) {
       case T_BOOLEAN:
         return (jboolean) value->i;
       case T_BYTE:
@@ -504,15 +505,13 @@ JRT_ENTRY(jlong, JVMCIRuntime::invoke_static_method_one_arg(JavaThread* thread, 
       case T_SHORT:
         return (jshort) value->i;
       case T_INT:
+      case T_FLOAT:
         return value->i;
       case T_LONG:
-        return value->j;
-      case T_FLOAT:
-        return value->f;
       case T_DOUBLE:
-        return value->d;
+        return value->j;
       default:
-        ShouldNotReachHere();
+        fatal("Unexpected type %s", type2name(return_type));
         return 0;
     }
   }
