@@ -23,6 +23,7 @@
 
 /* @test
  * @bug 8014499 8219804
+ * @library /test/lib
  * @summary Test for interference when two sockets are bound to the same
  *          port but joined to different multicast groups
  * @run main Promiscuous
