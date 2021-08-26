@@ -41,23 +41,21 @@
 //  }
 //
 
+class outputStream;
+
 class HeapDumper : public StackObj {
  private:
   char* _error;
-  bool _print_to_tty;
   bool _gc_before_heap_dump;
   bool _oome;
   elapsedTimer _t;
 
-  HeapDumper(bool gc_before_heap_dump, bool print_to_tty, bool oome) :
-    _gc_before_heap_dump(gc_before_heap_dump), _error(NULL), _print_to_tty(print_to_tty), _oome(oome) { }
+  HeapDumper(bool gc_before_heap_dump, bool oome) :
+    _gc_before_heap_dump(gc_before_heap_dump), _error(NULL), _oome(oome) { }
 
   // string representation of error
   char* error() const                   { return _error; }
   void set_error(char const* error);
-
-  // indicates if progress messages can be sent to tty
-  bool print_to_tty() const             { return _print_to_tty; }
 
   // internal timer.
   elapsedTimer* timer()                 { return &_t; }
@@ -66,7 +64,7 @@ class HeapDumper : public StackObj {
 
  public:
   HeapDumper(bool gc_before_heap_dump) :
-    _gc_before_heap_dump(gc_before_heap_dump), _error(NULL), _print_to_tty(false), _oome(false) { }
+    _gc_before_heap_dump(gc_before_heap_dump), _error(NULL), _oome(false) { }
 
   ~HeapDumper();
 
