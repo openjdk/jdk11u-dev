@@ -117,7 +117,7 @@ yum_help() {
     devkit)
       PKGHANDLER_COMMAND="sudo yum groupinstall \"Development Tools\"" ;;
     openjdk)
-      PKGHANDLER_COMMAND="sudo yum install java-1.8.0-openjdk-devel" ;;
+      PKGHANDLER_COMMAND="sudo yum install java-11-openjdk-devel" ;;
     alsa)
       PKGHANDLER_COMMAND="sudo yum install alsa-lib-devel" ;;
     cups)
