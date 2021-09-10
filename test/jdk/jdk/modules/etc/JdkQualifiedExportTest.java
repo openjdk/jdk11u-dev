@@ -71,9 +71,9 @@ public class JdkQualifiedExportTest {
     static Set<String> KNOWN_EXCEPTIONS =
         Set.of("jdk.internal.vm.ci/jdk.vm.ci.services",
                "jdk.internal.vm.ci/jdk.vm.ci.runtime",
-               "jdk.internal.vm.ci/jdk.vm.ci.code",
                "jdk.internal.vm.ci/jdk.vm.ci.hotspot",
                "jdk.internal.vm.ci/jdk.vm.ci.meta",
+               "jdk.internal.vm.ci/jdk.vm.ci.code",
                "jdk.jsobject/jdk.internal.netscape.javascript.spi");
 
     static void checkExports(ModuleDescriptor md) {
