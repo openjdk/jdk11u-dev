@@ -250,7 +250,7 @@ public final class CFontManager extends SunFontManager {
         if (family != null) return family;
 
         if (FontUtilities.debugFonts()) {
-            FontUtilities.logSevere(
+            FontUtilities.getLogger().severe(
                 "The fonts \"" + realName + "\" and \"" + fallbackName +
                 "\" are not available for the Java logical font \"" + logicalName +
                 "\", which may have unexpected appearance or behavior. Re-enable the \""+
@@ -266,7 +266,7 @@ public final class CFontManager extends SunFontManager {
         family = FontFamily.getFamily(fallbackName);
         if (family != null){
             if (FontUtilities.debugFonts()) {
-                FontUtilities.logWarning(
+                FontUtilities.getLogger().warning(
                     "The font \"" + realName + "\" is not available, so \"" + fallbackName +
                     "\" has been substituted, but may have unexpected appearance or behavor. Re-enable the \"" +
                     realName +"\" font to remove this warning.");
