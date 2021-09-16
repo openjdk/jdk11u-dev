@@ -656,7 +656,7 @@ sun/security/pkcs11/KeyStore/SecretKeysBasic.sh                 8209398 generic-
 security/infra/java/security/cert/CertPathValidator/certification/ActalisCA.java  8224768 generic-all
 security/infra/java/security/cert/CertPathValidator/certification/BuypassCA.java  8243543 generic-all
 security/infra/java/security/cert/CertPathValidator/certification/ComodoCA.java   8263059 generic-all
-security/infra/java/security/cert/CertPathValidator/certification/QuoVadisCA.java 8248899 generic-all
+security/infra/java/security/cert/CertPathValidator/certification/LetsEncryptCA.java 8270280 generic-all
 
 sun/security/smartcardio/TestChannel.java                       8039280 generic-all
 sun/security/smartcardio/TestConnect.java                       8039280 generic-all
@@ -817,7 +817,6 @@ javax/swing/JColorChooser/Test8051548.java 8233647 macosx-all
 javax/swing/plaf/synth/7158712/bug7158712.java 8238720 windows-all
 javax/swing/plaf/basic/BasicComboPopup/JComboBoxPopupLocation/JComboBoxPopupLocation.java 8238720 windows-all
 javax/swing/plaf/basic/BasicComboPopup/7072653/bug7072653.java 8238720 windows-all
-javax/swing/JTable/6263446/bug6263446.java 8238720 windows-all
 
 sanity/client/SwingSet/src/ToolTipDemoTest.java 8225012 windows-all,macosx-all
 
@@ -865,11 +864,7 @@ tools/jlink/JLinkReproducibleTest.java                          8258945 generic-
 
 # jdk_jdi
 
-com/sun/jdi/BasicJDWPConnectionTest.java                        8195703 generic-all
-
 com/sun/jdi/RepStep.java                                        8043571 generic-all
-
-com/sun/jdi/sde/SourceDebugExtensionTest.java                   8158066 windows-all
 
 com/sun/jdi/NashornPopFrameTest.java                            8187143 generic-all
 

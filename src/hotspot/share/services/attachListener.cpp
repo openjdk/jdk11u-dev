@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2021, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -44,7 +44,7 @@
 #include "utilities/debug.hpp"
 #include "utilities/formatBuffer.hpp"
 
-volatile bool AttachListener::_initialized;
+volatile AttachListenerState AttachListener::_state = AL_NOT_INITIALIZED;
 
 // Implementation of "properties" command.
 //
@@ -236,19 +236,7 @@ jint dump_heap(AttachOperation* op, outputStream* out) {
     // This helps reduces the amount of unreachable objects in the dump
     // and makes it easier to browse.
     HeapDumper dumper(live_objects_only /* request GC */);
-    int res = dumper.dump(op->arg(0));
-    if (res == 0) {
-      out->print_cr("Heap dump file created");
-    } else {
-      // heap dump failed
-      ResourceMark rm;
-      char* error = dumper.error_as_C_string();
-      if (error == NULL) {
-        out->print_cr("Dump failed - reason unknown");
-      } else {
-        out->print_cr("%s", error);
-      }
-    }
+    dumper.dump(op->arg(0), out);
   }
   return JNI_OK;
 }
@@ -258,9 +246,11 @@ jint dump_heap(AttachOperation* op, outputStream* out) {
 //
 // Input arguments :-
 //   arg0: "-live" or "-all"
+//   arg1: parallel thread number
 static jint heap_inspection(AttachOperation* op, outputStream* out) {
   bool live_objects_only = true;   // default is true to retain the behavior before this change is made
   const char* arg0 = op->arg(0);
+  uint parallel_thread_num = MAX2<uint>(1, (uint)os::initial_active_processor_count() * 3 / 8);
   if (arg0 != NULL && (strlen(arg0) > 0)) {
     if (strcmp(arg0, "-all") != 0 && strcmp(arg0, "-live") != 0) {
       out->print_cr("Invalid argument to inspectheap operation: %s", arg0);
@@ -268,7 +258,18 @@ static jint heap_inspection(AttachOperation* op, outputStream* out) {
     }
     live_objects_only = strcmp(arg0, "-live") == 0;
   }
-  VM_GC_HeapInspection heapop(out, live_objects_only /* request full gc */);
+
+  const char* num_str = op->arg(1);
+  if (num_str != NULL && num_str[0] != '\0') {
+    uintx num;
+    if (!Arguments::parse_uintx(num_str, &num, 0)) {
+      out->print_cr("Invalid parallel thread number: [%s]", num_str);
+      return JNI_ERR;
+    }
+    parallel_thread_num = num == 0 ? parallel_thread_num : (uint)num;
+  }
+
+  VM_GC_HeapInspection heapop(out, live_objects_only /* request full gc */, parallel_thread_num);
   VMThread::execute(&heapop);
   return JNI_OK;
 }
@@ -348,6 +349,7 @@ static void attach_listener_thread_entry(JavaThread* thread, TRAPS) {
          "Should already be setup");
 
   if (AttachListener::pd_init() != 0) {
+    AttachListener::set_state(AL_NOT_INITIALIZED);
     return;
   }
   AttachListener::set_initialized();
@@ -355,6 +357,7 @@ static void attach_listener_thread_entry(JavaThread* thread, TRAPS) {
   for (;;) {
     AttachOperation* op = AttachListener::dequeue();
     if (op == NULL) {
+      AttachListener::set_state(AL_NOT_INITIALIZED);
       return;   // dequeue failed or shutdown
     }
 
@@ -398,6 +401,8 @@ static void attach_listener_thread_entry(JavaThread* thread, TRAPS) {
     // operation complete - send result and output to client
     op->complete(res, &st);
   }
+
+  ShouldNotReachHere();
 }
 
 bool AttachListener::has_init_error(TRAPS) {
@@ -421,6 +426,7 @@ void AttachListener::init() {
   const char thread_name[] = "Attach Listener";
   Handle string = java_lang_String::create_from_str(thread_name, THREAD);
   if (has_init_error(THREAD)) {
+    set_state(AL_NOT_INITIALIZED);
     return;
   }
 
@@ -432,6 +438,7 @@ void AttachListener::init() {
                        string,
                        THREAD);
   if (has_init_error(THREAD)) {
+    set_state(AL_NOT_INITIALIZED);
     return;
   }
 
@@ -445,6 +452,7 @@ void AttachListener::init() {
                         thread_oop,
                         THREAD);
   if (has_init_error(THREAD)) {
+    set_state(AL_NOT_INITIALIZED);
     return;
   }
 
