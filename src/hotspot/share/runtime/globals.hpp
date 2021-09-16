@@ -1825,8 +1825,7 @@ define_pd_global(uint64_t,MaxRAM,                    1ULL*G);
           range(1*M, 3*G)                                                   \
                                                                             \
   diagnostic(bool, PrintMetaspaceStatisticsAtExit, false,                   \
-                  "Print metaspace statistics upon VM exit.")               \
-                                                                            \
+          "Print metaspace statistics upon VM exit.")                       \
                                                                             \
   manageable(uintx, MinHeapFreeRatio, 40,                                   \
           "The minimum percentage of heap free after GC to avoid expansion."\
