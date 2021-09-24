@@ -635,14 +635,14 @@ void MacroAssembler::ghash_processBlocks_wide(address field_polynomial, Register
     // Generate fully-unrolled multiply-reduce in two stages.
 
     (new GHASHMultiplyGenerator(this, unrolls,
-                           /*result_lo*/v5, /*result_hi*/v4, /*data*/v2,
-                           Hprime, a1_xor_a0, p, vzr,
+                                /*result_lo*/v5, /*result_hi*/v4, /*data*/v2,
+                                Hprime, a1_xor_a0, p, vzr,
                                 /*temps*/v1, v3, /* reuse b*/v2))->unroll();
 
     // NB: GHASHReduceGenerator also loads the next #unrolls blocks of
     // data into v0, v0+ofs, the current state.
     (new GHASHReduceGenerator (this, unrolls,
-                          /*result*/v0, /*lo*/v5, /*hi*/v4, p, vzr,
+                               /*result*/v0, /*lo*/v5, /*hi*/v4, p, vzr,
                                /*data*/v2, /*temp*/v3))->unroll();
 
     sub(blocks, blocks, unrolls);
