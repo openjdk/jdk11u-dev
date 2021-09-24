@@ -56,7 +56,7 @@ ciMethodData::ciMethodData(MethodData* md)
 // Check for entries that reference an unloaded method
 class PrepareExtraDataClosure : public CleanExtraDataClosure {
   MethodData*            _mdo;
-  uint64_t               _safepoint_counter;
+  int                    _safepoint_counter;
   GrowableArray<Method*> _uncached_methods;
 
 public:
