@@ -34,15 +34,18 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -116,6 +119,61 @@ public final class JarUtils {
         Path[] paths = Stream.of(input).map(Paths::get).toArray(Path[]::new);
         createJarFile(jarfile, dir, paths);
     }
+
+    /**
+     * Updates a JAR file.
+     *
+     * Equivalent to {@code jar uf <jarfile> -C <dir> file...}
+     *
+     * The input files are resolved against the given directory. Any input
+     * files that are directories are processed recursively.
+     */
+    public static void updateJarFile(Path jarfile, Path dir, Path... files)
+            throws IOException
+    {
+        List<Path> entries = findAllRegularFiles(dir, files);
+
+        Set<String> names = entries.stream()
+                                   .map(JarUtils::toJarEntryName)
+                                   .collect(Collectors.toSet());
+
+        Path tmpfile = Files.createTempFile("jar", "jar");
+
+        try (OutputStream out = Files.newOutputStream(tmpfile);
+             JarOutputStream jos = new JarOutputStream(out)) {
+            // copy existing entries from the original JAR file
+            try (JarFile jf = new JarFile(jarfile.toString())) {
+                Enumeration<JarEntry> jentries = jf.entries();
+                while (jentries.hasMoreElements()) {
+                    JarEntry jentry = jentries.nextElement();
+                    if (!names.contains(jentry.getName())) {
+                        jos.putNextEntry(copyEntry(jentry));
+                        jf.getInputStream(jentry).transferTo(jos);
+                    }
+                }
+            }
+
+            // add the new entries
+            for (Path entry : entries) {
+                String name = toJarEntryName(entry);
+                jos.putNextEntry(new JarEntry(name));
+                Files.copy(dir.resolve(entry), jos);
+            }
+        }
+
+        // replace the original JAR file
+        Files.move(tmpfile, jarfile, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    /**
+     * Updates a JAR file.
+     *
+     * Equivalent to {@code jar uf <jarfile> -C <dir> .}
+     */
+    public static void updateJarFile(Path jarfile, Path dir) throws IOException {
+        updateJarFile(jarfile, dir, Paths.get("."));
+    }
+
 
     /**
      * Create jar file with specified files. If a specified file does not exist,
@@ -288,5 +346,18 @@ public final class JarUtils {
             }
         }
         return entries;
+    }
+
+    private static JarEntry copyEntry(JarEntry e1) {
+        JarEntry e2 = new JarEntry(e1.getName());
+        e2.setMethod(e1.getMethod());
+        e2.setTime(e1.getTime());
+        e2.setComment(e1.getComment());
+        e2.setExtra(e1.getExtra());
+        if (e1.getMethod() == JarEntry.STORED) {
+            e2.setSize(e1.getSize());
+            e2.setCrc(e1.getCrc());
+        }
+        return e2;
     }
 }
