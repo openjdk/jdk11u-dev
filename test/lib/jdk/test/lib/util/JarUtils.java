@@ -49,7 +49,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Common library for various test jar file utility functions.
+ * This class consists exclusively of static utility methods that are useful
+ * for creating and manipulating JAR files.
  */
 public final class JarUtils {
     private JarUtils() { }
@@ -103,6 +104,15 @@ public final class JarUtils {
             throws IOException
     {
         createJarFile(jarfile, null, dir, files);
+    }
+
+    /**
+     * Creates a JAR file from the contents of a directory.
+     *
+     * Equivalent to {@code jar cf <jarfile> -C <dir> .}
+     */
+    public static void createJarFile(Path jarfile, Path dir) throws IOException {
+        createJarFile(jarfile, dir, Paths.get("."));
     }
 
     /**
@@ -174,11 +184,11 @@ public final class JarUtils {
         updateJarFile(jarfile, dir, Paths.get("."));
     }
 
-
     /**
      * Create jar file with specified files. If a specified file does not exist,
      * a new jar entry will be created with the file name itself as the content.
      */
+    @Deprecated
     public static void createJar(String dest, String... files)
             throws IOException {
         try (JarOutputStream jos = new JarOutputStream(
@@ -213,6 +223,7 @@ public final class JarUtils {
      *              the 1st group.
      * @throws IOException if there is an error
      */
+    @Deprecated
     public static void updateJar(String src, String dest, String... files)
             throws IOException {
         Map<String,Object> changes = new HashMap<>();
@@ -250,6 +261,7 @@ public final class JarUtils {
      *                Existing entries in src not a key is unmodified.
      * @throws IOException if there is an error
      */
+    @Deprecated
     public static void updateJar(String src, String dest,
                                  Map<String,Object> changes)
             throws IOException {
