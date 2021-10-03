@@ -157,7 +157,7 @@ public final class JarUtils {
                 while (jentries.hasMoreElements()) {
                     JarEntry jentry = jentries.nextElement();
                     if (!names.contains(jentry.getName())) {
-                        jos.putNextEntry(copyEntry(jentry));
+                        jos.putNextEntry(jentry);
                         jf.getInputStream(jentry).transferTo(jos);
                     }
                 }
@@ -358,18 +358,5 @@ public final class JarUtils {
             }
         }
         return entries;
-    }
-
-    private static JarEntry copyEntry(JarEntry e1) {
-        JarEntry e2 = new JarEntry(e1.getName());
-        e2.setMethod(e1.getMethod());
-        e2.setTime(e1.getTime());
-        e2.setComment(e1.getComment());
-        e2.setExtra(e1.getExtra());
-        if (e1.getMethod() == JarEntry.STORED) {
-            e2.setSize(e1.getSize());
-            e2.setCrc(e1.getCrc());
-        }
-        return e2;
     }
 }
