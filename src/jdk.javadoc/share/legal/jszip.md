@@ -1,4 +1,4 @@
-## JSZip v3.6.0
+## JSZip v3.7.1
 
 ### MIT License
 <pre>
