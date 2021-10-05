@@ -148,6 +148,8 @@ JVM_STRIPFLAGS ?= $(STRIPFLAGS)
 ################################################################################
 # Now set up the actual compilation of the main hotspot native library
 
+# Disable MSVC warning C4146 "unary minus operator applied to unsigned type,
+# result still unsigned". This operation is well-defined.
 $(eval $(call SetupNativeCompilation, BUILD_LIBJVM, \
     NAME := jvm, \
     TOOLCHAIN := TOOLCHAIN_LINK_CXX, \
