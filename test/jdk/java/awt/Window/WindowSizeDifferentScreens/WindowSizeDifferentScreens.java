@@ -105,9 +105,9 @@ public final class WindowSizeDifferentScreens {
     private static Window getTopLevel(String top) {
         switch (top) {
             case "window": return new Window(null);
-	    case "dialog": return new Dialog((Dialog) null);
-	    case "frame" : return new Frame();
-	    default: throw new IllegalArgumentException("Unexpected: " + top);
+            case "dialog": return new Dialog((Dialog) null);
+            case "frame" : return new Frame();
+            default: throw new IllegalArgumentException("Unexpected: " + top);
         }
     }
 }
