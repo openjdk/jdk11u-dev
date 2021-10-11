@@ -62,15 +62,15 @@ final class WRobotPeer implements RobotPeer {
     }
 
     @Override
-    public boolean useAbsoluteCoordinates() {
-        return true;
-    }
-
-    @Override
     public int [] getRGBPixels(Rectangle bounds) {
         int pixelArray[] = new int[bounds.width*bounds.height];
         getRGBPixels(bounds.x, bounds.y, bounds.width, bounds.height, pixelArray);
         return pixelArray;
+    }
+
+    @Override
+    public boolean useAbsoluteCoordinates() {
+        return true;
     }
 
     private native void getRGBPixels(int x, int y, int width, int height, int pixelArray[]);
