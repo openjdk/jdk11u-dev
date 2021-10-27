@@ -1292,17 +1292,14 @@ public:
   void ghash_multiply(FloatRegister result_lo, FloatRegister result_hi,
                       FloatRegister a, FloatRegister b, FloatRegister a1_xor_a0,
                       FloatRegister tmp1, FloatRegister tmp2, FloatRegister tmp3);
-  void ghash_multiply_wide(int index,
-                           FloatRegister result_lo, FloatRegister result_hi,
-                           FloatRegister a, FloatRegister b, FloatRegister a1_xor_a0,
-                           FloatRegister tmp1, FloatRegister tmp2, FloatRegister tmp3);
   void ghash_reduce(FloatRegister result, FloatRegister lo, FloatRegister hi,
-                    FloatRegister p, FloatRegister z, FloatRegister t1);
-  void ghash_reduce_wide(int index, FloatRegister result, FloatRegister lo, FloatRegister hi,
                     FloatRegister p, FloatRegister z, FloatRegister t1);
   void ghash_processBlocks_wide(address p, Register state, Register subkeyH,
                                 Register data, Register blocks, int unrolls);
-
+  void ghash_modmul (FloatRegister result,
+                     FloatRegister result_lo, FloatRegister result_hi, FloatRegister b,
+                     FloatRegister a, FloatRegister vzr, FloatRegister a1_xor_a0, FloatRegister p,
+                     FloatRegister t1, FloatRegister t2, FloatRegister t3);
 
   void aesenc_loadkeys(Register key, Register keylen);
   void aesecb_encrypt(Register from, Register to, Register keylen,
@@ -1312,11 +1309,7 @@ public:
 
   // ISB may be needed because of a safepoint
   void maybe_isb() { isb(); }
-  void ghash_modmul (FloatRegister result,
-                     FloatRegister result_lo, FloatRegister result_hi, FloatRegister b,
-                     FloatRegister a, FloatRegister vzr, FloatRegister a1_xor_a0, FloatRegister p,
-                     FloatRegister t1, FloatRegister t2, FloatRegister t3);
-  void ghash_load_wide(int index, Register data, FloatRegister result, FloatRegister state);
+
 private:
   // Return the effective address r + (r1 << ext) + offset.
   // Uses rscratch2.
