@@ -162,7 +162,7 @@ class Solaris {
   static int commit_memory_impl(char* addr, size_t bytes,
                                 size_t alignment_hint, bool exec);
   static char* mmap_chunk(char *addr, size_t size, int flags, int prot);
-  static char* anon_mmap(char* requested_addr, size_t bytes, size_t alignment_hint, bool fixed);
+  static char* anon_mmap(char* requested_addr, size_t bytes, size_t alignment_hint);
   static bool mpss_sanity_check(bool warn, size_t * page_size);
 
   // Workaround for 4352906. thr_stksegment sometimes returns

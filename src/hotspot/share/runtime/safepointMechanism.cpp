@@ -49,7 +49,7 @@ void SafepointMechanism::default_initialize() {
       // Polling page
       const size_t page_size = os::vm_page_size();
       const size_t allocation_size = 2 * page_size;
-      char* polling_page = os::reserve_memory(allocation_size, NULL, page_size);
+      char* polling_page = os::reserve_memory(allocation_size, page_size);
       os::commit_memory_or_exit(polling_page, allocation_size, false, "Unable to commit Safepoint polling page");
       MemTracker::record_virtual_memory_type((address)polling_page, mtSafepoint);
 
@@ -73,7 +73,7 @@ void SafepointMechanism::default_initialize() {
     _poll_disarmed_value = reinterpret_cast<void*>(poll_disarmed_value);
   } else {
     const size_t page_size = os::vm_page_size();
-    char* polling_page = os::reserve_memory(page_size, NULL, page_size);
+    char* polling_page = os::reserve_memory(page_size, page_size);
     os::commit_memory_or_exit(polling_page, page_size, false, "Unable to commit Safepoint polling page");
     os::protect_memory(polling_page, page_size, os::MEM_PROT_READ);
     MemTracker::record_virtual_memory_type((address)polling_page, mtSafepoint);
@@ -100,7 +100,7 @@ void SafepointMechanism::initialize_header(JavaThread* thread) {
 void SafepointMechanism::initialize_serialize_page() {
   if (!UseMembar) {
     const size_t page_size = os::vm_page_size();
-    char* serialize_page = os::reserve_memory(page_size, NULL, page_size);
+    char* serialize_page = os::reserve_memory(page_size, page_size);
     os::commit_memory_or_exit(serialize_page, page_size, false, "Unable to commit memory serialization page");
     log_info(os)("Memory Serialize Page address: " INTPTR_FORMAT, p2i(serialize_page));
     os::set_memory_serialize_page((address)(serialize_page));

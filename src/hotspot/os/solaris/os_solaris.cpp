@@ -2551,16 +2551,12 @@ char* os::Solaris::mmap_chunk(char *addr, size_t size, int flags, int prot) {
 }
 
 char* os::Solaris::anon_mmap(char* requested_addr, size_t bytes,
-                             size_t alignment_hint, bool fixed) {
+                             size_t alignment_hint) {
+  // MAP_FIXED is intentionally left out, to leave existing mappings intact.
   char* addr = requested_addr;
   int flags = MAP_PRIVATE | MAP_NORESERVE;
 
-  assert(!(fixed && (alignment_hint > 0)),
-         "alignment hint meaningless with fixed mmap");
-
-  if (fixed) {
-    flags |= MAP_FIXED;
-  } else if (alignment_hint > (size_t) vm_page_size()) {
+  if (alignment_hint > (size_t) vm_page_size()) {
     flags |= MAP_ALIGN;
     addr = (char*) alignment_hint;
   }
@@ -2571,13 +2567,9 @@ char* os::Solaris::anon_mmap(char* requested_addr, size_t bytes,
   return mmap_chunk(addr, bytes, flags, PROT_NONE);
 }
 
-char* os::pd_reserve_memory(size_t bytes, char* requested_addr,
-                            size_t alignment_hint) {
-  char* addr = Solaris::anon_mmap(requested_addr, bytes, alignment_hint,
-                                  (requested_addr != NULL));
+char* os::pd_reserve_memory(size_t bytes, size_t alignment_hint) {
+  char* addr = Solaris::anon_mmap(NULL /* addr */, bytes, alignment_hint);
 
-  guarantee(requested_addr == NULL || requested_addr == addr,
-            "OS failed to return requested mmap address.");
   return addr;
 }
 
@@ -2616,7 +2608,7 @@ char* os::pd_attempt_reserve_memory_at(size_t bytes, char* requested_addr) {
 
   // Since snv_84, Solaris attempts to honor the address hint - see 5003415.
   // Give it a try, if the kernel honors the hint we can return immediately.
-  char* addr = Solaris::anon_mmap(requested_addr, bytes, 0, false);
+  char* addr = Solaris::anon_mmap(requested_addr, bytes, 0);
 
   volatile int err = errno;
   if (addr == requested_addr) {
