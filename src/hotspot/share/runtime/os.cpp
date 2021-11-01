@@ -1742,7 +1742,9 @@ char* os::reserve_memory(size_t bytes, char* addr, size_t alignment_hint,
   char* result = pd_reserve_memory(bytes, addr, alignment_hint);
   if (result != NULL) {
     MemTracker::record_virtual_memory_reserve((address)result, bytes, CALLER_PC);
-    MemTracker::record_virtual_memory_type((address)result, flags);
+    if (flags != mtOther) {
+      MemTracker::record_virtual_memory_type((address)result, flags);
+    }
   }
 
   return result;
