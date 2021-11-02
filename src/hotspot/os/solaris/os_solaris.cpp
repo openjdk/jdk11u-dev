@@ -2573,7 +2573,7 @@ char* os::pd_reserve_memory(size_t bytes, size_t alignment_hint) {
   return addr;
 }
 
-char* os::pd_attempt_reserve_memory_at(size_t bytes, char* requested_addr, int file_desc) {
+char* os::pd_attempt_map_memory_to_file_at(size_t bytes, char* requested_addr, int file_desc) {
   assert(file_desc >= 0, "file_desc is not valid");
   char* result = pd_attempt_reserve_memory_at(bytes, requested_addr);
   if (result != NULL) {
