@@ -3055,7 +3055,7 @@ void os::pd_split_reserved_memory(char *base, size_t size, size_t split,
   if (size > 0) {
     release_memory(base, size);
     if (realloc) {
-      reserve_memory(split, base);
+      attempt_reserve_memory_at(split, base);
     }
     if (size != split) {
       attempt_reserve_memory_at(size - split, base + split);
