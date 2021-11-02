@@ -3109,7 +3109,7 @@ static char* map_or_reserve_memory_aligned(size_t size, size_t alignment, int fi
   return aligned_base;
 }
 
-char* os::reserve_memory_aligned(size_t size, bool exec, size_t alignment) {
+char* os::reserve_memory_aligned(size_t size, size_t alignment, bool exec) {
   // exec can be ignored
   return map_or_reserve_memory_aligned(size, alignment, -1 /* file_desc */);
 }
@@ -3118,7 +3118,7 @@ char* os::map_memory_to_file_aligned(size_t size, size_t alignment, int fd) {
   return map_or_reserve_memory_aligned(size, alignment, fd);
 }
 
-char* os::pd_reserve_memory(size_t bytes, size_t alignment_hint, bool exec) {
+char* os::pd_reserve_memory(size_t bytes, bool exec, size_t alignment_hint) {
   // Ignores alignment hint
   return pd_attempt_reserve_memory_at(bytes, NULL /* addr */, exec);
 }
