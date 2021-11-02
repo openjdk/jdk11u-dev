@@ -6355,7 +6355,7 @@ class StubGenerator: public StubCodeGenerator {
 
     // generate GHASH intrinsics code
     if (UseGHASHIntrinsics) {
-      if (UseAESGCMIntrinsics) {
+      if (UseAESCTRIntrinsics) {
         StubRoutines::_ghash_processBlocks = generate_ghash_processBlocks_wide();
       } else {
         StubRoutines::_ghash_processBlocks = generate_ghash_processBlocks();
@@ -6373,7 +6373,7 @@ class StubGenerator: public StubCodeGenerator {
       StubRoutines::_cipherBlockChaining_decryptAESCrypt = generate_cipherBlockChaining_decryptAESCrypt();
     }
 
-    if (UseAESGCMIntrinsics) {
+    if (UseAESCTRIntrinsics) {
       StubRoutines::_counterMode_AESCrypt = generate_counterMode_AESCrypt();
     }
 
