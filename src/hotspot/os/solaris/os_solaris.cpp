@@ -2530,7 +2530,7 @@ char *os::scan_pages(char *start, char* end, page_info* page_expected,
   return end;
 }
 
-bool os::pd_uncommit_memory(char* addr, size_t bytes) {
+bool os::pd_uncommit_memory(char* addr, size_t bytes, bool exec) {
   size_t size = bytes;
   // Map uncommitted pages PROT_NONE so we fail early if we touch an
   // uncommitted page. Otherwise, the read/write might succeed if we
@@ -2567,7 +2567,7 @@ char* os::Solaris::anon_mmap(char* requested_addr, size_t bytes,
   return mmap_chunk(addr, bytes, flags, PROT_NONE);
 }
 
-char* os::pd_reserve_memory(size_t bytes, size_t alignment_hint) {
+char* os::pd_reserve_memory(size_t bytes, bool exec, size_t alignment_hint) {
   char* addr = Solaris::anon_mmap(NULL /* addr */, bytes, alignment_hint);
 
   return addr;
@@ -2575,7 +2575,7 @@ char* os::pd_reserve_memory(size_t bytes, size_t alignment_hint) {
 
 char* os::pd_attempt_map_memory_to_file_at(size_t bytes, char* requested_addr, int file_desc) {
   assert(file_desc >= 0, "file_desc is not valid");
-  char* result = pd_attempt_reserve_memory_at(bytes, requested_addr);
+  char* result = pd_attempt_reserve_memory_at(bytes, requested_addr, !ExecMem);
   if (result != NULL) {
     if (replace_existing_mapping_with_file_mapping(result, bytes, file_desc) == NULL) {
       vm_exit_during_initialization(err_msg("Error in mapping Java heap at the given filesystem directory"));
@@ -2587,7 +2587,7 @@ char* os::pd_attempt_map_memory_to_file_at(size_t bytes, char* requested_addr, i
 // Reserve memory at an arbitrary address, only if that area is
 // available (and not reserved for something else).
 
-char* os::pd_attempt_reserve_memory_at(size_t bytes, char* requested_addr) {
+char* os::pd_attempt_reserve_memory_at(size_t bytes, char* requested_addr, bool exec) {
   const int max_tries = 10;
   char* base[max_tries];
   size_t size[max_tries];

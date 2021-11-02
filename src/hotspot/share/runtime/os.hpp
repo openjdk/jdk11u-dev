@@ -111,9 +111,9 @@ class os: AllStatic {
     _page_sizes[1] = 0; // sentinel
   }
 
-  static char*  pd_reserve_memory(size_t bytes, size_t alignment_hint);
+  static char*  pd_reserve_memory(size_t bytes, bool executable, size_t alignment_hint);
 
-  static char*  pd_attempt_reserve_memory_at(size_t bytes, char* addr);
+  static char*  pd_attempt_reserve_memory_at(size_t bytes, char* addr, bool executable);
 
   static void   pd_split_reserved_memory(char *base, size_t size,
                                       size_t split, bool realloc);
@@ -127,7 +127,7 @@ class os: AllStatic {
   static void   pd_commit_memory_or_exit(char* addr, size_t size,
                                          size_t alignment_hint,
                                          bool executable, const char* mesg);
-  static bool   pd_uncommit_memory(char* addr, size_t bytes);
+  static bool   pd_uncommit_memory(char* addr, size_t bytes, bool executable);
   static bool   pd_release_memory(char* addr, size_t bytes);
 
   static char*  pd_attempt_map_memory_to_file_at(size_t bytes, char* addr, int file_desc);
@@ -330,14 +330,14 @@ class os: AllStatic {
 
   // Reserves virtual memory.
   // alignment_hint - currently only used by AIX
-  static char*  reserve_memory(size_t bytes, size_t alignment_hint = 0, MEMFLAGS flags = mtOther);
+  static char*  reserve_memory(size_t bytes, bool executable = false, size_t alignment_hint = 0, MEMFLAGS flags = mtOther);
 
   // Reserves virtual memory that starts at an address that is aligned to 'alignment'.
-  static char*  reserve_memory_aligned(size_t size, size_t alignment);
+  static char*  reserve_memory_aligned(size_t size, size_t alignment, bool executable = false);
 
   // Attempts to reserve the virtual memory at [addr, addr + bytes).
   // Does not overwrite existing mappings.
-  static char*  attempt_reserve_memory_at(size_t bytes, char* addr);
+  static char*  attempt_reserve_memory_at(size_t bytes, char* addr, bool executable = false);
 
   static void   split_reserved_memory(char *base, size_t size,
                                       size_t split, bool realloc);
@@ -351,7 +351,7 @@ class os: AllStatic {
   static void   commit_memory_or_exit(char* addr, size_t size,
                                       size_t alignment_hint,
                                       bool executable, const char* mesg);
-  static bool   uncommit_memory(char* addr, size_t bytes);
+  static bool   uncommit_memory(char* addr, size_t bytes, bool executable = false);
   static bool   release_memory(char* addr, size_t bytes);
 
   // Touch memory pages that cover the memory range from start to end (exclusive)

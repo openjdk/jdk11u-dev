@@ -3375,7 +3375,7 @@ unsigned long* os::Linux::_numa_all_nodes;
 struct bitmask* os::Linux::_numa_all_nodes_ptr;
 struct bitmask* os::Linux::_numa_nodes_ptr;
 
-bool os::pd_uncommit_memory(char* addr, size_t size) {
+bool os::pd_uncommit_memory(char* addr, size_t size, bool exec) {
   uintptr_t res = (uintptr_t) ::mmap(addr, size, PROT_NONE,
                                      MAP_PRIVATE|MAP_FIXED|MAP_NORESERVE|MAP_ANONYMOUS, -1, 0);
   return res  != (uintptr_t) MAP_FAILED;
@@ -3622,7 +3622,7 @@ static int anon_munmap(char * addr, size_t size) {
   return ::munmap(addr, size) == 0;
 }
 
-char* os::pd_reserve_memory(size_t bytes, size_t alignment_hint) {
+char* os::pd_reserve_memory(size_t bytes, bool exec, size_t alignment_hint) {
   // Ignores alignment hint
   return anon_mmap(NULL, bytes);
 }
@@ -4269,7 +4269,7 @@ bool os::can_execute_large_page_memory() {
 
 char* os::pd_attempt_map_memory_to_file_at(size_t bytes, char* requested_addr, int file_desc) {
   assert(file_desc >= 0, "file_desc is not valid");
-  char* result = pd_attempt_reserve_memory_at(bytes, requested_addr);
+  char* result = pd_attempt_reserve_memory_at(bytes, requested_addr, !ExecMem);
   if (result != NULL) {
     if (replace_existing_mapping_with_file_mapping(result, bytes, file_desc) == NULL) {
       vm_exit_during_initialization(err_msg("Error in mapping Java heap at the given filesystem directory"));
@@ -4281,7 +4281,7 @@ char* os::pd_attempt_map_memory_to_file_at(size_t bytes, char* requested_addr, i
 // Reserve memory at an arbitrary address, only if that area is
 // available (and not reserved for something else).
 
-char* os::pd_attempt_reserve_memory_at(size_t bytes, char* requested_addr) {
+char* os::pd_attempt_reserve_memory_at(size_t bytes, char* requested_addr, bool exec) {
   const int max_tries = 10;
   char* base[max_tries];
   size_t size[max_tries];
