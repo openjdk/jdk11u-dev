@@ -41,6 +41,4 @@ inline u8 Bytes::swap_u8(u8 x) {
   return _byteswap_uint64(x);
 }
 
-#pragma warning(default: 4035) // Enable warning 4035: no return value
-
 #endif // OS_CPU_WINDOWS_AARCH64_BYTES_WINDOWS_AARCH64_INLINE_HPP
