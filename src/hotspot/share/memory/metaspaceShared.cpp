@@ -54,6 +54,7 @@
 #include "oops/typeArrayKlass.hpp"
 #include "prims/jvmtiRedefineClasses.hpp"
 #include "runtime/handles.inline.hpp"
+#include "runtime/jniHandles.inline.hpp"
 #include "runtime/os.hpp"
 #include "runtime/safepointVerifiers.hpp"
 #include "runtime/signature.hpp"
@@ -1626,17 +1627,20 @@ void MetaspaceShared::check_shared_class_loader_type(InstanceKlass* ik) {
 }
 class CollectCLDClosure : public CLDClosure {
   GrowableArray<ClassLoaderData*> _loaded_cld;
+  GrowableArray<jobject> _loaded_cld_handles; // keep the CLDs alive
   Thread* _current_thread;
-  HandleMark _hm;
 public:
-  CollectCLDClosure(Thread* thread) : _current_thread(thread), _hm(thread) {}
+  CollectCLDClosure(Thread* thread) : _current_thread(thread) {}
   ~CollectCLDClosure() {
+      for (int i = 0; i < _loaded_cld_handles.length(); i++) {
+        JNIHandles::destroy_local(_loaded_cld_handles.at(i));
+      }
   }
   void do_cld(ClassLoaderData* cld) {
     assert(cld->is_alive(), "must be");
     _loaded_cld.append(cld);
     oop holder = cld->holder_phantom();
-    JNIHandles::make_local(_current_thread, holder);
+    _loaded_cld_handles.append(JNIHandles::make_local(_current_thread, holder));
   }
 
   int nof_cld() const                { return _loaded_cld.length(); }
