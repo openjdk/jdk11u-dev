@@ -342,6 +342,9 @@ void ClassLoaderData::methods_do(void f(Method*)) {
 }
 
 void ClassLoaderData::loaded_classes_do(KlassClosure* klass_closure) {
+  // To call this, one must have the MultiArray_lock held, but the _klasses list still has lock free reads.
+  assert_locked_or_safepoint(MultiArray_lock);
+
   // Lock-free access requires load_acquire
   for (Klass* k = OrderAccess::load_acquire(&_klasses); k != NULL; k = k->next_link()) {
     // Do not filter ArrayKlass oops here...
@@ -1157,6 +1160,46 @@ void ClassLoaderDataGraph::classes_do(KlassClosure* klass_closure) {
   for (ClassLoaderData* cld = _head; cld != NULL; cld = cld->next()) {
     Handle holder(thread, cld->holder_phantom());
     cld->classes_do(klass_closure);
+  }
+}
+
+// Iterating over the CLDG needs to be locked because
+// unloading can remove entries concurrently soon.
+class ClassLoaderDataGraphIterator : public StackObj {
+  ClassLoaderData* _next;
+  Thread*          _thread;
+  HandleMark       _hm;  // clean up handles when this is done.
+  Handle           _holder;
+  NoSafepointVerifier _nsv; // No safepoints allowed in this scope
+                            // unless verifying at a safepoint.
+
+public:
+  ClassLoaderDataGraphIterator() : _next(ClassLoaderDataGraph::_head), _thread(Thread::current()), _hm(_thread) {
+    _thread = Thread::current();
+    assert_locked_or_safepoint(ClassLoaderDataGraph_lock);
+  }
+
+  ClassLoaderData* get_next() {
+    ClassLoaderData* cld = _next;
+    // Skip already unloaded CLD for concurrent unloading.
+    while (cld != NULL && !cld->is_alive()) {
+      cld = cld->next();
+    }
+    if (cld != NULL) {
+      // Keep cld that is being returned alive.
+      _holder = Handle(_thread, cld->holder_phantom());
+      _next = cld->next();
+    } else {
+      _next = NULL;
+    }
+    return cld;
+  }
+};
+
+void ClassLoaderDataGraph::loaded_cld_do(CLDClosure* cl) {
+  ClassLoaderDataGraphIterator iter;
+  while (ClassLoaderData* cld = iter.get_next()) {
+    cl->do_cld(cld);
   }
 }
 

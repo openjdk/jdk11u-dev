@@ -70,6 +70,7 @@ class ClassLoaderDataGraph : public AllStatic {
   friend class ClassLoaderDataGraphMetaspaceIterator;
   friend class ClassLoaderDataGraphKlassIteratorAtomic;
   friend class ClassLoaderDataGraphKlassIteratorStatic;
+  friend class ClassLoaderDataGraphIterator;
   friend class VMStructs;
  private:
   // All CLDs (except the null CLD) can be reached by walking _head->_next->...
@@ -102,6 +103,8 @@ class ClassLoaderDataGraph : public AllStatic {
   static void roots_cld_do(CLDClosure* strong, CLDClosure* weak);
   static void keep_alive_cld_do(CLDClosure* cl);
   static void always_strong_cld_do(CLDClosure* cl);
+  // Iteration through CLDG not by GC.
+  static void loaded_cld_do(CLDClosure* cl);
   // klass do
   // Walking classes through the ClassLoaderDataGraph include array classes.  It also includes
   // classes that are allocated but not loaded, classes that have errors, and scratch classes
@@ -178,6 +181,7 @@ class ClassLoaderDataGraph : public AllStatic {
 // ClassLoaderData class
 
 class ClassLoaderData : public CHeapObj<mtClass> {
+  friend class ClassLoaderDataGraphIterator;
   friend class VMStructs;
 
  private:
@@ -287,12 +291,13 @@ class ClassLoaderData : public CHeapObj<mtClass> {
   void accumulate_modified_oops()        { if (has_modified_oops()) _accumulated_modified_oops = true; }
   void clear_accumulated_modified_oops() { _accumulated_modified_oops = false; }
   bool has_accumulated_modified_oops()   { return _accumulated_modified_oops; }
+
+  oop holder_phantom() const;
  private:
 
   void unload();
   bool keep_alive() const       { return _keep_alive > 0; }
 
-  oop holder_phantom() const;
   void classes_do(void f(Klass*));
   void loaded_classes_do(KlassClosure* klass_closure);
   void classes_do(void f(InstanceKlass*));

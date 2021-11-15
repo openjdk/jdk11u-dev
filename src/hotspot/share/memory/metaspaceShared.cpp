@@ -1587,13 +1587,15 @@ class LinkSharedClassesClosure : public KlassClosure {
   void do_klass(Klass* k) {
     if (k->is_instance_klass()) {
       InstanceKlass* ik = InstanceKlass::cast(k);
-      // Link the class to cause the bytecodes to be rewritten and the
-      // cpcache to be created. Class verification is done according
-      // to -Xverify setting.
-      _made_progress |= MetaspaceShared::try_link_class(ik, THREAD);
-      guarantee(!HAS_PENDING_EXCEPTION, "exception in link_class");
+      if (ik->is_loaded()) {
+        // Link the class to cause the bytecodes to be rewritten and the
+        // cpcache to be created. Class verification is done according
+        // to -Xverify setting.
+        _made_progress |= MetaspaceShared::try_link_class(ik, THREAD);
+        guarantee(!HAS_PENDING_EXCEPTION, "exception in link_class");
 
-      ik->constants()->resolve_class_constants(THREAD);
+        ik->constants()->resolve_class_constants(THREAD);
+      }
     }
   }
 };
@@ -1622,18 +1624,55 @@ void MetaspaceShared::check_shared_class_loader_type(InstanceKlass* ik) {
             "Class loader type must be set for this class %s", ik->name()->as_C_string());
   }
 }
+class CollectCLDClosure : public CLDClosure {
+  GrowableArray<ClassLoaderData*> _loaded_cld;
+  GrowableArray<jobject> _loaded_cld_handles; // keep the CLDs alive
+  Thread* _current_thread;
+public:
+  CollectCLDClosure(Thread* thread) : _current_thread(thread) {}
+  ~CollectCLDClosure() {
+    for (int i = 0; i < _loaded_cld_handles.length(); i++) {
+      JNIHandles::destroy_global(_loaded_cld_handles.at(i));
+    }
+  }
+  void do_cld(ClassLoaderData* cld) {
+    assert(cld->is_alive(), "must be");
+    _loaded_cld.append(cld);
+    Handle holder(cld->holder_phantom(), _current_thread);
+    _loaded_cld_handles.append(JNIHandles::make_global(holder));
+  }
+
+  int nof_cld() const                { return _loaded_cld.length(); }
+  ClassLoaderData* cld_at(int index) { return _loaded_cld.at(index); }
+};
 
 void MetaspaceShared::link_and_cleanup_shared_classes(TRAPS) {
+  // Collect all loaded ClassLoaderData.
+  CollectCLDClosure collect_cld(THREAD);
+  {
+    MutexLocker ml(MultiArray_lock);
+    // ClassLoaderDataGraph::loaded_cld_do requires ClassLoaderDataGraph_lock.
+    // We cannot link the classes while holding this lock (or else we may run into deadlock).
+    // Therefore, we need to first collect all the CLDs, and then link their classes after
+    // releasing the lock.
+    MutexLocker lock(ClassLoaderDataGraph_lock);
+    ClassLoaderDataGraph::loaded_cld_do(&collect_cld);
+  }
+
   // We need to iterate because verification may cause additional classes
   // to be loaded.
   LinkSharedClassesClosure link_closure(THREAD);
   do {
     link_closure.reset();
-    ClassLoaderDataGraph::loaded_classes_do(&link_closure);
+    for (int i = 0; i < collect_cld.nof_cld(); i++) {
+      ClassLoaderData* cld = collect_cld.cld_at(i);
+      cld->classes_do(&link_closure);
+    }
     guarantee(!HAS_PENDING_EXCEPTION, "exception in link_class");
   } while (link_closure.made_progress());
 
   if (_has_error_classes) {
+    MutexLocker ml(MultiArray_lock);
     // Mark all classes whose super class or interfaces failed verification.
     CheckSharedClassesClosure check_closure;
     do {
