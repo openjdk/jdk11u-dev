@@ -698,7 +698,6 @@ public class LoginContext {
                             if (debug != null){
                                 debug.println("Build ServiceProviders cache for ClassLoader: " + contextClassLoader.getName());
                             }
-                            @SuppressWarnings("removal")
                             ServiceLoader<LoginModule> sc = AccessController.doPrivileged(
                                     (PrivilegedAction<ServiceLoader<LoginModule>>)
                                             () -> java.util.ServiceLoader.load(
