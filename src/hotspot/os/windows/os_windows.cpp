@@ -2674,7 +2674,7 @@ LONG WINAPI topLevelUnhandledExceptionFilter(struct _EXCEPTION_POINTERS* excepti
   if (InterceptOSException) goto exit;
   DWORD exception_code = exceptionInfo->ExceptionRecord->ExceptionCode;
 #if defined(_M_ARM64)
-  address pc = (address)exceptionInfo->ContextRecord->Pc;
+  address pc = (address) exceptionInfo->ContextRecord->Pc;
 #elif defined(_M_AMD64)
   address pc = (address) exceptionInfo->ContextRecord->Rip;
 #else
