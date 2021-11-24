@@ -56,10 +56,10 @@ public class TestFileStreamEvents {
                 recording.enable(IOEvent.EVENT_FILE_READ).withThreshold(Duration.ofMillis(0));
                 recording.enable(IOEvent.EVENT_FILE_WRITE).withThreshold(Duration.ofMillis(0));
                 recording.start();
-    
+
                 int writeByte = 47;
                 byte[] writeBuf = {11, 12, 13, 14};
-    
+
                 // Write
                 fos.write(writeByte);
                 expectedEvents.add(IOEvent.createFileWriteEvent(1, tmp));
@@ -67,26 +67,26 @@ public class TestFileStreamEvents {
                 expectedEvents.add(IOEvent.createFileWriteEvent(writeBuf.length, tmp));
                 fos.write(writeBuf, 0, 2);
                 expectedEvents.add(IOEvent.createFileWriteEvent(2, tmp));
-    
+
                 // Read
                 int readByte = fis.read();
                 assertEquals(readByte, writeByte, "Wrong byte read");
                 expectedEvents.add(IOEvent.createFileReadEvent(1, tmp));
-    
+
                 byte[] readBuf = new byte[writeBuf.length];
                 long size = fis.read(readBuf);
                 assertEquals(size, (long)writeBuf.length, "Wrong size when reading byte[]");
                 expectedEvents.add(IOEvent.createFileReadEvent(size, tmp));
-    
+
                 size = fis.read(readBuf, 0, 2);
                 assertEquals(size, 2L, "Wrong size when reading 2 bytes");
                 expectedEvents.add(IOEvent.createFileReadEvent(size, tmp));
-    
+
                 // We are at EOF. Read more and verify we get size -1.
                 size = fis.read(readBuf);
                 assertEquals(size, -1L, "Size should be -1 at EOF");
                 expectedEvents.add(IOEvent.createFileReadEvent(size, tmp));
-    
+
                 recording.stop();
                 List<RecordedEvent> events = Events.fromRecording(recording);
                 IOHelper.verifyEqualsInOrder(events, expectedEvents);

@@ -58,15 +58,15 @@ public class TestFileReadOnly {
             recording.enable(IOEvent.EVENT_FILE_READ).withThreshold(Duration.ofMillis(0));
             recording.enable(IOEvent.EVENT_FILE_WRITE).withThreshold(Duration.ofMillis(0));
             recording.start();
-    
+
             final byte[] buf = { 1, 2, 3 };
-    
+
             // Create the file.
             try (RandomAccessFile f = new RandomAccessFile(tmp, "rw")) {
                 f.write(buf);
                 expectedEvents.add(IOEvent.createFileWriteEvent(buf.length, tmp));
             }
-    
+
             // Reopen the file as ReadOnly and try to write to it.
             // Should generate an event with bytesWritten = -1.
             try (RandomAccessFile f = new RandomAccessFile(tmp, "r")) {
@@ -78,7 +78,7 @@ public class TestFileReadOnly {
                     expectedEvents.add(IOEvent.createFileWriteEvent(-1, tmp));
                 }
             }
-    
+
             // Try to write to read-only FileChannel.
             try (RandomAccessFile f = new RandomAccessFile(tmp, "r"); FileChannel ch = f.getChannel()) {
                 ByteBuffer writeBuf = ByteBuffer.allocateDirect(buf.length);
@@ -93,7 +93,7 @@ public class TestFileReadOnly {
                     expectedEvents.add(IOEvent.createFileWriteEvent(-1, tmp));
                 }
             }
-    
+
             recording.stop();
             List<RecordedEvent> events = Events.fromRecording(recording);
             IOHelper.verifyEqualsInOrder(events, expectedEvents);

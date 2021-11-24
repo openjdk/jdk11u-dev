@@ -55,19 +55,19 @@ public class TestRandomAccessFileEvents {
             recording.enable(IOEvent.EVENT_FILE_WRITE).withThreshold(Duration.ofMillis(0));
             recording.enable(IOEvent.EVENT_FILE_READ).withThreshold(Duration.ofMillis(0));
             recording.start();
-    
+
             RandomAccessFile ras = new RandomAccessFile(tmp, "rw");
             int writeInt = 47;
             byte[] writeBuffer = {10,11,12,13};
-    
+
             // Write an int and a buffer.
             ras.write(writeInt);
             expectedEvents.add(IOEvent.createFileWriteEvent(1, tmp));
             ras.write(writeBuffer);
             expectedEvents.add(IOEvent.createFileWriteEvent(writeBuffer.length, tmp));
-    
+
             ras.seek(0);
-    
+
             // Read int and buffer
             int readInt = ras.read();
             assertEquals(readInt, writeInt, "wrong int read");
@@ -76,31 +76,31 @@ public class TestRandomAccessFileEvents {
             int size = ras.read(readBuffer);
             verifyBufferEquals(readBuffer, writeBuffer);
             expectedEvents.add(IOEvent.createFileReadEvent(readBuffer.length, tmp));
-    
+
             // Read beyond EOF
             readInt = ras.read();
             assertEquals(-1, readInt, "wrong read after EOF");
             expectedEvents.add(IOEvent.createFileReadEvent(-1, tmp));
-    
+
             // Seek to beginning and verify we can read after EOF.
             ras.seek(0);
             readInt = ras.read();
             assertEquals(readInt, writeInt, "wrong int read after seek(0)");
             expectedEvents.add(IOEvent.createFileReadEvent(1, tmp));
-    
+
             // seek beyond EOF and verify we get EOF when reading.
             ras.seek(10);
             readInt = ras.read();
             assertEquals(-1, readInt, "wrong read after seek beyond EOF");
             expectedEvents.add(IOEvent.createFileReadEvent(-1, tmp));
-    
+
             // Read partial buffer.
             int partialSize = writeBuffer.length - 2;
             ras.seek(ras.length()-partialSize);
             size = ras.read(readBuffer);
             assertEquals(size, partialSize, "Wrong size partial buffer read");
             expectedEvents.add(IOEvent.createFileReadEvent(size, tmp));
-    
+
             ras.close();
             recording.stop();
             List<RecordedEvent> events = Events.fromRecording(recording);
