@@ -555,6 +555,7 @@ public final class Method extends Executable {
     {
         if (!override) {
             Class<?> caller = Reflection.getCallerClass();
+            System.out.println("obj = " + obj);
             checkAccess(caller, clazz,
                         Modifier.isStatic(modifiers) ? null : obj.getClass(),
                         modifiers);
