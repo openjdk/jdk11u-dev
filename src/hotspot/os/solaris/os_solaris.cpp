@@ -2581,9 +2581,9 @@ char* os::pd_reserve_memory(size_t bytes, char* requested_addr,
   return addr;
 }
 
-char* os::pd_attempt_reserve_memory_at(size_t bytes, char* requested_addr, int file_desc) {
+char* os::pd_attempt_reserve_memory_at(char* requested_addr, size_t bytes, int file_desc) {
   assert(file_desc >= 0, "file_desc is not valid");
-  char* result = pd_attempt_reserve_memory_at(bytes, requested_addr);
+  char* result = pd_attempt_reserve_memory_at(requested_addr, bytes);
   if (result != NULL) {
     if (replace_existing_mapping_with_file_mapping(result, bytes, file_desc) == NULL) {
       vm_exit_during_initialization(err_msg("Error in mapping Java heap at the given filesystem directory"));
@@ -2595,7 +2595,7 @@ char* os::pd_attempt_reserve_memory_at(size_t bytes, char* requested_addr, int f
 // Reserve memory at an arbitrary address, only if that area is
 // available (and not reserved for something else).
 
-char* os::pd_attempt_reserve_memory_at(size_t bytes, char* requested_addr) {
+char* os::pd_attempt_reserve_memory_at(char* requested_addr, size_t bytes) {
   const int max_tries = 10;
   char* base[max_tries];
   size_t size[max_tries];

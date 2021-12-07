@@ -113,8 +113,8 @@ class os: AllStatic {
 
   static char*  pd_reserve_memory(size_t bytes, char* addr = 0,
                                   size_t alignment_hint = 0);
-  static char*  pd_attempt_reserve_memory_at(size_t bytes, char* addr);
-  static char*  pd_attempt_reserve_memory_at(size_t bytes, char* addr, int file_desc);
+  static char*  pd_attempt_reserve_memory_at(char* addr, size_t bytes);
+  static char*  pd_attempt_reserve_memory_at(char* addr, size_t bytes, int file_desc);
   static void   pd_split_reserved_memory(char *base, size_t size,
                                       size_t split, bool realloc);
   static bool   pd_commit_memory(char* addr, size_t bytes, bool executable);
@@ -330,7 +330,7 @@ class os: AllStatic {
   static char*  reserve_memory(size_t bytes, char* addr,
                                size_t alignment_hint, MEMFLAGS flags);
   static char*  reserve_memory_aligned(size_t size, size_t alignment, int file_desc = -1);
-  static char*  attempt_reserve_memory_at(size_t bytes, char* addr, int file_desc = -1);
+  static char*  attempt_reserve_memory_at(char* addr, size_t bytes, int file_desc = -1);
   static void   split_reserved_memory(char *base, size_t size,
                                       size_t split, bool realloc);
   static bool   commit_memory(char* addr, size_t bytes, bool executable);
