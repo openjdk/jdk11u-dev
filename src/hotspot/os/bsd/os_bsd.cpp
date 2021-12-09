@@ -2174,7 +2174,6 @@ NOT_MACOS(char* os::pd_reserve_memory(size_t bytes, char* requested_addr,
   return anon_mmap(requested_addr, bytes, (requested_addr != NULL));
 })
 
-
 bool os::pd_release_memory(char* addr, size_t size) {
   return anon_munmap(addr, size);
 }
@@ -2355,7 +2354,7 @@ char* os::pd_attempt_reserve_memory_at(size_t bytes, char* requested_addr) {
 
   // Bsd mmap allows caller to pass an address as hint; give it a try first,
   // if kernel honors the hint then we can return immediately.
-  char * addr = anon_mmap(requested_addr, bytes, false/*fixed*/);
+  char * addr = anon_mmap(requested_addr, bytes, false);
   if (addr == requested_addr) {
     return requested_addr;
   }
