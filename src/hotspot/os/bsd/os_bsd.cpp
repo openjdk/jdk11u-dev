@@ -2095,13 +2095,14 @@ char *os::scan_pages(char *start, char* end, page_info* page_expected, page_info
 }
 
 
-bool os::pd_uncommit_memory(char* addr, size_t size, bool exec) {
+MACOS_ONLY(bool os::pd_uncommit_memory(char* addr, size_t size, bool executable))
+NOT_MACOS(bool os::pd_uncommit_memory(char* addr, size_t size)) {
 #if defined(__OpenBSD__)
   // XXX: Work-around mmap/MAP_FIXED bug temporarily on OpenBSD
   Events::log(NULL, "Protecting memory [" INTPTR_FORMAT "," INTPTR_FORMAT "] with PROT_NONE", p2i(addr), p2i(addr+size));
   return ::mprotect(addr, size, PROT_NONE) == 0;
 #elif defined(__APPLE__)
-  if (exec) {
+  if (executable) {
     if (::madvise(addr, size, MADV_FREE) != 0) {
       return false;
     }
@@ -2125,7 +2126,7 @@ bool os::pd_create_stack_guard_pages(char* addr, size_t size) {
 // If this is a growable mapping, remove the guard pages entirely by
 // munmap()ping them.  If not, just call uncommit_memory().
 bool os::remove_stack_guard_pages(char* addr, size_t size) {
-  return os::uncommit_memory(addr, size, !ExecMem);
+  return os::uncommit_memory(addr, size);
 }
 
 // If 'fixed' is true, anon_mmap() will attempt to reserve anonymous memory
@@ -2134,7 +2135,7 @@ bool os::remove_stack_guard_pages(char* addr, size_t size) {
 // 'requested_addr' is only treated as a hint, the return value may or
 // may not start from the requested address. Unlike Bsd mmap(), this
 // function returns NULL to indicate failure.
-static char* anon_mmap(char* requested_addr, size_t bytes, bool fixed, bool executable) {
+static char* anon_mmap(char* requested_addr, size_t bytes, bool fixed, bool executable = false) {
   char * addr;
   int flags;
 
@@ -2163,11 +2164,16 @@ static int anon_munmap(char * addr, size_t size) {
   return ::munmap(addr, size) == 0;
 }
 
-char* os::pd_reserve_memory(size_t bytes, char* requested_addr,
+MACOS_ONLY(char* os::pd_reserve_memory(size_t bytes, char* requested_addr,
                             size_t alignment_hint,
                             bool executable) {
   return anon_mmap(requested_addr, bytes, (requested_addr != NULL), executable);
-}
+})
+NOT_MACOS(char* os::pd_reserve_memory(size_t bytes, char* requested_addr,
+                            size_t alignment_hint) {
+  return anon_mmap(requested_addr, bytes, (requested_addr != NULL));
+})
+
 
 bool os::pd_release_memory(char* addr, size_t size) {
   return anon_munmap(addr, size);
@@ -2349,7 +2355,7 @@ char* os::pd_attempt_reserve_memory_at(size_t bytes, char* requested_addr) {
 
   // Bsd mmap allows caller to pass an address as hint; give it a try first,
   // if kernel honors the hint then we can return immediately.
-  char * addr = anon_mmap(requested_addr, bytes, false/*fixed*/, false/*executable*/);
+  char * addr = anon_mmap(requested_addr, bytes, false/*fixed*/);
   if (addr == requested_addr) {
     return requested_addr;
   }
