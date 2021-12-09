@@ -22,6 +22,16 @@
  *
  */
 
+/*
+ * On macOS MAP_JIT cannot be used in conjunction with MAP_FIXED when mapping
+ * a page for codecache. Therefore our traditional technique of doing commit
+ * and uncommit - replacing a mapping with another one at the same address
+ * range but swapped MAP_NORESERVE - does not work.
+ * The "exec" flag basically means "its code cache" and it should be used
+ * consistently for the same mapping (reserve-commit-uncommit etc)
+ * This affects pd_reserve_memory, pd_commit_memory, pd_uncommit_memory functions
+ */
+
 // no precompiled headers
 #include "jvm.h"
 #include "classfile/classLoader.hpp"
