@@ -2183,15 +2183,18 @@ static int anon_munmap(char * addr, size_t size) {
   return ::munmap(addr, size) == 0;
 }
 
-MACOS_ONLY(char* os::pd_reserve_memory(size_t bytes, char* requested_addr,
+#if defined(__APPLE__)
+char* os::pd_reserve_memory(size_t bytes, char* requested_addr,
                             size_t alignment_hint,
                             bool executable) {
   return anon_mmap(requested_addr, bytes, (requested_addr != NULL), executable);
-})
-NOT_MACOS(char* os::pd_reserve_memory(size_t bytes, char* requested_addr,
+}
+#else
+char* os::pd_reserve_memory(size_t bytes, char* requested_addr,
                             size_t alignment_hint) {
   return anon_mmap(requested_addr, bytes, (requested_addr != NULL));
-})
+}
+#endif
 
 bool os::pd_release_memory(char* addr, size_t size) {
   return anon_munmap(addr, size);
