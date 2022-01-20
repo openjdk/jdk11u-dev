@@ -3089,7 +3089,7 @@ public class Check {
          * we return that it is applicable and if it is erroneous that should imply
          * an error at the declaration site
          */
-        return targets.isEmpty() || targets.isPresent() && !targets.get().isEmpty();
+        return !targets.isPresent() || targets.isPresent() && !targets.get().isEmpty();
     }
 
     @SuppressWarnings("preview")
