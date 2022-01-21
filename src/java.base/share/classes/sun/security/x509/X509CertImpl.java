@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1996, 2021, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -1084,13 +1084,7 @@ public class X509CertImpl extends X509Certificate implements DerEncoder {
      *         null if no parameters are present.
      */
     public byte[] getSigAlgParams() {
-        if (algId == null)
-            return null;
-        try {
-            return algId.getEncodedParams();
-        } catch (IOException e) {
-            return null;
-        }
+        return algId == null ? null : algId.getEncodedParams();
     }
 
     /**
