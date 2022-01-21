@@ -291,7 +291,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
      *
      * @return DER encoded parameters, or null not present.
      */
-    public byte[] getEncodedParams() throws IOException {
+    public byte[] getEncodedParams() {
         return (encodedParams == null || algid.equals(specifiedWithECDSA_oid))
                 ? null
                 : encodedParams.clone();
