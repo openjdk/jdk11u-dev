@@ -47,16 +47,16 @@ import compiler.intrinsics.sha.cli.testcases.UseSHAIntrinsicsSpecificTestCaseFor
 
 public class TestUseSHA256IntrinsicsOptionOnUnsupportedCPU {
     public static void main(String args[]) throws Throwable {
-        new SHAOptionsBase(
+        new DigestOptionsBase(
                 new GenericTestCaseForUnsupportedSparcCPU(
-                        SHAOptionsBase.USE_SHA256_INTRINSICS_OPTION),
+                        DigestOptionsBase.USE_SHA256_INTRINSICS_OPTION),
                 new GenericTestCaseForUnsupportedX86CPU(
-                        SHAOptionsBase.USE_SHA256_INTRINSICS_OPTION),
+                        DigestOptionsBase.USE_SHA256_INTRINSICS_OPTION),
                 new GenericTestCaseForUnsupportedAArch64CPU(
-                        SHAOptionsBase.USE_SHA256_INTRINSICS_OPTION),
+                        DigestOptionsBase.USE_SHA256_INTRINSICS_OPTION),
                 new UseSHAIntrinsicsSpecificTestCaseForUnsupportedCPU(
-                        SHAOptionsBase.USE_SHA256_INTRINSICS_OPTION),
+                        DigestOptionsBase.USE_SHA256_INTRINSICS_OPTION),
                 new GenericTestCaseForOtherCPU(
-                        SHAOptionsBase.USE_SHA256_INTRINSICS_OPTION)).test();
+                        DigestOptionsBase.USE_SHA256_INTRINSICS_OPTION)).test();
     }
 }

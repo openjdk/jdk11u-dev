@@ -38,8 +38,8 @@
  *                   -XX:+LogCompilation -XX:LogFile=positive_224.log
  *                   -XX:CompileOnly=sun/security/provider/DigestBase
  *                   -XX:CompileOnly=sun/security/provider/SHA2
- *                   -XX:+UseSHA256Intrinsics -XX:-UseSHA1Intrinsics
- *                   -XX:-UseSHA512Intrinsics
+ *                   -XX:+UseSHA256Intrinsics -XX:-UseMD5Intrinsics
+ *                   -XX:-UseSHA1Intrinsics -XX:-UseSHA512Intrinsics
  *                   -Dalgorithm=SHA-224
  *                   compiler.intrinsics.sha.sanity.TestSHA256MultiBlockIntrinsics
  * @run main/othervm -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions
@@ -64,8 +64,8 @@
  *                   -XX:+LogCompilation -XX:LogFile=positive_256.log
  *                   -XX:CompileOnly=sun/security/provider/DigestBase
  *                   -XX:CompileOnly=sun/security/provider/SHA2
- *                   -XX:+UseSHA256Intrinsics -XX:-UseSHA1Intrinsics
- *                   -XX:-UseSHA512Intrinsics
+ *                   -XX:+UseSHA256Intrinsics -XX:-UseMD5Intrinsics
+ *                   -XX:-UseSHA1Intrinsics -XX:-UseSHA512Intrinsics
  *                   -Dalgorithm=SHA-256
  *                   compiler.intrinsics.sha.sanity.TestSHA256MultiBlockIntrinsics
  * @run main/othervm -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions
@@ -95,7 +95,7 @@ import compiler.testlibrary.sha.predicate.IntrinsicPredicates;
 
 public class TestSHA256MultiBlockIntrinsics {
     public static void main(String args[]) throws Exception {
-        new SHASanityTestBase(IntrinsicPredicates.isSHA256IntrinsicAvailable(),
-                SHASanityTestBase.MB_INTRINSIC_ID).test();
+        new DigestSanityTestBase(IntrinsicPredicates.isSHA256IntrinsicAvailable(),
+                DigestSanityTestBase.MB_INTRINSIC_ID).test();
     }
 }

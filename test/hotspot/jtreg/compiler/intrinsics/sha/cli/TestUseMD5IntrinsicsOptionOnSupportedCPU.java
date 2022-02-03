@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2016, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,30 +24,25 @@
 /**
  * @test
  * @bug 8035968
- * @summary Verify UseSHA option processing on supported CPU.
+ * @summary Verify UseMD5Intrinsics option processing on supported CPU.
  * @library /test/lib testcases /
  * @modules java.base/jdk.internal.misc
  *          java.management
  *
  * @build sun.hotspot.WhiteBox
  * @run driver ClassFileInstaller sun.hotspot.WhiteBox
- *                                sun.hotspot.WhiteBox$WhiteBoxPermission
  * @run main/othervm -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions
  *                   -XX:+WhiteBoxAPI
- *                   compiler.intrinsics.sha.cli.TestUseSHAOptionOnSupportedCPU
+ *                   compiler.intrinsics.sha.cli.TestUseMD5IntrinsicsOptionOnSupportedCPU
  */
 
 package compiler.intrinsics.sha.cli;
 
 import compiler.intrinsics.sha.cli.testcases.GenericTestCaseForSupportedCPU;
-import compiler.intrinsics.sha.cli.testcases.UseSHASpecificTestCaseForSupportedCPU;
 
-public class TestUseSHAOptionOnSupportedCPU {
+public class TestUseMD5IntrinsicsOptionOnSupportedCPU {
     public static void main(String args[]) throws Throwable {
-        new DigestOptionsBase(
-                new GenericTestCaseForSupportedCPU(
-                        DigestOptionsBase.USE_SHA_OPTION),
-                new UseSHASpecificTestCaseForSupportedCPU(
-                        DigestOptionsBase.USE_SHA_OPTION)).test();
+        new DigestOptionsBase(new GenericTestCaseForSupportedCPU(
+                DigestOptionsBase.USE_MD5_INTRINSICS_OPTION, /* checkUseSHA = */ false)).test();
     }
 }

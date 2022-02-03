@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -4513,6 +4513,19 @@ void Assembler::ret(int imm16) {
   } else {
     emit_int8((unsigned char)0xC2);
     emit_int16(imm16);
+  }
+}
+
+void Assembler::roll(Register dst, int imm8) {
+  assert(isShiftCount(imm8 >> 1), "illegal shift count");
+  int encode = prefix_and_encode(dst->encoding());
+  if (imm8 == 1) {
+    emit_int8((unsigned char)0xD1);
+    emit_int8((unsigned char)(0xC0 | encode));
+  } else {
+    emit_int8((unsigned char)0xC1);
+    emit_int8((unsigned char)(0xc0 | encode));
+    emit_int8(imm8);
   }
 }
 

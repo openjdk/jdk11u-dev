@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2016, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,51 +24,42 @@
 /**
  * @test
  * @bug 8035968
- * @summary Verify that SHA-1 multi block intrinsic is actually used.
+ * @summary Verify that MD5 intrinsic is actually used.
  * @library /test/lib /
  * @modules java.base/jdk.internal.misc
  *          java.management
  *
  * @build sun.hotspot.WhiteBox
  * @run driver ClassFileInstaller sun.hotspot.WhiteBox
- *                                sun.hotspot.WhiteBox$WhiteBoxPermission
  * @run main/othervm -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions
  *                   -XX:+WhiteBoxAPI -Xbatch -XX:CompileThreshold=500
  *                   -XX:Tier4InvocationThreshold=500
  *                   -XX:+LogCompilation -XX:LogFile=positive.log
  *                   -XX:CompileOnly=sun/security/provider/DigestBase
- *                   -XX:CompileOnly=sun/security/provider/SHA
- *                   -XX:+UseSHA1Intrinsics -XX:-UseMD5Intrinsics
- *                   -XX:-UseSHA256Intrinsics -XX:-UseSHA512Intrinsics
- *                   -Dalgorithm=SHA-1
- *                   compiler.intrinsics.sha.sanity.TestSHA1MultiBlockIntrinsics
- * @run main/othervm -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions
- *                   -XX:+WhiteBoxAPI -Xbatch -XX:CompileThreshold=500
- *                   -XX:Tier4InvocationThreshold=500
- *                   -XX:+LogCompilation -XX:LogFile=positive_def.log
- *                   -XX:CompileOnly=sun/security/provider/DigestBase
- *                   -XX:CompileOnly=sun/security/provider/SHA
- *                   -XX:+UseSHA1Intrinsics -Dalgorithm=SHA-1
- *                   compiler.intrinsics.sha.sanity.TestSHA1MultiBlockIntrinsics
+ *                   -XX:CompileOnly=sun/security/provider/MD5
+ *                   -XX:+UseMD5Intrinsics
+ *                   -Dalgorithm=MD5
+ *                   compiler.intrinsics.sha.sanity.TestMD5Intrinsics
  * @run main/othervm -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions
  *                   -XX:+WhiteBoxAPI -Xbatch -XX:CompileThreshold=500
  *                   -XX:Tier4InvocationThreshold=500
  *                   -XX:+LogCompilation -XX:LogFile=negative.log
  *                   -XX:CompileOnly=sun/security/provider/DigestBase
- *                   -XX:CompileOnly=sun/security/provider/SHA -XX:-UseSHA
- *                   -Dalgorithm=SHA-1
- *                   compiler.intrinsics.sha.sanity.TestSHA1MultiBlockIntrinsics
+ *                   -XX:CompileOnly=sun/security/provider/MD5
+ *                   -XX:-UseMD5Intrinsics
+ *                   -Dalgorithm=MD5
+ *                   compiler.intrinsics.sha.sanity.TestMD5Intrinsics
  * @run main/othervm -DverificationStrategy=VERIFY_INTRINSIC_USAGE
- *                   compiler.testlibrary.intrinsics.Verifier positive.log positive_def.log
- *                   negative.log
+ *                   compiler.testlibrary.intrinsics.Verifier positive.log negative.log
  */
 
 package compiler.intrinsics.sha.sanity;
+
 import compiler.testlibrary.sha.predicate.IntrinsicPredicates;
 
-public class TestSHA1MultiBlockIntrinsics {
+public class TestMD5Intrinsics {
     public static void main(String args[]) throws Exception {
-        new DigestSanityTestBase(IntrinsicPredicates.isSHA1IntrinsicAvailable(),
-                DigestSanityTestBase.MB_INTRINSIC_ID).test();
+        new DigestSanityTestBase(IntrinsicPredicates.isMD5IntrinsicAvailable(),
+                DigestSanityTestBase.MD5_INTRINSIC_ID).test();
     }
 }

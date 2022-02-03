@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2016, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,30 +24,33 @@
 /**
  * @test
  * @bug 8035968
- * @summary Verify UseSHA option processing on supported CPU.
+ * @summary Verify UseMD5Intrinsics option processing on unsupported CPU.
  * @library /test/lib testcases /
  * @modules java.base/jdk.internal.misc
  *          java.management
  *
  * @build sun.hotspot.WhiteBox
  * @run driver ClassFileInstaller sun.hotspot.WhiteBox
- *                                sun.hotspot.WhiteBox$WhiteBoxPermission
  * @run main/othervm -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions
  *                   -XX:+WhiteBoxAPI
- *                   compiler.intrinsics.sha.cli.TestUseSHAOptionOnSupportedCPU
+ *                   compiler.intrinsics.sha.cli.TestUseMD5IntrinsicsOptionOnUnsupportedCPU
  */
 
 package compiler.intrinsics.sha.cli;
 
-import compiler.intrinsics.sha.cli.testcases.GenericTestCaseForSupportedCPU;
-import compiler.intrinsics.sha.cli.testcases.UseSHASpecificTestCaseForSupportedCPU;
+import compiler.intrinsics.sha.cli.testcases.GenericTestCaseForOtherCPU;
+import compiler.intrinsics.sha.cli.testcases.GenericTestCaseForUnsupportedAArch64CPU;
+import compiler.intrinsics.sha.cli.testcases.GenericTestCaseForUnsupportedX86CPU;
+import compiler.intrinsics.sha.cli.testcases.UseSHAIntrinsicsSpecificTestCaseForUnsupportedCPU;
 
-public class TestUseSHAOptionOnSupportedCPU {
+public class TestUseMD5IntrinsicsOptionOnUnsupportedCPU {
     public static void main(String args[]) throws Throwable {
         new DigestOptionsBase(
-                new GenericTestCaseForSupportedCPU(
-                        DigestOptionsBase.USE_SHA_OPTION),
-                new UseSHASpecificTestCaseForSupportedCPU(
-                        DigestOptionsBase.USE_SHA_OPTION)).test();
+                new GenericTestCaseForUnsupportedX86CPU(
+                        DigestOptionsBase.USE_MD5_INTRINSICS_OPTION, /* checkUseSHA = */ false),
+                new GenericTestCaseForUnsupportedAArch64CPU(
+                        DigestOptionsBase.USE_MD5_INTRINSICS_OPTION, /* checkUseSHA = */ false),
+                new GenericTestCaseForOtherCPU(
+                        DigestOptionsBase.USE_MD5_INTRINSICS_OPTION, /* checkUseSHA = */ false)).test();
     }
 }

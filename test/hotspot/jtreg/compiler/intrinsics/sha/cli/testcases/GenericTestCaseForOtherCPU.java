@@ -23,7 +23,7 @@
 
 package compiler.intrinsics.sha.cli.testcases;
 
-import compiler.intrinsics.sha.cli.SHAOptionsBase;
+import compiler.intrinsics.sha.cli.DigestOptionsBase;
 import jdk.test.lib.process.ExitCode;
 import jdk.test.lib.Platform;
 import jdk.test.lib.cli.CommandLineOptionTest;
@@ -35,9 +35,16 @@ import jdk.test.lib.cli.predicate.OrPredicate;
  * AArch64, PPC, S390x, SPARC and X86.
  */
 public class GenericTestCaseForOtherCPU extends
-        SHAOptionsBase.TestCase {
+        DigestOptionsBase.TestCase {
+
+    final private boolean checkUseSHA;
+
     public GenericTestCaseForOtherCPU(String optionName) {
-        // Execute the test case on any CPU except AArch64, PPC, S390x, SPARC and X86.
+        this(optionName, true);
+    }
+
+    public GenericTestCaseForOtherCPU(String optionName, boolean checkUseSHA) {
+        // Execute the test case on any CPU except AArch64, PPC, S390x, and X86.
         super(optionName, new NotPredicate(
                               new OrPredicate(Platform::isAArch64,
                               new OrPredicate(Platform::isS390x,
@@ -45,6 +52,8 @@ public class GenericTestCaseForOtherCPU extends
                               new OrPredicate(Platform::isPPC,
                               new OrPredicate(Platform::isX64,
                                               Platform::isX86)))))));
+
+        this.checkUseSHA = checkUseSHA;
     }
 
     @Override
@@ -56,13 +65,13 @@ public class GenericTestCaseForOtherCPU extends
         CommandLineOptionTest.verifySameJVMStartup(null,
                 new String[] { ".*" + optionName + ".*" }, shouldPassMessage,
                 shouldPassMessage, ExitCode.OK,
-                SHAOptionsBase.UNLOCK_DIAGNOSTIC_VM_OPTIONS,
+                DigestOptionsBase.UNLOCK_DIAGNOSTIC_VM_OPTIONS,
                 CommandLineOptionTest.prepareBooleanFlag(optionName, true));
 
         CommandLineOptionTest.verifySameJVMStartup(null,
                 new String[] { ".*" + optionName + ".*" }, shouldPassMessage,
                 shouldPassMessage, ExitCode.OK,
-                SHAOptionsBase.UNLOCK_DIAGNOSTIC_VM_OPTIONS,
+                DigestOptionsBase.UNLOCK_DIAGNOSTIC_VM_OPTIONS,
                 CommandLineOptionTest.prepareBooleanFlag(optionName, false));
     }
 
@@ -72,24 +81,26 @@ public class GenericTestCaseForOtherCPU extends
         CommandLineOptionTest.verifyOptionValueForSameVM(optionName, "false",
                 String.format("Option '%s' should be disabled by default",
                         optionName),
-                SHAOptionsBase.UNLOCK_DIAGNOSTIC_VM_OPTIONS);
+                DigestOptionsBase.UNLOCK_DIAGNOSTIC_VM_OPTIONS);
 
         // Verify that option is disabled even if it was explicitly enabled
         // using CLI options.
         CommandLineOptionTest.verifyOptionValueForSameVM(optionName, "false",
                 String.format("Option '%s' should be off on unsupported "
                         + "CPU even if set to true directly", optionName),
-                SHAOptionsBase.UNLOCK_DIAGNOSTIC_VM_OPTIONS,
+                DigestOptionsBase.UNLOCK_DIAGNOSTIC_VM_OPTIONS,
                 CommandLineOptionTest.prepareBooleanFlag(optionName, true));
 
-        // Verify that option is disabled when it explicitly disabled
-        // using CLI options.
-        CommandLineOptionTest.verifyOptionValueForSameVM(optionName, "false",
-                String.format("Option '%s' should be off on unsupported CPU"
-                        + " even if '%s' flag set to JVM", optionName,
-                        CommandLineOptionTest.prepareBooleanFlag(
-                        SHAOptionsBase.USE_SHA_OPTION, true)),
-                SHAOptionsBase.UNLOCK_DIAGNOSTIC_VM_OPTIONS,
-                CommandLineOptionTest.prepareBooleanFlag(optionName, false));
+        if (checkUseSHA) {
+            // Verify that option is disabled when it explicitly disabled
+            // using CLI options.
+            CommandLineOptionTest.verifyOptionValueForSameVM(optionName, "false",
+                    String.format("Option '%s' should be off on unsupported CPU"
+                            + " even if '%s' flag set to JVM", optionName,
+                            CommandLineOptionTest.prepareBooleanFlag(
+                            DigestOptionsBase.USE_SHA_OPTION, true)),
+                    DigestOptionsBase.UNLOCK_DIAGNOSTIC_VM_OPTIONS,
+                    CommandLineOptionTest.prepareBooleanFlag(optionName, false));
+        }
     }
 }

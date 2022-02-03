@@ -46,16 +46,16 @@ import compiler.intrinsics.sha.cli.testcases.UseSHASpecificTestCaseForUnsupporte
 
 public class TestUseSHAOptionOnUnsupportedCPU {
     public static void main(String args[]) throws Throwable {
-        new SHAOptionsBase(
+        new DigestOptionsBase(
                 new GenericTestCaseForUnsupportedSparcCPU(
-                        SHAOptionsBase.USE_SHA_OPTION),
+                        DigestOptionsBase.USE_SHA_OPTION),
                 new GenericTestCaseForUnsupportedX86CPU(
-                        SHAOptionsBase.USE_SHA_OPTION),
+                        DigestOptionsBase.USE_SHA_OPTION),
                 new GenericTestCaseForUnsupportedAArch64CPU(
-                        SHAOptionsBase.USE_SHA_OPTION),
+                        DigestOptionsBase.USE_SHA_OPTION),
                 new UseSHASpecificTestCaseForUnsupportedCPU(
-                        SHAOptionsBase.USE_SHA_OPTION),
+                        DigestOptionsBase.USE_SHA_OPTION),
                 new GenericTestCaseForOtherCPU(
-                        SHAOptionsBase.USE_SHA_OPTION)).test();
+                        DigestOptionsBase.USE_SHA_OPTION)).test();
     }
 }
