@@ -390,11 +390,6 @@ public class CheckGraalIntrinsics extends GraalTest {
                             "jdk/jfr/internal/JVM.getEventWriter()Ljava/lang/Object;");
         }
 
-        if (isJDK16OrHigher()) {
-            add(toBeInvestigated,
-                            "sun/security/provider/MD5.implCompress0([BI)V");
-        }
-
         if (!config.inlineNotify()) {
             add(ignore, "java/lang/Object.notify()V");
         }
@@ -544,14 +539,6 @@ public class CheckGraalIntrinsics extends GraalTest {
 
     private static boolean isJDK11OrHigher() {
         return GraalServices.JAVA_SPECIFICATION_VERSION >= 11;
-    }
-
-    private static boolean isJDK15OrHigher() {
-        return JavaVersionUtil.JAVA_SPEC >= 15;
-    }
-
-    private static boolean isJDK16OrHigher() {
-        return JavaVersionUtil.JAVA_SPEC >= 16;
     }
 
     public interface Refiner {
