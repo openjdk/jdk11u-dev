@@ -387,7 +387,8 @@ public class CheckGraalIntrinsics extends GraalTest {
                             "java/lang/Math.signum(D)D",
                             "java/lang/Math.signum(F)F",
                             "java/util/Base64$Encoder.encodeBlock([BII[BIZ)V",
-                            "jdk/jfr/internal/JVM.getEventWriter()Ljava/lang/Object;");
+                            "jdk/jfr/internal/JVM.getEventWriter()Ljava/lang/Object;",
+                            "sun/security/provider/MD5.implCompress0([BI)V");
         }
 
         if (!config.inlineNotify()) {
