@@ -3296,6 +3296,8 @@ JvmtiEnv::RawMonitorEnter(JvmtiRawMonitor * rmonitor) {
       ThreadInVMfromUnknown __tiv;
       {
         ThreadBlockInVM __tbivm(current_thread);
+        // 8266889: raw_enter changes Java thread state, needs WXWrite
+        MACOS_AARCH64_ONLY(ThreadWXEnable __wx(WXWrite, current_thread));
         r = rmonitor->raw_enter(current_thread);
       }
 #else
@@ -3322,6 +3324,8 @@ JvmtiEnv::RawMonitorEnter(JvmtiRawMonitor * rmonitor) {
       assert(r == ObjectMonitor::OM_OK, "raw_enter should have worked");
     } else {
       if (thread->is_Named_thread()) {
+        // 8266889: raw_enter changes Java thread state, needs WXWrite
+        MACOS_AARCH64_ONLY(ThreadWXEnable __wx(WXWrite, thread));
         r = rmonitor->raw_enter(thread);
       } else {
         ShouldNotReachHere();
@@ -3392,6 +3396,8 @@ JvmtiEnv::RawMonitorWait(JvmtiRawMonitor * rmonitor, jlong millis) {
     ThreadInVMfromUnknown __tiv;
     {
       ThreadBlockInVM __tbivm(current_thread);
+      // 8266889: raw_wait changes Java thread state, needs WXWrite
+      MACOS_AARCH64_ONLY(ThreadWXEnable __wx(WXWrite, current_thread));
       r = rmonitor->raw_wait(millis, true, current_thread);
     }
 #else
@@ -3417,6 +3423,8 @@ JvmtiEnv::RawMonitorWait(JvmtiRawMonitor * rmonitor, jlong millis) {
 #endif /* PROPER_TRANSITIONS */
   } else {
     if (thread->is_Named_thread()) {
+      // 8266889: raw_wait changes Java thread state, needs WXWrite
+      MACOS_AARCH64_ONLY(ThreadWXEnable __wx(WXWrite, thread));
       r = rmonitor->raw_wait(millis, true, thread);
     } else {
       ShouldNotReachHere();
