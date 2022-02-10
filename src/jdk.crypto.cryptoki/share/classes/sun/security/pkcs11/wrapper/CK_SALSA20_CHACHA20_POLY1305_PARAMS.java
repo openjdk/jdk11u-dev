@@ -61,7 +61,7 @@ public class CK_SALSA20_CHACHA20_POLY1305_PARAMS {
         } else {
             sb.append("0x");
             for (byte b: nonce) {
-                sb.append(String.format("0%02X", b));
+                sb.append(String.format("%02x", b));
             }
         }
         sb.append(Constants.NEWLINE);
@@ -72,7 +72,7 @@ public class CK_SALSA20_CHACHA20_POLY1305_PARAMS {
         } else {
             sb.append("0x");
             for (byte b: aad) {
-                sb.append(String.format("0%02X", b));
+                sb.append(String.format("%02x", b));
             }
         }
         return sb.toString();
