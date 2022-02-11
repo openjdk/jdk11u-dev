@@ -43,7 +43,6 @@ import java.util.regex.Pattern;
 
 import static java.lang.System.out;
 
-@SuppressWarnings("removal")
 public class GetXSpace {
 
     private static SecurityManager [] sma = { null, new Allow(), new DenyFSA(),
@@ -222,13 +221,11 @@ public class GetXSpace {
         out.format(fmt, "df", s.total(), 0, s.free());
         out.format(fmt, "getX", ts, fs, us);
 
-        // If the file system can dynamically change size, this check will fail.
-        // This can happen on macOS for the /dev files system.
-        if (ts != s.total() && (!Platform.isOSX() || !s.name().equals("/dev"))) {
+        // If the file system can dynamically change size, this check will fail
+        if (ts != s.total())
             fail(s.name(), s.total(), "!=", ts);
-        }  else {
+        else
             pass();
-        }
 
         // unix df returns statvfs.f_bavail
         long tsp = (!name.startsWith("Windows") ? us : fs);
