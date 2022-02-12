@@ -1367,12 +1367,12 @@ class StubGenerator: public StubCodeGenerator {
       // save regs before copy_memory
       __ push(RegSet::of(d, count), sp);
     }
-    copy_memory(aligned, s, d, count, rscratch1, (int)size);
+    copy_memory(aligned, s, d, count, rscratch1, checked_cast<int>(size));
 
     if (is_oop) {
       __ pop(RegSet::of(d, count), sp);
       if (VerifyOops)
-        verify_oop_array((int)size, d, count, r16);
+        verify_oop_array(checked_cast<int>(size), d, count, r16);
     }
 
     bs->arraycopy_epilogue(_masm, decorators, is_oop, d, count, rscratch1, RegSet());
