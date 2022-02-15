@@ -547,7 +547,7 @@ void* os::native_java_library() {
       _native_java_library = dll_load(buffer, ebuf, sizeof(ebuf));
     }
     if (_native_java_library == NULL) {
-      vm_exit_during_initialization("Unable to load native library T", ebuf);
+      vm_exit_during_initialization("Unable to load native library", ebuf);
     }
 
 #if defined(__OpenBSD__)

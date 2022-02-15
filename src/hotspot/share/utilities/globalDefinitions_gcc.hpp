@@ -195,7 +195,7 @@ extern "C" {
 // checking for nanness
 #ifdef SOLARIS
 #ifdef SPARC
-inline int g_isnan(float  f) { return isnan(f); }
+inline int g_isnan(float  f) { return isnanf(f); }
 #else
 // isnanf() broken on Intel Solaris use isnand()
 inline int g_isnan(float  f) { return isnand(f); }
