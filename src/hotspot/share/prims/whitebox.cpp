@@ -2013,6 +2013,13 @@ WB_ENTRY(void, WB_PrintOsInfo(JNIEnv* env, jobject o))
   os::print_os_info(tty);
 WB_END
 
+WB_ENTRY(jstring, WB_GetLibcName(JNIEnv* env, jobject o))
+  ThreadToNativeFromVM ttn(thread);
+  jstring info_string = env->NewStringUTF(XSTR(LIBC));
+  CHECK_JNI_EXCEPTION_(env, NULL);
+  return info_string;
+WB_END
+
 // Elf decoder
 WB_ENTRY(void, WB_DisableElfSectionCache(JNIEnv* env))
 #if !defined(_WINDOWS) && !defined(__APPLE__) && !defined(_AIX)
@@ -2256,6 +2263,7 @@ static JNINativeMethod methods[] = {
   {CC"printOsInfo",               CC"()V",            (void*)&WB_PrintOsInfo },
   {CC"disableElfSectionCache",    CC"()V",            (void*)&WB_DisableElfSectionCache },
   {CC"aotLibrariesCount", CC"()I",                    (void*)&WB_AotLibrariesCount },
+  {CC"getLibcName",     CC"()Ljava/lang/String;",     (void*)&WB_GetLibcName},
 };
 
 
