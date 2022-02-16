@@ -101,7 +101,7 @@ public class XPathTest {
             throws Exception {
         xpf.getProperty(name);
     }
- 
+
     /*
       @bug 6211561
      * Verifies the specification for XPath and XPathExpression:
