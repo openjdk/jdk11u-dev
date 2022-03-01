@@ -632,7 +632,7 @@ public final class SunPKCS11 extends AuthProvider {
 
         d(AGP, "ChaCha20-Poly1305",
                 "com.sun.crypto.provider.ChaCha20Poly1305Parameters",
-                s("1.2.840.113549.1.9.16.3.18", "CHACHA20-POLY1305"),
+                s("1.2.840.113549.1.9.16.3.18", "OID.1.2.840.113549.1.9.16.3.18"),
                 m(CKM_CHACHA20_POLY1305));
 
         d(KA, "DH",             P11KeyAgreement,        s("DiffieHellman"),
@@ -721,7 +721,7 @@ public final class SunPKCS11 extends AuthProvider {
                 m(CKM_BLOWFISH_CBC));
 
         d(CIP, "ChaCha20-Poly1305",             P11AEADCipher,
-                s("1.2.840.113549.1.9.16.3.18", "CHACHA20-POLY1305"),
+                s("1.2.840.113549.1.9.16.3.18", "OID.1.2.840.113549.1.9.16.3.18"),
                 m(CKM_CHACHA20_POLY1305));
 
         d(CIP, "RSA/ECB/PKCS1Padding",          P11RSACipher,   s("RSA"),
