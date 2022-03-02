@@ -228,7 +228,7 @@ public final class OCSP {
         if (debug != null) {
             debug.println("connecting to OCSP service at: " + responderURI);
         }
-        
+
         URL url;
         HttpURLConnection con = null;
         try {
