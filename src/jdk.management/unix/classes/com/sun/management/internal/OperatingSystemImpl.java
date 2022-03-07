@@ -33,6 +33,7 @@ import java.util.function.ToDoubleFunction;
 import jdk.internal.platform.Metrics;
 import sun.management.BaseOperatingSystemImpl;
 import sun.management.VMManagement;
+
 /**
  * Implementation class for the operating system.
  * Standard and committed hotspot-specific metrics if any.
@@ -207,12 +208,6 @@ class OperatingSystemImpl extends BaseOperatingSystemImpl
             long memSwapLimit = containerMetrics.getMemoryAndSwapLimit();
             long memLimit = containerMetrics.getMemoryLimit();
             if (memSwapLimit >= 0 && memLimit >= 0) {
-                long deltaLimit = memSwapLimit - memLimit;
-                // Return 0 when memSwapLimit == memLimit, which means no swap space is allowed.
-                // And the same for memSwapLimit < memLimit.
-                if (deltaLimit <= 0) {
-                    return 0;
-                }
                 for (int attempt = 0; attempt < MAX_ATTEMPTS_NUMBER; attempt++) {
                     long memSwapUsage = containerMetrics.getMemoryAndSwapUsage();
                     long memUsage = containerMetrics.getMemoryUsage();
@@ -220,12 +215,8 @@ class OperatingSystemImpl extends BaseOperatingSystemImpl
                         // We read "memory usage" and "memory and swap usage" not atomically,
                         // and it's possible to get the negative value when subtracting these two.
                         // If this happens just retry the loop for a few iterations.
-                        long deltaUsage = memSwapUsage - memUsage;
-                        if (deltaUsage >= 0) {
-                            long freeSwap = deltaLimit - deltaUsage;
-                            if (freeSwap >= 0) {
-                                return freeSwap;
-                            }
+                        if ((memSwapUsage - memUsage) >= 0) {
+                            return memSwapLimit - memLimit - (memSwapUsage - memUsage);
                         }
                     }
                 }
@@ -282,8 +273,8 @@ class OperatingSystemImpl extends BaseOperatingSystemImpl
     }
 
     private boolean isCpuSetSameAsHostCpuSet() {
-        if (containerMetrics != null) {
-            return containerMetrics.getCpuSetCpus().length == getHostOnlineCpuCount0();
+        if (containerMetrics != null && containerMetrics.getCpuSetCpus() != null) {
+            return containerMetrics.getCpuSetCpus().length == getHostConfiguredCpuCount0();
         }
         return false;
     }
