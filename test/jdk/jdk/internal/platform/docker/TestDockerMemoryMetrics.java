@@ -26,6 +26,7 @@ import jdk.test.lib.Utils;
 import jdk.test.lib.containers.docker.Common;
 import jdk.test.lib.containers.docker.DockerRunOptions;
 import jdk.test.lib.containers.docker.DockerTestUtils;
+import jdk.test.lib.process.OutputAnalyzer;
 
 /*
  * @test
