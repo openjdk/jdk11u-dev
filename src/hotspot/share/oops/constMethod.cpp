@@ -405,7 +405,6 @@ void ConstMethod::copy_annotations_from(ClassLoaderData* loader_data, ConstMetho
 
 void ConstMethod::metaspace_pointers_do(MetaspaceClosure* it) {
   log_trace(cds)("Iter(ConstMethod): %p", this);
-  
   if (!method()->method_holder()->is_rewritten()) {
     it->push(&_constants, MetaspaceClosure::_writable);
   } else {
