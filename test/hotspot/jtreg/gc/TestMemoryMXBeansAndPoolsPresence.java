@@ -27,15 +27,33 @@ import java.lang.management.*;
 import static jdk.test.lib.Asserts.*;
 import java.util.stream.*;
 
-/* @test TestMemoryMXBeansAndPoolsPresence
+/* @test TestMemoryMXBeansAndPoolsPresenceG1
  * @bug 8191564
  * @summary Tests that GarbageCollectorMXBeans and GC MemoryPools are created.
  * @library /test/lib
  * @modules java.base/jdk.internal.misc
  *          java.management
- * @requires vm.gc == null
+ * @requires vm.gc.G1
  * @run main/othervm -XX:+UseG1GC TestMemoryMXBeansAndPoolsPresence G1
+ */
+
+/* @test TestMemoryMXBeansAndPoolsPresenceParallel
+ * @bug 8191564
+ * @summary Tests that GarbageCollectorMXBeans and GC MemoryPools are created.
+ * @library /test/lib
+ * @modules java.base/jdk.internal.misc
+ *          java.management
+ * @requires vm.gc.Parallel
  * @run main/othervm -XX:+UseParallelGC TestMemoryMXBeansAndPoolsPresence Parallel
+ */
+
+/* @test TestMemoryMXBeansAndPoolsPresenceSerial
+ * @bug 8191564
+ * @summary Tests that GarbageCollectorMXBeans and GC MemoryPools are created.
+ * @library /test/lib
+ * @modules java.base/jdk.internal.misc
+ *          java.management
+ * @requires vm.gc.Serial
  * @run main/othervm -XX:+UseSerialGC TestMemoryMXBeansAndPoolsPresence Serial
  */
 
@@ -45,7 +63,7 @@ import java.util.stream.*;
  * @modules java.base/jdk.internal.misc
  *          java.management
  * @comment Graal does not support CMS
- * @requires vm.gc == null & !vm.graal.enabled
+ * @requires vm.gc.ConcMarkSweep & !vm.graal.enabled
  * @run main/othervm -XX:+UseConcMarkSweepGC TestMemoryMXBeansAndPoolsPresence CMS
  */
 

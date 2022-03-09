@@ -26,7 +26,7 @@
  * @key gc regression
  * @summary Remove warning about CMS generation shrinking.
  * @bug 8012111
- * @requires !vm.graal.enabled
+ * @requires vm.gc.ConcMarkSweep & !vm.graal.enabled
  * @library /test/lib
  * @modules java.base/jdk.internal.misc
  *          java.management

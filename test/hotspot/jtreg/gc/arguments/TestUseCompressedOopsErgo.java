@@ -22,21 +22,51 @@
  */
 
 /*
- * @test TestUseCompressedOopsErgo
+ * @test TestUseCompressedOopsErgoSerial
  * @key gc
  * @bug 8010722
  * @summary Tests ergonomics for UseCompressedOops.
- * @requires vm.gc=="null"
+ * @requires vm.gc.Serial
+ * @library /test/lib
+ * @library /
+ * @modules java.base/jdk.internal.misc
+ *          java.management/sun.management
+ * @build sun.hotspot.WhiteBox
+ * @run driver ClassFileInstaller sun.hotspot.WhiteBox
+ *                              sun.hotspot.WhiteBox$WhiteBoxPermission
+ * @run main/othervm TestUseCompressedOopsErgo -XX:+UseSerialGC
+ */
+
+/*
+ * @test TestUseCompressedOopsErgoParallel
+ * @key gc
+ * @bug 8010722
+ * @summary Tests ergonomics for UseCompressedOops.
+ * @requires vm.gc.Parallel
  * @library /test/lib
  * @modules java.base/jdk.internal.misc
  *          java.management/sun.management
  * @build sun.hotspot.WhiteBox
  * @run driver ClassFileInstaller sun.hotspot.WhiteBox
  *                              sun.hotspot.WhiteBox$WhiteBoxPermission
- * @run main/othervm TestUseCompressedOopsErgo -XX:+UseG1GC
  * @run main/othervm TestUseCompressedOopsErgo -XX:+UseParallelGC
  * @run main/othervm TestUseCompressedOopsErgo -XX:+UseParallelGC -XX:-UseParallelOldGC
- * @run main/othervm TestUseCompressedOopsErgo -XX:+UseSerialGC
+ */
+
+/*
+ * @test TestUseCompressedOopsErgoG1
+ * @key gc
+ * @bug 8010722
+ * @summary Tests ergonomics for UseCompressedOops.
+ * @requires vm.gc.G1
+ * @library /test/lib
+ * @library /
+ * @modules java.base/jdk.internal.misc
+ *          java.management/sun.management
+ * @build sun.hotspot.WhiteBox
+ * @run driver ClassFileInstaller sun.hotspot.WhiteBox
+ *                              sun.hotspot.WhiteBox$WhiteBoxPermission
+ * @run main/othervm TestUseCompressedOopsErgo -XX:+UseG1GC
  */
 
 /*
@@ -44,7 +74,7 @@
  * @key gc
  * @bug 8010722
  * @comment Graal does not support CMS
- * @requires vm.gc=="null" & !vm.graal.enabled
+ * @requires vm.gc.ConcMarkSweep & !vm.graal.enabled
  * @library /test/lib
  * @modules java.base/jdk.internal.misc
  *          java.management/sun.management

@@ -22,12 +22,49 @@
  */
 
 /*
- * @test
+ * @test TestClassUnloadingDisabledSerial
  * @key gc
  * @bug 8114823
- * @requires vm.gc == null
  * @requires vm.opt.ExplicitGCInvokesConcurrent != true
  * @requires vm.opt.ClassUnloading != true
+ * @requires vm.gc.Serial
+ * @library /test/lib
+ * @modules java.base/jdk.internal.misc
+ *          java.management
+ * @build sun.hotspot.WhiteBox
+ * @run driver ClassFileInstaller sun.hotspot.WhiteBox
+ *                              sun.hotspot.WhiteBox$WhiteBoxPermission
+ *
+ * @run main/othervm -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI
+ *                   -XX:-ClassUnloading -XX:+UseSerialGC TestClassUnloadingDisabled
+ */
+
+/*
+ * @test TestClassUnloadingDisabledParallel
+ * @key gc
+ * @bug 8114823
+ * @requires vm.opt.ExplicitGCInvokesConcurrent != true
+ * @requires vm.opt.ClassUnloading != true
+ * @requires vm.gc.Parallel
+ * @library /test/lib
+ * @modules java.base/jdk.internal.misc
+ *          java.management
+ * @build sun.hotspot.WhiteBox
+ * @run driver ClassFileInstaller sun.hotspot.WhiteBox
+ *                              sun.hotspot.WhiteBox$WhiteBoxPermission
+ *
+ * @run main/othervm -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI
+ *                   -XX:-ClassUnloading -XX:+UseParallelGC TestClassUnloadingDisabled
+ *
+ */
+
+/*
+ * @test TestClassUnloadingDisabledG1
+ * @key gc
+ * @bug 8114823
+ * @requires vm.opt.ExplicitGCInvokesConcurrent != true
+ * @requires vm.opt.ClassUnloading != true
+ * @requires vm.gc.G1
  * @library /test/lib
  * @modules java.base/jdk.internal.misc
  *          java.management
@@ -38,20 +75,14 @@
  * @run main/othervm -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI
  *                   -XX:-ClassUnloading -XX:+UseG1GC TestClassUnloadingDisabled
  *
- * @run main/othervm -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI
- *                   -XX:-ClassUnloading -XX:+UseSerialGC TestClassUnloadingDisabled
- *
- * @run main/othervm -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI
- *                   -XX:-ClassUnloading -XX:+UseParallelGC TestClassUnloadingDisabled
- *
  */
 
 /*
- * @test
+ * @test TestClassUnloadingDisabledCMS
  * @key gc
  * @bug 8114823
  * @comment Graal does not support CMS
- * @requires vm.gc=="null" & !vm.graal.enabled
+ * @requires vm.gc.ConcMarkSweep & !vm.graal.enabled
  * @requires vm.opt.ExplicitGCInvokesConcurrent != true
  * @requires vm.opt.ClassUnloading != true
  * @library /test/lib

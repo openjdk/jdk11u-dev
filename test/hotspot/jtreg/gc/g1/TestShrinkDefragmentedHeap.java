@@ -32,6 +32,7 @@
  *     3. invoke gc and check that memory returned to the system (amount of committed memory got down)
  *
  * @library /test/lib /
+ * @requires vm.gc.G1
  * @modules java.base/jdk.internal.misc
  *          java.management/sun.management
  */

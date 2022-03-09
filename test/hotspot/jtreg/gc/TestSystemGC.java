@@ -22,14 +22,27 @@
  */
 
 /*
- * @test TestSystemGC
+ * @test TestSystemGCSerial
  * @key gc
- * @requires vm.gc=="null"
+ * @requires vm.gc.Serial
  * @summary Runs System.gc() with different flags.
- * @run main/othervm TestSystemGC
  * @run main/othervm -XX:+UseSerialGC TestSystemGC
+ */
+
+/*
+ * @test TestSystemGCParallel
+ * @key gc
+ * @requires vm.gc.Parallel
+ * @summary Runs System.gc() with different flags.
  * @run main/othervm -XX:+UseParallelGC TestSystemGC
  * @run main/othervm -XX:+UseParallelGC -XX:-UseParallelOldGC TestSystemGC
+ */
+
+/*
+ * @test TestSystemGCG1
+ * @key gc
+ * @requires vm.gc.G1
+ * @summary Runs System.gc() with different flags.
  * @run main/othervm -XX:+UseG1GC TestSystemGC
  * @run main/othervm -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent TestSystemGC
  * @run main/othervm -XX:+UseLargePages TestSystemGC
@@ -40,7 +53,7 @@
  * @test TestSystemGCCMS
  * @key gc
  * @comment Graal does not support CMS
- * @requires vm.gc=="null" & !vm.graal.enabled
+ * @requires vm.gc.ConcMarkSweep & !vm.graal.enabled
  * @run main/othervm -XX:+UseConcMarkSweepGC TestSystemGC
  * @run main/othervm -XX:+UseConcMarkSweepGC -XX:+ExplicitGCInvokesConcurrent TestSystemGC
  */

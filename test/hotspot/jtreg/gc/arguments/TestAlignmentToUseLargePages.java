@@ -22,18 +22,31 @@
  */
 
 /**
- * @test TestAlignmentToUseLargePages
+ * @test TestAlignmentToUseLargePagesSerial
  * @key gc regression
- * @summary All parallel GC variants may use large pages without the requirement that the
- * heap alignment is large page aligned. Other collectors also need to start up with odd sized heaps.
  * @bug 8024396
- * @requires vm.gc=="null"
+ * @requires vm.gc.Serial
+ * @run main/othervm -Xms71M -Xmx91M -XX:+UseSerialGC -XX:+UseLargePages TestAlignmentToUseLargePages
+ * @run main/othervm -Xms71M -Xmx91M -XX:+UseSerialGC -XX:-UseLargePages TestAlignmentToUseLargePages
+ */
+
+/**
+ * @test TestAlignmentToUseLargePagesParallel
+ * @key gc regression
+ * @summary All parallel GC variants may use large pages without the requirement that the heap alignment is large page aligned. Other collectors also need to start up with odd sized heaps.
+ * @bug 8024396
+ * @requires vm.gc.Parallel
  * @run main/othervm -Xms71M -Xmx91M -XX:+UseParallelGC -XX:-UseParallelOldGC -XX:+UseLargePages TestAlignmentToUseLargePages
  * @run main/othervm -Xms71M -Xmx91M -XX:+UseParallelGC -XX:-UseParallelOldGC -XX:-UseLargePages TestAlignmentToUseLargePages
  * @run main/othervm -Xms71M -Xmx91M -XX:+UseParallelGC -XX:+UseParallelOldGC -XX:+UseLargePages TestAlignmentToUseLargePages
  * @run main/othervm -Xms71M -Xmx91M -XX:+UseParallelGC -XX:+UseParallelOldGC -XX:-UseLargePages TestAlignmentToUseLargePages
- * @run main/othervm -Xms71M -Xmx91M -XX:+UseSerialGC -XX:+UseLargePages TestAlignmentToUseLargePages
- * @run main/othervm -Xms71M -Xmx91M -XX:+UseSerialGC -XX:-UseLargePages TestAlignmentToUseLargePages
+ */
+
+/**
+ * @test TestAlignmentToUseLargePagesG1
+ * @key gc regression
+ * @bug 8024396
+ * @requires vm.gc.G1
  * @run main/othervm -Xms71M -Xmx91M -XX:+UseG1GC -XX:+UseLargePages TestAlignmentToUseLargePages
  * @run main/othervm -Xms71M -Xmx91M -XX:+UseG1GC -XX:-UseLargePages TestAlignmentToUseLargePages
  */
@@ -43,7 +56,7 @@
  * @key gc regression
  * @bug 8024396
  * @comment Graal does not support CMS
- * @requires vm.gc=="null" & !vm.graal.enabled
+ * @requires vm.gc.ConcMarkSweep & !vm.graal.enabled
  * @run main/othervm -Xms71M -Xmx91M -XX:+UseConcMarkSweepGC -XX:+UseLargePages TestAlignmentToUseLargePages
  * @run main/othervm -Xms71M -Xmx91M -XX:+UseConcMarkSweepGC -XX:-UseLargePages TestAlignmentToUseLargePages
  */

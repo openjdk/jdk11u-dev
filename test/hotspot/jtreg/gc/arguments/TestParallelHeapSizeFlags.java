@@ -27,7 +27,7 @@
  * @bug 8006088
  * @summary Tests argument processing for initial and maximum heap size for the
  * parallel collectors.
- * @requires vm.gc=="null"
+ * @requires vm.gc.Parallel
  * @library /test/lib
  * @modules java.base/jdk.internal.misc
  *          java.management

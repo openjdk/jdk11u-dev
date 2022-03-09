@@ -22,16 +22,27 @@
  */
 
 /*
- * @test TestAgeOutput
+ * @test TestAgeOutputSerial
  * @bug 8164936
- * @summary Check that collectors using age table based aging print an age table even for the first garbage collection
  * @key gc
- * @requires vm.gc=="null"
+ * @requires vm.gc.Serial
  * @modules java.base/jdk.internal.misc
  * @library /test/lib
  * @build sun.hotspot.WhiteBox
  * @run driver ClassFileInstaller sun.hotspot.WhiteBox
  * @run main/othervm -XX:+UseSerialGC TestAgeOutput UseSerialGC
+ */
+
+/*
+ * @test TestAgeOutputG1
+ * @bug 8164936
+ * @summary Check that collectors using age table based aging print an age table even for the first garbage collection
+ * @key gc
+ * @requires vm.gc.G1
+ * @modules java.base/jdk.internal.misc
+ * @library /test/lib
+ * @build sun.hotspot.WhiteBox
+ * @run driver ClassFileInstaller sun.hotspot.WhiteBox
  * @run main/othervm -XX:+UseG1GC TestAgeOutput UseG1GC
  */
 
@@ -40,7 +51,7 @@
  * @bug 8164936
  * @key gc
  * @comment Graal does not support CMS
- * @requires vm.gc=="null" & !vm.graal.enabled
+ * @requires vm.gc.ConcMarkSweep & !vm.graal.enabled
  * @modules java.base/jdk.internal.misc
  * @library /test/lib
  * @build sun.hotspot.WhiteBox

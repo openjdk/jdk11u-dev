@@ -26,7 +26,7 @@
  * @key gc
  * @bug 8006398 8155948 8179013
  * @summary Test that CMS prints a warning message
- * @requires !vm.graal.enabled
+ * @requires vm.gc.ConcMarkSweep & !vm.graal.enabled
  * @library /test/lib
  * @modules java.base/jdk.internal.misc
  *          java.management

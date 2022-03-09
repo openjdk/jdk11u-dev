@@ -25,7 +25,7 @@
  * @test
  * @key gc
  * @bug 8049831
- * @requires !vm.graal.enabled
+ * @requires vm.gc.ConcMarkSweep & !vm.graal.enabled
  * @library /test/lib
  * @modules java.base/jdk.internal.misc
  *          java.management
