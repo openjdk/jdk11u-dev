@@ -334,7 +334,7 @@ void Method::remove_unshareable_info() {
 }
 
 void Method::set_vtable_index(int index) {
-  if (is_shared() && !MetaspaceShared::remapped_readwrite() && method_holder()->verified_at_dump_time()) {
+  if (is_shared() && !MetaspaceShared::remapped_readwrite() && !method_holder()->is_shared_old_klass()) {
     // At runtime initialize_vtable is rerun as part of link_class_impl()
     // for a shared class loaded by the non-boot loader to obtain the loader
     // constraints based on the runtime classloaders' context.
@@ -345,7 +345,7 @@ void Method::set_vtable_index(int index) {
 }
 
 void Method::set_itable_index(int index) {
-  if (is_shared() && !MetaspaceShared::remapped_readwrite() && method_holder()->verified_at_dump_time()) {
+  if (is_shared() && !MetaspaceShared::remapped_readwrite() && !method_holder()->is_shared_old_klass()) {
     // At runtime initialize_itable is rerun as part of link_class_impl()
     // for a shared class loaded by the non-boot loader to obtain the loader
     // constraints based on the runtime classloaders' context. The dumptime
@@ -986,7 +986,7 @@ void Method::unlink_method() {
   assert(DumpSharedSpaces, "dump time only");
   // Set the values to what they should be at run time. Note that
   // this Method can no longer be executed during dump time.
-  if (method_holder()->verified_at_dump_time()) {
+  if (!method_holder()->is_shared_old_klass()) {
     _i2i_entry = Interpreter::entry_for_cds_method(this);
     _from_interpreted_entry = _i2i_entry;
   } else {
@@ -1000,7 +1000,7 @@ void Method::unlink_method() {
   }
   NOT_PRODUCT(set_compiled_invocation_count(0);)
 
-  if (method_holder()->verified_at_dump_time()) {
+  if (!method_holder()->is_shared_old_klass()) {
     CDSAdapterHandlerEntry* cds_adapter = (CDSAdapterHandlerEntry*)adapter();
     constMethod()->set_adapter_trampoline(cds_adapter->get_adapter_trampoline());
     _from_compiled_entry = cds_adapter->get_c2i_entry_trampoline();
@@ -1089,7 +1089,7 @@ void Method::unlink_method() {
 void Method::link_method(const methodHandle& h_method, TRAPS) {
   // If the code cache is full, we may reenter this function for the
   // leftover methods that weren't linked.
-  if (is_shared() && method_holder()->verified_at_dump_time()) {
+  if (is_shared() && !method_holder()->is_shared_old_klass()) {
     address entry = Interpreter::entry_for_cds_method(h_method);
     assert(entry != NULL && entry == _i2i_entry,
            "should be correctly set during dump time");
@@ -1106,7 +1106,7 @@ void Method::link_method(const methodHandle& h_method, TRAPS) {
   // Setup interpreter entrypoint
   assert(this == h_method(), "wrong h_method()" );
 
-  if (!(is_shared() && method_holder()->verified_at_dump_time())) {
+  if (!(is_shared() && !method_holder()->is_shared_old_klass())) {
     assert(adapter() == NULL, "init'd to NULL");
     address entry = Interpreter::entry_for_method(h_method);
     assert(entry != NULL, "interpreter entry must be non-null");
@@ -1150,7 +1150,7 @@ address Method::make_adapters(const methodHandle& mh, TRAPS) {
       THROW_MSG_NULL(vmSymbols::java_lang_VirtualMachineError(), "Out of space in CodeCache for adapters");
     }
   }
-  if (mh->is_shared() && mh->method_holder()->verified_at_dump_time()) {
+  if (mh->is_shared() && !mh->method_holder()->is_shared_old_klass()) {
     assert(mh->adapter() == adapter, "must be");
     assert(mh->_from_compiled_entry != NULL, "must be");
   } else {
@@ -1161,7 +1161,7 @@ address Method::make_adapters(const methodHandle& mh, TRAPS) {
 }
 
 void Method::restore_unshareable_info(TRAPS) {
-  if (!method_holder()->verified_at_dump_time()) {
+  if (method_holder()->is_shared_old_klass()) {
     return;
   }
 

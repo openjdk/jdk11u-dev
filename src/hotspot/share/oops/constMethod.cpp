@@ -545,7 +545,7 @@ void ConstMethod::verify_on(outputStream* st) {
 }
 
 AdapterHandlerEntry* ConstMethod::adapter() {
-  if (is_shared() && _constants->pool_holder()->verified_at_dump_time()) {
+  if (is_shared() && !_constants->pool_holder()->is_shared_old_klass()) {
     return *_adapter_trampoline;
   } else {
     return _adapter;
@@ -553,12 +553,12 @@ AdapterHandlerEntry* ConstMethod::adapter() {
 }
 
 void ConstMethod::update_adapter_trampoline(AdapterHandlerEntry* adapter) {
-  assert(is_shared() && _constants->pool_holder()->verified_at_dump_time(), "must be");
+  assert(is_shared() && !_constants->pool_holder()->is_shared_old_klass()(), "must be");
   *_adapter_trampoline = adapter;
   assert(this->adapter() == adapter, "must be");
 }
 
 void ConstMethod::set_adapter_entry(AdapterHandlerEntry* adapter) {
-  assert(!(is_shared() && _constants->pool_holder()->verified_at_dump_time()), "shared methods have fixed adapter_trampoline");
+  assert(!(is_shared() && !_constants->pool_holder()->is_shared_old_klass()()), "shared methods have fixed adapter_trampoline");
   _adapter = adapter;
 }

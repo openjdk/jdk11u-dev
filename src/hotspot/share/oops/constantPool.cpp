@@ -365,7 +365,7 @@ void ConstantPool::restore_unshareable_info(TRAPS) {
 }
 
 void ConstantPool::remove_unshareable_info() {
-  if (!_pool_holder->is_linked() && !_pool_holder->verified_at_dump_time()) {
+  if (!_pool_holder->is_linked() && _pool_holder->is_shared_old_klass()) {
     return;
   }
   // Resolved references are not in the shared archive.

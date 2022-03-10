@@ -2286,9 +2286,9 @@ void InstanceKlass::metaspace_pointers_do(MetaspaceClosure* it) {
 }
 
 void InstanceKlass::remove_unshareable_info() {
-  if (can_be_verified_at_dumptime()) {
-    // Remember this so we can avoid walking the hierarchy at runtime.
-    set_verified_at_dump_time();
+  if (MetaspaceShared::is_old_class(this)) {
+    // Set the old class bit.
+    set_is_shared_old_klass();
   }
   Klass::remove_unshareable_info();
 
@@ -2388,30 +2388,6 @@ void InstanceKlass::restore_unshareable_info(ClassLoaderData* loader_data, Handl
     // --> see ArrayKlass::complete_create_array_klass()
     array_klasses()->restore_unshareable_info(ClassLoaderData::the_null_class_loader_data(), Handle(), CHECK);
   }
-}
-
-// Check if a class or any of its supertypes has a version older than 50.
-// CDS will not perform verification of old classes during dump time because
-// without changing the old verifier, the verification constraint cannot be
-// retrieved during dump time.
-// Verification of archived old classes will be performed during run time.
-bool InstanceKlass::can_be_verified_at_dumptime() const {
-  if (major_version() < 50 /*JAVA_6_VERSION*/) {
-    return false;
-  }
-  if (java_super() != NULL && !java_super()->can_be_verified_at_dumptime()) {
-    return false;
-  }
-  Array<Klass*>* interfaces = local_interfaces();
-  int len = interfaces->length();
-  for (int i = 0; i < len; i++) {
-    Klass* k = interfaces->at(i);
-    InstanceKlass* ik = InstanceKlass::cast(k);
-    if (!ik->can_be_verified_at_dumptime()) {
-      return false;
-    }
-  }
-  return true;
 }
 
 // returns true IFF is_in_error_state() has been changed as a result of this call.
