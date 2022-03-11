@@ -841,7 +841,7 @@ public final class LauncherHelper {
         } catch (Throwable e) {
             if (mainClass.getModule().isNamed()) {
                 abort(e, "java.launcher.module.error5",
-                      mainClass.getName(), mainClass.getModule().getName(),
+                      mainClass.getName(), mainClass.getModule(),
                       e.getClass().getName(), e.getLocalizedMessage());
             } else {
                 abort(e, "java.launcher.cls.error7", mainClass.getName(),
