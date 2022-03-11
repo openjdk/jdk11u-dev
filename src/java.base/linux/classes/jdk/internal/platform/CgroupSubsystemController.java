@@ -26,6 +26,7 @@
 package jdk.internal.platform;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.math.BigInteger;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -171,6 +172,8 @@ public interface CgroupSubsystemController {
             return result.isPresent() ? Long.parseLong(result.get()) : defaultRetval;
         }
         catch (IOException e) {
+            return defaultRetval;
+        } catch (UncheckedIOException e) {
             return defaultRetval;
         }
     }
