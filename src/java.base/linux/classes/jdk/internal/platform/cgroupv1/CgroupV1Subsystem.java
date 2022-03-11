@@ -162,7 +162,7 @@ public class CgroupV1Subsystem implements CgroupSubsystem, CgroupV1Metrics {
     /**
      * setSubSystemPath based on the contents of /proc/self/cgroup
      */
-private static void setSubSystemControllerPath(CgroupV1Subsystem subsystem, String[] entry) {
+    private static void setSubSystemControllerPath(CgroupV1Subsystem subsystem, String[] entry) {
         String controller = entry[1];
         String base = entry[2];
         if (controller != null && base != null) {
@@ -191,8 +191,8 @@ private static void setSubSystemControllerPath(CgroupV1Subsystem subsystem, Stri
         }
     }
 
-   private static void setPath(CgroupV1Subsystem subsystem, CgroupV1SubsystemController controller, String base) {        
-	if (controller != null) {
+    private static void setPath(CgroupV1Subsystem subsystem, CgroupV1SubsystemController controller, String base) {
+        if (controller != null) {
             controller.setPath(base);
             if (controller instanceof CgroupV1MemorySubSystemController) {
                 CgroupV1MemorySubSystemController memorySubSystem = (CgroupV1MemorySubSystemController)controller;
