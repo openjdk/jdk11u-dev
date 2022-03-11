@@ -26,6 +26,7 @@
 package jdk.internal.platform.cgroupv1;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
@@ -77,6 +78,8 @@ public class CgroupV1Subsystem implements CgroupSubsystem, CgroupV1Metrics {
 
         } catch (IOException e) {
             return null;
+        } catch (UncheckedIOException e) {
+            return null;
         }
 
         /**
@@ -110,6 +113,8 @@ public class CgroupV1Subsystem implements CgroupSubsystem, CgroupV1Metrics {
                  .forEach(line -> setSubSystemControllerPath(subsystem, line));
 
         } catch (IOException e) {
+            return null;
+        } catch (UncheckedIOException e) {
             return null;
         }
 
@@ -157,53 +162,46 @@ public class CgroupV1Subsystem implements CgroupSubsystem, CgroupV1Metrics {
     /**
      * setSubSystemPath based on the contents of /proc/self/cgroup
      */
-    private static void setSubSystemControllerPath(CgroupV1Subsystem subsystem, String[] entry) {
-        String controllerName;
-        String base;
-        CgroupV1SubsystemController controller = null;
-        CgroupV1SubsystemController controller2 = null;
-
-        controllerName = entry[1];
-        base = entry[2];
-        if (controllerName != null && base != null) {
-            switch (controllerName) {
-                case "memory":
-                    controller = subsystem.memoryController();
-                    break;
-                case "cpuset":
-                    controller = subsystem.cpuSetController();
-                    break;
-                case "cpu,cpuacct":
-                case "cpuacct,cpu":
-                    controller = subsystem.cpuController();
-                    controller2 = subsystem.cpuAcctController();
-                    break;
-                case "cpuacct":
-                    controller = subsystem.cpuAcctController();
-                    break;
-                case "cpu":
-                    controller = subsystem.cpuController();
-                    break;
-                case "blkio":
-                    controller = subsystem.blkIOController();
-                    break;
-                // Ignore subsystems that we don't support
-                default:
-                    break;
+private static void setSubSystemControllerPath(CgroupV1Subsystem subsystem, String[] entry) {
+        String controller = entry[1];
+        String base = entry[2];
+        if (controller != null && base != null) {
+            for (String cName: controller.split(",")) {
+                switch (cName) {
+                    case "memory":
+                        setPath(subsystem, subsystem.memoryController(), base);
+                        break;
+                    case "cpuset":
+                        setPath(subsystem, subsystem.cpuSetController(), base);
+                        break;
+                    case "cpuacct":
+                        setPath(subsystem, subsystem.cpuController(), base);
+                        break;
+                    case "cpu":
+                        setPath(subsystem, subsystem.cpuAcctController(), base);
+                        break;
+                    case "blkio":
+                        setPath(subsystem, subsystem.blkIOController(), base);
+                        break;
+                    // Ignore subsystems that we don't support
+                    default:
+                        break;
+                }
             }
         }
+    }
 
-        if (controller != null) {
+   private static void setPath(CgroupV1Subsystem subsystem, CgroupV1SubsystemController controller, String base) {        
+	if (controller != null) {
             controller.setPath(base);
             if (controller instanceof CgroupV1MemorySubSystemController) {
                 CgroupV1MemorySubSystemController memorySubSystem = (CgroupV1MemorySubSystemController)controller;
                 boolean isHierarchial = getHierarchical(memorySubSystem);
                 memorySubSystem.setHierarchical(isHierarchial);
+                boolean isSwapEnabled = getSwapEnabled(memorySubSystem);
+                memorySubSystem.setSwapEnabled(isSwapEnabled);
             }
             subsystem.setActiveSubSystems();
-        }
-        if (controller2 != null) {
-            controller2.setPath(base);
         }
     }
 
@@ -211,6 +209,11 @@ public class CgroupV1Subsystem implements CgroupSubsystem, CgroupV1Metrics {
     private static boolean getHierarchical(CgroupV1MemorySubSystemController controller) {
         long hierarchical = getLongValue(controller, "memory.use_hierarchy");
         return hierarchical > 0;
+    }
+
+    private static boolean getSwapEnabled(CgroupV1MemorySubSystemController controller) {
+        long retval = getLongValue(controller, "memory.memsw.limit_in_bytes");
+        return retval > 0;
     }
 
     private void setActiveSubSystems() {
@@ -442,6 +445,10 @@ public class CgroupV1Subsystem implements CgroupSubsystem, CgroupV1Metrics {
     }
 
     public long getMemoryAndSwapLimit() {
+        if (memory != null && !memory.isSwapEnabled()) {
+            return getMemoryLimit();
+        }
+
         long retval = getLongValue(memory, "memory.memsw.limit_in_bytes");
         if (retval > CgroupV1SubsystemController.UNLIMITED_MIN) {
             if (memory.isHierarchical()) {
@@ -457,10 +464,16 @@ public class CgroupV1Subsystem implements CgroupSubsystem, CgroupV1Metrics {
     }
 
     public long getMemoryAndSwapMaxUsage() {
+        if (memory != null && !memory.isSwapEnabled()) {
+            return getMemoryMaxUsage();
+        }
         return getLongValue(memory, "memory.memsw.max_usage_in_bytes");
     }
 
     public long getMemoryAndSwapUsage() {
+        if (memory != null && !memory.isSwapEnabled()) {
+            return getMemoryUsage();
+        }
         return getLongValue(memory, "memory.memsw.usage_in_bytes");
     }
 
@@ -486,5 +499,7 @@ public class CgroupV1Subsystem implements CgroupSubsystem, CgroupV1Metrics {
     public long getBlkIOServiced() {
         return CgroupV1SubsystemController.getLongEntry(blkio, "blkio.throttle.io_serviced", "Total");
     }
+
+    private static native boolean isUseContainerSupport();
 
 }
