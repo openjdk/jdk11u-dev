@@ -33,7 +33,6 @@ import java.util.function.ToDoubleFunction;
 import jdk.internal.platform.Metrics;
 import sun.management.BaseOperatingSystemImpl;
 import sun.management.VMManagement;
-
 /**
  * Implementation class for the operating system.
  * Standard and committed hotspot-specific metrics if any.

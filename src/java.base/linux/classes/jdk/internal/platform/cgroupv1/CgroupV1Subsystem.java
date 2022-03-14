@@ -76,9 +76,9 @@ public class CgroupV1Subsystem implements CgroupSubsystem, CgroupV1Metrics {
                  .map(line -> line.split(" "))
                  .forEach(entry -> createSubSystemController(subsystem, entry));
 
-        } catch (IOException e) {
-            return null;
         } catch (UncheckedIOException e) {
+            return null;
+        } catch (IOException e) {
             return null;
         }
 
@@ -112,9 +112,9 @@ public class CgroupV1Subsystem implements CgroupSubsystem, CgroupV1Metrics {
                  .filter(line -> (line.length >= 3))
                  .forEach(line -> setSubSystemControllerPath(subsystem, line));
 
-        } catch (IOException e) {
-            return null;
         } catch (UncheckedIOException e) {
+            return null;
+        } catch (IOException e) {
             return null;
         }
 
@@ -206,14 +206,15 @@ public class CgroupV1Subsystem implements CgroupSubsystem, CgroupV1Metrics {
     }
 
 
+    private static boolean getSwapEnabled(CgroupV1MemorySubSystemController controller) {
+         long retval = getLongValue(controller, "memory.memsw.limit_in_bytes");
+         return retval > 0;
+     }
+
+
     private static boolean getHierarchical(CgroupV1MemorySubSystemController controller) {
         long hierarchical = getLongValue(controller, "memory.use_hierarchy");
         return hierarchical > 0;
-    }
-
-    private static boolean getSwapEnabled(CgroupV1MemorySubSystemController controller) {
-        long retval = getLongValue(controller, "memory.memsw.limit_in_bytes");
-        return retval > 0;
     }
 
     private void setActiveSubSystems() {
@@ -441,6 +442,9 @@ public class CgroupV1Subsystem implements CgroupSubsystem, CgroupV1Metrics {
     }
 
     public long getMemoryAndSwapFailCount() {
+        if (memory != null && !memory.isSwapEnabled()) {
+            return getMemoryFailCount();
+        }
         return getLongValue(memory, "memory.memsw.failcnt");
     }
 
@@ -448,7 +452,6 @@ public class CgroupV1Subsystem implements CgroupSubsystem, CgroupV1Metrics {
         if (memory != null && !memory.isSwapEnabled()) {
             return getMemoryLimit();
         }
-
         long retval = getLongValue(memory, "memory.memsw.limit_in_bytes");
         if (retval > CgroupV1SubsystemController.UNLIMITED_MIN) {
             if (memory.isHierarchical()) {
