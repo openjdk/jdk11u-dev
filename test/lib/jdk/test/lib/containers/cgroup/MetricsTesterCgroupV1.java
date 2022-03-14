@@ -310,8 +310,8 @@ public class MetricsTesterCgroupV1 implements CgroupMetricsTester {
                 fail(Controller.MEMORY, "memory.memsw.usage_in_bytes", oldVal, newVal);
                 oldVal = metrics.getMemoryAndSwapUsage();
                 newVal = getLongValueFromFile(Controller.MEMORY, "memory.memsw.usage_in_bytes");
-                if (!compareWithErrorMargin(oldVal, newVal)) {
-                    fail(SubSystem.MEMORY, "memory.memsw.usage_in_bytes", oldVal, newVal);
+                if (!CgroupMetricsTester.compareWithErrorMargin(oldVal, newVal)) {
+                    fail(Controller.MEMORY, "memory.memsw.usage_in_bytes", oldVal, newVal);
                 }
             }
         }
