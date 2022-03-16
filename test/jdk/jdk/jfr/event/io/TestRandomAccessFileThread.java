@@ -64,7 +64,7 @@ public class TestRandomAccessFileThread {
 
     public static void main(String[] args) throws Throwable {
         File tmp = Utils.createTempFile("TestRandomAccessFileThread", ".tmp").toFile();
-        
+
         try (Recording recording = new Recording()) {
             recording.enable(IOEvent.EVENT_FILE_READ).withThreshold(Duration.ofMillis(0));
             recording.enable(IOEvent.EVENT_FILE_WRITE).withThreshold(Duration.ofMillis(0));
