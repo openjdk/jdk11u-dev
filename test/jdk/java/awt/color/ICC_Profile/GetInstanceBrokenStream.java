@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,36 +21,34 @@
  * questions.
  */
 
-package jdk.testlibrary;
+import java.awt.color.ICC_Profile;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 /**
- * This type serves no other purpose than to simply allow automatically running
- * something in a thread, and have all exceptions propagated to
- * RuntimeExceptions, which are thrown up to thread, which in turn should
- * probably be a {@link TestThread} to they are stored.
+ * @test
+ * @bug 8261107
+ * @summary Short and broken streams should be reported as unsupported
  */
-public abstract class XRun implements Runnable {
+public final class GetInstanceBrokenStream {
 
-    /**
-     * Invokes {@code xrun()} and throws all exceptions caught in it
-     * up to the thread.
-     */
-    public final void run() {
-        try {
-            xrun();
-        } catch (Error e) {
-            throw e;
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String[] args) throws IOException {
+        // Empty header
+        testHeader(new byte[]{});
+        // Short header
+        testHeader(new byte[]{-12, 3, 45});
+        // Broken header
+        testHeader(new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+                15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+                31, 32, 33, 34, 35, 0x61, 0x63, 0x73, 0x70});
     }
 
-    /**
-     * Override this method to implement what to run in the thread.
-     *
-     * @throws Throwable
-     */
-    protected abstract void xrun() throws Throwable;
+    private static void testHeader(byte[] data) throws IOException {
+        ByteArrayInputStream bais = new ByteArrayInputStream(data);
+        try {
+            ICC_Profile.getInstance(bais);
+        } catch (IllegalArgumentException e) {
+            // expected
+        }
+    }
 }
