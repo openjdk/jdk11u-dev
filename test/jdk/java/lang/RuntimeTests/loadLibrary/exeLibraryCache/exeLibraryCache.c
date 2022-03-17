@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -20,17 +20,30 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package nsk.share.test.timeoutwatchdog;
 
-/**
- * TimeoutHandler - interface to define reaction on timeout.
- * @see TimeoutWatchdoc
- */
-public interface TimeoutHandler {
+#include <stdio.h>
+#include <stdlib.h>
+#include <dlfcn.h>
 
-        /**
-         * Invoked when watchdog detects timeout. Subclasses must implement this method to define how timeout should be handled.
-         */
-        void handleTimeout();
+int main(int argc, char** argv)
+{
+    void *handle;
 
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s <lib_filename_or_full_path>\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+
+    printf("Attempting to load library '%s'...\n", argv[1]);
+
+    handle = dlopen(argv[1], RTLD_LAZY);
+
+    if (handle == NULL) {
+       fprintf(stderr, "Unable to load library!\n");
+       return EXIT_FAILURE;
+    }
+
+    printf("Library successfully loaded!\n");
+
+    return dlclose(handle);
 }
