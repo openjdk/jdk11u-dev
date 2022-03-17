@@ -28,6 +28,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import org.testng.annotations.Test;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 /* @test
@@ -45,8 +47,7 @@ public class ObjectStreamClassCaching {
         Thread.sleep(100L);
         // to trigger any ReferenceQueue processing...
         lookupObjectStreamClass(AnotherTestClass.class);
-        assertFalse(ref.refersTo(null),
-                    "Cache lost entry although memory was not under pressure");
+        assertNotNull(ref.get(), "Cache lost entry although memory was not under pressure");
     }
 
     @Test
@@ -55,8 +56,7 @@ public class ObjectStreamClassCaching {
         pressMemoryHard(ref);
         System.gc();
         Thread.sleep(100L);
-        assertTrue(ref.refersTo(null),
-                   "Cache still has entry although memory was pressed hard");
+        assertNull(ref.get(), "Cache still has entry although memory was pressed hard");
     }
 
     // separate method so that the looked-up ObjectStreamClass is not kept on stack
@@ -67,7 +67,7 @@ public class ObjectStreamClassCaching {
     private static void pressMemoryHard(Reference<?> ref) {
         try {
             var list = new ArrayList<>();
-            while (!ref.refersTo(null)) {
+            while (ref.get() != null) {
                 list.add(new byte[1024 * 1024 * 64]); // 64 MiB chunks
             }
         } catch (OutOfMemoryError e) {
