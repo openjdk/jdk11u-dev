@@ -82,16 +82,19 @@ G1ParScanThreadState::G1ParScanThreadState(G1CollectedHeap* g1h, uint worker_id,
 }
 
 // Pass locally gathered statistics to global state.
-void G1ParScanThreadState::flush(size_t* surviving_young_words) {
+size_t G1ParScanThreadState::flush(size_t* surviving_young_words) {
   _dcq.flush();
   // Update allocation statistics.
   _plab_allocator->flush_and_retire_stats();
   _g1h->g1_policy()->record_age_table(&_age_table);
 
+  size_t sum = 0;
   uint length = _g1h->collection_set()->young_region_length();
   for (uint region_index = 0; region_index < length; region_index++) {
-    surviving_young_words[region_index] += _surviving_young_words[region_index];
+    surviving_young_words[region_index] += G1ParScanThreadState::surviving_young_words()[region_index];
+    sum += G1ParScanThreadState::surviving_young_words()[region_index];
   }
+  return sum;
 }
 
 G1ParScanThreadState::~G1ParScanThreadState() {
@@ -339,6 +342,7 @@ const size_t* G1ParScanThreadStateSet::surviving_young_words() const {
 void G1ParScanThreadStateSet::flush() {
   assert(!_flushed, "thread local state from the per thread states should be flushed once");
 
+  size_t copied_words = 0;
   for (uint worker_index = 0; worker_index < _n_workers; ++worker_index) {
     G1ParScanThreadState* pss = _states[worker_index];
 
@@ -346,10 +350,11 @@ void G1ParScanThreadStateSet::flush() {
       continue;
     }
 
-    pss->flush(_surviving_young_words_total);
+    copied_words += pss->flush(_surviving_young_words_total);
     delete pss;
     _states[worker_index] = NULL;
   }
+  _g1h->g1_policy()->record_copied_bytes(copied_words << LogBytesPerWord);
   _flushed = true;
 }
 

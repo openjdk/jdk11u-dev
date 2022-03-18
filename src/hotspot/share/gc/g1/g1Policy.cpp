@@ -60,6 +60,7 @@ G1Policy::G1Policy(STWGCTimer* gc_timer) :
   _reserve_factor((double) G1ReservePercent / 100.0),
   _reserve_regions(0),
   _rs_lengths_prediction(0),
+  _copied_bytes(0),
   _initial_mark_to_mixed(),
   _collection_set(NULL),
   _g1h(NULL),
@@ -667,10 +668,9 @@ void G1Policy::record_collection_pause_end(double pause_time_ms, size_t cards_sc
 
     size_t freed_bytes = heap_used_bytes_before_gc - cur_used_bytes;
 
-    if (_collection_set->bytes_used_before() > freed_bytes) {
-      size_t copied_bytes = _collection_set->bytes_used_before() - freed_bytes;
+    if (_copied_bytes > 0) {
       double average_copy_time = average_time_ms(G1GCPhaseTimes::ObjCopy);
-      double cost_per_byte_ms = average_copy_time / (double) copied_bytes;
+      double cost_per_byte_ms = average_copy_time / (double) _copied_bytes;
       _analytics->report_cost_per_byte_ms(cost_per_byte_ms, collector_state()->mark_or_rebuild_in_progress());
     }
 
