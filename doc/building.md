@@ -250,7 +250,7 @@ of writing, the JDK has been successfully compiled on macOS 10.12 (Sierra).
 
 The standard macOS environment contains the basic tooling needed to build, but
 for external libraries a package manager is recommended. The JDK uses
-[homebrew](https://brew.sh/) in the examples, but feel free to use whatever
+[macports](https://www.macports.org/) in the examples, but feel free to use whatever
 manager you want (or none).
 
 ### Linux
@@ -541,7 +541,7 @@ platforms. At least version 2.69 is required.
     autoconf`.
   * To install on an rpm-based Linux, try running `sudo yum install
     autoconf`.
-  * To install on macOS, try running `brew install autoconf`.
+  * To install on macOS, try running `sudo port install autoconf`.
   * To install on Windows, try running `<path to Cygwin setup>/setup-x86_64 -q
     -P autoconf`.
 
