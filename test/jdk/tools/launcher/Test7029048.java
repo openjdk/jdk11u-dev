@@ -208,11 +208,6 @@ public class Test7029048 extends TestHelper {
     }
 
     private static void printSkipMessage(String description) {
-        System.out.printf("Skipping test case '%s' because the Aix launcher" +
-                          " adds the paths in any case.%n", description);
-    }
-
-    private static void printSkipMessage(String description) {
         System.out.printf("Skipping test case '%s' because the Aix and musl launchers" +
                           " add the paths in any case.%n", description);
     }
