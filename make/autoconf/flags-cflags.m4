@@ -534,6 +534,7 @@ AC_DEFUN([FLAGS_SETUP_CFLAGS_HELPER],
     TOOLCHAIN_CFLAGS_JVM="-qtbtable=full -qtune=balanced \
         -qalias=noansi -qstrict -qtls=default -qlanglvl=c99vla \
         -qlanglvl=noredefmac -qnortti -qnoeh -qignerrno"
+        -qalias=noansi -qstrict -qtls=default -qnortti -qnoeh -qignerrno -qstackprotect"
   elif test "x$TOOLCHAIN_TYPE" = xmicrosoft; then
     TOOLCHAIN_CFLAGS_JVM="-nologo -MD -MP"
     TOOLCHAIN_CFLAGS_JDK="-nologo -MD -Zc:wchar_t-"
