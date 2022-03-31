@@ -167,10 +167,7 @@ public:
   // private types by providing public typedefs for them.
   class TestAccess;
 
-  // xlC on AIX can't compile test_oopStorage.cpp with following private
-  // classes. C++03 introduced access for nested classes with DR45, but xlC
-  // version 12 rejects it.
-NOT_AIX( private: )
+private:
   class Block;                  // Fixed-size array of oops, plus bookkeeping.
   class ActiveArray;            // Array of Blocks, plus bookkeeping.
   class AllocationListEntry;    // Provides AllocationList links in a Block.
@@ -209,7 +206,6 @@ private:
   ActiveArray* _active_array;
   AllocationList _allocation_list;
   Block* volatile _deferred_updates;
-
   Mutex* _allocation_mutex;
   Mutex* _active_mutex;
 
