@@ -51,6 +51,19 @@
 
 #include <stdint.h>
 
+// check for xlc16 or higher
+#ifdef __ibmxl_version__
+  #if __ibmxl_version__ < 16
+  #error "xlc < 16 not supported"
+  #endif
+#else
+  #error "xlc < 16 not supported, macro __ibmxl_version__ not found"
+#endif
+
+#ifndef _AIX
+#error "missing AIX-specific definition _AIX"
+#endif
+
 // Use XLC compiler builtins instead of inline assembler
 #define USE_XLC_BUILTINS
 #ifdef USE_XLC_BUILTINS
