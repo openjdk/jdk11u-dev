@@ -57,7 +57,7 @@ GENSRC_JAVA_BASE += $(BUILD_VERSION_JAVA)
 
 ################################################################################
 
-ifneq ($(filter $(TOOLCHAIN_TYPE), gcc clang), )
+ifneq ($(filter $(TOOLCHAIN_TYPE), gcc clang xlc), )
   # Need to specify language since the template file has a non standard
   # extension.
   CPP_FLAGS += -x c
