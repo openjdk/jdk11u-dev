@@ -545,6 +545,10 @@ else
   # Modern HarfBuzz requires c++11.
   HARFBUZZ_CXXFLAGS := -std=c++11
 
+  ifeq ($(OPENJDK_TARGET_OS), aix)
+    LIBFONTMANAGER_EXTRA_SRC = $(TOPDIR)/src/$(MODULE)/aix/native/libharfbuzz
+    LIBFONTMANAGER_EXCLUDE_FILES += libharfbuzz/hb-coretext.cc
+  endif
   ifneq ($(OPENJDK_TARGET_OS), windows)
     HARFBUZZ_CFLAGS += -DGETPAGESIZE -DHAVE_MPROTECT -DHAVE_PTHREAD \
                        -DHAVE_SYSCONF -DHAVE_SYS_MMAN_H -DHAVE_UNISTD_H \
