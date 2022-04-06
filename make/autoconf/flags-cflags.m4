@@ -121,7 +121,11 @@ AC_DEFUN([FLAGS_SETUP_DEBUG_SYMBOLS],
     # -g0 enables debug symbols without disabling inlining.
     CFLAGS_DEBUG_SYMBOLS="-g0 -xs"
   elif test "x$TOOLCHAIN_TYPE" = xxlc; then
-    CFLAGS_DEBUG_SYMBOLS="-g"
+    if test "x$XLC_USES_CLANG" = xtrue; then
+      CFLAGS_DEBUG_SYMBOLS="-g1"
+    else
+      CFLAGS_DEBUG_SYMBOLS="-g"
+    fi
   elif test "x$TOOLCHAIN_TYPE" = xmicrosoft; then
     CFLAGS_DEBUG_SYMBOLS="-Z7 -d2Zi+"
   fi
@@ -583,6 +587,11 @@ AC_DEFUN([FLAGS_SETUP_CFLAGS_HELPER],
         OS_CFLAGS="$OS_CFLAGS \
             -DMAC_OS_X_VERSION_MAX_ALLOWED=$MACOSX_VERSION_MAX_NODOTS"
     fi
+  fi
+
+  OS_CFLAGS="$OS_CFLAGS -DLIBC=$OPENJDK_TARGET_LIBC"
+  if test "x$OPENJDK_TARGET_LIBC" = xmusl; then
+    OS_CFLAGS="$OS_CFLAGS -DMUSL_LIBC"
   fi
 
   # Where does this really belong??
