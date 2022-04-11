@@ -532,7 +532,6 @@ AC_DEFUN([FLAGS_SETUP_CFLAGS_HELPER],
     fi
 
   elif test "x$TOOLCHAIN_TYPE" = xxlc; then
-    # Suggested additions: -qsrcmsg to get improved error reporting
     TOOLCHAIN_CFLAGS_JDK="-qchars=signed -qfullpath -qsaveopt -qstackprotect"  # add on both CFLAGS
     TOOLCHAIN_CFLAGS_JVM="-qtune=balanced \
         -qalias=noansi -qstrict -qtls=default -qlanglvl=c99vla \
