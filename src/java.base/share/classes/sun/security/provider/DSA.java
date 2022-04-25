@@ -357,7 +357,8 @@ abstract class DSA extends SignatureSpi {
             s = new BigInteger(1, s.toByteArray());
         }
 
-        if ((r.compareTo(presetQ) == -1) && (s.compareTo(presetQ) == -1)) {
+        if ((r.compareTo(presetQ) == -1) && (s.compareTo(presetQ) == -1)
+                && r.signum() > 0 && s.signum() > 0) {
             BigInteger w = generateW(presetP, presetQ, presetG, s);
             BigInteger v = generateV(presetY, presetP, presetQ, presetG, w, r);
             return v.equals(r);
