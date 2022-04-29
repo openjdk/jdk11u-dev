@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,19 +21,32 @@
  * questions.
  */
 
-
 /*
  * @test
- * @key gc
- *
- * @summary converted from VM Testbase gc/huge/quicklook/largeheap/MemOptions.
- * VM Testbase keywords: [gc, nonconcurrent]
- *
- * @library /vmTestbase
- *          /test/lib
- * @run driver jdk.test.lib.FileInstaller . .
- * @build nsk.share.PrintProperties
- *        gc.huge.quicklook.largeheap.MemOptions.MemStat
- * @run shell MemOptions.sh
+ * @bug 8285445
+ * @requires (os.family == "windows")
+ * @summary Verify behavior of opening "NUL:" with ADS enabled and disabled.
+ * @run main/othervm -Djdk.io.File.enableADS OpenNUL
+ * @run main/othervm -Djdk.io.File.enableADS=true OpenNUL
  */
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class OpenNUL {
+    public static void main(String args[]) throws IOException {
+        String enableADS = System.getProperty("jdk.io.File.enableADS");
+        boolean fails = enableADS.equalsIgnoreCase(Boolean.FALSE.toString());
+
+        FileOutputStream fos;
+        try {
+            fos = new FileOutputStream("NUL:");
+            if (fails)
+                throw new RuntimeException("Should have failed");
+        } catch (FileNotFoundException fnfe) {
+            if (!fails)
+                throw new RuntimeException("Should not have failed");
+        }
+    }
+}
