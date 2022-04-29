@@ -201,7 +201,7 @@ class MacroAssembler: public Assembler {
   template<class T>
   inline void cmpw(Register Rd, T imm)  { subsw(zr, Rd, imm); }
   // imm is limited to 12 bits.
-  inline void cmp(Register Rd, unsigned imm)  { subs(zr, Rd, imm); }
+  inline void cmp(Register Rd, unsigned imm)  { Assembler::subs(zr, Rd, imm); }
 
   inline void cmnw(Register Rd, unsigned imm) { addsw(zr, Rd, imm); }
   inline void cmn(Register Rd, unsigned imm) { adds(zr, Rd, imm); }
@@ -1113,7 +1113,7 @@ public:
                              add_sub_reg_insn insn2);
 
 #define WRAP(INSN)                                                      \
-  void INSN(Register Rd, Register Rn, unsigned imm) {                   \
+  void INSN(Register Rd, Register Rn, uint64_t imm) {                   \
     wrap_add_sub_imm_insn(Rd, Rn, imm, &Assembler::INSN, &Assembler::INSN); \
   }                                                                     \
                                                                         \
