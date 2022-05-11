@@ -578,7 +578,6 @@ else
 
 endif
 
-
 LIBFONTMANAGER_EXTRA_HEADER_DIRS := \
     libharfbuzz \
     libharfbuzz/hb-ucdn \
