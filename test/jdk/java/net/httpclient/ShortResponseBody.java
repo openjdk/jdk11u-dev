@@ -336,13 +336,6 @@ public abstract class ShortResponseBody {
         }
     }
 
-    // POST tests are racy in what may be received before writing may cause a
-    // broken pipe or reset exception, before all the received data can be read.
-    // Any message up to, and including, the "expected" error message can occur.
-    // Strictly ordered list, in order of possible occurrence.
-    static final List<String> MSGS_ORDER =
-            List.of("no bytes", "status line", "header");
-
     // Asserts that the "send" method appears in the stack of the given
     // exception. The synchronous API must contain the send method on the stack.
     static void assertSendMethodOnStack(IOException ioe) {
