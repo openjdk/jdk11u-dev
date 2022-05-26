@@ -278,4 +278,16 @@ public final class PlatformEventType extends Type {
     public int getStackTraceOffset() {
         return stackTraceOffset;
     }
+
+    public boolean isLargeSize() {
+        return largeSize;
+    }
+
+    public void setLargeSize() {
+        largeSize = true;
+    }
+
+    public boolean isMethodSampling() {
+        return isMethodSampling;
+    }
 }
