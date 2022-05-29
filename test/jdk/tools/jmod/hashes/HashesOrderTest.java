@@ -30,6 +30,7 @@
  */
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -51,7 +52,9 @@ public class HashesOrderTest {
             new RuntimeException("jmod tool not found")
         );
 
-    private String DATE = "2021-01-06T14:36:00+02:00";
+    // buffer size used for reading and writing
+    private static final int BUFFER_SIZE = 8192;
+
     private int NUM_MODULES = 64;
     private Path mods;
     private Path lib1;
@@ -85,7 +88,7 @@ public class HashesOrderTest {
                 "--hash-modules", ".*");
         Path jmod2 = lib2.resolve("ma.jmod");
 
-        assertEquals(Files.mismatch(jmod1, jmod2), -1);
+        assertEquals(mismatch(jmod1, jmod2), -1);
     }
 
     private void makeModule(String mn, String... deps)
@@ -113,7 +116,6 @@ public class HashesOrderTest {
         List<String> args = new ArrayList<>();
         args.add("create");
         Collections.addAll(args, options);
-        Collections.addAll(args, "--date", DATE);
         Collections.addAll(args, "--class-path", mclasses.toString(),
                            outfile.toString());
 
@@ -132,4 +134,29 @@ public class HashesOrderTest {
         }
     }
 
+    private long mismatch(Path path, Path path2) throws IOException {
+        if (Files.isSameFile(path, path2)) {
+            return -1;
+        }
+        byte[] buffer1 = new byte[BUFFER_SIZE];
+        byte[] buffer2 = new byte[BUFFER_SIZE];
+        try (InputStream in1 = Files.newInputStream(path);
+             InputStream in2 = Files.newInputStream(path2);) {
+            long totalRead = 0;
+            while (true) {
+                int nRead1 = in1.readNBytes(buffer1, 0, BUFFER_SIZE);
+                int nRead2 = in2.readNBytes(buffer2, 0, BUFFER_SIZE);
+
+                int i = Arrays.mismatch(buffer1, 0, nRead1, buffer2, 0, nRead2);
+                if (i > -1) {
+                    return totalRead + i;
+                }
+                if (nRead1 < BUFFER_SIZE) {
+                    // we've reached the end of the files, but found no mismatch
+                    return -1;
+                }
+                totalRead += nRead1;
+            }
+        }
+    }
 }
