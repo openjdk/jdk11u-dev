@@ -588,7 +588,6 @@ void GenCollectedHeap::do_collection(bool           full,
 
     size_t young_prev_used = _young_gen->used();
     size_t old_prev_used = _old_gen->used();
-
     const metaspace::MetaspaceSizesSnapshot prev_meta_sizes;
 
     bool run_verification = total_collections() >= VerifyGCStartAt;
