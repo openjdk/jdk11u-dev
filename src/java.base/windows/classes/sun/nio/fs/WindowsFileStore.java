@@ -230,7 +230,8 @@ class WindowsFileStore
     public boolean equals(Object ob) {
         if (ob == this)
             return true;
-        if (ob instanceof WindowsFileStore other) {
+        if (ob instanceof WindowsFileStore) {
+            WindowsFileStore other = (WindowsFileStore)ob;
             if (root.equals(other.root))
                 return true;
             if (volType == DRIVE_FIXED && other.volumeType() == DRIVE_FIXED)
