@@ -221,7 +221,7 @@ class Utils {
         byte[] buffer = new byte[1 << 14];
         for (JarEntry je; (je = in.getNextJarEntry()) != null; ) {
             je.setCompressedSize(-1);
-				out.putNextEntry(je);
+            out.putNextEntry(je);
             for (int nr; 0 < (nr = in.read(buffer)); ) {
                 out.write(buffer, 0, nr);
             }
