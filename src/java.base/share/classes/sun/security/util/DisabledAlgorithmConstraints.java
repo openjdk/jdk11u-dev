@@ -159,6 +159,9 @@ public class DisabledAlgorithmConstraints extends AbstractAlgorithmConstraints {
         if (!cachedCheckAlgorithm(algorithm)) {
             return false;
         }
+        if (algorithm == null || algorithm.isEmpty()) {
+            throw new IllegalArgumentException("No algorithm name specified");
+        }
 
         if (parameters != null) {
             return algorithmConstraints.permits(algorithm, parameters);
