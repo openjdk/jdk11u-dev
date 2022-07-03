@@ -400,7 +400,7 @@ public class TestSearch extends JavadocTester {
                 "<!--[if IE]>\n",
                 "<script type=\"text/javascript\" src=\"jquery/jszip-utils/dist/jszip-utils-ie.min.js\"></script>\n",
                 "<![endif]-->\n",
-                "<script type=\"text/javascript\" src=\"jquery/jquery-3.5.1.min.js\"></script>\n",
+                "<script type=\"text/javascript\" src=\"jquery/jquery-3.6.0.min.js\"></script>\n",
                 "<script type=\"text/javascript\" src=\"jquery/jquery-ui.min.js\"></script>",
                 "var pathtoroot = \"./\";\n"
                 + "var useModuleDirectories = " + moduleDirectoriesVar + ";\n"
@@ -593,7 +593,7 @@ public class TestSearch extends JavadocTester {
         checkFiles(expectedOutput,
                 "search.js",
                 "jquery-ui.overrides.css",
-                "jquery/jquery-3.5.1.min.js",
+                "jquery/jquery-3.6.0.min.js",
                 "jquery/jquery-ui.min.js",
                 "jquery/jquery-ui.min.css",
                 "jquery/jquery-ui.structure.min.css",
@@ -644,7 +644,7 @@ public class TestSearch extends JavadocTester {
                 + "            return ui.item.m + slash;\n"
                 + "        } else if ((ui.item.category === catTypes && ui.item.p) || ui.item.category === catMembers) {\n"
                 + "            $.each(packageSearchIndex, function(index, item) {\n"
-                + "                if (ui.item.p == item.l) {\n"
+                + "                if (item.m && ui.item.p == item.l) {\n"
                 + "                    urlPrefix = item.m + slash;\n"
                 + "                }\n"
                 + "            });\n"
