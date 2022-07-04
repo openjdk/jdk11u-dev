@@ -207,6 +207,7 @@ public class TestCPUAwareness {
         System.out.println("quota = " + quota);
         System.out.println("period = " + period);
         System.out.println("shares = " + period);
+        System.out.println("useContainerCpuShares = " + useContainerCpuShares);
         System.out.println("usePreferContainerQuotaForCPUCount = " + usePreferContainerQuotaForCPUCount);
         System.out.println("expectedAPC = " + expectedAPC);
 
