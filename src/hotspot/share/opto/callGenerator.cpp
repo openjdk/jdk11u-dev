@@ -855,13 +855,13 @@ CallGenerator* CallGenerator::for_method_handle_inline(JVMState* jvms, ciMethod*
         } else {
           assert(receiver->bottom_type() == TypePtr::NULL_PTR, "not a null: %s",
                  Type::str(receiver->bottom_type()));
-         print_inlining_failure(C, callee, jvms->depth() - 1, jvms->bci(),
+          print_inlining_failure(C, callee, jvms->depth() - 1, jvms->bci(),
                                  "receiver is always null");
         }
 
       } else {
-        print_inlining_failure(C, callee, jvms->depth() - 1, jvms->bci(),
-                               "receiver not constant");
+         print_inlining_failure(C, callee, jvms->depth() - 1, jvms->bci(),
+                                "receiver not constant");
       }
     }
     break;
