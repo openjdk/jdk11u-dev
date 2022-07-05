@@ -1,12 +1,11 @@
 /*
- * Copyright (c) 2020, Red Hat Inc.
+ * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, Twitter, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the LICENSE file that accompanied this code.
+ * published by the Free Software Foundation.
  *
  * This code is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -21,28 +20,22 @@
  * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
  * or visit www.oracle.com if you need additional information or have any
  * questions.
- */
-
-package jdk.internal.platform;
-
-/**
- * Marker interface for cgroup-based metrics
  *
  */
-public interface CgroupSubsystem extends Metrics {
 
-    /**
-     * Returned for metrics of type long if the underlying implementation
-     * has determined that no limit is being imposed.
-     */
-    public static final long LONG_RETVAL_UNLIMITED = -1;
-    public static final String MAX_VAL = "max";
+#include "precompiled.hpp"
 
-    public static long limitFromString(String strVal) {
-        if (strVal == null || MAX_VAL.equals(strVal)) {
-            return CgroupSubsystem.LONG_RETVAL_UNLIMITED;
-        }
-        return Long.parseLong(strVal);
-    }
+#include "memory/metaspace.hpp"
+#include "memory/metaspace/metaspaceSizesSnapshot.hpp"
 
-}
+namespace metaspace {
+
+MetaspaceSizesSnapshot::MetaspaceSizesSnapshot()
+    : _used(MetaspaceUtils::used_bytes()),
+      _committed(MetaspaceUtils::committed_bytes()),
+      _non_class_used(MetaspaceUtils::used_bytes(Metaspace::NonClassType)),
+      _non_class_committed(MetaspaceUtils::committed_bytes(Metaspace::NonClassType)),
+      _class_used(MetaspaceUtils::used_bytes(Metaspace::ClassType)),
+      _class_committed(MetaspaceUtils::committed_bytes(Metaspace::ClassType)) { }
+
+} // namespace metaspace
