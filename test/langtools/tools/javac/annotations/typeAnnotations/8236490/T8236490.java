@@ -73,29 +73,26 @@ public class T8236490 extends TestRunner {
         //     }
         // }
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("""
-                import java.lang.annotation.ElementType;
-                import java.lang.annotation.Target;
-                public class Test8236490 {
-                """);
+        stringBuilder.append(
+                "import java.lang.annotation.ElementType;\n" +
+                "import java.lang.annotation.Target;\n" +
+                "public class Test8236490 {");
         for (int i = 0; i < 300; i++) {
             stringBuilder.append("    private class Test" + i + " {}\n");
         }
-        stringBuilder.append("""
-                    @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
-                    private @interface AnnotationTest {}
-                    public void test() {
-                """);
+        stringBuilder.append(
+                "    @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})" +
+                "    private @interface AnnotationTest {}" +
+                "    public void test() {");
         for (int i = 0; i < 300; i++) {
             stringBuilder.append("        Test" + i + " test" + i + " = new Test" + i + "();\n");
         }
-        stringBuilder.append("""
-                        try {
-                            System.out.println("Hello");
-                        } catch (@AnnotationTest Exception e) {}
-                    }
-                }
-                """);
+        stringBuilder.append(
+                "        try {" +
+                "            System.out.println(\"Hello\");" +
+                "        } catch (@AnnotationTest Exception e) {}" +
+                "    }" +
+                "}");
 
         new JavacTask(tb)
                 .sources(stringBuilder.toString())
