@@ -860,8 +860,8 @@ CallGenerator* CallGenerator::for_method_handle_inline(JVMState* jvms, ciMethod*
         }
 
       } else {
-         print_inlining_failure(C, callee, jvms->depth() - 1, jvms->bci(),
-                                "receiver not constant");
+        print_inlining_failure(C, callee, jvms->depth() - 1, jvms->bci(),
+                               "receiver not constant");
       }
     }
     break;
