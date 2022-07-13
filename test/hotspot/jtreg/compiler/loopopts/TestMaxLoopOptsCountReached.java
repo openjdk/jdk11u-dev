@@ -31,17 +31,18 @@
 
 import java.lang.System.Logger.Level;
 
+class A {
+
+   static String e(long f, boolean b, String g, Level h, String s,
+                   Object... i) {
+       return "message" + s + new String() + g;
+   }
+}
+
 public class TestMaxLoopOptsCountReached {
 
     static Long a = Long.valueOf(42);
 
-    class A {
-
-        static String e(long f, boolean b, String g, Level h, String s,
-                        Object... i) {
-            return "message" + s + new String() + g;
-        }
-    }
 
     public static void main(String[] args) {
         test(null, "", null, null);
