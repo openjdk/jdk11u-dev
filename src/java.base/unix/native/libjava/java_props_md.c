@@ -545,6 +545,12 @@ GetJavaProperties(JNIEnv *env)
 #else
     sprops.sun_jnu_encoding = sprops.encoding;
 #endif
+    if (isatty(STDOUT_FILENO) == 1) {
+        sprops.sun_stdout_encoding = sprops.encoding;
+    }
+    if (isatty(STDERR_FILENO) == 1) {
+        sprops.sun_stderr_encoding = sprops.encoding;
+    }
 
 #ifdef _ALLBSD_SOURCE
 #if BYTE_ORDER == _LITTLE_ENDIAN
