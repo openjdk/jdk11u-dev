@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,28 +21,40 @@
  * questions.
  */
 
-
-/*
+/**
  * @test
- * @bug 8253916
- *
- * @summary converted from VM Testbase nsk/jvmti/ResourceExhausted/resexhausted001.
- * VM Testbase keywords: [jpda, jvmti, noras, vm6, nonconcurrent, quarantine, exclude]
- * VM Testbase comments: 7013634
- * VM Testbase readme:
- * Description
- *      Test verifies that ResourceExhausted JVMTI event is generated for
- *      too many threads OOME by creating threads.
- * Comments
- *      CR 6465063
- *
- * @library /vmTestbase
- *          /test/lib
- * @run driver jdk.test.lib.FileInstaller . .
- * @run main/othervm/native/manual
- *      -agentlib:resexhausted=-waittime=5
- *      -XX:-UseGCOverheadLimit
- *      nsk.jvmti.ResourceExhausted.resexhausted001
- *      -stressTime 220
+ * @bug 8286177
+ * @summary Test that inconsistent reduction node-loop state does not trigger
+ *          assertion failures when the inconsistency does not lead to a
+ *          miscompilation.
+ * @run main/othervm -Xbatch compiler.loopopts.superword.TestHoistedReductionNode
  */
+package compiler.loopopts.superword;
 
+public class TestHoistedReductionNode {
+
+    static boolean b = true;
+
+    static int test() {
+        int acc = 0;
+        int i = 0;
+        do {
+            int j = 0;
+            do {
+                if (b) {
+                    acc += j;
+                }
+                j++;
+            } while (j < 5);
+            i++;
+        } while (i < 100);
+        return acc;
+
+    }
+
+    public static void main(String[] args) {
+        for (int i = 0; i < 10_000; i++) {
+            test();
+        }
+    }
+}
