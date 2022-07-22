@@ -68,7 +68,6 @@ import javax.net.ssl.SSLContext;
 
 import static java.net.http.HttpClient.newBuilder;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.stream.Collectors.toList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.FileAssert.fail;
 
@@ -155,6 +154,9 @@ public class WebSocketProxyTest {
         public Bytes(byte[] bytes) {
             this.bytes = bytes;
         }
+        public byte[] getBytes() {
+            return bytes;
+        }
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -166,13 +168,8 @@ public class WebSocketProxyTest {
             }
             return false;
         }
-        public byte[] getBytes() {
-            return bytes;
-        }
         @Override
-        public int hashCode() {
-            return Arrays.hashCode(bytes);
-        }
+        public int hashCode() { return Arrays.hashCode(bytes); }
         public String toString() {
             StringBuilder builder = new StringBuilder("0x");
             for (byte aByte : bytes) {
@@ -183,10 +180,7 @@ public class WebSocketProxyTest {
     }
 
     static List<Bytes> ofBytes(List<byte[]> bytes) {
-        return bytes
-            .stream()
-            .map(byteArray -> new Bytes(byteArray))
-            .collect(Collectors.toList());
+        return bytes.stream().map(WebSocketProxyTest.Bytes::new).collect(Collectors.toList());
     }
 
     static String diagnose(List<byte[]> a, List<byte[]> b) {
