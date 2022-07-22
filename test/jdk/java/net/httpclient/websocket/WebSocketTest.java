@@ -43,7 +43,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.HexFormat;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -58,6 +57,7 @@ import static java.net.http.HttpClient.Builder.NO_PROXY;
 import static java.net.http.HttpClient.newBuilder;
 import static java.net.http.WebSocket.NORMAL_CLOSURE;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.stream.Collectors.toList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.fail;
@@ -434,33 +434,50 @@ public class WebSocketTest {
         };
     }
 
-    record bytes(byte[] bytes) {
+    private static class Bytes {
+        private final byte[] bytes;
+        public Bytes(byte[] bytes) {
+            this.bytes = bytes;
+        }
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (o instanceof bytes other) {
-                return Arrays.equals(bytes(), other.bytes());
+            if (o instanceof byte[]) {
+                return Arrays.equals(bytes, (byte[]) o);
+            }
+            if (o instanceof Bytes) {
+                return Arrays.equals(bytes, ((Bytes) o).getBytes());
             }
             return false;
         }
+        public byte[] getBytes() {
+            return bytes;
+        }
         @Override
-        public int hashCode() { return Arrays.hashCode(bytes()); }
+        public int hashCode() {
+            return Arrays.hashCode(bytes);
+        }
         public String toString() {
-            return "0x" + HexFormat.of()
-                    .withUpperCase()
-                    .formatHex(bytes());
+            StringBuilder builder = new StringBuilder("0x");
+            for (byte aByte : bytes) {
+                builder.append(String.format("%X", aByte).toUpperCase());
+            }
+            return builder.toString();
         }
     }
 
-    static List<bytes> ofBytes(List<byte[]> bytes) {
-        return bytes.stream().map(bytes::new).toList();
+    static List<Bytes> ofBytes(List<byte[]> bytes) {
+        return bytes
+            .stream()
+            .map(byteArray -> new Bytes(byteArray))
+            .collect(Collectors.toList());
     }
 
     static String diagnose(List<byte[]> a, List<byte[]> b) {
         var actual = ofBytes(a);
         var expected = ofBytes(b);
         var message = actual.equals(expected) ? "match" : "differ";
-        return "%s and %s %s".formatted(actual, expected, message);
+        return String.format("%s and %s %s", actual, expected, message);
     }
 
     @Test(dataProvider = "servers")
