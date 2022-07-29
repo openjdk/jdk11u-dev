@@ -45,12 +45,12 @@ public class TestHtmlVersion extends JavadocTester {
         javadoc("-d", "out-1",
                 "-private",
                 "-linksource",
-                "--frames",				
+                "--frames",
                 "-sourcepath", testSrc,
                 "-use",
                 "pkg", "pkg1", "pkg2", "pkg3");
         checkExit(Exit.OK);
-                
+
         html5Output();
         html5NegatedOutput();
     }
@@ -61,7 +61,7 @@ public class TestHtmlVersion extends JavadocTester {
                 "-html4",
                 "-private",
                 "-linksource",
-                "--frames",				
+                "--frames",
                 "-sourcepath", testSrc,
                 "-use",
                 "pkg", "pkg1", "pkg2", "pkg3");
@@ -77,7 +77,7 @@ public class TestHtmlVersion extends JavadocTester {
                 "-html4",
                 "-private",
                 "-linksource",
-                "--frames",				
+                "--frames",
                 "-sourcepath", testSrc,
                 "-use",
                 "pkg", "pkg1", "pkg2", "pkg3");
