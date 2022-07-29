@@ -45,7 +45,7 @@ public class TestHtmlVersion extends JavadocTester {
         javadoc("-d", "out-1",
                 "-private",
                 "-linksource",
-		        "--frames",
+				"--frames",
                 "-sourcepath", testSrc,
                 "-use",
                 "pkg", "pkg1", "pkg2", "pkg3");
@@ -61,7 +61,7 @@ public class TestHtmlVersion extends JavadocTester {
                 "-html4",
                 "-private",
                 "-linksource",
-		        "--frames",
+				"--frames",
                 "-sourcepath", testSrc,
                 "-use",
                 "pkg", "pkg1", "pkg2", "pkg3");
@@ -77,7 +77,7 @@ public class TestHtmlVersion extends JavadocTester {
                 "-html4",
                 "-private",
                 "-linksource",
-		        "--frames",
+				"--frames",
                 "-sourcepath", testSrc,
                 "-use",
                 "pkg", "pkg1", "pkg2", "pkg3");
@@ -359,10 +359,10 @@ public class TestHtmlVersion extends JavadocTester {
                 + "<!-- ========= START OF TOP NAVBAR ======= -->",
                 "<main role=\"main\">\n"
                 + "<div class=\"header\">",
-		        "<section>\n"
+				"<section>\n"
                 + "<ul class=\"blockList\">\n"
                 + "<li class=\"blockList\"><a id=\"nested.class.summary\">\n"
-		        + "<!--   -->\n"
+				+ "<!--   -->\n"
                 + "</a>\n"
                 + "<h3>Nested Class Summary</h3>\n"
                 + "<table class=\"memberSummary\">\n",
