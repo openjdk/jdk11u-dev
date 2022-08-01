@@ -63,6 +63,7 @@ public class ClhsdbLauncher {
         }
 
         ProcessBuilder processBuilder = SATestUtils.createProcessBuilder(launcher);
+        processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
         toolProcess = processBuilder.start();
     }
 
