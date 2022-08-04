@@ -928,7 +928,7 @@ targets are given, a native toolchain for the current platform will be
 created. Currently, at least the following targets are known to work:
 
  Supported devkit targets
- ------------------------
+ -------------------------
  x86_64-linux-gnu
  aarch64-linux-gnu
  arm-linux-gnueabihf
