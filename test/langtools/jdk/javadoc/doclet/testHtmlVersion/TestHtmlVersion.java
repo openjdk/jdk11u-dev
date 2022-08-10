@@ -124,7 +124,9 @@ public class TestHtmlVersion extends JavadocTester {
         checkOutput("allclasses-noframe.html", true,
                 "<!DOCTYPE HTML>",
                 "<meta name=\"dc.created\"",
-                "<main role=\"main\" class=\"indexContainer\">\n"
+                "<main role=\"main\">\n"
+                + "<h1 class=\"bar\">All&nbsp;Classes</h1>\n"
+                + "<div class=\"indexContainer\">\n"
                 + "<ul>\n"
                 + "<li>");
 
@@ -643,7 +645,7 @@ public class TestHtmlVersion extends JavadocTester {
         checkOutput("allclasses-noframe.html", false,
                 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">",
                 "<meta name=\"date\"",
-                "<div class=\"indexContainer\">\n"
+                "<main class=\"indexContainer\">\n"
                 + "<ul>\n"
                 + "<li>");
 
