@@ -148,7 +148,7 @@ void BFSClosure::closure_impl(const oop* reference, const oop pointee) {
 
 void BFSClosure::add_chain(const oop* reference, const oop pointee) {
   assert(pointee != NULL, "invariant");
-  assert(NULL == pointee->mark(), "invariant");
+  assert(NULL == pointee->mark().to_pointer(), "invariant");
   Edge leak_edge(_current_parent, reference);
   _edge_store->put_chain(&leak_edge, _current_parent == NULL ? 1 : _current_frontier_level + 2);
 }
