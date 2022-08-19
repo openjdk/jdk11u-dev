@@ -36,9 +36,9 @@ MarkOopContext::MarkOopContext(const oop obj) : _obj(obj), _mark_oop(obj->mark()
   // This is an "impossible" state during a safepoint,
   // hence we will use it to quickly identify objects
   // during the reachability search from gc roots.
-  assert(NULL == markOop::INFLATING(), "invariant");
+  assert(markOop::zero() == markOop::INFLATING(), "invariant");
   _obj->set_mark(markOop::INFLATING());
-  assert(NULL == obj->mark(), "invariant");
+  assert(markOop::zero() == obj->mark(), "invariant");
 }
 
 MarkOopContext::~MarkOopContext() {
