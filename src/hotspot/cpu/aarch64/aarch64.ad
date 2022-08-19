@@ -3544,7 +3544,7 @@ encode %{
       // lock. The fast-path monitor unlock code checks for
       // markOop::monitor_value so use markOop::unused_mark which has the
       // relevant bit set, and also matches ObjectSynchronizer::slow_enter.
-      __ mov(tmp, (address)markOop::unused_mark());
+      __ mov(tmp, (address)markOop::unused_mark().value());
       __ str(tmp, Address(box, BasicLock::displaced_header_offset_in_bytes()));
     }
 
