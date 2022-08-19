@@ -145,7 +145,7 @@ bool oopDesc::is_oop_or_null(oop obj, bool ignore_mark_word) {
 // used only for asserts
 bool oopDesc::is_unlocked_oop() const {
   if (!Universe::heap()->is_in_reserved(this)) return false;
-  return mark()->is_unlocked();
+  return mark().is_unlocked();
 }
 #endif // PRODUCT
 

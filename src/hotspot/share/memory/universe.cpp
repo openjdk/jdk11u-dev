@@ -1315,7 +1315,7 @@ uintptr_t Universe::verify_mark_mask() {
 
 uintptr_t Universe::verify_mark_bits() {
   intptr_t mask = verify_mark_mask();
-  intptr_t bits = (intptr_t)markOop::prototype();
+  intptr_t bits = (intptr_t)markOop::prototype().value();
   assert((bits & ~mask) == 0, "no stray header bits");
   return bits;
 }

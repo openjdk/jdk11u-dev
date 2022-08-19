@@ -797,8 +797,9 @@ intptr_t ObjectSynchronizer::FastHashCode(Thread * Self, oop obj) {
   if (hash == 0) {
     hash = get_next_hash(Self, obj);
     temp = mark.copy_set_hash(hash); // merge hash code into header
-    assert(temp->is_neutral(), "invariant");
-    test = Atomic::cmpxchg(temp, monitor->header_addr(), mark);
+    assert(temp.is_neutral(), "invariant");
+    uintptr_t t = Atomic::cmpxchg(temp.value(), (volatile uintptr_t*)monitor->header_addr(), mark.value());
+    test = markOop(t);
     if (test != mark) {
       // The only update to the header in the monitor (outside GC)
       // is install the hash code. If someone add new usage of
@@ -1376,7 +1377,7 @@ ObjectMonitor* ObjectSynchronizer::inflate_helper(oop obj) {
   markOop mark = obj->mark();
   if (mark.has_monitor()) {
     assert(ObjectSynchronizer::verify_objmon_isinpool(mark.monitor()), "monitor is invalid");
-    assert(mark.monitor()->header()->is_neutral(), "monitor must record a good object header");
+    assert(mark.monitor()->header().is_neutral(), "monitor must record a good object header");
     return mark.monitor();
   }
   return ObjectSynchronizer::inflate(Thread::current(),
@@ -1409,7 +1410,7 @@ ObjectMonitor* ObjectSynchronizer::inflate(Thread * Self,
     // CASE: inflated
     if (mark.has_monitor()) {
       ObjectMonitor * inf = mark.monitor();
-      assert(inf->header()->is_neutral(), "invariant");
+      assert(inf->header().is_neutral(), "invariant");
       assert(inf->object() == object, "invariant");
       assert(ObjectSynchronizer::verify_objmon_isinpool(inf), "monitor is invalid");
       return inf;
@@ -1493,7 +1494,7 @@ ObjectMonitor* ObjectSynchronizer::inflate(Thread * Self,
       // object is in the mark.  Furthermore the owner can't complete
       // an unlock on the object, either.
       markOop dmw = mark.displaced_mark_helper();
-      assert(dmw->is_neutral(), "invariant");
+      assert(dmw.is_neutral(), "invariant");
 
       // Setup monitor fields to proper values -- prepare the monitor
       m->set_header(dmw);
