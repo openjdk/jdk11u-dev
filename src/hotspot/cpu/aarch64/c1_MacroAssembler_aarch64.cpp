@@ -176,7 +176,7 @@ void C1_MacroAssembler::initialize_header(Register obj, Register klass, Register
     ldr(t1, Address(klass, Klass::prototype_header_offset()));
   } else {
     // This assumes that all prototype bits fit in an int32_t
-    mov(t1, (int32_t)(intptr_t)markOop::prototype());
+    mov(t1, (int32_t)(intptr_t)markOop::prototype().value());
   }
   str(t1, Address(obj, oopDesc::mark_offset_in_bytes()));
 

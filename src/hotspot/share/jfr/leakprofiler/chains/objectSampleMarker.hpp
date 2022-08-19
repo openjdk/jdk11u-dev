@@ -72,9 +72,9 @@ class ObjectSampleMarker : public StackObj {
     // This is an "impossible" state during a safepoint,
     // hence we will use it to quickly identify sample objects
     // during the reachability search from gc roots.
-    assert(NULL == markOop::INFLATING(), "invariant");
+    assert(NULL == markOop::INFLATING().to_pointer(), "invariant");
     obj->set_mark(markOop::INFLATING());
-    assert(NULL == obj->mark(), "invariant");
+    assert(NULL == obj->mark().to_pointer(), "invariant");
   }
 };
 

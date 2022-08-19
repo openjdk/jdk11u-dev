@@ -1878,7 +1878,7 @@ void MacroAssembler::fast_lock(Register objReg, Register boxReg, Register tmpReg
        //   Invariant: m->_recursions should already be 0, so we don't need to explicitly set it.
        // Intentional fall-through into DONE_LABEL ...
     } else {
-       movptr(Address(boxReg, 0), intptr_t(markOop::unused_mark()));  // results in ST-before-CAS penalty
+       movptr(Address(boxReg, 0), intptr_t(markOop::unused_mark().value()));  // results in ST-before-CAS penalty
        movptr(boxReg, tmpReg);
 
        // Using a prefetchw helps avoid later RTS->RTO upgrades and cache probes
