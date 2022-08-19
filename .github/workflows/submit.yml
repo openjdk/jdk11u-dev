@@ -231,7 +231,7 @@ jobs:
             jdk/build/linux-x64/bundles/jdk-${{ env.JDK_VERSION }}-internal+0_linux-x64_bin${{ matrix.artifact }}.tar.gz
             jdk/build/linux-x64/bundles/jdk-${{ env.JDK_VERSION }}-internal+0_linux-x64_bin-tests${{ matrix.artifact }}.tar.gz
 
-  linux_x64_clang_clang:
+  linux_x64_clang_build:
     name: Linux x64 clang
     runs-on: "ubuntu-22.04"
     needs: prerequisites
