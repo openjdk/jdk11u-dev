@@ -312,6 +312,7 @@ jobs:
           --with-default-make-target="product-bundles test-bundles"
           --with-zlib=system
           --with-toolchain-type=clang
+          --disable-warnings-as-errors
           --with-jvm-features=shenandoahgc
           --enable-jtreg-failure-handler
         working-directory: jdk

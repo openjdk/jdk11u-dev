@@ -48,7 +48,7 @@
 #include "precompiled.hpp"
 #include "classfile/altHashing.hpp"
 #include "classfile/systemDictionary.hpp"
-#include "oops/markOop.hpp"
+#include "oops/markWord.hpp"
 #include "oops/oop.inline.hpp"
 #include "runtime/os.hpp"
 
@@ -58,7 +58,7 @@
 // this value because it may safepoint.
 static intptr_t object_hash(Klass* k) {
   intptr_t hc = k->java_mirror()->mark().hash();
-  return hc != markOop::no_hash ? hc : os::random();
+  return hc != markWord::no_hash ? hc : os::random();
 }
 
 // Seed value used for each alternative hash calculated.

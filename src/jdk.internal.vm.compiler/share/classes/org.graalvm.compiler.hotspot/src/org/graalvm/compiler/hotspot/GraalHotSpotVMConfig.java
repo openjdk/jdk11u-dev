@@ -195,10 +195,10 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
     public final int stackBias = getConstant("STACK_BIAS", Integer.class);
     public final int vmPageSize = getFieldValue("CompilerToVM::Data::vm_page_size", Integer.class, "int");
 
-    public final int markOffset = getFieldOffset("oopDesc::_mark", Integer.class, "markOop");
+    public final int markOffset = getFieldOffset("oopDesc::_mark", Integer.class, "markWord");
     public final int hubOffset = getFieldOffset("oopDesc::_metadata._klass", Integer.class, "Klass*");
 
-    public final int prototypeMarkWordOffset = getFieldOffset("Klass::_prototype_header", Integer.class, "markOop");
+    public final int prototypeMarkWordOffset = getFieldOffset("Klass::_prototype_header", Integer.class, "markWord");
     public final int subklassOffset = getFieldOffset("Klass::_subklass", Integer.class, "Klass*");
     public final int nextSiblingOffset = getFieldOffset("Klass::_next_sibling", Integer.class, "Klass*");
     public final int superCheckOffsetOffset = getFieldOffset("Klass::_super_check_offset", Integer.class, "juint");
@@ -399,17 +399,17 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
 
     public final int osThreadInterruptedOffset = getFieldOffset("OSThread::_interrupted", Integer.class, "jint");
 
-    public final long markOopHashShift = getConstant("markOop::hash_shift", Long.class);
+    public final long markWordHashShift = getConstant("markWord::hash_shift", Long.class);
 
-    public final int biasedLockMaskInPlace = getConstant("markOop::biased_lock_mask_in_place", Integer.class);
-    public final int ageMaskInPlace = getConstant("markOop::age_mask_in_place", Integer.class);
-    public final int epochMaskInPlace = getConstant("markOop::epoch_mask_in_place", Integer.class);
-    public final long markOopHashMask = getConstant("markOop::hash_mask", Long.class);
-    public final long markOopHashMaskInPlace = getConstant("markOop::hash_mask_in_place", Long.class);
+    public final int biasedLockMaskInPlace = getConstant("markWord::biased_lock_mask_in_place", Integer.class);
+    public final int ageMaskInPlace = getConstant("markWord::age_mask_in_place", Integer.class);
+    public final int epochMaskInPlace = getConstant("markWord::epoch_mask_in_place", Integer.class);
+    public final long markWordHashMask = getConstant("markWord::hash_mask", Long.class);
+    public final long markWordHashMaskInPlace = getConstant("markWord::hash_mask_in_place", Long.class);
 
-    public final int unlockedMask = getConstant("markOop::unlocked_value", Integer.class);
-    public final int monitorMask = getConstant("markOop::monitor_value", Integer.class, -1);
-    public final int biasedLockPattern = getConstant("markOop::biased_lock_pattern", Integer.class);
+    public final int unlockedMask = getConstant("markWord::unlocked_value", Integer.class);
+    public final int monitorMask = getConstant("markWord::monitor_value", Integer.class, -1);
+    public final int biasedLockPattern = getConstant("markWord::biased_lock_pattern", Integer.class);
 
     // This field has no type in vmStructs.cpp
     public final int objectMonitorOwner = getFieldOffset("ObjectMonitor::_owner", Integer.class, null, -1);
@@ -417,34 +417,34 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
     public final int objectMonitorCxq = getFieldOffset("ObjectMonitor::_cxq", Integer.class, "ObjectWaiter*", -1);
     public final int objectMonitorEntryList = getFieldOffset("ObjectMonitor::_EntryList", Integer.class, "ObjectWaiter*", -1);
 
-    public final int markWordNoHashInPlace = getConstant("markOop::no_hash_in_place", Integer.class);
-    public final int markWordNoLockInPlace = getConstant("markOop::no_lock_in_place", Integer.class);
+    public final int markWordNoHashInPlace = getConstant("markWord::no_hash_in_place", Integer.class);
+    public final int markWordNoLockInPlace = getConstant("markWord::no_lock_in_place", Integer.class);
 
     /**
-     * See {@code markOop::prototype()}.
+     * See {@code markWord::prototype()}.
      */
     public long arrayPrototypeMarkWord() {
         return markWordNoHashInPlace | markWordNoLockInPlace;
     }
 
     /**
-     * See {@code markOop::copy_set_hash()}.
+     * See {@code markWord::copy_set_hash()}.
      */
     public long tlabIntArrayMarkWord() {
-        long tmp = arrayPrototypeMarkWord() & (~markOopHashMaskInPlace);
-        tmp |= ((0x2 & markOopHashMask) << markOopHashShift);
+        long tmp = arrayPrototypeMarkWord() & (~markWordHashMaskInPlace);
+        tmp |= ((0x2 & markWordHashMask) << markWordHashShift);
         return tmp;
     }
 
     /**
      * Mark word right shift to get identity hash code.
      */
-    public final int identityHashCodeShift = getConstant("markOop::hash_shift", Integer.class);
+    public final int identityHashCodeShift = getConstant("markWord::hash_shift", Integer.class);
 
     /**
      * Identity hash code value when uninitialized.
      */
-    public final int uninitializedIdentityHashCodeValue = getConstant("markOop::no_hash", Integer.class);
+    public final int uninitializedIdentityHashCodeValue = getConstant("markWord::no_hash", Integer.class);
 
     public final int methodAccessFlagsOffset = getFieldOffset("Method::_access_flags", Integer.class, "AccessFlags");
     public final int methodConstMethodOffset = getFieldOffset("Method::_constMethod", Integer.class, "ConstMethod*");
@@ -518,7 +518,7 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
     public final int arrayKlassOffset = getFieldValue("java_lang_Class::_array_klass_offset", Integer.class, "int");
 
     public final int basicLockSize = getFieldValue("CompilerToVM::Data::sizeof_BasicLock", Integer.class, "int");
-    public final int basicLockDisplacedHeaderOffset = getFieldOffset("BasicLock::_displaced_header", Integer.class, "markOop");
+    public final int basicLockDisplacedHeaderOffset = getFieldOffset("BasicLock::_displaced_header", Integer.class, "markWord");
 
     public final int threadPollingPageOffset = getFieldOffset("Thread::_polling_page", Integer.class, "address", -1);
     public final int threadAllocatedBytesOffset = getFieldOffset("Thread::_allocated_bytes", Integer.class, "jlong");

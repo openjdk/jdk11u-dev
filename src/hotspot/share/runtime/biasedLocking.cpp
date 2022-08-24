@@ -28,7 +28,7 @@
 #include "logging/log.hpp"
 #include "memory/resourceArea.hpp"
 #include "oops/klass.inline.hpp"
-#include "oops/markOop.hpp"
+#include "oops/markWord.hpp"
 #include "oops/oop.inline.hpp"
 #include "runtime/atomic.hpp"
 #include "runtime/basicLock.hpp"
@@ -45,11 +45,11 @@
 static bool _biased_locking_enabled = false;
 BiasedLockingCounters BiasedLocking::_counters;
 
-static GrowableArray<Handle>*  _preserved_oop_stack  = NULL;
-static GrowableArray<markOop>* _preserved_mark_stack = NULL;
+static GrowableArray<Handle>*   _preserved_oop_stack  = NULL;
+static GrowableArray<markWord>* _preserved_mark_stack = NULL;
 
 static void enable_biased_locking(InstanceKlass* k) {
-  k->set_prototype_header(markOop::biased_locking_prototype());
+  k->set_prototype_header(markWord::biased_locking_prototype());
 }
 
 class VM_EnableBiasedLocking: public VM_Operation {
@@ -153,7 +153,7 @@ static GrowableArray<MonitorInfo*>* get_or_compute_monitor_info(JavaThread* thre
 // After the call, *biased_locker will be set to obj->mark().biased_locker() if biased_locker != NULL,
 // AND it is a living thread. Otherwise it will not be updated, (i.e. the caller is responsible for initialization).
 static BiasedLocking::Condition revoke_bias(oop obj, bool allow_rebias, bool is_bulk, JavaThread* requesting_thread, JavaThread** biased_locker) {
-  markOop mark = obj->mark();
+  markWord mark = obj->mark();
   if (!mark.has_bias_pattern()) {
     if (log_is_enabled(Info, biasedlocking)) {
       ResourceMark rm;
@@ -161,7 +161,7 @@ static BiasedLocking::Condition revoke_bias(oop obj, bool allow_rebias, bool is_
                               ", mark " INTPTR_FORMAT ", type %s"
                               ", requesting thread " INTPTR_FORMAT
                               " because it's no longer biased)",
-                              p2i((void *)obj), (intptr_t) mark.value(),
+                              p2i((void *)obj), mark.value(),
                               obj->klass()->external_name(),
                               (intptr_t) requesting_thread);
     }
@@ -169,8 +169,8 @@ static BiasedLocking::Condition revoke_bias(oop obj, bool allow_rebias, bool is_
   }
 
   uint age = mark.age();
-  markOop   biased_prototype = markOop::biased_locking_prototype().set_age(age);
-  markOop unbiased_prototype = markOop::prototype().set_age(age);
+  markWord   biased_prototype = markWord::biased_locking_prototype().set_age(age);
+  markWord unbiased_prototype = markWord::prototype().set_age(age);
 
   // Log at "info" level if not bulk, else "trace" level
   if (!is_bulk) {
@@ -179,9 +179,9 @@ static BiasedLocking::Condition revoke_bias(oop obj, bool allow_rebias, bool is_
                             INTPTR_FORMAT ", type %s, prototype header " INTPTR_FORMAT
                             ", allow rebias %d, requesting thread " INTPTR_FORMAT,
                             p2i((void *)obj),
-                            (intptr_t) mark.value(),
+                            mark.value(),
                             obj->klass()->external_name(),
-                            (intptr_t) obj->klass()->prototype_header().value(),
+                            obj->klass()->prototype_header().value(),
                             (allow_rebias ? 1 : 0),
                             (intptr_t) requesting_thread);
   } else {
@@ -190,9 +190,9 @@ static BiasedLocking::Condition revoke_bias(oop obj, bool allow_rebias, bool is_
                              INTPTR_FORMAT " , type %s , prototype header " INTPTR_FORMAT
                              " , allow rebias %d , requesting thread " INTPTR_FORMAT,
                              p2i((void *)obj),
-                             (intptr_t) mark.value(),
+                             mark.value(),
                              obj->klass()->external_name(),
-                             (intptr_t) obj->klass()->prototype_header().value(),
+                             obj->klass()->prototype_header().value(),
                              (allow_rebias ? 1 : 0),
                              (intptr_t) requesting_thread);
   }
@@ -262,7 +262,7 @@ static BiasedLocking::Condition revoke_bias(oop obj, bool allow_rebias, bool is_
                                p2i((void *) mon_info->owner()),
                                p2i((void *) obj));
       // Assume recursive case and fix up highest lock later
-      markOop mark = markOop::encode((BasicLock*) NULL);
+      markWord mark = markWord::encode((BasicLock*) NULL);
       highest_lock = mon_info->lock();
       highest_lock->set_displaced_header(mark);
     } else {
@@ -278,7 +278,7 @@ static BiasedLocking::Condition revoke_bias(oop obj, bool allow_rebias, bool is_
     // Reset object header to point to displaced mark.
     // Must release storing the lock address for platforms without TSO
     // ordering (e.g. ppc).
-    obj->release_set_mark(markOop::encode(highest_lock));
+    obj->release_set_mark(markWord::encode(highest_lock));
     assert(!obj->mark().has_bias_pattern(), "illegal mark state: stack lock used bias bit");
     // Log at "info" level if not bulk, else "trace" level
     if (!is_bulk) {
@@ -319,7 +319,7 @@ enum HeuristicsResult {
 
 
 static HeuristicsResult update_heuristics(oop o, bool allow_rebias) {
-  markOop mark = o->mark();
+  markWord mark = o->mark();
   if (!mark.has_bias_pattern()) {
     return HR_NOT_BIASED;
   }
@@ -381,7 +381,7 @@ static BiasedLocking::Condition bulk_revoke_or_rebias_at_safepoint(oop o,
                           INTPTR_FORMAT " , mark " INTPTR_FORMAT " , type %s",
                           (bulk_rebias ? "rebias" : "revoke"),
                           p2i((void *) o),
-                          (intptr_t) o->mark().value(),
+                          o->mark().value(),
                           o->klass()->external_name());
 
   jlong cur_time = os::javaTimeMillis();
@@ -417,7 +417,7 @@ static BiasedLocking::Condition bulk_revoke_or_rebias_at_safepoint(oop o,
           for (int i = 0; i < cached_monitor_info->length(); i++) {
             MonitorInfo* mon_info = cached_monitor_info->at(i);
             oop owner = mon_info->owner();
-            markOop mark = owner->mark();
+            markWord mark = owner->mark();
             if ((owner->klass() == k_o) && mark.has_bias_pattern()) {
               // We might have encountered this object already in the case of recursive locking
               assert(mark.bias_epoch() == prev_epoch || mark.bias_epoch() == cur_epoch, "error in bias epoch adjustment");
@@ -440,7 +440,7 @@ static BiasedLocking::Condition bulk_revoke_or_rebias_at_safepoint(oop o,
       // cause future instances to not be biased, but existing biased
       // instances will notice that this implicitly caused their biases
       // to be revoked.
-      klass->set_prototype_header(markOop::prototype());
+      klass->set_prototype_header(markWord::prototype());
 
       // Now walk all threads' stacks and forcibly revoke the biases of
       // any locked and biased objects of this data type we encounter.
@@ -449,7 +449,7 @@ static BiasedLocking::Condition bulk_revoke_or_rebias_at_safepoint(oop o,
         for (int i = 0; i < cached_monitor_info->length(); i++) {
           MonitorInfo* mon_info = cached_monitor_info->at(i);
           oop owner = mon_info->owner();
-          markOop mark = owner->mark();
+          markWord mark = owner->mark();
           if ((owner->klass() == k_o) && mark.has_bias_pattern()) {
             revoke_bias(owner, false, true, requesting_thread, NULL);
           }
@@ -469,7 +469,7 @@ static BiasedLocking::Condition bulk_revoke_or_rebias_at_safepoint(oop o,
   if (attempt_rebias_of_object &&
       o->mark().has_bias_pattern() &&
       klass->prototype_header().has_bias_pattern()) {
-    markOop new_mark = markOop::encode(requesting_thread, o->mark().age(),
+    markWord new_mark = markWord::encode(requesting_thread, o->mark().age(),
                                            klass->prototype_header().bias_epoch());
     o->set_mark(new_mark);
     status_code = BiasedLocking::BIAS_REVOKED_AND_REBIASED;
@@ -522,13 +522,13 @@ public:
     // give us locked object(s). If we don't find any biased objects
     // there is nothing to do and we avoid a safepoint.
     if (_obj != NULL) {
-      markOop mark = (*_obj)()->mark();
+      markWord mark = (*_obj)()->mark();
       if (mark.has_bias_pattern()) {
         return true;
       }
     } else {
       for ( int i = 0 ; i < _objs->length(); i++ ) {
-        markOop mark = (_objs->at(i))()->mark();
+        markWord mark = (_objs->at(i))()->mark();
         if (mark.has_bias_pattern()) {
           return true;
         }
@@ -628,7 +628,7 @@ BiasedLocking::Condition BiasedLocking::revoke_and_rebias(Handle obj, bool attem
   // efficiently enough that we should not cause these revocations to
   // update the heuristics because doing so may cause unwanted bulk
   // revocations (which are expensive) to occur.
-  markOop mark = obj->mark();
+  markWord mark = obj->mark();
   if (mark.is_biased_anonymously() && !attempt_rebias) {
     // We are probably trying to revoke the bias of this object due to
     // an identity hash code computation. Try to revoke the bias
@@ -636,15 +636,15 @@ BiasedLocking::Condition BiasedLocking::revoke_and_rebias(Handle obj, bool attem
     // compare-and-exchange an unbiased header into the mark word of
     // the object, meaning that no other thread has raced to acquire
     // the bias of the object.
-    markOop biased_value       = mark;
-    markOop unbiased_prototype = markOop::prototype().set_age(mark.age());
-    markOop res_mark = obj->cas_set_mark(unbiased_prototype, mark);
+    markWord biased_value       = mark;
+    markWord unbiased_prototype = markWord::prototype().set_age(mark.age());
+    markWord res_mark = obj->cas_set_mark(unbiased_prototype, mark);
     if (res_mark == biased_value) {
       return BIAS_REVOKED;
     }
   } else if (mark.has_bias_pattern()) {
     Klass* k = obj->klass();
-    markOop prototype_header = k->prototype_header();
+    markWord prototype_header = k->prototype_header();
     if (!prototype_header.has_bias_pattern()) {
       // This object has a stale bias from before the bulk revocation
       // for this data type occurred. It's pointless to update the
@@ -652,8 +652,8 @@ BiasedLocking::Condition BiasedLocking::revoke_and_rebias(Handle obj, bool attem
       // CAS. If we fail this race, the object's bias has been revoked
       // by another thread so we simply return and let the caller deal
       // with it.
-      markOop biased_value       = mark;
-      markOop res_mark = obj->cas_set_mark(prototype_header, mark);
+      markWord biased_value       = mark;
+      markWord res_mark = obj->cas_set_mark(prototype_header, mark);
       assert(!obj->mark().has_bias_pattern(), "even if we raced, should still be revoked");
       return BIAS_REVOKED;
     } else if (prototype_header.bias_epoch() != mark.bias_epoch()) {
@@ -666,16 +666,16 @@ BiasedLocking::Condition BiasedLocking::revoke_and_rebias(Handle obj, bool attem
       // needing to revoke biases.
       if (attempt_rebias) {
         assert(THREAD->is_Java_thread(), "");
-        markOop biased_value       = mark;
-        markOop rebiased_prototype = markOop::encode((JavaThread*) THREAD, mark.age(), prototype_header.bias_epoch());
-        markOop res_mark = obj->cas_set_mark(rebiased_prototype, mark);
+        markWord biased_value       = mark;
+        markWord rebiased_prototype = markWord::encode((JavaThread*) THREAD, mark.age(), prototype_header.bias_epoch());
+        markWord res_mark = obj->cas_set_mark(rebiased_prototype, mark);
         if (res_mark == biased_value) {
           return BIAS_REVOKED_AND_REBIASED;
         }
       } else {
-        markOop biased_value       = mark;
-        markOop unbiased_prototype = markOop::prototype().set_age(mark.age());
-        markOop res_mark = obj->cas_set_mark(unbiased_prototype, mark);
+        markWord biased_value       = mark;
+        markWord unbiased_prototype = markWord::prototype().set_age(mark.age());
+        markWord res_mark = obj->cas_set_mark(unbiased_prototype, mark);
         if (res_mark == biased_value) {
           return BIAS_REVOKED;
         }
@@ -688,7 +688,7 @@ BiasedLocking::Condition BiasedLocking::revoke_and_rebias(Handle obj, bool attem
     return NOT_BIASED;
   } else if (heuristics == HR_SINGLE_REVOKE) {
     Klass *k = obj->klass();
-    markOop prototype_header = k->prototype_header();
+    markWord prototype_header = k->prototype_header();
     if (mark.biased_locker() == THREAD &&
         prototype_header.bias_epoch() == mark.bias_epoch()) {
       // A thread is trying to revoke the bias of an object biased
@@ -794,7 +794,7 @@ void BiasedLocking::preserve_marks() {
   // monitors in a prepass and, if they are biased, preserve their
   // mark words here. This should be a relatively small set of objects
   // especially compared to the number of objects in the heap.
-  _preserved_mark_stack = new (ResourceObj::C_HEAP, mtInternal) GrowableArray<markOop>(10, true);
+  _preserved_mark_stack = new (ResourceObj::C_HEAP, mtInternal) GrowableArray<markWord>(10, true);
   _preserved_oop_stack = new (ResourceObj::C_HEAP, mtInternal) GrowableArray<Handle>(10, true);
 
   Thread* cur = Thread::current();
@@ -813,7 +813,7 @@ void BiasedLocking::preserve_marks() {
             if (mon_info->owner_is_scalar_replaced()) continue;
             oop owner = mon_info->owner();
             if (owner != NULL) {
-              markOop mark = owner->mark();
+              markWord mark = owner->mark();
               if (mark.has_bias_pattern()) {
                 _preserved_oop_stack->push(Handle(cur, owner));
                 _preserved_mark_stack->push(mark);
@@ -837,7 +837,7 @@ void BiasedLocking::restore_marks() {
   int len = _preserved_oop_stack->length();
   for (int i = 0; i < len; i++) {
     Handle owner = _preserved_oop_stack->at(i);
-    markOop mark = _preserved_mark_stack->at(i);
+    markWord mark = _preserved_mark_stack->at(i);
     owner->set_mark(mark);
   }
 

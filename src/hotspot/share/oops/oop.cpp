@@ -123,8 +123,8 @@ bool oopDesc::is_oop(oop obj, bool ignore_mark_word) {
     return false;
   }
 
-  // Header verification: the mark is typically non-NULL. If we're
-  // at a safepoint, it must not be null.
+  // Header verification: the mark is typically non-zero. If we're
+  // at a safepoint, it must not be zero.
   // Outside of a safepoint, the header could be changing (for example,
   // another thread could be inflating a lock on this object).
   if (ignore_mark_word) {

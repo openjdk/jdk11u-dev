@@ -4607,7 +4607,7 @@ void TemplateTable::_new() {
     if (UseBiasedLocking) {
       __ ldr(Rtemp, Address(Rklass, Klass::prototype_header_offset()));
     } else {
-      __ mov_slow(Rtemp, (intptr_t)markOop::prototype());
+      __ mov_slow(Rtemp, (intptr_t)markWord::prototype());
     }
     // mark
     __ str(Rtemp, Address(Robj, oopDesc::mark_offset_in_bytes()));

@@ -34,7 +34,7 @@
 #include "interpreter/interpreterRuntime.hpp"
 #include "logging/log.hpp"
 #include "oops/arrayOop.hpp"
-#include "oops/markOop.hpp"
+#include "oops/markWord.hpp"
 #include "oops/method.hpp"
 #include "oops/methodData.hpp"
 #include "prims/jvmtiExport.hpp"
@@ -995,8 +995,8 @@ void InterpreterMacroAssembler::lock_object(Register Rlock) {
     ldr(Rmark, Robj);
 
     // Test if object is already locked
-    assert(markOop::unlocked_value == 1, "adjust this code");
-    tbz(Rmark, exact_log2(markOop::unlocked_value), already_locked);
+    assert(markWord::unlocked_value == 1, "adjust this code");
+    tbz(Rmark, exact_log2(markWord::unlocked_value), already_locked);
 
 #else // AARCH64
 
@@ -1009,7 +1009,7 @@ void InterpreterMacroAssembler::lock_object(Register Rlock) {
     ldr(Rmark, Address(Robj, oopDesc::mark_offset_in_bytes()));
 
     // Test if object is already locked
-    tst(Rmark, markOop::unlocked_value);
+    tst(Rmark, markWord::unlocked_value);
     b(already_locked, eq);
 
 #endif // !AARCH64

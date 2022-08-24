@@ -2102,7 +2102,7 @@ class JNIMethodBlock : public CHeapObj<mtClass> {
 #endif // PRODUCT
 };
 
-// Something that can't be mistaken for an address or a markOop
+// Something that can't be mistaken for an address or a markWord
 Method* const JNIMethodBlock::_free_method = (Method*)55;
 
 JNIMethodBlockNode::JNIMethodBlockNode(int num_methods) : _next(NULL), _top(0) {

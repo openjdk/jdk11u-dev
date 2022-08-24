@@ -249,7 +249,7 @@ void G1ParCopyClosure<barrier, do_mark_object>::do_oop_work(T* p) {
   const InCSetState state = _g1h->in_cset_state(obj);
   if (state.is_in_cset()) {
     oop forwardee;
-    markOop m = obj->mark_raw();
+    markWord m = obj->mark_raw();
     if (m.is_marked()) {
       forwardee = (oop) m.decode_pointer();
     } else {

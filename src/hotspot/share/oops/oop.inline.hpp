@@ -32,7 +32,7 @@
 #include "oops/arrayOop.hpp"
 #include "oops/compressedOops.inline.hpp"
 #include "oops/klass.inline.hpp"
-#include "oops/markOop.inline.hpp"
+#include "oops/markWord.inline.hpp"
 #include "oops/oop.hpp"
 #include "runtime/atomic.hpp"
 #include "runtime/orderAccess.hpp"
@@ -43,50 +43,50 @@
 // Implementation of all inlined member functions defined in oop.hpp
 // We need a separate file to avoid circular references
 
-markOop  oopDesc::mark()      const {
+markWord  oopDesc::mark() const {
   uintptr_t v = HeapAccess<MO_VOLATILE>::load_at(as_oop(), mark_offset_in_bytes());
-  return markOop(v);
+  return markWord(v);
 }
 
-markOop  oopDesc::mark_raw()  const {
+markWord  oopDesc::mark_raw() const {
   return Atomic::load(&_mark);;
 }
 
-markOop* oopDesc::mark_addr_raw() const {
-  return (markOop*) &_mark;
+markWord* oopDesc::mark_addr_raw() const {
+  return (markWord*) &_mark;
 }
 
-void oopDesc::set_mark(markOop m) {
+void oopDesc::set_mark(markWord m) {
   HeapAccess<MO_VOLATILE>::store_at(as_oop(), mark_offset_in_bytes(), m.value());
 }
 
-void oopDesc::set_mark_raw(markOop m) {
+void oopDesc::set_mark_raw(markWord m) {
   Atomic::store(m, &_mark);
 }
 
-void oopDesc::set_mark_raw(HeapWord* mem, markOop m) {
-  *(markOop*)(((char*)mem) + mark_offset_in_bytes()) = m;
+void oopDesc::set_mark_raw(HeapWord* mem, markWord m) {
+  *(markWord*)(((char*)mem) + mark_offset_in_bytes()) = m;
 }
 
-void oopDesc::release_set_mark(markOop m) {
+void oopDesc::release_set_mark(markWord m) {
   HeapAccess<MO_RELEASE>::store_at(as_oop(), mark_offset_in_bytes(), m.value());
 }
 
-markOop oopDesc::cas_set_mark(markOop new_mark, markOop old_mark) {
+markWord oopDesc::cas_set_mark(markWord new_mark, markWord old_mark) {
   uintptr_t v = HeapAccess<>::atomic_cmpxchg_at(new_mark.value(), as_oop(), mark_offset_in_bytes(), old_mark.value());
-  return markOop(v);
+  return markWord(v);
 }
 
-markOop oopDesc::cas_set_mark_raw(markOop new_mark, markOop old_mark, atomic_memory_order order) {
+markWord oopDesc::cas_set_mark_raw(markWord new_mark, markWord old_mark, atomic_memory_order order) {
   return Atomic::cmpxchg(new_mark, &_mark, old_mark, order);
 }
 
 void oopDesc::init_mark() {
-  set_mark(markOop::prototype_for_object(this));
+  set_mark(markWord::prototype_for_object(this));
 }
 
 void oopDesc::init_mark_raw() {
-  set_mark_raw(markOop::prototype_for_object(this));
+  set_mark_raw(markWord::prototype_for_object(this));
 }
 
 Klass* oopDesc::klass() const {
@@ -356,29 +356,29 @@ void oopDesc::forward_to(oop p) {
   assert(!MetaspaceShared::is_archive_object(oop(this)) &&
          !MetaspaceShared::is_archive_object(p),
          "forwarding archive object");
-  markOop m = markOop::encode_pointer_as_mark(p);
+  markWord m = markWord::encode_pointer_as_mark(p);
   assert(m.decode_pointer() == p, "encoding must be reversable");
   set_mark_raw(m);
 }
 
 // Used by parallel scavengers
-bool oopDesc::cas_forward_to(oop p, markOop compare, atomic_memory_order order) {
+bool oopDesc::cas_forward_to(oop p, markWord compare, atomic_memory_order order) {
   assert(check_obj_alignment(p),
          "forwarding to something not aligned");
   assert(Universe::heap()->is_in_reserved(p),
          "forwarding to something not in heap");
-  markOop m = markOop::encode_pointer_as_mark(p);
+  markWord m = markWord::encode_pointer_as_mark(p);
   assert(m.decode_pointer() == p, "encoding must be reversable");
   return cas_set_mark_raw(m, compare, order) == compare;
 }
 
 oop oopDesc::forward_to_atomic(oop p, atomic_memory_order order) {
-  markOop oldMark = mark_raw();
-  markOop forwardPtrMark = markOop::encode_pointer_as_mark(p);
-  markOop curMark;
+  markWord oldMark = mark_raw();
+  markWord forwardPtrMark = markWord::encode_pointer_as_mark(p);
+  markWord curMark;
 
   assert(forwardPtrMark.decode_pointer() == p, "encoding must be reversable");
-  assert(sizeof(markOop) == sizeof(intptr_t), "CAS below requires this.");
+  assert(sizeof(markWord) == sizeof(intptr_t), "CAS below requires this.");
 
   while (!oldMark.is_marked()) {
     curMark = cas_set_mark_raw(forwardPtrMark, oldMark, order);
@@ -489,7 +489,7 @@ bool oopDesc::is_instanceof_or_null(oop obj, Klass* klass) {
 intptr_t oopDesc::identity_hash() {
   // Fast case; if the object is unlocked and the hash value is set, no locking is needed
   // Note: The mark must be read into local variable to avoid concurrent updates.
-  markOop mrk = mark();
+  markWord mrk = mark();
   if (mrk.is_unlocked() && !mrk.has_no_hash()) {
     return mrk.hash();
   } else if (mrk.is_marked()) {
@@ -503,11 +503,11 @@ bool oopDesc::has_displaced_mark_raw() const {
   return mark_raw().has_displaced_mark_helper();
 }
 
-markOop oopDesc::displaced_mark_raw() const {
+markWord oopDesc::displaced_mark_raw() const {
   return mark_raw().displaced_mark_helper();
 }
 
-void oopDesc::set_displaced_mark_raw(markOop m) {
+void oopDesc::set_displaced_mark_raw(markWord m) {
   mark_raw().set_displaced_mark_helper(m);
 }
 

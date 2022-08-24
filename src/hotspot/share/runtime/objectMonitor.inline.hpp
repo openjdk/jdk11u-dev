@@ -34,16 +34,16 @@ inline intptr_t ObjectMonitor::is_entered(TRAPS) const {
   return 0;
 }
 
-inline markOop ObjectMonitor::header() const {
+inline markWord ObjectMonitor::header() const {
   return Atomic::load(&_header);
 }
 
-inline volatile markOop* ObjectMonitor::header_addr() {
+inline volatile markWord* ObjectMonitor::header_addr() {
   assert((intptr_t)this == (intptr_t)&_header, "sync code expects this");
   return &_header;
 }
 
-inline void ObjectMonitor::set_header(markOop hdr) {
+inline void ObjectMonitor::set_header(markWord hdr) {
   Atomic::store(hdr, &_header);
 }
 
@@ -67,7 +67,7 @@ inline void ObjectMonitor::clear() {
   assert(_object != NULL, "Fatal logic error in ObjectMonitor object!");
   assert(_owner == 0, "Fatal logic error in ObjectMonitor owner!");
 
-  Atomic::store(markOop::zero(), &_header);
+  Atomic::store(markWord::zero(), &_header);
   _object = NULL;
 }
 

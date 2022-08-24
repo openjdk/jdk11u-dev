@@ -29,7 +29,7 @@
 #include "gc/serial/markSweep.hpp"
 #include "memory/metaspaceShared.hpp"
 #include "memory/universe.hpp"
-#include "oops/markOop.inline.hpp"
+#include "oops/markWord.inline.hpp"
 #include "oops/access.inline.hpp"
 #include "oops/compressedOops.inline.hpp"
 #include "oops/oop.inline.hpp"
@@ -38,8 +38,8 @@
 inline void MarkSweep::mark_object(oop obj) {
   // some marks may contain information we need to preserve so we store them away
   // and overwrite the mark.  We'll restore it at the end of markSweep.
-  markOop mark = obj->mark_raw();
-  obj->set_mark_raw(markOop::prototype().set_marked());
+  markWord mark = obj->mark_raw();
+  obj->set_mark_raw(markWord::prototype().set_marked());
 
   if (mark.must_be_preserved(obj)) {
     preserve_mark(obj, mark);
@@ -81,8 +81,8 @@ template <class T> inline void MarkSweep::adjust_pointer(T* p) {
 
     oop new_obj = oop(obj->mark_raw().decode_pointer());
 
-    assert(new_obj != NULL ||                         // is forwarding ptr?
-           obj->mark_raw() == markOop::prototype() || // not gc marked?
+    assert(new_obj != NULL ||                          // is forwarding ptr?
+           obj->mark_raw() == markWord::prototype() || // not gc marked?
            (UseBiasedLocking && obj->mark_raw().has_bias_pattern()),
            // not gc marked?
            "should be forwarded");

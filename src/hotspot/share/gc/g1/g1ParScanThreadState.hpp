@@ -185,7 +185,7 @@ private:
                                   size_t word_sz,
                                   bool previous_plab_refill_failed);
 
-  inline InCSetState next_state(InCSetState const state, markOop const m, uint& age);
+  inline InCSetState next_state(InCSetState const state, markWord const m, uint& age);
 
   void report_promotion_event(InCSetState const dest_state,
                               oop const old, size_t word_sz, uint age,
@@ -196,7 +196,7 @@ private:
 
   inline void trim_queue_to_threshold(uint threshold);
 public:
-  oop copy_to_survivor_space(InCSetState const state, oop const obj, markOop const old_mark);
+  oop copy_to_survivor_space(InCSetState const state, oop const obj, markWord const old_mark);
 
   void trim_queue();
   void trim_queue_partially();
@@ -207,7 +207,7 @@ public:
   inline void steal_and_trim_queue(RefToScanQueueSet *task_queues);
 
   // An attempt to evacuate "obj" has failed; take necessary steps.
-  oop handle_evacuation_failure_par(oop obj, markOop m);
+  oop handle_evacuation_failure_par(oop obj, markWord m);
 };
 
 class G1ParScanThreadStateSet : public StackObj {

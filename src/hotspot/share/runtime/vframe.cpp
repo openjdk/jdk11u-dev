@@ -222,7 +222,7 @@ void javaVFrame::print_lock_info_on(outputStream* st, int frame_count) {
       if (monitor->owner() != NULL) {
         // the monitor is associated with an object, i.e., it is locked
 
-        markOop mark = markOop::zero();
+        markWord mark = markWord::zero();
         const char *lock_state = "locked"; // assume we have the monitor locked
         if (!found_first_monitor && frame_count == 0) {
           // If this is the first frame and we haven't found an owned
@@ -241,7 +241,7 @@ void javaVFrame::print_lock_info_on(outputStream* st, int frame_count) {
           } else {
             // We own the monitor which is not as interesting so
             // disable the extra printing below.
-            mark = markOop::zero();
+            mark = markWord::zero();
           }
         } else if (frame_count != 0) {
           // This is not the first frame so we either own this monitor
@@ -260,7 +260,7 @@ void javaVFrame::print_lock_info_on(outputStream* st, int frame_count) {
           } else {
             // We own the monitor which is not as interesting so
             // disable the extra printing below.
-            mark = markOop::zero();
+            mark = markWord::zero();
           }
         }
         print_locked_object_class_name(st, Handle(THREAD, monitor->owner()), lock_state);

@@ -28,9 +28,9 @@
 
 void BasicLock::print_on(outputStream* st) const {
   st->print("monitor");
-  markOop moop = displaced_header();
-  if (moop.value() != 0)
-    moop.print_on(st);
+  markWord mark_word = displaced_header();
+  if (mark_word.value() != 0)
+    mark_word.print_on(st);
 }
 
 void BasicLock::move_to(oop obj, BasicLock* dest) {

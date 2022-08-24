@@ -963,7 +963,7 @@ JvmtiEnvBase::get_object_monitor_usage(JavaThread* calling_thread, jobject objec
 
     address owner = NULL;
     {
-      markOop mark = hobj()->mark();
+      markWord mark = hobj()->mark();
 
       if (!mark.has_monitor()) {
         // this object has a lightweight monitor

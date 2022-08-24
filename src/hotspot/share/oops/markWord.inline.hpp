@@ -22,23 +22,23 @@
  *
  */
 
-#ifndef SHARE_VM_OOPS_MARKOOP_INLINE_HPP
-#define SHARE_VM_OOPS_MARKOOP_INLINE_HPP
+#ifndef SHARE_VM_OOPS_MARKWORD_INLINE_HPP
+#define SHARE_VM_OOPS_MARKWORD_INLINE_HPP
 
 #include "oops/klass.hpp"
-#include "oops/markOop.hpp"
+#include "oops/markWord.hpp"
 #include "oops/oop.inline.hpp"
 #include "runtime/globals.hpp"
 
 // Should this header be preserved during GC (when biased locking is enabled)?
-inline bool markOop::must_be_preserved_with_bias(oop obj_containing_mark) const {
+inline bool markWord::must_be_preserved_with_bias(oop obj_containing_mark) const {
   assert(UseBiasedLocking, "unexpected");
   if (has_bias_pattern()) {
     // Will reset bias at end of collection
     // Mark words of biased and currently locked objects are preserved separately
     return false;
   }
-  markOop prototype_header = prototype_for_object(obj_containing_mark);
+  markWord prototype_header = prototype_for_object(obj_containing_mark);
   if (prototype_header.has_bias_pattern()) {
     // Individual instance which has its bias revoked; must return
     // true for correctness
@@ -48,7 +48,7 @@ inline bool markOop::must_be_preserved_with_bias(oop obj_containing_mark) const 
 }
 
 // Should this header be preserved during GC?
-inline bool markOop::must_be_preserved(oop obj_containing_mark) const {
+inline bool markWord::must_be_preserved(oop obj_containing_mark) const {
   if (!UseBiasedLocking)
     return (!is_unlocked() || !has_no_hash());
   return must_be_preserved_with_bias(obj_containing_mark);
@@ -56,7 +56,7 @@ inline bool markOop::must_be_preserved(oop obj_containing_mark) const {
 
 // Should this header be preserved in the case of a promotion failure
 // during scavenge (when biased locking is enabled)?
-inline bool markOop::must_be_preserved_with_bias_for_promotion_failure(oop obj_containing_mark) const {
+inline bool markWord::must_be_preserved_with_bias_for_promotion_failure(oop obj_containing_mark) const {
   assert(UseBiasedLocking, "unexpected");
   // We don't explicitly save off the mark words of biased and
   // currently-locked objects during scavenges, so if during a
@@ -76,7 +76,7 @@ inline bool markOop::must_be_preserved_with_bias_for_promotion_failure(oop obj_c
 
 // Should this header be preserved in the case of a promotion failure
 // during scavenge?
-inline bool markOop::must_be_preserved_for_promotion_failure(oop obj_containing_mark) const {
+inline bool markWord::must_be_preserved_for_promotion_failure(oop obj_containing_mark) const {
   if (!UseBiasedLocking)
     return (!is_unlocked() || !has_no_hash());
   return must_be_preserved_with_bias_for_promotion_failure(obj_containing_mark);
@@ -85,7 +85,7 @@ inline bool markOop::must_be_preserved_for_promotion_failure(oop obj_containing_
 
 // Same as must_be_preserved_with_bias_for_promotion_failure() except that
 // it takes a Klass* argument, instead of the object of which this is the mark word.
-inline bool markOop::must_be_preserved_with_bias_for_cms_scavenge(Klass* klass_of_obj_containing_mark) const {
+inline bool markWord::must_be_preserved_with_bias_for_cms_scavenge(Klass* klass_of_obj_containing_mark) const {
   assert(UseBiasedLocking, "unexpected");
   // CMS scavenges preserve mark words in similar fashion to promotion failures; see above
   if (has_bias_pattern() ||
@@ -97,18 +97,18 @@ inline bool markOop::must_be_preserved_with_bias_for_cms_scavenge(Klass* klass_o
 
 // Same as must_be_preserved_for_promotion_failure() except that
 // it takes a Klass* argument, instead of the object of which this is the mark word.
-inline bool markOop::must_be_preserved_for_cms_scavenge(Klass* klass_of_obj_containing_mark) const {
+inline bool markWord::must_be_preserved_for_cms_scavenge(Klass* klass_of_obj_containing_mark) const {
   if (!UseBiasedLocking)
     return (!is_unlocked() || !has_no_hash());
   return must_be_preserved_with_bias_for_cms_scavenge(klass_of_obj_containing_mark);
 }
 
-inline markOop markOop::prototype_for_object(oop obj) {
+inline markWord markWord::prototype_for_object(oop obj) {
 #ifdef ASSERT
-  markOop prototype_header = obj->klass()->prototype_header();
+  markWord prototype_header = obj->klass()->prototype_header();
   assert(prototype_header == prototype() || prototype_header.has_bias_pattern(), "corrupt prototype header");
 #endif
   return obj->klass()->prototype_header();
 }
 
-#endif // SHARE_VM_OOPS_MARKOOP_INLINE_HPP
+#endif // SHARE_VM_OOPS_MARKWORD_INLINE_HPP

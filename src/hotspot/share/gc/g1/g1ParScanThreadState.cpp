@@ -186,7 +186,7 @@ HeapWord* G1ParScanThreadState::allocate_in_next_plab(InCSetState const state,
   }
 }
 
-InCSetState G1ParScanThreadState::next_state(InCSetState const state, markOop const m, uint& age) {
+InCSetState G1ParScanThreadState::next_state(InCSetState const state, markWord const m, uint& age) {
   if (state.is_young()) {
     age = !m.has_displaced_mark_helper() ? m.age()
                                           : m.displaced_mark_helper().age();
@@ -213,7 +213,7 @@ void G1ParScanThreadState::report_promotion_event(InCSetState const dest_state,
 
 oop G1ParScanThreadState::copy_to_survivor_space(InCSetState const state,
                                                  oop const old,
-                                                 markOop const old_mark) {
+                                                 markWord const old_mark) {
   const size_t word_sz = old->size();
   HeapRegion* const from_region = _g1h->heap_region_containing(old);
   // +1 to make the -1 indexes valid...
@@ -271,7 +271,7 @@ oop G1ParScanThreadState::copy_to_survivor_space(InCSetState const state,
     Copy::aligned_disjoint_words((HeapWord*) old, obj_ptr, word_sz);
 
     if (dest_state.is_young()) {
-      if (age < markOop::max_age) {
+      if (age < markWord::max_age) {
         age++;
       }
       if (old_mark.has_displaced_mark_helper()) {
@@ -279,7 +279,7 @@ oop G1ParScanThreadState::copy_to_survivor_space(InCSetState const state,
         // otherwise obj looks to be forwarded (the old mark word,
         // which contains the forward pointer, was copied)
         obj->set_mark_raw(old_mark);
-        markOop new_mark = old_mark.displaced_mark_helper().set_age(age);
+        markWord new_mark = old_mark.displaced_mark_helper().set_age(age);
         old_mark.set_displaced_mark_helper(new_mark);
       } else {
         obj->set_mark_raw(old_mark.set_age(age));
@@ -353,7 +353,7 @@ void G1ParScanThreadStateSet::flush() {
   _flushed = true;
 }
 
-oop G1ParScanThreadState::handle_evacuation_failure_par(oop old, markOop m) {
+oop G1ParScanThreadState::handle_evacuation_failure_par(oop old, markWord m) {
   assert(_g1h->is_in_cset(old), "Object " PTR_FORMAT " should be in the CSet", p2i(old));
 
   oop forward_ptr = old->forward_to_atomic(old, memory_order_relaxed);

@@ -29,7 +29,7 @@
 #include "gc/shared/collectedHeap.hpp"
 #include "interpreter/interpreter.hpp"
 #include "oops/arrayOop.hpp"
-#include "oops/markOop.hpp"
+#include "oops/markWord.hpp"
 #include "runtime/basicLock.hpp"
 #include "runtime/biasedLocking.hpp"
 #include "runtime/os.hpp"
@@ -101,7 +101,7 @@ void C1_MacroAssembler::initialize_header(Register obj, Register klass, Register
   if(UseBiasedLocking && !len->is_valid()) {
     ldr(tmp, Address(klass, Klass::prototype_header_offset()));
   } else {
-    mov(tmp, (intptr_t)markOop::prototype());
+    mov(tmp, (intptr_t)markWord::prototype());
   }
 
 #ifdef AARCH64
@@ -282,8 +282,8 @@ int C1_MacroAssembler::lock_object(Register hdr, Register obj,
   ldr(hdr, obj);
 
   // Test if object is already locked
-  assert(markOop::unlocked_value == 1, "adjust this code");
-  tbnz(hdr, exact_log2(markOop::unlocked_value), fast_lock);
+  assert(markWord::unlocked_value == 1, "adjust this code");
+  tbnz(hdr, exact_log2(markWord::unlocked_value), fast_lock);
 
   // Check for recursive locking
   // See comments in InterpreterMacroAssembler::lock_object for
@@ -312,7 +312,7 @@ int C1_MacroAssembler::lock_object(Register hdr, Register obj,
   ldr(hdr, Address(obj, oopDesc::mark_offset_in_bytes()));
 
   str(obj, Address(disp_hdr, obj_offset));
-  tst(hdr, markOop::unlocked_value);
+  tst(hdr, markWord::unlocked_value);
   b(fast_lock, ne);
 
   // Check for recursive locking

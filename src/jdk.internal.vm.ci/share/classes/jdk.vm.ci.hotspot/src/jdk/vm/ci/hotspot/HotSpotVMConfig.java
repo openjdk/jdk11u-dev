@@ -70,7 +70,7 @@ class HotSpotVMConfig extends HotSpotVMConfigAccess {
 
     final int objectAlignment = getFlag("ObjectAlignmentInBytes", Integer.class);
 
-    final int prototypeMarkWordOffset = getFieldOffset("Klass::_prototype_header", Integer.class, "markOop");
+    final int prototypeMarkWordOffset = getFieldOffset("Klass::_prototype_header", Integer.class, "markWord");
     final int subklassOffset = getFieldOffset("Klass::_subklass", Integer.class, "Klass*");
     final int nextSiblingOffset = getFieldOffset("Klass::_next_sibling", Integer.class, "Klass*");
     final int superCheckOffsetOffset = getFieldOffset("Klass::_super_check_offset", Integer.class, "juint");
@@ -134,11 +134,11 @@ class HotSpotVMConfig extends HotSpotVMConfigAccess {
     // This is only valid on AMD64.
     final int runtimeCallStackSize = getConstant("frame::arg_reg_save_area_bytes", Integer.class, osArch.equals("amd64") ? null : 0);
 
-    private final int markWordNoHashInPlace = getConstant("markOop::no_hash_in_place", Integer.class);
-    private final int markWordNoLockInPlace = getConstant("markOop::no_lock_in_place", Integer.class);
+    private final int markWordNoHashInPlace = getConstant("markWord::no_hash_in_place", Integer.class);
+    private final int markWordNoLockInPlace = getConstant("markWord::no_lock_in_place", Integer.class);
 
     /**
-     * See {@code markOop::prototype()}.
+     * See {@code markWord::prototype()}.
      */
     long arrayPrototypeMarkWord() {
         return markWordNoHashInPlace | markWordNoLockInPlace;

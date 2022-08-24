@@ -51,21 +51,21 @@ public class ClhsdbLongConstant {
 
             List<String> cmds = List.of(
                     "longConstant",
-                    "longConstant markOop::locked_value",
-                    "longConstant markOop::lock_bits",
+                    "longConstant markWord::locked_value",
+                    "longConstant markWord::lock_bits",
                     "longConstant jtreg::test 6",
                     "longConstant jtreg::test");
 
             Map<String, List<String>> expStrMap = new HashMap<>();
             expStrMap.put("longConstant", List.of(
-                    "longConstant markOop::locked_value",
-                    "longConstant markOop::lock_bits",
+                    "longConstant markWord::locked_value",
+                    "longConstant markWord::lock_bits",
                     "InvocationCounter::count_increment",
-                    "markOop::epoch_mask_in_place"));
-            expStrMap.put("longConstant markOop::locked_value", List.of(
-                    "longConstant markOop::locked_value"));
-            expStrMap.put("longConstant markOop::lock_bits", List.of(
-                    "longConstant markOop::lock_bits"));
+                    "markWord::epoch_mask_in_place"));
+            expStrMap.put("longConstant markWord::locked_value", List.of(
+                    "longConstant markWord::locked_value"));
+            expStrMap.put("longConstant markWord::lock_bits", List.of(
+                    "longConstant markWord::lock_bits"));
             expStrMap.put("longConstant jtreg::test", List.of(
                     "longConstant jtreg::test 6"));
 
@@ -88,17 +88,17 @@ public class ClhsdbLongConstant {
 
     private static void checkForTruncation(String longConstantOutput) throws Exception {
 
-        // Expected values obtained from the hash_mask_in_place definition in markOop.hpp
+        // Expected values obtained from the hash_mask_in_place definition in markWord.hpp
 
         // Expected output snippet is of the form (on x64-64):
         // ...
         // longConstant VM_Version::CPU_SHA 17179869184
-        // longConstant markOop::biased_lock_bits 1
-        // longConstant markOop::age_shift 3
-        // longConstant markOop::hash_mask_in_place 549755813632
+        // longConstant markWord::biased_lock_bits 1
+        // longConstant markWord::age_shift 3
+        // longConstant markWord::hash_mask_in_place 549755813632
         // ...
 
-        checkLongValue("markOop::hash_mask_in_place",
+        checkLongValue("markWord::hash_mask_in_place",
                        longConstantOutput,
                        Platform.is64bit() ? 549755813632L: 4294967168L);
 

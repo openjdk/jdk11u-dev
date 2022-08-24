@@ -492,7 +492,7 @@ void TypeArrayKlass::oop_ps_push_contents(oop obj, PSPromotionManager* pm) {
   ShouldNotReachHere();
 }
 
-oop PSPromotionManager::oop_promotion_failed(oop obj, markOop obj_mark) {
+oop PSPromotionManager::oop_promotion_failed(oop obj, markWord obj_mark) {
   assert(_old_gen_is_full || PromotionFailureALot, "Sanity");
 
   // Attempt to CAS in the header.

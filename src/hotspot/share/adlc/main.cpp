@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
   AD.addInclude(AD._CPP_file, "code/vmreg.inline.hpp");
   AD.addInclude(AD._CPP_file, "gc/shared/collectedHeap.inline.hpp");
   AD.addInclude(AD._CPP_file, "oops/compiledICHolder.hpp");
-  AD.addInclude(AD._CPP_file, "oops/markOop.hpp");
+  AD.addInclude(AD._CPP_file, "oops/markWord.hpp");
   AD.addInclude(AD._CPP_file, "oops/method.hpp");
   AD.addInclude(AD._CPP_file, "oops/oop.inline.hpp");
   AD.addInclude(AD._CPP_file, "opto/cfgnode.hpp");

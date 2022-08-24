@@ -50,7 +50,7 @@ inline bool G1FullGCMarker::mark_object(oop obj) {
   }
 
   // Marked by us, preserve if needed.
-  markOop mark = obj->mark_raw();
+  markWord mark = obj->mark_raw();
   if (mark.must_be_preserved(obj) &&
       !G1ArchiveAllocator::is_open_archive_object(obj)) {
     preserved_stack()->push(obj, mark);

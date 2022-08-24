@@ -1310,12 +1310,12 @@ uintptr_t Universe::verify_oop_bits() {
 }
 
 uintptr_t Universe::verify_mark_mask() {
-  return markOop::lock_mask_in_place;
+  return markWord::lock_mask_in_place;
 }
 
 uintptr_t Universe::verify_mark_bits() {
   intptr_t mask = verify_mark_mask();
-  intptr_t bits = (intptr_t)markOop::prototype().value();
+  intptr_t bits = (intptr_t)markWord::prototype().value();
   assert((bits & ~mask) == 0, "no stray header bits");
   return bits;
 }

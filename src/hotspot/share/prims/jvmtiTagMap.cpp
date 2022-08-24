@@ -1644,7 +1644,7 @@ class RestoreMarksClosure : public ObjectClosure {
  public:
   void do_object(oop o) {
     if (o != NULL) {
-      markOop mark = o->mark();
+      markWord mark = o->mark();
       if (mark.is_marked()) {
         o->init_mark();
       }
@@ -1657,7 +1657,7 @@ class ObjectMarker : AllStatic {
  private:
   // saved headers
   static GrowableArray<oop>* _saved_oop_stack;
-  static GrowableArray<markOop>* _saved_mark_stack;
+  static GrowableArray<markWord>* _saved_mark_stack;
   static bool _needs_reset;                  // do we need to reset mark bits?
 
  public:
@@ -1672,7 +1672,7 @@ class ObjectMarker : AllStatic {
 };
 
 GrowableArray<oop>* ObjectMarker::_saved_oop_stack = NULL;
-GrowableArray<markOop>* ObjectMarker::_saved_mark_stack = NULL;
+GrowableArray<markWord>* ObjectMarker::_saved_mark_stack = NULL;
 bool ObjectMarker::_needs_reset = true;  // need to reset mark bits by default
 
 // initialize ObjectMarker - prepares for object marking
@@ -1683,7 +1683,7 @@ void ObjectMarker::init() {
   Universe::heap()->ensure_parsability(false);  // no need to retire TLABs
 
   // create stacks for interesting headers
-  _saved_mark_stack = new (ResourceObj::C_HEAP, mtInternal) GrowableArray<markOop>(4000, true);
+  _saved_mark_stack = new (ResourceObj::C_HEAP, mtInternal) GrowableArray<markWord>(4000, true);
   _saved_oop_stack = new (ResourceObj::C_HEAP, mtInternal) GrowableArray<oop>(4000, true);
 
   if (UseBiasedLocking) {
@@ -1707,7 +1707,7 @@ void ObjectMarker::done() {
   // now restore the interesting headers
   for (int i = 0; i < _saved_oop_stack->length(); i++) {
     oop o = _saved_oop_stack->at(i);
-    markOop mark = _saved_mark_stack->at(i);
+    markWord mark = _saved_mark_stack->at(i);
     o->set_mark(mark);
   }
 
@@ -1726,7 +1726,7 @@ inline void ObjectMarker::mark(oop o) {
   assert(!o->mark().is_marked(), "should only mark an object once");
 
   // object's mark word
-  markOop mark = o->mark();
+  markWord mark = o->mark();
 
   if (mark.must_be_preserved(o)) {
     _saved_mark_stack->push(mark);
@@ -1734,7 +1734,7 @@ inline void ObjectMarker::mark(oop o) {
   }
 
   // mark the object
-  o->set_mark(markOop::prototype().set_marked());
+  o->set_mark(markWord::prototype().set_marked());
 }
 
 // return true if object is marked

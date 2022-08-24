@@ -75,7 +75,7 @@ PSMarkSweepDecorator* PSMarkSweepDecorator::destination_decorator() {
 // The object forwarding code is duplicated. Factor this out!!!!!
 //
 // This method "precompacts" objects inside its space to dest. It places forwarding
-// pointers into markOops for use by adjust_pointers. If "dest" should overflow, we
+// pointers into markWords for use by adjust_pointers. If "dest" should overflow, we
 // finish by compacting into our own space.
 
 void PSMarkSweepDecorator::precompact() {
