@@ -286,7 +286,7 @@ AC_DEFUN([BASIC_CHECK_TAR],
     fi
   elif test "x$TAR_TYPE" = "aix"; then
     # -L InputList of aix tar: name of file listing the files and directories
-    # that need to be   archived or extracted
+    # that need to be archived or extracted
     TAR_INCLUDE_PARAM="L"
     TAR_SUPPORTS_TRANSFORM="false"
   elif test "x$TAR_TYPE" = "xbusybox"; then
