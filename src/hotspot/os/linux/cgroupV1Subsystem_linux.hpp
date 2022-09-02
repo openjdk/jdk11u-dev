@@ -97,8 +97,6 @@ class CgroupV1Subsystem: public CgroupSubsystem {
     CachingCgroupController * cpu_controller() { return _cpu; }
 
   private:
-    julong _unlimited_memory;
-
     /* controllers */
     CachingCgroupController* _memory = NULL;
     CgroupV1Controller* _cpuset = NULL;
@@ -107,6 +105,8 @@ class CgroupV1Subsystem: public CgroupSubsystem {
     CgroupV1Controller* _pids = NULL;
 
     char * pids_max_val();
+
+    jlong read_mem_swappiness();
 
   public:
     CgroupV1Subsystem(CgroupV1Controller* cpuset,
@@ -119,7 +119,6 @@ class CgroupV1Subsystem: public CgroupSubsystem {
       _cpuacct = cpuacct;
       _pids = pids;
       _memory = new CachingCgroupController(memory);
-      _unlimited_memory = (LONG_MAX / os::vm_page_size()) * os::vm_page_size();
     }
 };
 
