@@ -1240,6 +1240,13 @@ bool os::is_first_C_frame(frame* fr) {
   if (old_fp == 0 || old_fp == (uintptr_t)-1 || old_fp == ufp ||
     is_pointer_bad(fr->link_or_null())) return true;
 
+  // stack grows downwards; if old_fp is below current fp or if the stack
+  // frame is too large, either the stack is corrupted or fp is not saved
+  // on stack (i.e. on x86, ebp may be used as general register). The stack
+  // is not walkable beyond current frame.
+  if (old_fp < ufp) return true;
+  if (old_fp - ufp > 64 * K) return true;
+
   return false;
 }
 
