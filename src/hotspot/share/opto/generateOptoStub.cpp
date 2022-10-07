@@ -107,7 +107,7 @@ void GraphKit::gen_stub(address C_function,
   //
   Node *adr_sp = basic_plus_adr(top(), thread, in_bytes(JavaThread::last_Java_sp_offset()));
   Node *last_sp = basic_plus_adr(top(), frameptr(), (intptr_t) STACK_BIAS);
-  store_to_memory(NULL, adr_sp, last_sp, T_ADDRESS, NoAlias, MemNode::unordered);
+  store_to_memory(control(), adr_sp, last_sp, T_ADDRESS, NoAlias, MemNode::unordered);
 
   // Set _thread_in_native
   // The order of stores into TLS is critical!  Setting _thread_in_native MUST
@@ -228,15 +228,15 @@ void GraphKit::gen_stub(address C_function,
   //-----------------------------
 
   // Clear last_Java_sp
-  store_to_memory(NULL, adr_sp, null(), T_ADDRESS, NoAlias, MemNode::unordered);
+  store_to_memory(control(), adr_sp, null(), T_ADDRESS, NoAlias, MemNode::unordered);
   // Clear last_Java_pc and (optionally)_flags
-  store_to_memory(NULL, adr_last_Java_pc, null(), T_ADDRESS, NoAlias, MemNode::unordered);
+  store_to_memory(control(), adr_last_Java_pc, null(), T_ADDRESS, NoAlias, MemNode::unordered);
 #if defined(SPARC)
-  store_to_memory(NULL, adr_flags, intcon(0), T_INT, NoAlias, MemNode::unordered);
+ store_to_memory(control(), adr_flags, intcon(0), T_INT, NoAlias, MemNode::unordered);
 #endif /* defined(SPARC) */
 #if (defined(IA64) && !defined(AIX))
   Node* adr_last_Java_fp = basic_plus_adr(top(), thread, in_bytes(JavaThread::last_Java_fp_offset()));
-  store_to_memory(NULL, adr_last_Java_fp, null(), T_ADDRESS, NoAlias, MemNode::unordered);
+  store_to_memory(control(), adr_last_Java_fp, null(), T_ADDRESS, NoAlias, MemNode::unordered);
 #endif
 
   // For is-fancy-jump, the C-return value is also the branch target
@@ -247,7 +247,7 @@ void GraphKit::gen_stub(address C_function,
     Node* vm_result = make_load(NULL, adr, TypeOopPtr::BOTTOM, T_OBJECT, NoAlias, MemNode::unordered);
     map()->set_req(TypeFunc::Parms, vm_result); // vm_result passed as result
     // clear thread-local-storage(tls)
-    store_to_memory(NULL, adr, null(), T_ADDRESS, NoAlias, MemNode::unordered);
+    store_to_memory(control(), adr, null(), T_ADDRESS, NoAlias, MemNode::unordered);
   }
 
   //-----------------------------

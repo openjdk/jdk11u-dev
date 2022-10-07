@@ -1126,6 +1126,9 @@ public:
 private:
   void walk_(NFunc pre, NFunc post, void *env, VectorSet &visited);
 
+  // Whether this is a memory-writing machine node.
+  bool is_memory_writer() const { return is_Mach() && bottom_type()->has_memory(); }
+
 //----------------- Printing, etc
 public:
 #ifndef PRODUCT
