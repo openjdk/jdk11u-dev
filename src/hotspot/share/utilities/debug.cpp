@@ -543,7 +543,7 @@ extern "C" JNIEXPORT void pss() { // print all stacks
 
 //#ifndef PRODUCT
 
-extern "C"JNIEXPORT  void debug() {               // to set things up for compiler debugging
+extern "C" JNIEXPORT  void debug() {               // to set things up for compiler debugging
   Command c("debug");
   NOT_PRODUCT(WizardMode = true);
   NOT_PRODUCT(PrintVMMessages = true);
