@@ -38,7 +38,7 @@ class TestNegativeStringBuilderCapacity {
     static final String doIdenticalPositiveConst() throws Throwable {
         // C2 knows that argument is 5 and applies string opts without runtime check.
         StringBuilder sb = new StringBuilder(5); // StringBuilder object optimized away by string opts.
-        return sb.toString(); // Call optimized away by string opts.        
+        return sb.toString(); // Call optimized away by string opts.
     }
 
     @Test
