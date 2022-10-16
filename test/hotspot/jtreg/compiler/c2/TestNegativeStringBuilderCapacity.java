@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
  */
 class TestNegativeStringBuilderCapacity {
 
-    static final int pass_count = 100;
+    static final int pass_count = 10000;
 
     static final String doIdenticalPositiveConst() throws Throwable {
         // C2 knows that argument is 5 and applies string opts without runtime check.
