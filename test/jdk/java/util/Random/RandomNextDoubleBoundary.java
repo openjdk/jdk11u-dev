@@ -28,7 +28,6 @@
  */
 
 import java.util.SplittableRandom;
-import java.util.random.RandomGenerator;
 
 public class RandomNextDoubleBoundary {
     public static void main(String... args) {
@@ -66,17 +65,7 @@ public class RandomNextDoubleBoundary {
     }
 
     public static void nextDoublesWithRange(double origin, double bound) {
-        RandomGenerator rg = new RandomGenerator() {
-            @Override
-            public double nextDouble() {
-                return Double.MAX_VALUE;
-            }
-
-            @Override
-            public long nextLong() {
-                return 0;
-            }
-        };
+        SplittableRandom rg = new SplittableRandom(42L);
         double value = rg.nextDouble(origin, bound);
 
         assertTrue(value >= origin);
