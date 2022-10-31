@@ -282,7 +282,6 @@ public class ThreadLocalRandom extends Random {
         if (origin < bound) {
             r = r * (bound - origin) + origin;
             if (r >= bound) // correct for rounding
-                //r = Double.longBitsToDouble(Double.doubleToLongBits(bound) - 1);
                 Math.nextAfter(r, origin);
         }
         return r;
