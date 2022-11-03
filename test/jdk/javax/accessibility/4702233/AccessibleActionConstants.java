@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2016, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2022, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,27 +22,23 @@
  */
 
 /*
- * @test DoubleTest
- * @bug 8038756
- * @library /test/lib
- * @modules java.base/jdk.internal.misc
- * @modules java.management/sun.management
- * @build sun.hotspot.WhiteBox
- * @run driver ClassFileInstaller sun.hotspot.WhiteBox
- *                              sun.hotspot.WhiteBox$WhiteBoxPermission
- * @run main/othervm/timeout=600 -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI DoubleTest
- * @summary testing of WB::set/getDoubleVMFlag()
- * @author igor.ignatyev@oracle.com
+ * @summary Constant for testing public fields in AccessibleAction.
  */
 
-public class DoubleTest {
-    private static final String FLAG_NAME = "CompileThresholdScaling";
-    private static final Double[] TESTS = {0d, -0d, 1d, Double.MAX_VALUE};
+public interface AccessibleActionConstants {
 
-    public static void main(String[] args) throws Exception {
-        VmFlagTest.runTest(FLAG_NAME, TESTS,
-            VmFlagTest.WHITE_BOX::setDoubleVMFlag,
-            VmFlagTest.WHITE_BOX::getDoubleVMFlag);
-    }
+    String CLASS_NAME = "javax.accessibility.AccessibleAction";
+
+    /**
+     * Public fields values in AccessibleAction class.
+     */
+    String[][] FIELDS =
+        new String[][] { { "CLICK", "click" }, { "DECREMENT", "decrement" },
+        { "INCREMENT", "increment" }, { "TOGGLE_EXPAND", "toggleexpand" },
+        { "TOGGLE_POPUP", "toggle popup" } };
+        /**
+         * Old(removed) fields in AccessibleAction class.
+         */
+        String[] OLD_FIELDS = new String[] {};
 }
 
