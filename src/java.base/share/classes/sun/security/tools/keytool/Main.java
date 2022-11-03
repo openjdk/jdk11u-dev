@@ -1120,6 +1120,7 @@ public final class Main {
             cf = CertificateFactory.getInstance("X509");
         }
 
+        KeyStore cakstore = buildTrustedCerts();
         // -trustcacerts can only be specified on -importcert.
         // Reset it so that warnings on CA cert will remain for
         // -printcert, etc.
@@ -1991,7 +1992,8 @@ public final class Main {
         if (keyPass == null) {
             keyPass = promptForKeyPass(alias, null, storePass);
         }
-        checkWeak(rb.getString("the.generated.certificate"), chain[0]);
+        checkWeakConstraint(rb.getString("the.generated.certificate"),
+                finalChain);
         keyStore.setKeyEntry(alias, privKey, keyPass, chain);
     }
 
@@ -3492,21 +3494,24 @@ public final class Main {
         return result;
     }
 
-    private String withWeak(PublicKey key) {
+    private String withWeakConstraint(PublicKey key,
+            CertPathConstraintsParameters cpcp) {
         int kLen = KeyUtil.getKeySize(key);
         String displayAlg = fullDisplayAlgName(key);
-        if (DISABLED_CHECK.permits(SIG_PRIMITIVE_SET, key)) {
-            if (LEGACY_CHECK.permits(SIG_PRIMITIVE_SET, key)) {
-                if (kLen >= 0) {
-                    return String.format(rb.getString("key.bit"), kLen, displayAlg);
-                } else {
-                    return String.format(rb.getString("unknown.size.1"), displayAlg);
-                }
-            } else {
-                return String.format(rb.getString("key.bit.weak"), kLen, displayAlg);
-            }
-        } else {
+        try {
+            DISABLED_CHECK.permits(key.getAlgorithm(), cpcp, true);
+        } catch (CertPathValidatorException e) {
             return String.format(rb.getString("key.bit.disabled"), kLen, displayAlg);
+        }
+        try {
+            LEGACY_CHECK.permits(key.getAlgorithm(), cpcp, true);
+            if (kLen >= 0) {
+                return String.format(rb.getString("key.bit"), kLen, displayAlg);
+            } else {
+                return String.format(rb.getString("unknown.size.1"), displayAlg);
+            }
+        } catch (CertPathValidatorException e) {
+            return String.format(rb.getString("key.bit.weak"), kLen, displayAlg);
         }
     }
 
@@ -3968,11 +3973,14 @@ public final class Main {
                                  replyCerts.length);
                 tmpCerts[tmpCerts.length-1] = root.snd;
                 replyCerts = tmpCerts;
-                checkWeak(String.format(rb.getString(fromKeyStore ?
+                CertPathConstraintsParameters cpcp =
+                        buildCertPathConstraint((X509Certificate)root.snd,
+                        null);
+                checkWeakConstraint(String.format(rb.getString(fromKeyStore ?
                                             "alias.in.keystore" :
                                             "alias.in.cacerts"),
-                                        root.fst),
-                          root.snd);
+                                            root.fst),
+                          root.snd, cpcp);
             }
         }
         return replyCerts;
