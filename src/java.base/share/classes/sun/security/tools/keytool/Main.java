@@ -86,6 +86,7 @@ import sun.security.pkcs10.PKCS10;
 import sun.security.pkcs10.PKCS10Attribute;
 import sun.security.provider.X509Factory;
 import sun.security.provider.certpath.ssl.SSLServerCertStore;
+import sun.security.util.KnownOIDs;
 import sun.security.util.Password;
 import sun.security.util.SecurityProperties;
 import sun.security.util.SecurityProviderConstants;
@@ -1993,7 +1994,7 @@ public final class Main {
             keyPass = promptForKeyPass(alias, null, storePass);
         }
         checkWeakConstraint(rb.getString("the.generated.certificate"),
-                finalChain);
+                chain);
         keyStore.setKeyEntry(alias, privKey, keyPass, chain);
     }
 
