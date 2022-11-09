@@ -125,9 +125,11 @@ AC_DEFUN_ONCE([BASIC_COMPILE_FIXPATH],
 
     else # OPENJDK_TARGET_CPU is aarch64
       AC_MSG_CHECKING([if fixpath is in place])
+
       FIXPATH_BIN="$TOPDIR/fixpath.exe"
       $RM -rf $FIXPATH_DIR
       $MKDIR -p $FIXPATH_DIR
+
       if test ! -x $FIXPATH_BIN; then
         AC_MSG_RESULT([no])
         AC_MSG_ERROR([Could not find fixpath.exe under $TOPDIR])
