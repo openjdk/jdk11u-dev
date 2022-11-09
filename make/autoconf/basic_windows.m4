@@ -104,6 +104,7 @@ AC_DEFUN_ONCE([BASIC_COMPILE_FIXPATH],
 
     if test "x$OPENJDK_TARGET_CPU" != "xaarch64"; then
       AC_MSG_CHECKING([if fixpath can be created])
+
       FIXPATH_BIN="$CONFIGURESUPPORT_OUTPUTDIR/bin/fixpath.exe"
       FIXPATH_SRC_W="$FIXPATH_SRC"
       FIXPATH_BIN_W="$FIXPATH_BIN"
@@ -113,13 +114,15 @@ AC_DEFUN_ONCE([BASIC_COMPILE_FIXPATH],
       $MKDIR -p $FIXPATH_DIR $CONFIGURESUPPORT_OUTPUTDIR/bin
       cd $FIXPATH_DIR
       $CC $FIXPATH_SRC_W -Fe$FIXPATH_BIN_W > $FIXPATH_DIR/fixpath1.log 2>&1
-      cd $CURDIR
+      cd $CONFIGURE_START_DIR
+
       if test ! -x $FIXPATH_BIN; then
         AC_MSG_RESULT([no])
         cat $FIXPATH_DIR/fixpath1.log
         AC_MSG_ERROR([Could not create $FIXPATH_BIN])
       fi
       AC_MSG_RESULT([yes])
+
     else # OPENJDK_TARGET_CPU is aarch64
       AC_MSG_CHECKING([if fixpath is in place])
       FIXPATH_BIN="$TOPDIR/fixpath.exe"
