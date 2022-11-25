@@ -80,10 +80,6 @@ jobs:
         id: jtreg
         uses: ./.github/actions/get-jtreg
 
-      - name: 'Get GTest'
-        id: gtest
-        uses: ./.github/actions/get-gtest
-
       - name: 'Set architecture'
         id: arch
         run: |
@@ -112,7 +108,6 @@ jobs:
           --with-version-opt=${GITHUB_ACTOR}-${GITHUB_SHA}
           --with-boot-jdk=${{ steps.bootjdk.outputs.path }}
           --with-jtreg=${{ steps.jtreg.outputs.path }}
-          --with-gtest=${{ steps.gtest.outputs.path }}
           --enable-jtreg-failure-handler
           --with-zlib=system
           ${{ inputs.extra-conf-options }}

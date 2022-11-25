@@ -88,10 +88,6 @@ jobs:
         id: jtreg
         uses: ./.github/actions/get-jtreg
 
-      - name: 'Get GTest'
-        id: gtest
-        uses: ./.github/actions/get-gtest
-
       - name: 'Install toolchain and dependencies'
         run: |
           # Run Visual Studio Installer
@@ -107,7 +103,6 @@ jobs:
           --with-version-opt=${GITHUB_ACTOR}-${GITHUB_SHA}
           --with-boot-jdk=${{ steps.bootjdk.outputs.path }}
           --with-jtreg=${{ steps.jtreg.outputs.path }}
-          --with-gtest=${{ steps.gtest.outputs.path }}
           --enable-jtreg-failure-handler
           --with-msvc-toolset-version=${{ inputs.msvc-toolset-version }}
           ${{ inputs.extra-conf-options }}
