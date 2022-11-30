@@ -23,20 +23,19 @@
  * questions.
  */
 
-#import "ButtonAccessibility.h"
+#import "CheckboxAccessibility.h"
+#import "JNIUtilities.h"
+#import "ThreadUtilities.h"
 
 /*
- * Implementation of the accessibility peer for the pushbutton role
+ * Implementation of the accessibility peer for the checkbox role
  */
-@implementation ButtonAccessibility
-- (nullable NSString *)accessibilityLabel
-{
-    return [self accessibilityTitleAttribute];
-}
+@implementation CheckboxAccessibility
 
-- (BOOL)accessibilityPerformPress
+- (id) accessibilityValue
 {
-    return [self performAccessibleAction:0];
+    AWT_ASSERT_APPKIT_THREAD;
+    return [self accessibilityValueAttribute];
 }
 
 @end

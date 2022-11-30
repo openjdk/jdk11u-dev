@@ -23,20 +23,19 @@
  * questions.
  */
 
-#import "ButtonAccessibility.h"
+#import "RadiobuttonAccessibility.h"
+#import "JNIUtilities.h"
+#import "ThreadUtilities.h"
 
 /*
- * Implementation of the accessibility peer for the pushbutton role
+ * Implementation of the accessibility peer for the radiobutton role
  */
-@implementation ButtonAccessibility
-- (nullable NSString *)accessibilityLabel
-{
-    return [self accessibilityTitleAttribute];
-}
+@implementation RadiobuttonAccessibility
 
-- (BOOL)accessibilityPerformPress
+- (id) accessibilityValue
 {
-    return [self performAccessibleAction:0];
+    AWT_ASSERT_APPKIT_THREAD;
+    return [self accessibilityValueAttribute];
 }
 
 @end

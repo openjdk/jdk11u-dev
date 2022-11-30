@@ -25,18 +25,8 @@
 
 #import "ButtonAccessibility.h"
 
-/*
- * Implementation of the accessibility peer for the pushbutton role
- */
-@implementation ButtonAccessibility
-- (nullable NSString *)accessibilityLabel
-{
-    return [self accessibilityTitleAttribute];
-}
+@interface RadiobuttonAccessibility : ButtonAccessibility <NSAccessibilityRadioButton> {
 
-- (BOOL)accessibilityPerformPress
-{
-    return [self performAccessibleAction:0];
-}
-
+};
+- (id)accessibilityValue;
 @end

@@ -23,20 +23,15 @@
  * questions.
  */
 
-#import "ButtonAccessibility.h"
+#import "IgnoreAccessibility.h"
 
 /*
- * Implementation of the accessibility peer for the pushbutton role
+ * Indicates that component does not participate in accessibility exchange
  */
-@implementation ButtonAccessibility
-- (nullable NSString *)accessibilityLabel
+@implementation IgnoreAccessibility
+- (BOOL)isAccessibilityElement
 {
-    return [self accessibilityTitleAttribute];
-}
-
-- (BOOL)accessibilityPerformPress
-{
-    return [self performAccessibleAction:0];
+    return NO;
 }
 
 @end

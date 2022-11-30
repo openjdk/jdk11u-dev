@@ -23,20 +23,13 @@
  * questions.
  */
 
-#import "ButtonAccessibility.h"
+#import "JavaComponentAccessibility.h"
+#import "CommonComponentAccessibility.h"
 
-/*
- * Implementation of the accessibility peer for the pushbutton role
- */
-@implementation ButtonAccessibility
-- (nullable NSString *)accessibilityLabel
-{
-    return [self accessibilityTitleAttribute];
-}
+#import <AppKit/AppKit.h>
 
-- (BOOL)accessibilityPerformPress
-{
-    return [self performAccessibleAction:0];
-}
+@interface IgnoreAccessibility : CommonComponentAccessibility {
 
+};
+- (BOOL)isAccessibilityElement;
 @end
