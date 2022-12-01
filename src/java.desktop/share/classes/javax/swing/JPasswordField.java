@@ -286,8 +286,8 @@ public class JPasswordField extends JTextField {
         // overwrite the old data first
         Document doc = getDocument();
         DocumentFilter filter = null;
-        if (doc instanceof AbstractDocument adoc) {
-            filter = adoc.getDocumentFilter();
+        if (doc instanceof AbstractDocument) {
+            filter = ((AbstractDocument) doc).getDocumentFilter();
         }
         if (filter == null) {
             int nleft = doc.getLength();
