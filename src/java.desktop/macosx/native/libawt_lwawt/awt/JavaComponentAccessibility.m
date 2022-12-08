@@ -150,6 +150,24 @@ static NSObject *sAttributeNamesLOCK = nil;
 - (NSArray *)accessibilityColumnsAttribute;
 @end
 
+
+// In order to use a new NSAccessibility API and since our components
+// are represented as a custom UI elements we need to implement a set
+// of custom protocols. Definitions of these protocols will start here.
+
+// This is a root interface in the NSAccessibility* protocols hierarchy
+// and all the component-specific protocols should be derived from it.
+// It is also a place for the functions that might be exposed by all the
+// component accessibility peers.
+// Please see https://developer.apple.com/documentation/appkit/nsaccessibilityprotocol
+// for more details.
+@interface CommonComponentAccessibility : JavaComponentAccessibility <NSAccessibilityElement> {
+
+}
+- (NSRect)accessibilityFrame;
+- (nullable id)accessibilityParent;
+@end
+
 @implementation JavaComponentAccessibility
 
 - (NSString *)description
@@ -2061,6 +2079,32 @@ static BOOL ObjectEquals(JNIEnv *env, jobject a, jobject b, jobject component);
 - (id)accessibilityColumnCountAttribute {
     return [self getTableInfo:JAVA_AX_COLS];
 }
+@end
+
+@implementation CommonComponentAccessibility
+// NSAccessibilityElement protocol implementation
+- (NSRect)accessibilityFrame
+{
+    JNIEnv* env = [ThreadUtilities getJNIEnv];
+    jobject axComponent = JNFCallStaticObjectMethod(env, sjm_getAccessibleComponent,
+                                                    fAccessible, fComponent);
+
+    NSSize size = getAxComponentSize(env, axComponent, fComponent);
+    NSPoint point = getAxComponentLocationOnScreen(env, axComponent, fComponent);
+    (*env)->DeleteLocalRef(env, axComponent);
+    point.y += size.height;
+
+    point.y = [[[[self view] window] screen] frame].size.height - point.y;
+
+    NSRect retval = NSMakeRect(point.x, point.y, size.width, size.height);
+    return retval;
+}
+
+- (nullable id)accessibilityParent
+{
+    return [self accessibilityParentAttribute];
+}
+
 @end
 
 /*
