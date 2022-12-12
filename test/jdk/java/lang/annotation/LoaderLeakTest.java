@@ -73,15 +73,15 @@ class Main {
     static void doTest(boolean readAnn) throws Exception {
         ClassLoader loader = new SimpleClassLoader();
         var c = new WeakReference<Class<?>>(loader.loadClass("C"));
-        if (c.refersTo(null)) throw new AssertionError("class missing after loadClass");
+        if (c.get() == null) throw new AssertionError("class missing after loadClass");
         // c.get() should never return null here since we hold a strong
         // reference to the class loader that loaded the class referred by c.
         if (c.get().getClassLoader() != loader) throw new AssertionError("wrong classloader");
         if (readAnn) System.out.println(c.get().getAnnotations()[0]);
-        if (c.refersTo(null)) throw new AssertionError("class missing before GC");
+        if (c.get() == null) throw new AssertionError("class missing before GC");
         System.gc();
         System.gc();
-        if (c.refersTo(null)) throw new AssertionError("class missing after GC but before loader is unreachable");
+        if (c.get() == null) throw new AssertionError("class missing after GC but before loader is unreachable");
         System.gc();
         System.gc();
         Reference.reachabilityFence(loader);
@@ -93,7 +93,7 @@ class Main {
         while (true) {
             System.gc();
             Thread.sleep(20);
-            if (c.refersTo(null)) {
+            if (c.get() == null) {
                 break;
             }
         }
@@ -124,7 +124,9 @@ class SimpleClassLoader extends ClassLoader {
     public Class<?> loadClass(String className, boolean resolveIt)
             throws ClassNotFoundException {
         switch (className) {
-            case "A", "B", "C" -> {
+            case "A":
+            case "B":
+            case "C": {
                 var classData = getClassImplFromDataBase(className);
                 return defineClass(className, classData, 0, classData.length);
             }
