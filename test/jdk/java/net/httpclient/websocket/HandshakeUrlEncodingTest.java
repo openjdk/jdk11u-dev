@@ -97,14 +97,13 @@ public class HandshakeUrlEncodingTest {
         HttpClient client = null;
         out.println("The url is " + uri);
         for (int i = 0; i < ITERATION_COUNT; i++) {
-            out.printf("iteration %s%n", i);
+            System.out.printf("iteration %s%n", i);
             if (!sameClient || client == null)
                 client = newHttpClient();
 
             try {
                 client.newWebSocketBuilder()
-                        .buildAsync(URI.create(uri), new WebSocket.Listener() {
-                        })
+                        .buildAsync(URI.create(uri), new WebSocket.Listener() { })
                         .join();
                 fail("Expected to throw");
             } catch (CompletionException ce) {
@@ -118,10 +117,14 @@ public class HandshakeUrlEncodingTest {
                 final String rawQuery = wse.getResponse().uri().getRawQuery();
                 final String expectedRawQuery = "&raw=abc+def/ghi=xyz&encoded=abc%2Bdef%2Fghi%3Dxyz";
                 assertEquals(rawQuery, expectedRawQuery);
+                if (wse.getResponse().body() != null &&
+                        (wse.getResponse().body().getClass().equals(String.class))) {
+                    final String body = (String) wse.getResponse().body();
+                    final String expectedBody = "/?" + expectedRawQuery;
+                    assertEquals(body, expectedBody);
+                }
                 out.println("Status code is " + wse.getResponse().statusCode());
                 out.println("Response is " + wse.getResponse());
-                assertNotNull(wse.getResponse().statusCode());
-                out.println("Status code is " + wse.getResponse().statusCode());
                 assertEquals(wse.getResponse().statusCode(), 400);
             }
         }
