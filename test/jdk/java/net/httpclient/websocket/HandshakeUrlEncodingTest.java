@@ -33,7 +33,11 @@
  * @run testng/othervm -Djdk.internal.httpclient.debug=true HandshakeUrlEncodingTest
  */
 
-import com.sun.net.httpserver.*;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpsConfigurator;
+import com.sun.net.httpserver.HttpsServer;
+import com.sun.net.httpserver.HttpExchange;
 import jdk.test.lib.net.URIBuilder;
 import jdk.testlibrary.SimpleSSLContext;
 import org.testng.annotations.AfterTest;
@@ -56,9 +60,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static java.lang.System.out;
 import static java.net.http.HttpClient.Builder.NO_PROXY;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.fail;
+import static java.lang.System.out;
 
 public class HandshakeUrlEncodingTest {
 
@@ -77,19 +83,19 @@ public class HandshakeUrlEncodingTest {
     @DataProvider(name = "variants")
     public Object[][] variants() {
         return new Object[][]{
-                {httpURI, false},
-                {httpsURI, false},
-                {httpURI, true},
-                {httpsURI, true}
+            { httpURI,   false },
+            { httpsURI,  false },
+            { httpURI,   true  },
+            { httpsURI,  true  }
         };
     }
 
     HttpClient newHttpClient() {
         return HttpClient.newBuilder()
-                .proxy(NO_PROXY)
-                .executor(executor)
-                .sslContext(sslContext)
-                .build();
+                         .proxy(NO_PROXY)
+                         .executor(executor)
+                         .sslContext(sslContext)
+                         .build();
     }
 
     @Test(dataProvider = "variants")
@@ -103,8 +109,8 @@ public class HandshakeUrlEncodingTest {
 
             try {
                 client.newWebSocketBuilder()
-                        .buildAsync(URI.create(uri), new WebSocket.Listener() { })
-                        .join();
+                    .buildAsync(URI.create(uri), new WebSocket.Listener() { })
+                    .join();
                 fail("Expected to throw");
             } catch (CompletionException ce) {
                 final Throwable t = getCompletionCause(ce);
@@ -114,6 +120,7 @@ public class HandshakeUrlEncodingTest {
                 final WebSocketHandshakeException wse = (WebSocketHandshakeException) t;
                 assertNotNull(wse.getResponse());
                 assertNotNull(wse.getResponse().uri());
+                assertNotNull(wse.getResponse().statusCode());
                 final String rawQuery = wse.getResponse().uri().getRawQuery();
                 final String expectedRawQuery = "&raw=abc+def/ghi=xyz&encoded=abc%2Bdef%2Fghi%3Dxyz";
                 assertEquals(rawQuery, expectedRawQuery);
@@ -133,32 +140,32 @@ public class HandshakeUrlEncodingTest {
     @BeforeTest
     public void setup() throws Exception {
         sslContext = new SimpleSSLContext().get();
-        if (sslContext == null) {
+        if (sslContext == null)
             throw new AssertionError("Unexpected null sslContext");
-        }
 
-        final InetSocketAddress sa = new InetSocketAddress(InetAddress.getLoopbackAddress(), 0);
+
+        InetSocketAddress sa = new InetSocketAddress(InetAddress.getLoopbackAddress(), 0);
         queryPart = "?&raw=abc+def/ghi=xyz&encoded=abc%2Bdef%2Fghi%3Dxyz";
         httpTestServer = HttpServer.create(sa, 10);
         httpURI = URIBuilder.newBuilder()
-                .scheme("ws")
-                .host("localhost")
-                .port(httpTestServer.getAddress().getPort())
-                .path("/")
-                .build()
-                .toString() + queryPart;
+                            .scheme("ws")
+                            .host("localhost")
+                            .port(httpTestServer.getAddress().getPort())
+                            .path("/")
+                            .build()
+                            .toString() + queryPart;
 
         httpTestServer.createContext("/", new UrlHandler());
 
         httpsTestServer = HttpsServer.create(sa, 10);
         httpsTestServer.setHttpsConfigurator(new HttpsConfigurator(sslContext));
         httpsURI = URIBuilder.newBuilder()
-                .scheme("wss")
-                .host("localhost")
-                .port(httpsTestServer.getAddress().getPort())
-                .path("/")
-                .build()
-                .toString() + queryPart;
+                             .scheme("wss")
+                             .host("localhost")
+                             .port(httpsTestServer.getAddress().getPort())
+                             .path("/")
+                             .build()
+                             .toString() + queryPart;
 
         httpsTestServer.createContext("/", new UrlHandler());
 
@@ -174,9 +181,8 @@ public class HandshakeUrlEncodingTest {
     }
 
     private static Throwable getCompletionCause(Throwable x) {
-        if (!(x instanceof CompletionException) && !(x instanceof ExecutionException)) {
-            return x;
-        }
+        if (!(x instanceof CompletionException)
+            && !(x instanceof ExecutionException)) return x;
         final Throwable cause = x.getCause();
         if (cause == null) {
             throw new InternalError("Unexpected null cause", x);
@@ -188,15 +194,17 @@ public class HandshakeUrlEncodingTest {
 
         @Override
         public void handle(HttpExchange e) throws IOException {
-            try (InputStream is = e.getRequestBody(); OutputStream os = e.getResponseBody()) {
-                final String testUri = "/?&raw=abc+def/ghi=xyz&encoded=abc%2Bdef%2Fghi%3Dxyz";
-                final URI uri = e.getRequestURI();
+            try(InputStream is = e.getRequestBody();
+                OutputStream os = e.getResponseBody()) {
+                String testUri = "/?&raw=abc+def/ghi=xyz&encoded=abc%2Bdef%2Fghi%3Dxyz";
+                URI uri = e.getRequestURI();
                 byte[] bytes = is.readAllBytes();
                 if (uri.toString().equals(testUri)) {
                     bytes = testUri.getBytes();
                 }
                 e.sendResponseHeaders(400, bytes.length);
                 os.write(bytes);
+
             }
         }
     }
