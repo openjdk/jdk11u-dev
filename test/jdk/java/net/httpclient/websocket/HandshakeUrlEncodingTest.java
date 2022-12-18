@@ -124,6 +124,7 @@ public class HandshakeUrlEncodingTest {
                 final String rawQuery = wse.getResponse().uri().getRawQuery();
                 final String expectedRawQuery = "&raw=abc+def/ghi=xyz&encoded=abc%2Bdef%2Fghi%3Dxyz";
                 assertEquals(rawQuery, expectedRawQuery);
+                // [JDK-8240666] Websocket client's OpeningHandshake discards the HTTP response body
                 if (wse.getResponse().body() != null &&
                         (wse.getResponse().body().getClass().equals(String.class))) {
                     final String body = (String) wse.getResponse().body();
