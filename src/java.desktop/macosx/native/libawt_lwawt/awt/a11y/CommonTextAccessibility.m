@@ -133,7 +133,7 @@ static NSRange javaIntArrayToNSRange(JNIEnv* env, jintArray array) {
                             fAccessible, fComponent, range.location, range.length); // AWT_THREADING Safe (AWTRunLoop)
     CHECK_EXCEPTION();
     if (jstringForRange == NULL) return @"";
-    NSString* str = JNFJavaToNSString(env, jstringForRange);
+    NSString* str = JavaStringToNSString(env, jstringForRange);
     (*env)->DeleteLocalRef(env, jstringForRange);
     return str;
 }
