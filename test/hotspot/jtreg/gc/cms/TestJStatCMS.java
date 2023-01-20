@@ -51,7 +51,7 @@ public class TestJStatCMS {
 
     public static void main(String[] args) throws Exception {
         if (args.length != 0) {
-            int MX = Integer.parseInt(args[0]); // pass -Xmx 
+            int MX = Integer.parseInt(args[0]); // pass -Xmx
             test(MX);
             return;
         }
@@ -153,7 +153,7 @@ public class TestJStatCMS {
         System.out.println("jstat CGT=" + jstatCGC);
         System.out.println("jstat CGCT=" + jstatCGCT + "ms");
 
-        double ratio = jstatCGCT / cmsGGlogPauseTime; 
+        double ratio = jstatCGCT / cmsGGlogPauseTime;
         System.out.println("jstat/loggc=" + ratio);
         if (cmsGGlogPauseInvocations != jstatCGC) {
            throw new RuntimeException("jstat CGC " + jstatCGC + " is not equal to GC log " + cmsGGlogPauseInvocations);
@@ -162,7 +162,7 @@ public class TestJStatCMS {
            throw new RuntimeException("jstat CGCT " + jstatCGCT + " is not equal GC log " + cmsGGlogPauseTime + ", the difference(" + ratio + ") is larger than " + tolerance + "%.");
         }
     }
-     
+
     private static void test(int MX) throws Exception {
         // Causes lots of CMSGC
         CMSGCALot.consumeHeap(MX);
@@ -189,13 +189,13 @@ class CMSGCALot
         arrayList = new ArrayList();
 
         int notFreed = (int)(MX * 0.65);
-        // Use 0.65% of -Xmx which is not freed 
+        // Use 0.65% of -Xmx which is not freed
         for (int i = 0 ; i < (1024 * notFreed) ; i++) { // Allocate 1K * 1024 * (MX*0.65) bytes
             byte[] b = new byte[1024];                  // For instance, if MX=64mx,
             arrayList.add(b);                           // consume 1K * 1024 * (64*0.65) = 41.6MB
         }
 
-        // Use 0.35% of -Xmx which is freed 
+        // Use 0.35% of -Xmx which is freed
         for (int i = 0 ; i < 1000 ; i++) { // new 1000 * 100000 * 1KB = 100GB which is freed by GC
             Thread.sleep(10);
             for (int j = 0 ; j < 100000 ; j++) {
