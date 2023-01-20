@@ -24,7 +24,7 @@
 package gc.cms;
 
 /* @test TestJStatCMS
- * @bug 9999999
+ * @bug 8300742
  * @comment Graal does not support CMS
  * @requires vm.gc.ConcMarkSweep & !vm.graal.enabled
  * @library /test/lib /
