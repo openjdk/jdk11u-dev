@@ -66,7 +66,7 @@ import org.xml.sax.SAXException;
 
 /*
  * @test
- * @bug 6439439 8087303 8174025 8249867 8261209
+ * @bug 6439439 8087303 8174025 8223291 8249867 8261209
  * @library /javax/xml/jaxp/libs /javax/xml/jaxp/unittest
  * @run testng/othervm -DrunSecMngr=true common.prettyprint.PrettyPrintTest
  * @run testng/othervm common.prettyprint.PrettyPrintTest
@@ -523,7 +523,6 @@ public class PrettyPrintTest {
     private Document toXmlDocument(String xmlString) throws Exception {
         InputSource xmlInputSource = new InputSource(new StringReader(xmlString));
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setValidating(true);
         DocumentBuilder xmlDocumentBuilder = dbf.newDocumentBuilder();
         Document node = xmlDocumentBuilder.parse(xmlInputSource);
         return node;
