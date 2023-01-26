@@ -70,12 +70,11 @@ _sequence-do = \
 
 ################################################################################
 # Replace question marks with space in string. This macro needs to be called on
-# files from CacheFind in case any of them contains space in their file name,
-# since CacheFind replaces space with ?.
+# files from FindFiles in case any of them contains space in their file name,
+# since FindFiles replaces space with ?.
 # Param 1 - String to replace in
 DecodeSpace = \
     $(subst ?,$(SPACE),$(strip $1))
-
 EncodeSpace = \
     $(subst $(SPACE),?,$(strip $1))
 
@@ -122,7 +121,8 @@ DirToDotDot = \
 # $2 - Directory to compute the relative path from
 RelativePath = \
     $(eval $1_prefix := $(call FindCommonPathPrefix, $1, $2)) \
-    $(eval $1_dotdots := $(call DirToDotDot, $(patsubst $($(strip $1)_prefix)/%, %, $2))) \
+    $(eval $1_dotdots := $(call DirToDotDot, $(patsubst $($(strip $1)_prefix)%, %, $2))) \
+    $(eval $1_dotdots := $(if $($(strip $1)_dotdots),$($(strip $1)_dotdots),.)) \
     $(eval $1_suffix := $(patsubst $($(strip $1)_prefix)/%, %, $1)) \
     $($(strip $1)_dotdots)/$($(strip $1)_suffix)
 
@@ -150,11 +150,8 @@ dups = \
 
 # String equals
 equals = \
-    $(if $(strip $1)$(strip $2),$(strip \
-      $(and $(findstring $(strip $1),$(strip $2)),\
-        $(findstring $(strip $2),$(strip $1)))), \
-      true \
-    )
+    $(and $(findstring $(strip $1),$(strip $2)),\
+        $(findstring $(strip $2),$(strip $1)))
 
 # Remove a whole list of prefixes
 # $1 - List of prefixes
@@ -256,7 +253,7 @@ FindExecutableDirForModule = \
 # param 1 : A space separated list of classpath entries
 # The surrounding strip is needed to keep additional whitespace out
 PathList = \
-  "$(subst $(SPACE),$(PATH_SEP),$(strip $(subst $(DQUOTE),,$1)))"
+  "$(subst $(SPACE),:,$(strip $(subst $(DQUOTE),,$1)))"
 
 ################################################################################
 # Check if a specified hotspot variant is being built, or at least one of a
