@@ -28,14 +28,9 @@
 
 #import <AppKit/AppKit.h>
 
-@interface ScrollAreaAccessibility : CommonComponentAccessibility {
+@interface GroupAccessibility : CommonComponentAccessibility <NSAccessibilityGroup> {
 
 };
 - (NSAccessibilityRole _Nonnull)accessibilityRole;
-- (NSArray * _Nullable)accessibilityContents;
-- (id _Nullable)accessibilityHorizontalScrollBar;
-- (id _Nullable)accessibilityVerticalScrollBar;
-
-- (NSArray * _Nullable)accessibilityContentsAttribute;
-- (id _Nullable)getScrollBarwithOrientation:(enum NSAccessibilityOrientation)orientation;
+- (NSArray * _Nullable)accessibilityChildren;
 @end

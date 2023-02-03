@@ -23,19 +23,38 @@
  * questions.
  */
 
-#import "JavaComponentAccessibility.h"
-#import "CommonComponentAccessibility.h"
+#import "SliderAccessibility.h"
 
-#import <AppKit/AppKit.h>
+#define INCREMENT 0
+#define DECREMENT 1
 
-@interface ScrollAreaAccessibility : CommonComponentAccessibility {
+/*
+ * Implementation of the accessibility peer for the slider role
+ */
+@implementation SliderAccessibility
+- (NSAccessibilityRole _Nonnull)accessibilityRole
+{
+    return NSAccessibilitySliderRole;
+}
 
-};
-- (NSAccessibilityRole _Nonnull)accessibilityRole;
-- (NSArray * _Nullable)accessibilityContents;
-- (id _Nullable)accessibilityHorizontalScrollBar;
-- (id _Nullable)accessibilityVerticalScrollBar;
+- (NSString * _Nullable)accessibilityLabel
+{
+    return [self accessibilityTitleAttribute];
+}
 
-- (NSArray * _Nullable)accessibilityContentsAttribute;
-- (id _Nullable)getScrollBarwithOrientation:(enum NSAccessibilityOrientation)orientation;
+- (id _Nullable)accessibilityValue
+{
+    return [self accessibilityValueAttribute];
+}
+
+- (BOOL)accessibilityPerformIncrement
+{
+    return [self performAccessibleAction:INCREMENT];
+}
+
+- (BOOL)accessibilityPerformDecrement
+{
+    return [self performAccessibleAction:DECREMENT];
+}
+
 @end

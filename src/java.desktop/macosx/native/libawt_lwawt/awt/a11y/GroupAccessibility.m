@@ -23,19 +23,36 @@
  * questions.
  */
 
-#import "JavaComponentAccessibility.h"
-#import "CommonComponentAccessibility.h"
+#import "GroupAccessibility.h"
+#import "JNIUtilities.h"
+#import "ThreadUtilities.h"
+/*
+ * This is the protocol for the components that contain children.
+ * Basic logic of accessibilityChildren might be overridden in the specific implementing
+ * classes reflecting the logic of the class.
+ */
+@implementation GroupAccessibility
+- (NSAccessibilityRole _Nonnull)accessibilityRole
+{
+    return NSAccessibilityGroupRole;
+}
 
-#import <AppKit/AppKit.h>
+/*
+ * Return all non-ignored children.
+ */
+- (NSArray *)accessibilityChildren {
+    JNIEnv *env = [ThreadUtilities getJNIEnv];
 
-@interface ScrollAreaAccessibility : CommonComponentAccessibility {
+    NSArray *children = [JavaComponentAccessibility childrenOfParent:self
+                                                             withEnv:env
+                                                    withChildrenCode:JAVA_AX_ALL_CHILDREN
+                                                        allowIgnored:NO];
 
-};
-- (NSAccessibilityRole _Nonnull)accessibilityRole;
-- (NSArray * _Nullable)accessibilityContents;
-- (id _Nullable)accessibilityHorizontalScrollBar;
-- (id _Nullable)accessibilityVerticalScrollBar;
+    if ([children count] == 0) {
+        return nil;
+    } else {
+        return children;
+    }
+}
 
-- (NSArray * _Nullable)accessibilityContentsAttribute;
-- (id _Nullable)getScrollBarwithOrientation:(enum NSAccessibilityOrientation)orientation;
 @end
