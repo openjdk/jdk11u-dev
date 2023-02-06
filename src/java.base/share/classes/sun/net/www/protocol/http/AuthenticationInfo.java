@@ -503,7 +503,6 @@ public abstract class AuthenticationInfo extends AuthCacheValue implements Clone
 
     String s1, s2;  /* used for serialization of pw */
 
-    @java.io.Serial
     // should be safe to keep synchronized here
     private synchronized void readObject(ObjectInputStream s)
         throws IOException, ClassNotFoundException
@@ -516,7 +515,6 @@ public abstract class AuthenticationInfo extends AuthCacheValue implements Clone
         }
     }
 
-    @java.io.Serial
     // should be safe to keep synchronized here
     private synchronized void writeObject(java.io.ObjectOutputStream s)
         throws IOException
