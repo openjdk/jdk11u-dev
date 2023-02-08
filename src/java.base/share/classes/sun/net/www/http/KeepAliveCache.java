@@ -286,7 +286,7 @@ class ClientVector extends ArrayDeque<KeepAliveEntry> {
     ClientVector(int nap) {
         this.nap = nap;
     }
-    
+
     HttpClient get() {
         lock();
         try {
