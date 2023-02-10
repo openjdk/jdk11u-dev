@@ -955,7 +955,7 @@ static int create_sharedmem_file(const char* dirname, const char* filename, size
     ::close(fd);
     return -1;
   }
-  
+
   // truncate the file to get rid of any existing data
   RESTARTABLE(::ftruncate(fd, (off_t)0), result);
   if (result == OS_ERR) {
@@ -1112,7 +1112,7 @@ static char* mmap_create_shared(size_t size) {
   MemTracker::record_virtual_memory_reserve_and_commit((address)mapAddress, size, CURRENT_PC, mtInternal);
 
   log_info(perf, memops)("Successfully opened");
-  
+
   return mapAddress;
 }
 

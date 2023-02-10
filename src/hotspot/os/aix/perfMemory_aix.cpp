@@ -1048,7 +1048,7 @@ static char* mmap_create_shared(size_t size) {
   MemTracker::record_virtual_memory_reserve((address)mapAddress, size, CURRENT_PC, mtInternal);
 
   log_info(perf, memops)("Successfully opened");
-  
+
   return mapAddress;
 }
 

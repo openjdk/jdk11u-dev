@@ -969,7 +969,7 @@ static char* mmap_create_shared(size_t size) {
   MemTracker::record_virtual_memory_reserve_and_commit((address)mapAddress, size, CURRENT_PC, mtInternal);
 
   log_info(perf, memops)("Successfully opened");
-  
+
   return mapAddress;
 }
 
