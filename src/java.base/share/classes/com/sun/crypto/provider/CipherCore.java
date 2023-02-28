@@ -956,9 +956,11 @@ final class CipherCore {
                                                + " bytes needed");
             }
             // copy the result into user-supplied output buffer
-            System.arraycopy(outWithPadding, 0, output, outputOffset, outLen);
-            // decrypt mode. Zero out output data that's not required
-            Arrays.fill(outWithPadding, (byte) 0x00);
+            if(outWithPadding != null) {
+              System.arraycopy(outWithPadding, 0, output, outputOffset, outLen);
+              // decrypt mode. Zero out output data that's not required
+              Arrays.fill(outWithPadding, (byte) 0x00);
+            }
         }
         endDoFinal();
         return outLen;
