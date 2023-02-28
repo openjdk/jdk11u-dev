@@ -940,7 +940,7 @@ final class CipherCore {
                 offset = 0;
             }
         }
-        byte[] outBuffer = decrypting ? outWithPadding : output;
+        byte[] outBuffer = (outWithPadding != null) ? outWithPadding : output;
 
         int outLen = fillOutputBuffer(finalBuf, finalOffset, outBuffer,
                 offset, finalBufLen, input);
