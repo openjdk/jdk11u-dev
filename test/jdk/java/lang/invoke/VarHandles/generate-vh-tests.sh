@@ -82,9 +82,15 @@ do
   args="$args -Dvalue1=$value1 -Dvalue2=$value2 -Dvalue3=$value3 -Dwrong_primitive_type=$wrong_primitive_type"
 
   echo $args
-  java $SPP -nel $args -iX-VarHandleTestAccess.java.template -oVarHandleTestAccess${Type}.java
-  java $SPP -nel $args -iX-VarHandleTestMethodHandleAccess.java.template -oVarHandleTestMethodHandleAccess${Type}.java
-  java $SPP -nel $args -iX-VarHandleTestMethodType.java.template -oVarHandleTestMethodType${Type}.java
+  out=VarHandleTestAccess${Type}.java
+  rm -f $out
+  java $SPP -nel $args -iX-VarHandleTestAccess.java.template -o$out
+  out=VarHandleTestMethodHandleAccess${Type}.java
+  rm -f $out
+  java $SPP -nel $args -iX-VarHandleTestMethodHandleAccess.java.template -o$out
+  out=VarHandleTestMethodType${Type}.java
+  rm -f $out
+  java $SPP -nel $args -iX-VarHandleTestMethodType.java.template -o$out
 done
 
 for type in short char int long float double
@@ -161,7 +167,9 @@ do
   args="$args -Dvalue1=$value1 -Dvalue2=$value2 -Dvalue3=$value3"
 
   echo $args
-  java $SPP -nel $args -iX-VarHandleTestByteArrayView.java.template -oVarHandleTestByteArrayAs${Type}.java
+  out=VarHandleTestByteArrayAs${Type}.java
+  rm -f $out
+  java $SPP -nel $args -iX-VarHandleTestByteArrayView.java.template -o$out
 done
 
 rm -fr build
