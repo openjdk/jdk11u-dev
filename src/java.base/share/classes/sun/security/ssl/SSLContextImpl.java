@@ -571,9 +571,7 @@ public abstract class SSLContextImpl extends SSLContextSpi {
                     ProtocolVersion.TLS13,
                     ProtocolVersion.TLS12,
                     ProtocolVersion.TLS11,
-                    ProtocolVersion.TLS10,
-                    ProtocolVersion.SSL30,
-                    ProtocolVersion.SSL20Hello
+                    ProtocolVersion.TLS10
                 });
             }
 
@@ -637,8 +635,7 @@ public abstract class SSLContextImpl extends SSLContextSpi {
             } else {
                 clientDefaultProtocols = getAvailableProtocols(
                         new ProtocolVersion[] {
-                    ProtocolVersion.TLS10,
-                    ProtocolVersion.SSL30
+                    ProtocolVersion.TLS10
                 });
             }
 
@@ -677,8 +674,7 @@ public abstract class SSLContextImpl extends SSLContextSpi {
                 clientDefaultProtocols = getAvailableProtocols(
                         new ProtocolVersion[] {
                     ProtocolVersion.TLS11,
-                    ProtocolVersion.TLS10,
-                    ProtocolVersion.SSL30
+                    ProtocolVersion.TLS10
                 });
             }
 
@@ -720,8 +716,7 @@ public abstract class SSLContextImpl extends SSLContextSpi {
                         new ProtocolVersion[] {
                     ProtocolVersion.TLS12,
                     ProtocolVersion.TLS11,
-                    ProtocolVersion.TLS10,
-                    ProtocolVersion.SSL30
+                    ProtocolVersion.TLS10
                 });
             }
 
@@ -764,8 +759,7 @@ public abstract class SSLContextImpl extends SSLContextSpi {
                     ProtocolVersion.TLS13,
                     ProtocolVersion.TLS12,
                     ProtocolVersion.TLS11,
-                    ProtocolVersion.TLS10,
-                    ProtocolVersion.SSL30
+                    ProtocolVersion.TLS10
                 });
             }
 
@@ -927,8 +921,7 @@ public abstract class SSLContextImpl extends SSLContextSpi {
                             ProtocolVersion.TLS13,
                             ProtocolVersion.TLS12,
                             ProtocolVersion.TLS11,
-                            ProtocolVersion.TLS10,
-                            ProtocolVersion.SSL30
+                            ProtocolVersion.TLS10
                         };
                     }
                 } else {
@@ -944,9 +937,7 @@ public abstract class SSLContextImpl extends SSLContextSpi {
                             ProtocolVersion.TLS13,
                             ProtocolVersion.TLS12,
                             ProtocolVersion.TLS11,
-                            ProtocolVersion.TLS10,
-                            ProtocolVersion.SSL30,
-                            ProtocolVersion.SSL20Hello
+                            ProtocolVersion.TLS10
                         };
                     }
                 }
