@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,12 +21,23 @@
  * questions.
  */
 
-package vm;
+import java.io.File;
+import java.io.FileOutputStream;
 
-/*
-* @test
-* @ignore
-*/
-interface StrictfpDefault {
-    default strictfp void m() {}
+public class WaitForFlagFile {
+    public static void main(String[] args) throws Exception {
+        System.out.println("WaitForFlagFile: Entering");
+
+        File started = new File("/tmp/started");
+        FileOutputStream fout = new FileOutputStream(started);
+        fout.close();
+
+        File flag = new File("/tmp/flag");
+        while (!flag.exists()) {
+            System.out.println("WaitForFlagFile: Waiting");
+            Thread.sleep(500);
+        }
+        System.out.println("WaitForFlagFile: Exiting");
+
+    }
 }
