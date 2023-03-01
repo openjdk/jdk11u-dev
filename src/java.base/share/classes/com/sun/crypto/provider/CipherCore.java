@@ -915,7 +915,7 @@ final class CipherCore {
         int estOutSize = getOutputSizeByOperation(inputLen, true);
         int outputCapacity = checkOutputCapacity(output, outputOffset,
                 estOutSize);
-        int offset = decrypting ? 0 : outputOffset; // 0 for decrypting
+        int offset = outputOffset; // 0 for decrypting
         byte[] finalBuf = prepareInputBuffer(input, inputOffset,
                 inputLen, output, outputOffset);
         byte[] outWithPadding = null; // for decrypting only
@@ -940,7 +940,7 @@ final class CipherCore {
                 offset = 0;
             }
         }
-        byte[] outBuffer = (decrypting && (outWithPadding != null)) ? outWithPadding : output;
+        byte[] outBuffer = (outWithPadding != null) ? outWithPadding : output;
 
         int outLen = fillOutputBuffer(finalBuf, finalOffset, outBuffer,
                 offset, finalBufLen, input);
