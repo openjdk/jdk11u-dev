@@ -925,6 +925,7 @@ public abstract class SSLContextImpl extends SSLContextSpi {
                         };
                     }
                 } else {
+                    // default server protocols
                     if (SunJSSE.isFIPS()) {
                         candidates = new ProtocolVersion[] {
                             ProtocolVersion.TLS13,
