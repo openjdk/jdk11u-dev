@@ -918,7 +918,7 @@ final class CipherCore {
         int offset = outputOffset; // 0 for decrypting
         byte[] finalBuf = prepareInputBuffer(input, inputOffset,
                 inputLen, output, outputOffset);
-        byte[] outWithPadding = null; // for decrypting only
+        byte[] internalOutput = null; // for decrypting only
 
         int finalOffset = (finalBuf == input) ? inputOffset : 0;
         int finalBufLen = (finalBuf == input) ? inputLen : finalBuf.length;
@@ -936,11 +936,11 @@ final class CipherCore {
                 // create temporary output buffer if the estimated size is larger
                 // than the user-provided buffer or a padding needs to be removed
                 // before copying the unpadded result to the output buffer
-                outWithPadding = new byte[estOutSize];
+                internalOutput = new byte[estOutSize];
                 offset = 0;
             }
         }
-        byte[] outBuffer = (outWithPadding != null) ? outWithPadding : output;
+        byte[] outBuffer = (internalOutput != null) ? internalOutput : output;
 
         int outLen = fillOutputBuffer(finalBuf, finalOffset, outBuffer,
                 offset, finalBufLen, input);
@@ -956,10 +956,10 @@ final class CipherCore {
                                                + " bytes needed");
             }
             // copy the result into user-supplied output buffer
-            if(outWithPadding != null) {
-              System.arraycopy(outWithPadding, 0, output, outputOffset, outLen);
+            if (internalOutput != null) {
+              System.arraycopy(internalOutput, 0, output, outputOffset, outLen);
               // decrypt mode. Zero out output data that's not required
-              Arrays.fill(outWithPadding, (byte) 0x00);
+              Arrays.fill(internalOutput, (byte) 0x00);
             }
         }
         endDoFinal();
@@ -974,9 +974,9 @@ final class CipherCore {
         }
     }
 
-    private int unpad(int outLen, byte[] outWithPadding)
+    private int unpad(int outLen, byte[] internalOutput)
             throws BadPaddingException {
-        int padStart = padding.unpad(outWithPadding, 0, outLen);
+        int padStart = padding.unpad(internalOutput, 0, outLen);
         if (padStart < 0) {
             throw new BadPaddingException("Given final block not " +
             "properly padded. Such issues can arise if a bad key " +
