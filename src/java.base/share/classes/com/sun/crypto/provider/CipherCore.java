@@ -974,9 +974,9 @@ final class CipherCore {
         }
     }
 
-    private int unpad(int outLen, byte[] internalOutput)
+    private int unpad(int outLen, byte[] outWithPadding)
             throws BadPaddingException {
-        int padStart = padding.unpad(internalOutput, 0, outLen);
+        int padStart = padding.unpad(outWithPadding, 0, outLen);
         if (padStart < 0) {
             throw new BadPaddingException("Given final block not " +
             "properly padded. Such issues can arise if a bad key " +
