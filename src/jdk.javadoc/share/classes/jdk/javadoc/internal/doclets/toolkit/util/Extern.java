@@ -480,7 +480,7 @@ public class Extern {
      * @param name the string that needs to be converted to a valid HTML name
      * @return old-form HTML name
      */
-    private String getOldFormHtmlName(String name) {
+    public static String getOldFormHtmlName(String name) {
         /* The HTML 4 spec at http://www.w3.org/TR/html4/types.html#h-6.2 mentions
          * that the name/id should begin with a letter followed by other valid characters.
          * The HTML 5 spec (draft) is more permissive on names/ids where the only restriction
