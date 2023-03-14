@@ -48,7 +48,11 @@ static jobject sAccessibilityClass = NULL;
     /*
      * Here we should keep all the mapping between the accessibility roles and implementing classes
      */
+<<<<<<< HEAD
+    rolesMap = [[NSMutableDictionary alloc] initWithCapacity:35];
+=======
     rolesMap = [[NSMutableDictionary alloc] initWithCapacity:34];
+>>>>>>> 013e27dfe97 (Backport f07dcf471c160e09fbc748124998923e7d453e66)
 
     [rolesMap setObject:@"ButtonAccessibility" forKey:@"pushbutton"];
     [rolesMap setObject:@"ImageAccessibility" forKey:@"icon"];
@@ -58,14 +62,23 @@ static jobject sAccessibilityClass = NULL;
     [rolesMap setObject:@"StaticTextAccessibility" forKey:@"label"];
     [rolesMap setObject:@"RadiobuttonAccessibility" forKey:@"radiobutton"];
     [rolesMap setObject:@"CheckboxAccessibility" forKey:@"checkbox"];
+<<<<<<< HEAD
    // [rolesMap setObject:@"SliderAccessibility" forKey:@"slider"];
     [rolesMap setObject:@"ScrollAreaAccessibility" forKey:@"scrollpane"];
+=======
+    [rolesMap setObject:@"SliderAccessibility" forKey:@"slider"];
+   //[rolesMap setObject:@"ScrollAreaAccessibility" forKey:@"scrollpane"];
+>>>>>>> 013e27dfe97 (Backport f07dcf471c160e09fbc748124998923e7d453e66)
     [rolesMap setObject:@"ScrollBarAccessibility" forKey:@"scrollbar"];
     [rolesMap setObject:@"GroupAccessibility" forKey:@"awtcomponent"];
     [rolesMap setObject:@"GroupAccessibility" forKey:@"canvas"];
     [rolesMap setObject:@"GroupAccessibility" forKey:@"groupbox"];
     [rolesMap setObject:@"GroupAccessibility" forKey:@"internalframe"];
     [rolesMap setObject:@"GroupAccessibility" forKey:@"swingcomponent"];
+<<<<<<< HEAD
+    [rolesMap setObject:@"ToolbarAccessibility" forKey:@"toolbar"];
+=======
+>>>>>>> 013e27dfe97 (Backport f07dcf471c160e09fbc748124998923e7d453e66)
 
     /*
      * All the components below should be ignored by the accessibility subsystem,
