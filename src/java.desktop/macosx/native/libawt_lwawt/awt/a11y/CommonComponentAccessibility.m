@@ -58,7 +58,7 @@ static jobject sAccessibilityClass = NULL;
     [rolesMap setObject:@"StaticTextAccessibility" forKey:@"label"];
     [rolesMap setObject:@"RadiobuttonAccessibility" forKey:@"radiobutton"];
     [rolesMap setObject:@"CheckboxAccessibility" forKey:@"checkbox"];
-   // [rolesMap setObject:@"SliderAccessibility" forKey:@"slider"];
+    //[rolesMap setObject:@"SliderAccessibility" forKey:@"slider"];
     [rolesMap setObject:@"ScrollAreaAccessibility" forKey:@"scrollpane"];
     [rolesMap setObject:@"ScrollBarAccessibility" forKey:@"scrollbar"];
     [rolesMap setObject:@"GroupAccessibility" forKey:@"awtcomponent"];
@@ -66,7 +66,9 @@ static jobject sAccessibilityClass = NULL;
     [rolesMap setObject:@"GroupAccessibility" forKey:@"groupbox"];
     [rolesMap setObject:@"GroupAccessibility" forKey:@"internalframe"];
     [rolesMap setObject:@"GroupAccessibility" forKey:@"swingcomponent"];
+
     [rolesMap setObject:@"ToolbarAccessibility" forKey:@"toolbar"];
+
 
     /*
      * All the components below should be ignored by the accessibility subsystem,
