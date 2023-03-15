@@ -28,14 +28,12 @@
 
 #import <AppKit/AppKit.h>
 
-@interface ScrollAreaAccessibility : CommonComponentAccessibility {
+@interface SliderAccessibility : CommonComponentAccessibility <NSAccessibilitySlider> {
 
 };
 - (NSAccessibilityRole _Nonnull)accessibilityRole;
-- (NSArray * _Nullable)accessibilityContents;
-- (id _Nullable)accessibilityHorizontalScrollBar;
-- (id _Nullable)accessibilityVerticalScrollBar;
-
-- (NSArray * _Nullable)accessibilityContentsAttribute;
-- (id _Nullable)getScrollBarwithOrientation:(enum NSAccessibilityOrientation)orientation;
+- (NSString * _Nullable)accessibilityLabel;
+- (id _Nullable)accessibilityValue;
+- (BOOL)accessibilityPerformDecrement;
+- (BOOL)accessibilityPerformIncrement;
 @end
