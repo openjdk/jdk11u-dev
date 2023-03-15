@@ -50,6 +50,7 @@ static jobject sAccessibilityClass = NULL;
      */
     rolesMap = [[NSMutableDictionary alloc] initWithCapacity:35];
 
+
     [rolesMap setObject:@"ButtonAccessibility" forKey:@"pushbutton"];
     [rolesMap setObject:@"ImageAccessibility" forKey:@"icon"];
     [rolesMap setObject:@"ImageAccessibility" forKey:@"desktopicon"];
@@ -66,7 +67,6 @@ static jobject sAccessibilityClass = NULL;
     [rolesMap setObject:@"GroupAccessibility" forKey:@"groupbox"];
     [rolesMap setObject:@"GroupAccessibility" forKey:@"internalframe"];
     [rolesMap setObject:@"GroupAccessibility" forKey:@"swingcomponent"];
-
     [rolesMap setObject:@"ToolbarAccessibility" forKey:@"toolbar"];
 
 
