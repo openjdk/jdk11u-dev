@@ -23,18 +23,33 @@
  * questions.
  */
 
-#import "JavaComponentAccessibility.h"
-#import "CommonComponentAccessibility.h"
+#import "SliderAccessibility.h"
 
-#import <AppKit/AppKit.h>
+#define INCREMENT 0
+#define DECREMENT 1
 
-@interface SliderAccessibility : CommonComponentAccessibility <NSAccessibilitySlider> {
+/*
+ * Implementation of the accessibility peer for the slider role
+ */
+@implementation SliderAccessibility
+- (nullable NSString *)accessibilityLabel
+{
+    return [self accessibilityTitleAttribute];
+}
 
-};
-- (NSAccessibilityRole _Nonnull)accessibilityRole;
-- (NSString * _Nullable)accessibilityLabel;
-- (id _Nullable)accessibilityValue;
+- (nullable id)accessibilityValue
+{
+    return [self accessibilityValueAttribute];
+}
 
-- (BOOL)accessibilityPerformDecrement;
-- (BOOL)accessibilityPerformIncrement;
+- (BOOL)accessibilityPerformIncrement
+{
+    return [self performAccessibleAction:INCREMENT];
+}
+
+- (BOOL)accessibilityPerformDecrement
+{
+    return [self performAccessibleAction:DECREMENT];
+}
+
 @end
