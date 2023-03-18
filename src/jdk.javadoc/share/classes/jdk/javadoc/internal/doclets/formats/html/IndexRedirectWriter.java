@@ -80,12 +80,12 @@ public class IndexRedirectWriter extends HtmlDocletWriter {
                 .setTimestamp(!configuration.notimestamp, false)
                 .addDefaultScript(false);
 
-        String title = (configuration.windowtitle.length() > 0)
-                ? configuration.windowtitle
+        String title = (configuration.windowtitle().length() > 0)
+                ? configuration.windowtitle()
                 : resources.getText("doclet.Generated_Docs_Untitled");
 
         head.setTitle(title)
-                .setCharset(configuration.charset)
+                .setCharset(configuration.charset())
                 .setCanonicalLink(target);
 
         String targetPath = target.getPath();

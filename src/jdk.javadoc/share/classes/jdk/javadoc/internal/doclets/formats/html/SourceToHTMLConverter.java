@@ -230,7 +230,7 @@ public class SourceToHTMLConverter {
      * @param head an HtmlTree to which the stylesheet links will be added
      */
     public void addStyleSheetProperties(Content head) {
-        String filename = configuration.stylesheetfile;
+        String filename = configuration.stylesheetfile();
         DocPath stylesheet;
         if (filename.length() > 0) {
             DocFile file = DocFile.createFileForInput(configuration, filename);
@@ -245,7 +245,7 @@ public class SourceToHTMLConverter {
     }
 
     protected void addStylesheets(Content tree) {
-        List<String> stylesheets = configuration.additionalStylesheets;
+        List<String> stylesheets = configuration.additionalStylesheets();
         if (!stylesheets.isEmpty()) {
             stylesheets.forEach((ssheet) -> {
                 DocFile file = DocFile.createFileForInput(configuration, ssheet);

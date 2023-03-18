@@ -242,9 +242,9 @@ public class HtmlDocletWriter {
             // append htmlstr up to start of next {@docroot}
             buf.append(htmlstr.substring(prevEnd, match));
             prevEnd = docrootMatcher.end();
-            if (configuration.docrootparent.length() > 0 && htmlstr.startsWith("/..", prevEnd)) {
+            if (configuration.docrootparent().length() > 0 && htmlstr.startsWith("/..", prevEnd)) {
                 // Insert the absolute link if {@docRoot} is followed by "/..".
-                buf.append(configuration.docrootparent);
+                buf.append(configuration.docrootparent());
                 prevEnd += 3;
             } else {
                 // Insert relative path where {@docRoot} was located
@@ -420,11 +420,11 @@ public class HtmlDocletWriter {
         Head head = new Head(path, configuration.htmlVersion, configuration.docletVersion)
                 .setTimestamp(!configuration.notimestamp)
                 .setTitle(winTitle)
-                .setCharset(configuration.charset)
+                .setCharset(configuration.charset())
                 .addKeywords(metakeywords)
                 .setStylesheets(configuration.getMainStylesheet(), configuration.getAdditionalStylesheets())
                 .setUseModuleDirectories(configuration.useModuleDirectories)
-                .setIndex(configuration.createindex, mainBodyScript);
+                .setIndex(configuration.createindex(), mainBodyScript);
 
         Content htmlTree = HtmlTree.HTML(configuration.getLocale().getLanguage(), head.toContent(), body);
         HtmlDocument htmlDocument = new HtmlDocument(htmlDocType, htmlComment, htmlTree);
@@ -438,8 +438,8 @@ public class HtmlDocletWriter {
      * @return the window title string
      */
     public String getWindowTitle(String title) {
-        if (configuration.windowtitle.length() > 0) {
-            title += " (" + configuration.windowtitle  + ")";
+        if (configuration.windowtitle().length() > 0) {
+            title += " (" + configuration.windowtitle()  + ")";
         }
         return title;
     }
@@ -453,12 +453,12 @@ public class HtmlDocletWriter {
     public Content getUserHeaderFooter(boolean header) {
         String content;
         if (header) {
-            content = replaceDocRootDir(configuration.header);
+            content = replaceDocRootDir(configuration.header());
         } else {
-            if (configuration.footer.length() != 0) {
-                content = replaceDocRootDir(configuration.footer);
+            if (configuration.footer().length() != 0) {
+                content = replaceDocRootDir(configuration.footer());
             } else {
-                content = replaceDocRootDir(configuration.header);
+                content = replaceDocRootDir(configuration.header());
             }
         }
         Content rawContent = new RawHtml(content);
@@ -471,7 +471,7 @@ public class HtmlDocletWriter {
      * @param htmlTree the content tree to which user specified top will be added
      */
     public void addTop(Content htmlTree) {
-        Content top = new RawHtml(replaceDocRootDir(configuration.top));
+        Content top = new RawHtml(replaceDocRootDir(configuration.top()));
         fixedNavDiv.addContent(top);
     }
 
@@ -481,7 +481,7 @@ public class HtmlDocletWriter {
      * @param htmlTree the content tree to which user specified bottom will be added
      */
     public void addBottom(Content htmlTree) {
-        Content bottom = new RawHtml(replaceDocRootDir(configuration.bottom));
+        Content bottom = new RawHtml(replaceDocRootDir(configuration.bottom()));
         Content small = HtmlTree.SMALL(bottom);
         Content p = HtmlTree.P(HtmlStyle.legalCopy, small);
         htmlTree.addContent(p);
@@ -1356,8 +1356,8 @@ public class HtmlDocletWriter {
                     for (DocTree dt : node.getValue()) {
                         if (utils.isText(dt) && isHRef) {
                             String text = ((TextTree) dt).getBody();
-                            if (text.startsWith("/..") && !configuration.docrootparent.isEmpty()) {
-                                result.addContent(configuration.docrootparent);
+                            if (text.startsWith("/..") && !configuration.docrootparent().isEmpty()) {
+                                result.addContent(configuration.docrootparent());
                                 docRootContent = new ContentBuilder();
                                 result.addContent(textCleanup(text.substring(3), isLastNode));
                             } else {

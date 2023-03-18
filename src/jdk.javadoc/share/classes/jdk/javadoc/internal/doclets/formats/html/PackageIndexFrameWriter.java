@@ -124,10 +124,10 @@ public class PackageIndexFrameWriter extends AbstractPackageIndexWriter {
     @Override
     protected void addNavigationBarHeader(Content header) {
         Content headerContent;
-        if (configuration.packagesheader.length() > 0) {
-            headerContent = new RawHtml(replaceDocRootDir(configuration.packagesheader));
+        if (configuration.packagesheader().length() > 0) {
+            headerContent = new RawHtml(replaceDocRootDir(configuration.packagesheader()));
         } else {
-            headerContent = new RawHtml(replaceDocRootDir(configuration.header));
+            headerContent = new RawHtml(replaceDocRootDir(configuration.header()));
         }
         Content heading = HtmlTree.HEADING(HtmlConstants.TITLE_HEADING, true,
                 HtmlStyle.bar, headerContent);

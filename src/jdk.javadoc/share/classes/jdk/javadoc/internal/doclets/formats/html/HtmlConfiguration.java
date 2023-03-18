@@ -85,104 +85,104 @@ public class HtmlConfiguration extends BaseConfiguration {
     /**
      * Argument for command line option "-header".
      */
-    public String header = "";
+    private String header = "";
 
     /**
      * Argument for command line option "-packagesheader".
      */
-    public String packagesheader = "";
+    private String packagesheader = "";
 
     /**
      * Argument for command line option "-footer".
      */
-    public String footer = "";
+    private String footer = "";
 
     /**
      * Argument for command line option "-doctitle".
      */
-    public String doctitle = "";
+    private String doctitle = "";
 
     /**
      * Argument for command line option "-windowtitle".
      */
-    public String windowtitle = "";
+    private String windowtitle = "";
 
     /**
      * Argument for command line option "-top".
      */
-    public String top = "";
+    private String top = "";
 
     /**
      * Argument for command line option "-bottom".
      */
-    public String bottom = "";
+    private String bottom = "";
 
     /**
      * Argument for command line option "-helpfile".
      */
-    public String helpfile = "";
+    private String helpfile = "";
 
     /**
      * Argument for command-line option "--legal-notices".
      */
-    public String legalnotices = "";
+    private String legalnotices = "";
 
     /**
      * Argument for command line option "-stylesheetfile".
      */
-    public String stylesheetfile = "";
+    private String stylesheetfile = "";
 
     /**
      * Argument for command line option "--add-stylesheet".
      */
-    public List<String> additionalStylesheets = new ArrayList<>();
+    private List<String> additionalStylesheets = new ArrayList<>();
 
     /**
      * Argument for command line option "-Xdocrootparent".
      */
-    public String docrootparent = "";
+    private String docrootparent = "";
 
     /**
      * True if command line option "-nohelp" is used. Default value is false.
      */
-    public boolean nohelp = false;
+    private boolean nohelp = false;
 
     /**
      * True if command line option "-splitindex" is used. Default value is
      * false.
      */
-    public boolean splitindex = false;
+    private boolean splitindex = false;
 
     /**
      * False if command line option "-noindex" is used. Default value is true.
      */
-    public boolean createindex = true;
+    private boolean createindex = true;
 
     /**
      * True if command line option "-use" is used. Default value is false.
      */
-    public boolean classuse = false;
+    private boolean classuse = false;
 
     /**
      * False if command line option "-notree" is used. Default value is true.
      */
-    public boolean createtree = true;
+    private boolean createtree = true;
 
     /**
      * The META charset tag used for cross-platform viewing.
      */
-    public String charset = null;
+    private String charset = null;
 
     /**
      * True if command line option "-nodeprecated" is used. Default value is
      * false.
      */
-    public boolean nodeprecatedlist = false;
+    private boolean nodeprecatedlist = false;
 
     /**
      * True if command line option "-nonavbar" is used. Default value is false.
      */
-    public boolean nonavbar = false;
+    private boolean nonavbar = false;
 
     /**
      * True if command line option "-nooverview" is used. Default value is
@@ -193,13 +193,13 @@ public class HtmlConfiguration extends BaseConfiguration {
     /**
      * The overview path specified with "-overview" flag.
      */
-    public String overviewpath = null;
+    private String overviewpath = null;
 
     /**
      * This is true if option "-overview" is used or option "-overview" is not
      * used and number of packages is more than one.
      */
-    public boolean createoverview = false;
+    private boolean createoverview = false;
 
     /**
      * Specifies whether or not frames should be generated.
@@ -881,5 +881,170 @@ public class HtmlConfiguration extends BaseConfiguration {
         packageSearchIndex = new TreeSet<>(utils.makeGenericSearchIndexComparator());
         tagSearchIndex = new TreeSet<>(utils.makeGenericSearchIndexComparator());
         typeSearchIndex = new TreeSet<>(utils.makeTypeSearchIndexComparator());
+    }
+
+    /**
+     * Argument for command line option "-header".
+     */
+    public String header() {
+        return header;
+    }
+
+    /**
+     * Argument for command line option "-packagesheader".
+     */
+    public String packagesheader() {
+        return packagesheader;
+    }
+
+    /**
+     * Argument for command line option "-footer".
+     */
+    public String footer() {
+        return footer;
+    }
+
+    /**
+     * Argument for command line option "-doctitle".
+     */
+    public String doctitle() {
+        return doctitle;
+    }
+
+    /**
+     * Argument for command line option "-windowtitle".
+     */
+    public String windowtitle() {
+        return windowtitle;
+    }
+
+    /**
+     * Argument for command line option "-top".
+     */
+    public String top() {
+        return top;
+    }
+
+    /**
+     * Argument for command line option "-bottom".
+     */
+    public String bottom() {
+        return bottom;
+    }
+
+    /**
+     * Argument for command line option "-helpfile".
+     */
+    public String helpfile() {
+        return helpfile;
+    }
+
+    /**
+     * Argument for command-line option "--legal-notices".
+     */
+    public String legalnotices() {
+        return legalnotices;
+    }
+
+    /**
+     * Argument for command line option "-stylesheetfile".
+     */
+    public String stylesheetfile() {
+        return stylesheetfile;
+    }
+
+    /**
+     * Argument for command line option "--add-stylesheet".
+     */
+    public List<String> additionalStylesheets() {
+        return additionalStylesheets;
+    }
+
+    /**
+     * Argument for command line option "-Xdocrootparent".
+     */
+    public String docrootparent() {
+        return docrootparent;
+    }
+
+    /**
+     * True if command line option "-nohelp" is used. Default value is false.
+     */
+    public boolean nohelp() {
+        return nohelp;
+    }
+
+    /**
+     * True if command line option "-splitindex" is used. Default value is
+     * false.
+     */
+    public boolean splitindex() {
+        return splitindex;
+    }
+
+    /**
+     * False if command line option "-noindex" is used. Default value is true.
+     */
+    public boolean createindex() {
+        return createindex;
+    }
+
+    /**
+     * True if command line option "-use" is used. Default value is false.
+     */
+    public boolean classuse() {
+        return classuse;
+    }
+
+    /**
+     * False if command line option "-notree" is used. Default value is true.
+     */
+    public boolean createtree() {
+        return createtree;
+    }
+
+    /**
+     * The META charset tag used for cross-platform viewing.
+     */
+    public String charset() {
+        return charset;
+    }
+
+    /**
+     * True if command line option "-nodeprecated" is used. Default value is
+     * false.
+     */
+    public boolean nodeprecatedlist() {
+        return nodeprecatedlist;
+    }
+
+    /**
+     * True if command line option "-nonavbar" is used. Default value is false.
+     */
+    public boolean nonavbar() {
+        return nonavbar;
+    }
+
+    /**
+     * True if command line option "-nooverview" is used. Default value is
+     * false
+     */
+    public boolean nooverview() {
+        return nooverview;
+    }
+
+    /**
+     * The overview path specified with "-overview" flag.
+     */
+    public String overviewpath() {
+        return overviewpath;
+    }
+
+    /**
+     * This is true if option "-overview" is used or option "-overview" is not
+     * used and number of packages is more than one.
+     */
+    public boolean createoverview() {
+        return createoverview;
     }
 }

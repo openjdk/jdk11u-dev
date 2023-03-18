@@ -137,7 +137,7 @@ public class HelpWriter extends HtmlDocletWriter {
         ul.setStyle(HtmlStyle.blockList);
 
         // Overview
-        if (configuration.createoverview) {
+        if (configuration.createoverview()) {
             Content overviewHeading = HtmlTree.HEADING(HtmlConstants.CONTENT_HEADING,
                 contents.overviewLabel);
             htmlTree = (configuration.allowTag(HtmlTag.SECTION))
@@ -289,7 +289,7 @@ public class HelpWriter extends HtmlDocletWriter {
         }
 
         // Class Use
-        if (configuration.classuse) {
+        if (configuration.classuse()) {
             Content useHead = HtmlTree.HEADING(HtmlConstants.CONTENT_HEADING,
                     contents.getContent("doclet.help.use.head"));
             htmlTree = (configuration.allowTag(HtmlTag.SECTION))
@@ -306,7 +306,7 @@ public class HelpWriter extends HtmlDocletWriter {
         }
 
         // Tree
-        if (configuration.createtree) {
+        if (configuration.createtree()) {
             Content treeHead = HtmlTree.HEADING(HtmlConstants.CONTENT_HEADING,
                     contents.getContent("doclet.help.tree.head"));
             htmlTree = (configuration.allowTag(HtmlTag.SECTION))
@@ -330,7 +330,7 @@ public class HelpWriter extends HtmlDocletWriter {
         }
 
         // Deprecated
-        if (!(configuration.nodeprecatedlist || configuration.nodeprecated)) {
+        if (!(configuration.nodeprecatedlist() || configuration.nodeprecated)) {
             Content dHead = HtmlTree.HEADING(HtmlConstants.CONTENT_HEADING,
                     contents.deprecatedAPI);
             htmlTree = (configuration.allowTag(HtmlTag.SECTION))
@@ -349,9 +349,9 @@ public class HelpWriter extends HtmlDocletWriter {
         }
 
         // Index
-        if (configuration.createindex) {
+        if (configuration.createindex()) {
             Content indexlink;
-            if (configuration.splitindex) {
+            if (configuration.splitindex()) {
                 indexlink = links.createLink(DocPaths.INDEX_FILES.resolve(DocPaths.indexN(1)),
                         configuration.getText("doclet.Index"));
             } else {

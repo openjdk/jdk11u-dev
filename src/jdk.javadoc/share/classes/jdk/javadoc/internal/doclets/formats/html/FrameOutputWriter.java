@@ -112,8 +112,8 @@ public class FrameOutputWriter extends HtmlDocletWriter {
         } else {
             body.addContent(frame);
         }
-        if (configuration.windowtitle.length() > 0) {
-            printFramesDocument(configuration.windowtitle, body);
+        if (configuration.windowtitle().length() > 0) {
+            printFramesDocument(configuration.windowtitle(), body);
         } else {
             printFramesDocument(configuration.getText("doclet.Generated_Docs_Untitled"), body);
         }
@@ -133,7 +133,7 @@ public class FrameOutputWriter extends HtmlDocletWriter {
         Head head = new Head(path, configuration.htmlVersion, configuration.docletVersion)
                 .setTimestamp(!configuration.notimestamp, false)
                 .setTitle(title)
-                .setCharset(configuration.charset)
+                .setCharset(configuration.charset())
                 .setStylesheets(configuration.getMainStylesheet(), configuration.getAdditionalStylesheets())
                 .addDefaultScript(false)
                 .addScript(getFramesScript());

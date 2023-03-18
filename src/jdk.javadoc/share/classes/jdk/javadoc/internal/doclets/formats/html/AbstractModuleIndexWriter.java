@@ -143,7 +143,7 @@ public abstract class AbstractModuleIndexWriter extends HtmlDocletWriter {
         body.addContent(main);
         body.addContent(footer);
         printHtmlDocument(configuration.metakeywords.getOverviewMetaKeywords(title,
-                configuration.doctitle), includeScript, body);
+                configuration.doctitle()), includeScript, body);
     }
 
     /**
@@ -172,7 +172,7 @@ public abstract class AbstractModuleIndexWriter extends HtmlDocletWriter {
         body.addContent(main);
         body.addContent(footer);
         printHtmlDocument(configuration.metakeywords.getOverviewMetaKeywords(title,
-                configuration.doctitle), includeScript, body);
+                configuration.doctitle()), includeScript, body);
     }
 
     /**
@@ -260,8 +260,8 @@ public abstract class AbstractModuleIndexWriter extends HtmlDocletWriter {
      * @param body the document tree to which the title will be added
      */
     protected void addConfigurationTitle(Content body) {
-        if (configuration.doctitle.length() > 0) {
-            Content title = new RawHtml(configuration.doctitle);
+        if (configuration.doctitle().length() > 0) {
+            Content title = new RawHtml(configuration.doctitle());
             Content heading = HtmlTree.HEADING(HtmlConstants.TITLE_HEADING,
                     HtmlStyle.title, title);
             Content div = HtmlTree.DIV(HtmlStyle.header, heading);

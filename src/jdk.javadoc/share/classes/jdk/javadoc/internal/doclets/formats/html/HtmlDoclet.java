@@ -132,23 +132,23 @@ public class HtmlDoclet extends AbstractDoclet {
             return;
         }
         boolean nodeprecated = configuration.nodeprecated;
-        performCopy(configuration.helpfile);
-        performCopy(configuration.stylesheetfile);
-        for (String stylesheet : configuration.additionalStylesheets) {
+        performCopy(configuration.helpfile());
+        performCopy(configuration.stylesheetfile());
+        for (String stylesheet : configuration.additionalStylesheets()) {
             performCopy(stylesheet);
         }
         // do early to reduce memory footprint
-        if (configuration.classuse) {
+        if (configuration.classuse()) {
             ClassUseWriter.generate(configuration, classtree);
         }
         IndexBuilder indexbuilder = new IndexBuilder(configuration, nodeprecated);
 
-        if (configuration.createtree) {
+        if (configuration.createtree()) {
             TreeWriter.generate(configuration, classtree);
         }
-        if (configuration.createindex) {
+        if (configuration.createindex()) {
             configuration.buildSearchTagIndex();
-            if (configuration.splitindex) {
+            if (configuration.splitindex()) {
                 SplitIndexWriter.generate(configuration, indexbuilder);
             } else {
                 SingleIndexWriter.generate(configuration, indexbuilder);
@@ -160,7 +160,7 @@ public class HtmlDoclet extends AbstractDoclet {
             }
         }
 
-        if (!(configuration.nodeprecatedlist || nodeprecated)) {
+        if (!(configuration.nodeprecatedlist() || nodeprecated)) {
             DeprecatedListWriter.generate(configuration);
         }
 
@@ -171,7 +171,7 @@ public class HtmlDoclet extends AbstractDoclet {
             FrameOutputWriter.generate(configuration);
         }
 
-        if (configuration.createoverview) {
+        if (configuration.createoverview()) {
             if (configuration.showModules) {
                 ModuleIndexWriter.generate(configuration);
             } else {
@@ -180,26 +180,26 @@ public class HtmlDoclet extends AbstractDoclet {
         }
 
         if (!configuration.frames) {
-            if (configuration.createoverview) {
+            if (configuration.createoverview()) {
                 IndexRedirectWriter.generate(configuration, DocPaths.OVERVIEW_SUMMARY, DocPaths.INDEX);
             } else {
                 IndexRedirectWriter.generate(configuration);
             }
         }
 
-        if (configuration.helpfile.isEmpty() && !configuration.nohelp) {
+        if (configuration.helpfile().isEmpty() && !configuration.nohelp()) {
             HelpWriter.generate(configuration);
         }
         // If a stylesheet file is not specified, copy the default stylesheet
         // and replace newline with platform-specific newline.
         DocFile f;
-        if (configuration.stylesheetfile.length() == 0) {
+        if (configuration.stylesheetfile().length() == 0) {
             f = DocFile.createFileForOutput(configuration, DocPaths.STYLESHEET);
             f.copyResource(DocPaths.RESOURCES.resolve(DocPaths.STYLESHEET), true, true);
         }
         f = DocFile.createFileForOutput(configuration, DocPaths.JAVASCRIPT);
         f.copyResource(DocPaths.RESOURCES.resolve(DocPaths.JAVASCRIPT), true, true);
-        if (configuration.createindex) {
+        if (configuration.createindex()) {
             f = DocFile.createFileForOutput(configuration, DocPaths.SEARCH_JS);
             f.copyResource(DOCLET_RESOURCES.resolve(DocPaths.SEARCH_JS), true, true);
 
@@ -214,7 +214,7 @@ public class HtmlDoclet extends AbstractDoclet {
             f.copyResource(DOCLET_RESOURCES.resolve(DocPaths.JQUERY_OVERRIDES_CSS), true, true);
         }
 
-        copyLegalFiles(configuration.createindex);
+        copyLegalFiles(configuration.createindex());
     }
 
     private void copyJqueryFiles() throws DocletException {
@@ -239,7 +239,7 @@ public class HtmlDoclet extends AbstractDoclet {
 
     private void copyLegalFiles(boolean includeJQuery) throws DocletException {
         Path legalNoticesDir;
-        String legalNotices = configuration.legalnotices;
+        String legalNotices = configuration.legalnotices();
         switch (legalNotices) {
             case "":
             case "default" :
@@ -345,7 +345,7 @@ public class HtmlDoclet extends AbstractDoclet {
                 AbstractBuilder packageSummaryBuilder =
                         configuration.getBuilderFactory().getPackageSummaryBuilder(pkg);
                 packageSummaryBuilder.build();
-                if (configuration.createtree) {
+                if (configuration.createtree()) {
                     PackageTreeWriter.generate(configuration, pkg, configuration.nodeprecated);
                 }
             }
