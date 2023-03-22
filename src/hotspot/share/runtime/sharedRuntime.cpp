@@ -229,12 +229,15 @@ JRT_LEAF(jlong, SharedRuntime::lrem(jlong y, jlong x))
 JRT_END
 
 
+#ifdef _WIN64
 const juint  float_sign_mask  = 0x7FFFFFFF;
 const juint  float_infinity   = 0x7F800000;
 const julong double_sign_mask = CONST64(0x7FFFFFFFFFFFFFFF);
 const julong double_infinity  = CONST64(0x7FF0000000000000);
+#endif
 
-JRT_LEAF(jfloat, SharedRuntime::frem(jfloat  x, jfloat  y))
+#if !defined(X86) || !defined(TARGET_COMPILER_gcc) || defined(_WIN64)
+JRT_LEAF(jfloat, SharedRuntime::frem(jfloat x, jfloat y))
 #ifdef _WIN64
   // 64-bit Windows on amd64 returns the wrong values for
   // infinity operands.
@@ -252,7 +255,6 @@ JRT_LEAF(jfloat, SharedRuntime::frem(jfloat  x, jfloat  y))
 #endif
 JRT_END
 
-
 JRT_LEAF(jdouble, SharedRuntime::drem(jdouble x, jdouble y))
 #ifdef _WIN64
   union { jdouble d; julong l; } xbits, ybits;
@@ -268,6 +270,7 @@ JRT_LEAF(jdouble, SharedRuntime::drem(jdouble x, jdouble y))
   return ((jdouble)fmod((double)x,(double)y));
 #endif
 JRT_END
+#endif // !X86 || !TARGET_COMPILER_gcc || _WIN64
 
 #ifdef __SOFTFP__
 JRT_LEAF(jfloat, SharedRuntime::fadd(jfloat x, jfloat y))
