@@ -124,7 +124,7 @@ public class PropertyWriterImpl extends AbstractMemberWriter
                 utils.getReturnType(property)));
         pre.addContent(propertylink);
         pre.addContent(" ");
-        if (configuration.linksource) {
+        if (configuration.linksource()) {
             Content propertyName = new StringContent(name(property));
             writer.addSrcLink(property, propertyName, pre);
         } else {
@@ -227,7 +227,7 @@ public class PropertyWriterImpl extends AbstractMemberWriter
             resources.getText("doclet.Property_Summary"),
             resources.getText("doclet.properties"));
 
-        return new Table(configuration.htmlVersion, HtmlStyle.memberSummary)
+        return new Table(configuration.htmlVersion(), HtmlStyle.memberSummary)
                 .setSummary(summary)
                 .setCaption(contents.properties)
                 .setHeader(getSummaryTableHeader(typeElement))
@@ -262,7 +262,7 @@ public class PropertyWriterImpl extends AbstractMemberWriter
         Content classLink = writer.getPreQualifiedClassLink(
                 LinkInfoImpl.Kind.MEMBER, typeElement, false);
         Content label;
-        if (configuration.summarizeOverriddenMethods) {
+        if (configuration.summarizeOverriddenMethods()) {
             label = new StringContent(utils.isClass(typeElement)
                     ? resources.getText("doclet.Properties_Declared_In_Class")
                     : resources.getText("doclet.Properties_Declared_In_Interface"));

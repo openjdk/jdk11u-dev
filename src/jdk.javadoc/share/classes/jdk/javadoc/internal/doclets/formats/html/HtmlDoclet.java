@@ -120,7 +120,7 @@ public class HtmlDoclet extends AbstractDoclet {
     protected void generateOtherFiles(DocletEnvironment docEnv, ClassTree classtree)
             throws DocletException {
         super.generateOtherFiles(docEnv, classtree);
-        if (configuration.linksource) {
+        if (configuration.linksource()) {
             SourceToHTMLConverter.convertRoot(configuration,
                 docEnv, DocPaths.SOURCE_OUTPUT);
         }
@@ -131,7 +131,7 @@ public class HtmlDoclet extends AbstractDoclet {
             messages.error("doclet.No_Non_Deprecated_Classes_To_Document");
             return;
         }
-        boolean nodeprecated = configuration.nodeprecated;
+        boolean nodeprecated = configuration.nodeprecated();
         performCopy(configuration.helpfile());
         performCopy(configuration.stylesheetfile());
         for (String stylesheet : configuration.additionalStylesheets()) {
@@ -155,7 +155,7 @@ public class HtmlDoclet extends AbstractDoclet {
             }
             AllClassesIndexWriter.generate(configuration,
                     new IndexBuilder(configuration, nodeprecated, true));
-            if (!configuration.packages.isEmpty()) {
+            if (!configuration.packages().isEmpty()) {
                 AllPackagesIndexWriter.generate(configuration);
             }
         }
@@ -167,19 +167,19 @@ public class HtmlDoclet extends AbstractDoclet {
         AllClassesFrameWriter.generate(configuration,
             new IndexBuilder(configuration, nodeprecated, true));
 
-        if (configuration.frames) {
+        if (configuration.frames()) {
             FrameOutputWriter.generate(configuration);
         }
 
         if (configuration.createoverview()) {
-            if (configuration.showModules) {
+            if (configuration.showModules()) {
                 ModuleIndexWriter.generate(configuration);
             } else {
                 PackageIndexWriter.generate(configuration);
             }
         }
 
-        if (!configuration.frames) {
+        if (!configuration.frames()) {
             if (configuration.createoverview()) {
                 IndexRedirectWriter.generate(configuration, DocPaths.OVERVIEW_SUMMARY, DocPaths.INDEX);
             } else {
@@ -307,13 +307,13 @@ public class HtmlDoclet extends AbstractDoclet {
      */
     @Override // defined by AbstractDoclet
     protected void generateModuleFiles() throws DocletException {
-        if (configuration.showModules) {
-            if (configuration.frames  && configuration.modules.size() > 1) {
+        if (configuration.showModules()) {
+            if (configuration.frames()  && configuration.modules().size() > 1) {
                 ModuleIndexFrameWriter.generate(configuration);
             }
-            List<ModuleElement> mdles = new ArrayList<>(configuration.modulePackages.keySet());
+            List<ModuleElement> mdles = new ArrayList<>(configuration.modulePackages().keySet());
             for (ModuleElement mdle : mdles) {
-                if (configuration.frames && configuration.modules.size() > 1) {
+                if (configuration.frames() && configuration.modules().size() > 1) {
                     ModulePackageIndexFrameWriter.generate(configuration, mdle);
                     ModuleFrameWriter.generate(configuration, mdle);
                 }
@@ -329,8 +329,8 @@ public class HtmlDoclet extends AbstractDoclet {
      */
     @Override // defined by AbstractDoclet
     protected void generatePackageFiles(ClassTree classtree) throws DocletException {
-        Set<PackageElement> packages = configuration.packages;
-        if (packages.size() > 1 && configuration.frames) {
+        Set<PackageElement> packages = configuration.packages();
+        if (packages.size() > 1 && configuration.frames()) {
             PackageIndexFrameWriter.generate(configuration);
         }
         List<PackageElement> pList = new ArrayList<>(packages);
@@ -338,15 +338,15 @@ public class HtmlDoclet extends AbstractDoclet {
             // if -nodeprecated option is set and the package is marked as
             // deprecated, do not generate the package-summary.html, package-frame.html
             // and package-tree.html pages for that package.
-            if (!(configuration.nodeprecated && utils.isDeprecated(pkg))) {
-                if (configuration.frames) {
+            if (!(configuration.nodeprecated() && utils.isDeprecated(pkg))) {
+                if (configuration.frames()) {
                     PackageFrameWriter.generate(configuration, pkg);
                 }
                 AbstractBuilder packageSummaryBuilder =
                         configuration.getBuilderFactory().getPackageSummaryBuilder(pkg);
                 packageSummaryBuilder.build();
                 if (configuration.createtree()) {
-                    PackageTreeWriter.generate(configuration, pkg, configuration.nodeprecated);
+                    PackageTreeWriter.generate(configuration, pkg, configuration.nodeprecated());
                 }
             }
         }

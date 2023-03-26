@@ -89,7 +89,7 @@ public class ModuleIndexFrameWriter extends AbstractModuleIndexWriter {
         HtmlTree htmlTree = HtmlTree.DIV(HtmlStyle.indexContainer, heading);
         HtmlTree ul = new HtmlTree(HtmlTag.UL);
         ul.setTitle(contents.modulesLabel);
-        for (ModuleElement mdle: configuration.modules) {
+        for (ModuleElement mdle: configuration.modules()) {
             ul.addContent(getModuleLink(mdle));
         }
         htmlTree.addContent(ul);

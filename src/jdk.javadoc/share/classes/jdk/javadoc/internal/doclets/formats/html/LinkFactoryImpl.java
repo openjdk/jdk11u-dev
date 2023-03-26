@@ -59,7 +59,7 @@ public class LinkFactoryImpl extends LinkFactory {
     private final DocPaths docPaths;
 
     public LinkFactoryImpl(HtmlDocletWriter writer) {
-        super(writer.configuration.utils);
+        super(writer.configuration.utils());
         m_writer = writer;
         docPaths = writer.configuration.docPaths;
     }

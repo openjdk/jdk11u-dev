@@ -129,7 +129,7 @@ public class FieldWriterImpl extends AbstractMemberWriter
                 configuration, LinkInfoImpl.Kind.MEMBER, field.asType()));
         pre.addContent(fieldlink);
         pre.addContent(" ");
-        if (configuration.linksource) {
+        if (configuration.linksource()) {
             Content fieldName = new StringContent(name(field));
             writer.addSrcLink(field, fieldName, pre);
         } else {
@@ -213,7 +213,7 @@ public class FieldWriterImpl extends AbstractMemberWriter
         List<HtmlStyle> bodyRowStyles = Arrays.asList(HtmlStyle.colFirst, HtmlStyle.colSecond,
                 HtmlStyle.colLast);
 
-        return new Table(configuration.htmlVersion, HtmlStyle.memberSummary)
+        return new Table(configuration.htmlVersion(), HtmlStyle.memberSummary)
                 .setSummary(summary)
                 .setCaption(contents.fields)
                 .setHeader(getSummaryTableHeader(typeElement))
@@ -248,7 +248,7 @@ public class FieldWriterImpl extends AbstractMemberWriter
         Content classLink = writer.getPreQualifiedClassLink(
                 LinkInfoImpl.Kind.MEMBER, typeElement, false);
         Content label;
-        if (configuration.summarizeOverriddenMethods) {
+        if (configuration.summarizeOverriddenMethods()) {
             label = new StringContent(utils.isClass(typeElement)
                     ? configuration.getText("doclet.Fields_Declared_In_Class")
                     : configuration.getText("doclet.Fields_Declared_In_Interface"));

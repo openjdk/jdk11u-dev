@@ -77,21 +77,21 @@ public class ValueTaglet extends BaseTaglet {
      * @return the referenced field or null.
      */
     private VariableElement getVariableElement(Element holder, BaseConfiguration config, DocTree tag) {
-        CommentHelper ch = config.utils.getCommentHelper(holder);
+        CommentHelper ch = config.utils().getCommentHelper(holder);
         String signature = ch.getReferencedSignature(tag);
 
         Element e = signature == null
                 ? holder
                 : ch.getReferencedMember(config, tag);
 
-        return (e != null && config.utils.isVariableElement(e))
+        return (e != null && config.utils().isVariableElement(e))
                 ? (VariableElement) e
                 : null;
     }
 
     @Override
     public Content getTagletOutput(Element holder, DocTree tag, TagletWriter writer) {
-        Utils utils = writer.configuration().utils;
+        Utils utils = writer.configuration().utils();
         Messages messages = writer.configuration().getMessages();
         VariableElement field = getVariableElement(holder, writer.configuration(), tag);
         if (field == null) {

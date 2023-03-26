@@ -153,7 +153,7 @@ public class HtmlSerialMethodWriter extends MethodWriterImpl implements
     public void addMemberTags(ExecutableElement member, Content methodsContentTree) {
         Content tagContent = new ContentBuilder();
         TagletManager tagletManager =
-            configuration.tagletManager;
+            configuration.tagletManager();
         TagletWriter.genTagOutput(tagletManager, member,
             tagletManager.getSerializedFormTaglets(),
             writer.getTagletWriterInstance(false), tagContent);

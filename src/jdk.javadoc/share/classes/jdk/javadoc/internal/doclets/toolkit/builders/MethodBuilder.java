@@ -171,7 +171,7 @@ public class MethodBuilder extends AbstractMemberBuilder {
      * @param methodDocTree the content tree to which the documentation will be added
      */
     protected void buildMethodComments(Content methodDocTree) {
-        if (!configuration.nocomment) {
+        if (!configuration.nocomment()) {
             ExecutableElement method = currentMethod;
             if (utils.getFullBody(currentMethod).isEmpty()) {
                 DocFinder.Output docs = DocFinder.search(configuration,

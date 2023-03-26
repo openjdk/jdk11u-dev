@@ -190,7 +190,7 @@ public class ModuleSummaryBuilder extends AbstractBuilder {
      *                           be added
      */
     protected void buildModuleDescription(Content moduleContentTree) {
-        if (!configuration.nocomment) {
+        if (!configuration.nocomment()) {
             moduleWriter.addModuleDescription(moduleContentTree);
         }
     }
@@ -201,7 +201,7 @@ public class ModuleSummaryBuilder extends AbstractBuilder {
      * @param moduleContentTree the tree to which the module tags will be added
      */
     protected void buildModuleTags(Content moduleContentTree) {
-        if (!configuration.nocomment) {
+        if (!configuration.nocomment()) {
             moduleWriter.addModuleTags(moduleContentTree);
         }
     }

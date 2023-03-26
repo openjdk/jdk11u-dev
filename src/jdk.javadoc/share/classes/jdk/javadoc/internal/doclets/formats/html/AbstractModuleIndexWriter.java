@@ -75,7 +75,7 @@ public abstract class AbstractModuleIndexWriter extends HtmlDocletWriter {
     public AbstractModuleIndexWriter(HtmlConfiguration configuration,
                                       DocPath filename) {
         super(configuration, filename);
-        modules = configuration.modulePackages;
+        modules = configuration.modulePackages();
         this.navBar = new Navigation(null, configuration, fixedNavDiv, PageMode.OVERVIEW, path);
     }
 
@@ -142,7 +142,7 @@ public abstract class AbstractModuleIndexWriter extends HtmlDocletWriter {
         body.addContent(header);
         body.addContent(main);
         body.addContent(footer);
-        printHtmlDocument(configuration.metakeywords.getOverviewMetaKeywords(title,
+        printHtmlDocument(configuration.metakeywords().getOverviewMetaKeywords(title,
                 configuration.doctitle()), includeScript, body);
     }
 
@@ -171,7 +171,7 @@ public abstract class AbstractModuleIndexWriter extends HtmlDocletWriter {
         body.addContent(header);
         body.addContent(main);
         body.addContent(footer);
-        printHtmlDocument(configuration.metakeywords.getOverviewMetaKeywords(title,
+        printHtmlDocument(configuration.metakeywords().getOverviewMetaKeywords(title,
                 configuration.doctitle()), includeScript, body);
     }
 
@@ -189,7 +189,7 @@ public abstract class AbstractModuleIndexWriter extends HtmlDocletWriter {
      * @param main the document tree to which the modules list will be added
      */
     protected void addIndex(Content header, Content main) {
-        addIndexContents(configuration.modules, "doclet.Module_Summary",
+        addIndexContents(configuration.modules(), "doclet.Module_Summary",
                 configuration.getText("doclet.Member_Table_Summary",
                 configuration.getText("doclet.Module_Summary"),
                 configuration.getText("doclet.modules")), header, main);

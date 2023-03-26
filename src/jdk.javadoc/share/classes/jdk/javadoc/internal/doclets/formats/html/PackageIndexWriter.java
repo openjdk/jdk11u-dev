@@ -76,7 +76,7 @@ public class PackageIndexWriter extends AbstractPackageIndexWriter {
      * @throws DocFileIOException if there is a problem generating the package index page
      */
     public static void generate(HtmlConfiguration configuration) throws DocFileIOException {
-        DocPath filename = DocPaths.overviewSummary(configuration.frames);
+        DocPath filename = DocPaths.overviewSummary(configuration.frames());
         PackageIndexWriter packgen = new PackageIndexWriter(configuration, filename);
         packgen.buildPackageIndexFile("doclet.Window_Overview_Summary", true);
     }
@@ -99,12 +99,12 @@ public class PackageIndexWriter extends AbstractPackageIndexWriter {
     @Override
     protected void addPackagesList(Content main) {
         Map<String, SortedSet<PackageElement>> groupPackageMap
-                = configuration.group.groupPackages(packages);
+                = configuration.group().groupPackages(packages);
 
         if (!groupPackageMap.keySet().isEmpty()) {
             String tableSummary = configuration.getText("doclet.Member_Table_Summary",
                     configuration.getText("doclet.Package_Summary"), configuration.getText("doclet.packages"));
-            Table table =  new Table(configuration.htmlVersion, HtmlStyle.overviewSummary)
+            Table table =  new Table(configuration.htmlVersion(), HtmlStyle.overviewSummary)
                     .setSummary(tableSummary)
                     .setHeader(getPackageTableHeader())
                     .setColumnStyles(HtmlStyle.colFirst, HtmlStyle.colLast)
@@ -113,16 +113,16 @@ public class PackageIndexWriter extends AbstractPackageIndexWriter {
                     .setTabId(i -> (i == 0) ? "t0" : ("t" + (1 << (i - 1))));
 
             // add the tabs in command-line order
-            for (String groupName : configuration.group.getGroupList()) {
+            for (String groupName : configuration.group().getGroupList()) {
                 Set<PackageElement> groupPackages = groupPackageMap.get(groupName);
                 if (groupPackages != null) {
                     table.addTab(groupName, groupPackages::contains);
                 }
             }
 
-            for (PackageElement pkg : configuration.packages) {
+            for (PackageElement pkg : configuration.packages()) {
                 if (!pkg.isUnnamed()) {
-                    if (!(configuration.nodeprecated && utils.isDeprecated(pkg))) {
+                    if (!(configuration.nodeprecated() && utils.isDeprecated(pkg))) {
                         Content packageLinkContent = getPackageLink(pkg, getPackageName(pkg));
                         Content summaryContent = new ContentBuilder();
                         addSummaryComment(pkg, summaryContent);
@@ -150,7 +150,7 @@ public class PackageIndexWriter extends AbstractPackageIndexWriter {
     @Override
     protected void addOverviewHeader(Content main) {
         addConfigurationTitle(main);
-        if (!utils.getFullBody(configuration.overviewElement).isEmpty()) {
+        if (!utils.getFullBody(configuration.overviewElement()).isEmpty()) {
             HtmlTree div = new HtmlTree(HtmlTag.DIV);
             div.setStyle(HtmlStyle.contentContainer);
             addOverviewComment(div);
@@ -166,8 +166,8 @@ public class PackageIndexWriter extends AbstractPackageIndexWriter {
      *                 be added
      */
     protected void addOverviewComment(Content htmltree) {
-        if (!utils.getFullBody(configuration.overviewElement).isEmpty()) {
-            addInlineComment(configuration.overviewElement, htmltree);
+        if (!utils.getFullBody(configuration.overviewElement()).isEmpty()) {
+            addInlineComment(configuration.overviewElement(), htmltree);
         }
     }
 

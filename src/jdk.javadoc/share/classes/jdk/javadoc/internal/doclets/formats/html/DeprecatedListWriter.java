@@ -405,7 +405,7 @@ public class DeprecatedListWriter extends SubWriterHolderWriter {
             String tableSummary, TableHeader tableHeader, Content contentTree) {
         if (deprList.size() > 0) {
             Content caption = contents.getContent(headingKey);
-            Table table = new Table(configuration.htmlVersion, HtmlStyle.deprecatedSummary)
+            Table table = new Table(configuration.htmlVersion(), HtmlStyle.deprecatedSummary)
                     .setSummary(tableSummary)
                     .setCaption(caption)
                     .setHeader(tableHeader)

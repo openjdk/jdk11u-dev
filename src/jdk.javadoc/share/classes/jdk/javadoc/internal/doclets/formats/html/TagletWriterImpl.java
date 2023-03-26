@@ -76,7 +76,7 @@ public class TagletWriterImpl extends TagletWriter {
         super(isFirstSentence);
         this.htmlWriter = htmlWriter;
         configuration = htmlWriter.configuration;
-        this.utils = configuration.utils;
+        this.utils = configuration.utils();
     }
 
     /**

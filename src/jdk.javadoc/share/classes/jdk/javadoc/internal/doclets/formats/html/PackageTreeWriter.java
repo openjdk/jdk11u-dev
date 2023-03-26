@@ -69,7 +69,7 @@ public class PackageTreeWriter extends AbstractTreeWriter {
      */
     public PackageTreeWriter(HtmlConfiguration configuration, DocPath path, PackageElement packageElement) {
         super(configuration, path,
-              new ClassTree(configuration.typeElementCatalog.allClasses(packageElement), configuration));
+              new ClassTree(configuration.typeElementCatalog().allClasses(packageElement), configuration));
         this.packageElement = packageElement;
         this.navBar = new Navigation(packageElement, configuration, fixedNavDiv, PageMode.TREE, path);
     }
@@ -106,7 +106,7 @@ public class PackageTreeWriter extends AbstractTreeWriter {
         Content heading = HtmlTree.HEADING(HtmlConstants.TITLE_HEADING, false,
                 HtmlStyle.title, headContent);
         Content div = HtmlTree.DIV(HtmlStyle.header, heading);
-        if (configuration.packages.size() > 1) {
+        if (configuration.packages().size() > 1) {
             addLinkToMainTree(div);
         }
         htmlTree.addContent(div);

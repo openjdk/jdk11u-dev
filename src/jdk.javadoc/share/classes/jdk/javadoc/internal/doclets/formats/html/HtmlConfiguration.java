@@ -205,18 +205,18 @@ public class HtmlConfiguration extends BaseConfiguration {
      * Specifies whether or not frames should be generated.
      * Defaults to false; can be set to true by --frames; can be set to false by --no-frames; last one wins.
      */
-    public boolean frames = false;
+    private boolean frames = false;
 
     /**
      * This is the HTML version of the generated pages.
      * The default value is determined later.
      */
-    public HtmlVersion htmlVersion = null;
+    private HtmlVersion htmlVersion = null;
 
     /**
      * Collected set of doclint options
      */
-    public Map<Doclet.Option, String> doclintOpts = new LinkedHashMap<>();
+    private Map<Doclet.Option, String> doclintOpts = new LinkedHashMap<>();
 
     public final Resources resources;
 
@@ -229,7 +229,7 @@ public class HtmlConfiguration extends BaseConfiguration {
     /**
      * The TypeElement for the class file getting generated.
      */
-    public TypeElement currentTypeElement = null;  // Set this TypeElement in the ClassWriter.
+    protected TypeElement currentTypeElement = null;  // Set this TypeElement in the ClassWriter.
 
     protected SortedSet<SearchIndexItem> memberSearchIndex;
 
@@ -1046,5 +1046,21 @@ public class HtmlConfiguration extends BaseConfiguration {
      */
     public boolean createoverview() {
         return createoverview;
+    }
+
+    /**
+     * Specifies whether or not frames should be generated.
+     * Defaults to false; can be set to true by --frames; can be set to false by --no-frames; last one wins.
+     */
+    public boolean frames() {
+        return frames;
+    }
+
+    /**
+     * This is the HTML version of the generated pages.
+     * The default value is determined later.
+     */
+    public HtmlVersion htmlVersion() {
+        return htmlVersion;
     }
 }

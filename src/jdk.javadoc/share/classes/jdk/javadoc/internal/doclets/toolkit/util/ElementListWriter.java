@@ -58,7 +58,7 @@ public class ElementListWriter {
     public ElementListWriter(BaseConfiguration configuration) {
         file = DocFile.createFileForOutput(configuration, DocPaths.ELEMENT_LIST);
         this.configuration = configuration;
-        this.utils = configuration.utils;
+        this.utils = configuration.utils();
     }
 
     /**
@@ -69,27 +69,27 @@ public class ElementListWriter {
      */
     public static void generate(BaseConfiguration configuration) throws DocFileIOException {
         ElementListWriter elemgen = new ElementListWriter(configuration);
-        elemgen.generateElementListFile(configuration.docEnv);
+        elemgen.generateElementListFile(configuration.docEnv());
     }
 
     protected void generateElementListFile(DocletEnvironment docEnv) throws DocFileIOException {
         try (BufferedWriter out = new BufferedWriter(file.openWriter())) {
-            if (configuration.showModules) {
-                for (ModuleElement mdle : configuration.modulePackages.keySet()) {
-                    if (!(configuration.nodeprecated && utils.isDeprecated(mdle))) {
+            if (configuration.showModules()) {
+                for (ModuleElement mdle : configuration.modulePackages().keySet()) {
+                    if (!(configuration.nodeprecated() && utils.isDeprecated(mdle))) {
                         out.write(DocletConstants.MODULE_PREFIX + mdle.toString());
                         out.newLine();
-                        for (PackageElement pkg : configuration.modulePackages.get(mdle)) {
+                        for (PackageElement pkg : configuration.modulePackages().get(mdle)) {
                             out.write(pkg.toString());
                             out.newLine();
                         }
                     }
                 }
             } else {
-                for (PackageElement pkg : configuration.packages) {
+                for (PackageElement pkg : configuration.packages()) {
                     // if the -nodeprecated option is set and the package is marked as
                     // deprecated, do not include it in the packages list.
-                    if (!(configuration.nodeprecated && utils.isDeprecated(pkg))) {
+                    if (!(configuration.nodeprecated() && utils.isDeprecated(pkg))) {
                         out.write(pkg.toString());
                         out.newLine();
                     }

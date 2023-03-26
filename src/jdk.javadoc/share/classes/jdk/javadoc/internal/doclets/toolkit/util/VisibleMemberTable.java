@@ -124,7 +124,7 @@ public class VisibleMemberTable {
     protected VisibleMemberTable(TypeElement typeElement, BaseConfiguration configuration,
                                  VisibleMemberCache mcache) {
         config = configuration;
-        utils = configuration.utils;
+        utils = configuration.utils();
         te = typeElement;
         parent = utils.getSuperClass(te);
         this.mcache = mcache;
@@ -439,7 +439,7 @@ public class VisibleMemberTable {
     }
 
     private boolean isMemberHidden(Element inheritedMember, Kind kind, LocalMemberTable lmt) {
-        Elements elementUtils = config.docEnv.getElementUtils();
+        Elements elementUtils = config.docEnv().getElementUtils();
         switch(kind) {
             default:
                 List<Element> list = lmt.getMembers(inheritedMember, kind);
@@ -594,7 +594,7 @@ public class VisibleMemberTable {
             }
         }
 
-        Elements elementUtils = config.docEnv.getElementUtils();
+        Elements elementUtils = config.docEnv().getElementUtils();
 
         // Check the local methods in this type.
         List<Element> lMethods = lmt.getMembers(inheritedMethod, Kind.METHODS);
@@ -652,7 +652,7 @@ public class VisibleMemberTable {
 
             List<? extends Element> elements = te.getEnclosedElements();
             for (Element e : elements) {
-                if (config.nodeprecated && utils.isDeprecated(e)) {
+                if (config.nodeprecated() && utils.isDeprecated(e)) {
                     continue;
                 }
                 switch (e.getKind()) {
@@ -792,10 +792,10 @@ public class VisibleMemberTable {
      * {@code boolean isFoo()}
      */
     private void computeVisibleProperties(LocalMemberTable lmt) {
-        if (!config.javafx)
+        if (!config.javafx())
             return;
 
-        PropertyUtils pUtils = config.propertyUtils;
+        PropertyUtils pUtils = config.propertyUtils();
         List<ExecutableElement> list = visibleMembers.getOrDefault(Kind.METHODS, Collections.emptyList())
                 .stream()
                 .map(m -> (ExecutableElement)m)

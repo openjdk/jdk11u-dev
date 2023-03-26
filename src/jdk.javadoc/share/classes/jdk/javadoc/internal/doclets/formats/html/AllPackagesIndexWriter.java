@@ -127,13 +127,13 @@ public class AllPackagesIndexWriter extends HtmlDocletWriter {
      * @param content HtmlTree content to which the links will be added
      */
     protected void addPackages(Content content) {
-        Table table = new Table(configuration.htmlVersion, HtmlStyle.packagesSummary)
+        Table table = new Table(configuration.htmlVersion(), HtmlStyle.packagesSummary)
                 .setSummary(resources.packageTableSummary)
                 .setCaption(getTableCaption(new StringContent(resources.packageSummary)))
                 .setHeader(new TableHeader(contents.packageLabel, contents.descriptionLabel))
                 .setColumnStyles(HtmlStyle.colFirst, HtmlStyle.colLast);
-        for (PackageElement pkg : configuration.packages) {
-            if (!(configuration.nodeprecated && utils.isDeprecated(pkg))) {
+        for (PackageElement pkg : configuration.packages()) {
+            if (!(configuration.nodeprecated() && utils.isDeprecated(pkg))) {
                 Content packageLinkContent = getPackageLink(pkg, getPackageName(pkg));
                 Content summaryContent = new ContentBuilder();
                 addSummaryComment(pkg, summaryContent);

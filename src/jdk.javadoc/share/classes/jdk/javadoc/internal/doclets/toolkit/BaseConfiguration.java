@@ -81,7 +81,7 @@ public abstract class BaseConfiguration {
     /**
      * The doclet that created this configuration.
      */
-    public final Doclet doclet;
+    private final Doclet doclet;
 
     /**
      * The factory for builders.
@@ -91,68 +91,68 @@ public abstract class BaseConfiguration {
     /**
      * The taglet manager.
      */
-    public TagletManager tagletManager;
+    protected TagletManager tagletManager;
 
     /**
      * The path to the builder XML input file.
      */
-    public String builderXMLPath;
+    private String builderXMLPath;
 
     /**
      * The default path to the builder XML.
      */
-    public static final String DEFAULT_BUILDER_XML = "resources/doclet.xml";
+    private static final String DEFAULT_BUILDER_XML = "resources/doclet.xml";
 
     /**
      * The path to Taglets
      */
-    public String tagletpath = null;
+    private String tagletpath = null;
 
     /**
      * This is true if option "-serialwarn" is used. Defualt value is false to
      * suppress excessive warnings about serial tag.
      */
-    public boolean serialwarn = false;
+    private boolean serialwarn = false;
 
     /**
      * The specified amount of space between tab stops.
      */
-    public int sourcetab;
+    private int sourcetab;
 
-    public String tabSpaces;
+    private String tabSpaces;
 
     /**
      * True if we should generate browsable sources.
      */
-    public boolean linksource = false;
+    private boolean linksource = false;
 
     /**
      * True if command line option "-nosince" is used. Default value is
      * false.
      */
-    public boolean nosince = false;
+    private boolean nosince = false;
 
     /**
      * True if we should recursively copy the doc-file subdirectories
      */
-    public boolean copydocfilesubdirs = false;
+    private boolean copydocfilesubdirs = false;
 
     /**
      * Maintain backward compatibility with previous javadoc version
      */
-    public boolean backwardCompatibility = true;
+    private boolean backwardCompatibility = true;
 
     /**
      * True if user wants to add member names as meta keywords.
      * Set to false because meta keywords are ignored in general
      * by most Internet search engines.
      */
-    public boolean keywords = false;
+    private boolean keywords = false;
 
     /**
      * The meta tag keywords instance.
      */
-    public final MetaKeywords metakeywords;
+    private final MetaKeywords metakeywords;
 
     /**
      * The set of doc-file subdirectories to exclude
@@ -167,45 +167,45 @@ public abstract class BaseConfiguration {
     /**
      * The doclet environment.
      */
-    public DocletEnvironment docEnv;
+    protected DocletEnvironment docEnv;
 
     /**
      * An utility class for commonly used helpers
      */
-    public Utils utils;
+    protected Utils utils;
 
     /**
      * All the temporary accessors to javac internals.
      */
-    public WorkArounds workArounds;
+    protected WorkArounds workArounds;
 
     /**
      * Destination directory name, in which doclet will generate the entire
      * documentation. Default is current directory.
      */
-    public String destDirName = "";
+    private String destDirName = "";
 
     /**
      * Destination directory name, in which doclet will copy the doc-files to.
      */
-    public String docFileDestDirName = "";
+    private String docFileDestDirName = ""; //AAA Not Use
 
     /**
      * Encoding for this document. Default is default encoding for this
      * platform.
      */
-    public String docencoding = null;
+    protected String docencoding = null;
 
     /**
      * True if user wants to suppress descriptions and tags.
      */
-    public boolean nocomment = false;
+    private boolean nocomment = false;
 
     /**
      * Encoding for this document. Default is default encoding for this
      * platform.
      */
-    public String encoding = null;
+    protected String encoding = null;
 
     /**
      * Generate author specific information for all the classes if @author
@@ -213,13 +213,13 @@ public abstract class BaseConfiguration {
      * <code>showauthor</code> is set to true if -author option is used.
      * Default is don't show author information.
      */
-    public boolean showauthor = false;
+    private boolean showauthor = false;
 
     /**
      * Generate documentation for JavaFX getters and setters automatically
      * by copying it from the appropriate property definition.
      */
-    public boolean javafx = false;
+    private boolean javafx = false;
 
     /**
      * Generate version specific information for the all the classes
@@ -227,7 +227,7 @@ public abstract class BaseConfiguration {
      * used. <code>showversion</code> is set to true if -version option is
      * used.Default is don't show version information.
      */
-    public boolean showversion = false;
+    private boolean showversion = false;
 
     /**
      * Allow JavaScript in doc comments.
@@ -237,12 +237,12 @@ public abstract class BaseConfiguration {
     /**
      * Sourcepath from where to read the source files. Default is classpath.
      */
-    public String sourcepath = "";
+    private String sourcepath = "";
 
     /**
      * Generate modules documentation if more than one module is present.
      */
-    public boolean showModules = false;
+    protected boolean showModules = false;
 
     /**
      * Don't generate deprecated API information at all, if -nodeprecated
@@ -250,28 +250,28 @@ public abstract class BaseConfiguration {
      * -nodeprecated option is used. Default is generate deprected API
      * information.
      */
-    public boolean nodeprecated = false;
+    protected boolean nodeprecated = false;
 
     /**
      * The catalog of classes specified on the command-line
      */
-    public TypeElementCatalog typeElementCatalog;
+    private TypeElementCatalog typeElementCatalog;
 
     /**
      * True if user wants to suppress time stamp in output.
      * Default is false.
      */
-    public boolean notimestamp = false;
+    private boolean notimestamp = false;
 
     /**
      * The package grouping instance.
      */
-    public final Group group = new Group(this);
+    private final Group group = new Group(this);
 
     /**
      * The tracker of external package links.
      */
-    public final Extern extern = new Extern(this);
+    private final Extern extern = new Extern(this);
 
     public Reporter reporter;
 
@@ -280,14 +280,14 @@ public abstract class BaseConfiguration {
     /**
      * Suppress all messages
      */
-    public boolean quiet = false;
+    private boolean quiet = false;
 
     /**
      * Specifies whether those methods that override a super-type's method
      * with no changes to the API contract should be summarized in the
      * footnote section.
      */
-    public boolean summarizeOverriddenMethods = false;
+    private boolean summarizeOverriddenMethods = false;
 
     // A list containing urls
     private final List<String> linkList = new ArrayList<>();
@@ -299,9 +299,9 @@ public abstract class BaseConfiguration {
      * Flag to enable/disable use of module directories when generating docs for modules
      * Default: on (module directories are enabled).
      */
-    public boolean useModuleDirectories = true;
+    protected boolean useModuleDirectories = true;
 
-    public boolean dumpOnError = false;
+    private boolean dumpOnError = false;
 
     private List<Pair<String, String>> groupPairs;
 
@@ -326,26 +326,26 @@ public abstract class BaseConfiguration {
 
     public abstract boolean finishOptionSettings();
 
-    public CommentUtils cmtUtils;
+    private CommentUtils cmtUtils;
 
     /**
      * A sorted set of included packages.
      */
-    public SortedSet<PackageElement> packages = null;
+    protected SortedSet<PackageElement> packages = null;
 
-    public OverviewElement overviewElement;
+    private OverviewElement overviewElement;
 
-    public DocFileFactory docFileFactory;
+    private DocFileFactory docFileFactory;
 
     /**
      * A sorted map, giving the (specified|included|other) packages for each module.
      */
-    public SortedMap<ModuleElement, Set<PackageElement>> modulePackages;
+    private SortedMap<ModuleElement, Set<PackageElement>> modulePackages;
 
     /**
      * The list of known modules, that should be documented.
      */
-    public SortedSet<ModuleElement> modules;
+    protected SortedSet<ModuleElement> modules;
 
     protected static final String sharedResourceBundleName =
             "jdk.javadoc.internal.doclets.toolkit.resources.doclets";
@@ -355,16 +355,16 @@ public abstract class BaseConfiguration {
      * tests allowing those tests to be executed successfully, for
      * instance, with OpenJDK builds which may not contain FX libraries.
      */
-    public boolean disableJavaFxStrictChecks = false;
+    private boolean disableJavaFxStrictChecks = false;
 
     /**
      * Show taglets (internal debug switch)
      */
-    public boolean showTaglets = false;
+    private boolean showTaglets = false;
 
     VisibleMemberCache visibleMemberCache = null;
 
-    public PropertyUtils propertyUtils = null;
+    private PropertyUtils propertyUtils = null;
 
     /**
      * Constructs the configurations needed by the doclet.
@@ -1346,5 +1346,301 @@ public abstract class BaseConfiguration {
 
     public synchronized VisibleMemberTable getVisibleMemberTable(TypeElement te) {
         return visibleMemberCache.getVisibleMemberTable(te);
+    }
+
+    /**
+     * The doclet that created this configuration.
+     */
+    public final Doclet doclet() {
+        return doclet;
+    }
+
+    /**
+     * The taglet manager.
+     */
+    public TagletManager tagletManager() {
+        return tagletManager;
+    }
+
+    /**
+     * The path to Taglets
+     */
+    public String tagletpath() {
+        return tagletpath;
+    }
+
+    /**
+     * This is true if option "-serialwarn" is used. Defualt value is false to
+     * suppress excessive warnings about serial tag.
+     */
+    public boolean serialwarn() {
+        return serialwarn;
+    }
+
+    /**
+     * The specified amount of space between tab stops.
+     */
+    public int sourcetab() {
+        return sourcetab;
+    }
+
+    public String tabSpaces() {
+        return tabSpaces;
+    }
+
+    /**
+     * True if we should generate browsable sources.
+     */
+    public boolean linksource() {
+        return linksource;
+    }
+
+    /**
+     * True if command line option "-nosince" is used. Default value is
+     * false.
+     */
+    public boolean nosince() {
+        return nosince;
+    }
+
+    /**
+     * True if we should recursively copy the doc-file subdirectories
+     */
+    public boolean copydocfilesubdirs() {
+        return copydocfilesubdirs;
+    }
+
+    /**
+     * Maintain backward compatibility with previous javadoc version
+     */
+    public boolean backwardCompatibility() {
+        return backwardCompatibility;
+    }
+
+    /**
+     * True if user wants to add member names as meta keywords.
+     * Set to false because meta keywords are ignored in general
+     * by most Internet search engines.
+     */
+    public boolean keywords() {
+        return keywords;
+    }
+
+    /**
+     * The meta tag keywords instance.
+     */
+    public final MetaKeywords metakeywords() {
+        return metakeywords;
+    }
+
+    /**
+     * The doclet environment.
+     */
+    public DocletEnvironment docEnv() {
+        return docEnv;
+    }
+
+    /**
+     * An utility class for commonly used helpers
+     */
+    public Utils utils() {
+        return utils;
+    }
+
+    /**
+     * All the temporary accessors to javac internals.
+     */
+    public WorkArounds workArounds() {
+        return workArounds;
+    }
+
+    /**
+     * Destination directory name, in which doclet will generate the entire
+     * documentation. Default is current directory.
+     */
+    public String destDirName() {
+        return destDirName;
+    }
+
+    /**
+     * Encoding for this document. Default is default encoding for this
+     * platform.
+     */
+    public String docencoding() {
+        return docencoding;
+    }
+
+    /**
+     * True if user wants to suppress descriptions and tags.
+     */
+    public boolean nocomment() {
+        return nocomment;
+    }
+
+    /**
+     * Encoding for this document. Default is default encoding for this
+     * platform.
+     */
+    public String encoding() {
+        return encoding;
+    }
+
+    /**
+     * Generate author specific information for all the classes if @author
+     * tag is used in the doc comment and if -author option is used.
+     * <code>showauthor</code> is set to true if -author option is used.
+     * Default is don't show author information.
+     */
+    public boolean showauthor() {
+        return showauthor;
+    }
+
+    /**
+     * Generate documentation for JavaFX getters and setters automatically
+     * by copying it from the appropriate property definition.
+     */
+    public boolean javafx() {
+        return javafx;
+    }
+
+    /**
+     * Generate version specific information for the all the classes
+     * if @version tag is used in the doc comment and if -version option is
+     * used. <code>showversion</code> is set to true if -version option is
+     * used.Default is don't show version information.
+     */
+    public boolean showversion() {
+        return showversion;
+    }
+
+    /**
+     * Generate modules documentation if more than one module is present.
+     */
+    public boolean showModules() {
+        return showModules;
+    }
+
+    /**
+     * Don't generate deprecated API information at all, if -nodeprecated
+     * option is used. <code>nodepracted</code> is set to true if
+     * -nodeprecated option is used. Default is generate deprected API
+     * information.
+     */
+    public boolean nodeprecated() {
+        return nodeprecated;
+    }
+
+    /**
+     * The catalog of classes specified on the command-line
+     */
+    public TypeElementCatalog typeElementCatalog() {
+        return typeElementCatalog;
+    }
+
+    /**
+     * True if user wants to suppress time stamp in output.
+     * Default is false.
+     */
+    public boolean notimestamp() {
+        return notimestamp;
+    }
+
+    /**
+     * The package grouping instance.
+     */
+    public final Group group() {
+        return group;
+    }
+
+    /**
+     * The tracker of external package links.
+     */
+    public final Extern extern() {
+        return extern;
+    }
+
+    /**
+     * Suppress all messages
+     */
+    public boolean quiet() {
+        return quiet;
+    }
+
+    /**
+     * Specifies whether those methods that override a super-type's method
+     * with no changes to the API contract should be summarized in the
+     * footnote section.
+     */
+    public boolean summarizeOverriddenMethods() {
+        return summarizeOverriddenMethods;
+    }
+
+    /**
+     * Flag to enable/disable use of module directories when generating docs for modules
+     * Default: on (module directories are enabled).
+     */
+    public boolean useModuleDirectories() {
+        return useModuleDirectories;
+    }
+
+    public boolean dumpOnError() {
+        return dumpOnError;
+    }
+
+    public CommentUtils cmtUtils() {
+        return cmtUtils;
+    }
+
+    /**
+     * A sorted set of included packages.
+     */
+    public SortedSet<PackageElement> packages() {
+        return packages;
+    }
+
+    public OverviewElement overviewElement() {
+        return overviewElement;
+    }
+
+    public DocFileFactory docFileFactory() {
+        return docFileFactory;
+    }
+
+    public void setDocFileFactory(DocFileFactory docFileFactory) {
+        this.docFileFactory = docFileFactory;
+    }
+
+    /**
+     * A sorted map, giving the (specified|included|other) packages for each module.
+     */
+    public SortedMap<ModuleElement, Set<PackageElement>> modulePackages() {
+        return modulePackages;
+    }
+
+    /**
+     * The list of known modules, that should be documented.
+     */
+    public SortedSet<ModuleElement> modules() {
+        return modules;
+    }
+
+    /**
+     * Primarily used to disable strict checks in the regression
+     * tests allowing those tests to be executed successfully, for
+     * instance, with OpenJDK builds which may not contain FX libraries.
+     */
+    public boolean disableJavaFxStrictChecks() {
+        return disableJavaFxStrictChecks;
+    }
+
+    /**
+     * Show taglets (internal debug switch)
+     */
+    public boolean showTaglets() {
+        return showTaglets;
+    }
+
+    public PropertyUtils propertyUtils() {
+        return propertyUtils;
     }
 }

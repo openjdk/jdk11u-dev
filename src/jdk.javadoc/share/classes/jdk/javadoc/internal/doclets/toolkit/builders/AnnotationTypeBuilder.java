@@ -127,8 +127,8 @@ public class AnnotationTypeBuilder extends AbstractBuilder {
      */
     private void copyDocFiles() throws DocletException {
         PackageElement containingPackage = utils.containingPackage(annotationType);
-        if ((configuration.packages == null ||
-            !configuration.packages.contains(containingPackage) &&
+        if ((configuration.packages() == null ||
+            !configuration.packages().contains(containingPackage) &&
             !containingPackagesSeen.contains(containingPackage))){
             //Only copy doc files dir if the containing package is not
             //documented AND if we have not documented a class from the same

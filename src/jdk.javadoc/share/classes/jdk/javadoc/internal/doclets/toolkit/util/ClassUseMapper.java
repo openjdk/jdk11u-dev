@@ -194,10 +194,10 @@ public class ClassUseMapper {
     private final Utils utils;
 
     public ClassUseMapper(BaseConfiguration configuration, ClassTree classtree) {
-        docEnv = configuration.docEnv;
+        docEnv = configuration.docEnv();
         elementUtils = docEnv.getElementUtils();
         typeUtils = docEnv.getTypeUtils();
-        utils = configuration.utils;
+        utils = configuration.utils();
         this.classtree = classtree;
         classToPackage = new TreeMap<>(utils.makeClassUseComparator());
         // Map subclassing, subinterfacing implementing, ...

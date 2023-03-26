@@ -199,8 +199,8 @@ public class HtmlSerialFieldWriter extends FieldWriterImpl
      */
     public void addMemberTags(VariableElement field, Content contentTree) {
         Content tagContent = new ContentBuilder();
-        TagletWriter.genTagOutput(configuration.tagletManager, field,
-                configuration.tagletManager.getBlockTaglets(field),
+        TagletWriter.genTagOutput(configuration.tagletManager(), field,
+                configuration.tagletManager().getBlockTaglets(field),
                 writer.getTagletWriterInstance(false), tagContent);
         Content dlTags = new HtmlTree(HtmlTag.DL);
         dlTags.addContent(tagContent);
@@ -216,7 +216,7 @@ public class HtmlSerialFieldWriter extends FieldWriterImpl
      * @return true if overview details need to be printed
      */
     public boolean shouldPrintOverview(VariableElement field) {
-        if (!configuration.nocomment) {
+        if (!configuration.nocomment()) {
             if(!utils.getFullBody(field).isEmpty() ||
                     writer.hasSerializationOverviewTags(field))
                 return true;

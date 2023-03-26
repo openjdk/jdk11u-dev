@@ -219,7 +219,7 @@ public abstract class TagletWriter {
      */
     public static void genTagOutput(TagletManager tagletManager, Element element,
             List<Taglet> taglets, TagletWriter writer, Content output) {
-        Utils utils = writer.configuration().utils;
+        Utils utils = writer.configuration().utils();
         tagletManager.checkTags(element, utils.getBlockTags(element), false);
         tagletManager.checkTags(element, utils.getFullBody(element), true);
         for (Taglet taglet : taglets) {
@@ -267,7 +267,7 @@ public abstract class TagletWriter {
     public static Content getInlineTagOutput(Element holder, TagletManager tagletManager,
             DocTree holderTag, DocTree inlineTag, TagletWriter tagletWriter) {
         List<Taglet> definedTags = tagletManager.getInlineTaglets();
-        CommentHelper ch = tagletWriter.configuration().utils.getCommentHelper(holder);
+        CommentHelper ch = tagletWriter.configuration().utils().getCommentHelper(holder);
         final String inlineTagName = ch.getTagName(inlineTag);
         //This is a custom inline tag.
         for (Taglet definedTag : definedTags) {

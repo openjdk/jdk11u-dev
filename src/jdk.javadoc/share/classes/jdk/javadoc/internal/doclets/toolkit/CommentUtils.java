@@ -184,7 +184,7 @@ public class CommentUtils {
                 }
                 break;
             case PACKAGE:
-                fo = configuration.workArounds.getJavaFileObject((PackageElement)e);
+                fo = configuration.workArounds().getJavaFileObject((PackageElement)e);
                 pe = (PackageElement)e;
                 break;
             default:

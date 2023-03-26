@@ -121,8 +121,8 @@ public class PackageWriterImpl extends HtmlDocletWriter
         }
         HtmlTree div = new HtmlTree(HtmlTag.DIV);
         div.setStyle(HtmlStyle.header);
-        if (configuration.showModules) {
-            ModuleElement mdle = configuration.docEnv.getElementUtils().getModuleOf(packageElement);
+        if (configuration.showModules()) {
+            ModuleElement mdle = configuration.docEnv().getElementUtils().getModuleOf(packageElement);
             Content classModuleLabel = HtmlTree.SPAN(HtmlStyle.moduleLabelInPackage, contents.moduleLabel);
             Content moduleNameDiv = HtmlTree.DIV(HtmlStyle.subTitle, classModuleLabel);
             moduleNameDiv.addContent(Contents.SPACE);
@@ -253,7 +253,7 @@ public class PackageWriterImpl extends HtmlDocletWriter
     public void addClassesSummary(SortedSet<TypeElement> classes, String label,
             String tableSummary, TableHeader tableHeader, Content summaryContentTree) {
         if(!classes.isEmpty()) {
-            Table table = new Table(configuration.htmlVersion, HtmlStyle.typeSummary)
+            Table table = new Table(configuration.htmlVersion(), HtmlStyle.typeSummary)
                     .setSummary(tableSummary)
                     .setCaption(getTableCaption(new StringContent(label)))
                     .setHeader(tableHeader)
@@ -343,7 +343,7 @@ public class PackageWriterImpl extends HtmlDocletWriter
      */
     @Override
     public void printDocument(Content contentTree) throws DocFileIOException {
-        printHtmlDocument(configuration.metakeywords.getMetaKeywords(packageElement),
+        printHtmlDocument(configuration.metakeywords().getMetaKeywords(packageElement),
                 true, contentTree);
     }
 }

@@ -102,8 +102,8 @@ public class AnnotationTypeWriterImpl extends SubWriterHolderWriter
         bodyTree.addContent(HtmlConstants.START_OF_CLASS_DATA);
         HtmlTree div = new HtmlTree(HtmlTag.DIV);
         div.setStyle(HtmlStyle.header);
-        if (configuration.showModules) {
-            ModuleElement mdle = configuration.docEnv.getElementUtils().getModuleOf(annotationType);
+        if (configuration.showModules()) {
+            ModuleElement mdle = configuration.docEnv().getElementUtils().getModuleOf(annotationType);
             Content typeModuleLabel = HtmlTree.SPAN(HtmlStyle.moduleLabelInType, contents.moduleLabel);
             Content moduleNameDiv = HtmlTree.DIV(HtmlStyle.subTitle, typeModuleLabel);
             moduleNameDiv.addContent(Contents.SPACE);
@@ -164,7 +164,7 @@ public class AnnotationTypeWriterImpl extends SubWriterHolderWriter
      */
     @Override
     public void printDocument(Content contentTree) throws DocFileIOException {
-        printHtmlDocument(configuration.metakeywords.getMetaKeywords(annotationType),
+        printHtmlDocument(configuration.metakeywords().getMetaKeywords(annotationType),
                 true, contentTree);
     }
 
@@ -198,7 +198,7 @@ public class AnnotationTypeWriterImpl extends SubWriterHolderWriter
                 LinkInfoImpl.Kind.CLASS_SIGNATURE, annotationType);
         Content annotationName = new StringContent(utils.getSimpleName(annotationType));
         Content parameterLinks = getTypeParameterLinks(linkInfo);
-        if (configuration.linksource) {
+        if (configuration.linksource()) {
             addSrcLink(annotationType, annotationName, pre);
             pre.addContent(parameterLinks);
         } else {
@@ -214,7 +214,7 @@ public class AnnotationTypeWriterImpl extends SubWriterHolderWriter
      */
     @Override
     public void addAnnotationTypeDescription(Content annotationInfoTree) {
-        if (!configuration.nocomment) {
+        if (!configuration.nocomment()) {
             if (!utils.getFullBody(annotationType).isEmpty()) {
                 addInlineComment(annotationType, annotationInfoTree);
             }
@@ -226,7 +226,7 @@ public class AnnotationTypeWriterImpl extends SubWriterHolderWriter
      */
     @Override
     public void addAnnotationTypeTagInfo(Content annotationInfoTree) {
-        if (!configuration.nocomment) {
+        if (!configuration.nocomment()) {
             addTagsInfo(annotationType, annotationInfoTree);
         }
     }

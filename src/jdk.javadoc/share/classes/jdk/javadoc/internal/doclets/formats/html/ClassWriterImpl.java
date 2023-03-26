@@ -113,8 +113,8 @@ public class ClassWriterImpl extends SubWriterHolderWriter implements ClassWrite
         bodyTree.addContent(HtmlConstants.START_OF_CLASS_DATA);
         HtmlTree div = new HtmlTree(HtmlTag.DIV);
         div.setStyle(HtmlStyle.header);
-        if (configuration.showModules) {
-            ModuleElement mdle = configuration.docEnv.getElementUtils().getModuleOf(typeElement);
+        if (configuration.showModules()) {
+            ModuleElement mdle = configuration.docEnv().getElementUtils().getModuleOf(typeElement);
             Content classModuleLabel = HtmlTree.SPAN(HtmlStyle.moduleLabelInType, contents.moduleLabel);
             Content moduleNameDiv = HtmlTree.DIV(HtmlStyle.subTitle, classModuleLabel);
             moduleNameDiv.addContent(Contents.SPACE);
@@ -179,7 +179,7 @@ public class ClassWriterImpl extends SubWriterHolderWriter implements ClassWrite
      */
     @Override
     public void printDocument(Content contentTree) throws DocFileIOException {
-        printHtmlDocument(configuration.metakeywords.getMetaKeywords(typeElement),
+        printHtmlDocument(configuration.metakeywords().getMetaKeywords(typeElement),
                 true, contentTree);
     }
 
@@ -215,7 +215,7 @@ public class ClassWriterImpl extends SubWriterHolderWriter implements ClassWrite
         linkInfo.linkToSelf = false;
         Content className = new StringContent(utils.getSimpleName(typeElement));
         Content parameterLinks = getTypeParameterLinks(linkInfo);
-        if (configuration.linksource) {
+        if (configuration.linksource()) {
             addSrcLink(typeElement, className, pre);
             pre.addContent(parameterLinks);
         } else {
@@ -263,7 +263,7 @@ public class ClassWriterImpl extends SubWriterHolderWriter implements ClassWrite
      */
     @Override
     public void addClassDescription(Content classInfoTree) {
-        if(!configuration.nocomment) {
+        if(!configuration.nocomment()) {
             // generate documentation for the class.
             if (!utils.getFullBody(typeElement).isEmpty()) {
                 addInlineComment(typeElement, classInfoTree);
@@ -276,7 +276,7 @@ public class ClassWriterImpl extends SubWriterHolderWriter implements ClassWrite
      */
     @Override
     public void addClassTagInfo(Content classInfoTree) {
-        if(!configuration.nocomment) {
+        if(!configuration.nocomment()) {
             // Print Information about all the tags here
             addTagsInfo(typeElement, classInfoTree);
         }

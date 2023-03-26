@@ -144,7 +144,7 @@ public class AnnotationTypeRequiredMemberWriterImpl extends AbstractMemberWriter
                         LinkInfoImpl.Kind.MEMBER, getType(member)));
         pre.addContent(link);
         pre.addContent(Contents.SPACE);
-        if (configuration.linksource) {
+        if (configuration.linksource()) {
             Content memberName = new StringContent(name(member));
             writer.addSrcLink(member, memberName, pre);
         } else {
@@ -237,7 +237,7 @@ public class AnnotationTypeRequiredMemberWriterImpl extends AbstractMemberWriter
      */
     @Override
     protected Table createSummaryTable() {
-        return new Table(configuration.htmlVersion, HtmlStyle.memberSummary)
+        return new Table(configuration.htmlVersion(), HtmlStyle.memberSummary)
                 .setSummary(getTableSummary())
                 .setCaption(getCaption())
                 .setHeader(getSummaryTableHeader(typeElement))

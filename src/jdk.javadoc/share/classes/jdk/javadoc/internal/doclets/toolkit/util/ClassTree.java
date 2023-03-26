@@ -107,7 +107,7 @@ public class ClassTree {
      */
     public ClassTree(BaseConfiguration configuration, boolean noDeprecated) {
         this.configuration = configuration;
-        this.utils = configuration.utils;
+        this.utils = configuration.utils();
 
         Messages messages = configuration.getMessages();
         messages.notice("doclet.Building_Tree");
@@ -128,7 +128,7 @@ public class ClassTree {
      */
     public ClassTree(DocletEnvironment docEnv, BaseConfiguration configuration) {
         this.configuration = configuration;
-        this.utils = configuration.utils;
+        this.utils = configuration.utils();
         comparator = utils.makeClassUseComparator();
         baseAnnotationTypes = new TreeSet<>(comparator);
         baseEnums = new TreeSet<>(comparator);
@@ -145,7 +145,7 @@ public class ClassTree {
      */
     public ClassTree(SortedSet<TypeElement>classesSet, BaseConfiguration configuration) {
         this.configuration = configuration;
-        this.utils = configuration.utils;
+        this.utils = configuration.utils();
         comparator = utils.makeClassUseComparator();
         baseAnnotationTypes = new TreeSet<>(comparator);
         baseEnums = new TreeSet<>(comparator);
@@ -167,7 +167,7 @@ public class ClassTree {
             // In the tree page (e.g overview-tree.html) do not include
             // information of classes which are deprecated or are a part of a
             // deprecated package.
-            if (configuration.nodeprecated &&
+            if (configuration.nodeprecated() &&
                     (utils.isDeprecated(aClass) ||
                     utils.isDeprecated(utils.containingPackage(aClass)))) {
                 continue;

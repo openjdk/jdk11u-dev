@@ -87,7 +87,7 @@ public class PackageIndexFrameWriter extends AbstractPackageIndexWriter {
             // Do not list the package if -nodeprecated option is set and the
             // package is marked as deprecated.
             if (aPackage != null &&
-                (!(configuration.nodeprecated && utils.isDeprecated(aPackage)))) {
+                (!(configuration.nodeprecated() && utils.isDeprecated(aPackage)))) {
                 ul.addContent(getPackage(aPackage));
             }
         }

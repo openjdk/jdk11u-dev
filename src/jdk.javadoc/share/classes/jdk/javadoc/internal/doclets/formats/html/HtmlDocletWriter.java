@@ -195,8 +195,8 @@ public class HtmlDocletWriter {
         this.contents = configuration.contents;
         this.messages = configuration.messages;
         this.resources = configuration.resources;
-        this.links = new Links(path, configuration.htmlVersion);
-        this.utils = configuration.utils;
+        this.links = new Links(path, configuration.htmlVersion());
+        this.utils = configuration.utils();
         this.path = path;
         this.pathToRoot = path.parent().invert();
         this.filename = path.basename();
@@ -322,7 +322,7 @@ public class HtmlDocletWriter {
      * @param htmltree the documentation tree to which the tags will be added
      */
     protected void addTagsInfo(Element e, Content htmltree) {
-        if (configuration.nocomment) {
+        if (configuration.nocomment()) {
             return;
         }
         Content dl = new HtmlTree(HtmlTag.DL);
@@ -330,8 +330,8 @@ public class HtmlDocletWriter {
             addMethodInfo((ExecutableElement)e, dl);
         }
         Content output = new ContentBuilder();
-        TagletWriter.genTagOutput(configuration.tagletManager, e,
-            configuration.tagletManager.getBlockTaglets(e),
+        TagletWriter.genTagOutput(configuration.tagletManager(), e,
+            configuration.tagletManager().getBlockTaglets(e),
                 getTagletWriterInstance(false), output);
         dl.addContent(output);
         htmltree.addContent(dl);
@@ -346,8 +346,8 @@ public class HtmlDocletWriter {
      */
     protected boolean hasSerializationOverviewTags(VariableElement field) {
         Content output = new ContentBuilder();
-        TagletWriter.genTagOutput(configuration.tagletManager, field,
-                configuration.tagletManager.getBlockTaglets(field),
+        TagletWriter.genTagOutput(configuration.tagletManager(), field,
+                configuration.tagletManager().getBlockTaglets(field),
                 getTagletWriterInstance(false), output);
         return !output.isEmpty();
     }
@@ -415,15 +415,15 @@ public class HtmlDocletWriter {
      */
     public void printHtmlDocument(List<String> metakeywords, boolean includeScript,
             Content body) throws DocFileIOException {
-        DocType htmlDocType = DocType.forVersion(configuration.htmlVersion);
+        DocType htmlDocType = DocType.forVersion(configuration.htmlVersion());
         Content htmlComment = contents.newPage;
-        Head head = new Head(path, configuration.htmlVersion, configuration.docletVersion)
-                .setTimestamp(!configuration.notimestamp)
+        Head head = new Head(path, configuration.htmlVersion(), configuration.docletVersion)
+                .setTimestamp(!configuration.notimestamp())
                 .setTitle(winTitle)
                 .setCharset(configuration.charset())
                 .addKeywords(metakeywords)
                 .setStylesheets(configuration.getMainStylesheet(), configuration.getAdditionalStylesheets())
-                .setUseModuleDirectories(configuration.useModuleDirectories)
+                .setUseModuleDirectories(configuration.useModuleDirectories())
                 .setIndex(configuration.createindex(), mainBodyScript);
 
         Content htmlTree = HtmlTree.HTML(configuration.getLocale().getLanguage(), head.toContent(), body);
@@ -599,7 +599,7 @@ public class HtmlDocletWriter {
     public Content getPackageLink(PackageElement packageElement, Content label) {
         boolean included = packageElement != null && utils.isIncluded(packageElement);
         if (!included) {
-            for (PackageElement p : configuration.packages) {
+            for (PackageElement p : configuration.packages()) {
                 if (p.equals(packageElement)) {
                     included = true;
                     break;
@@ -720,7 +720,7 @@ public class HtmlDocletWriter {
                 exists, but no way to determine if the external class exists.  We just
                 have to assume that it does.
                 */
-                DocLink link = configuration.extern.getExternalLink(packageElement, pathToRoot,
+                DocLink link = configuration.extern().getExternalLink(packageElement, pathToRoot,
                                 className + ".html", refMemName);
                 return links.createLink(link,
                     (label == null) || label.isEmpty() ? defaultLabel : label,
@@ -736,16 +736,16 @@ public class HtmlDocletWriter {
         if (utils.isIncluded(typeElement)) {
             return configuration.isGeneratedDoc(typeElement);
         }
-        return configuration.extern.isExternal(typeElement);
+        return configuration.extern().isExternal(typeElement);
     }
 
     public DocLink getCrossPackageLink(PackageElement element) {
-        return configuration.extern.getExternalLink(element, pathToRoot,
+        return configuration.extern().getExternalLink(element, pathToRoot,
             DocPaths.PACKAGE_SUMMARY.getPath());
     }
 
     public DocLink getCrossModuleLink(ModuleElement element) {
-        return configuration.extern.getExternalLink(element, pathToRoot,
+        return configuration.extern().getExternalLink(element, pathToRoot,
             docPaths.moduleSummary(utils.getModuleName(element)).getPath());
     }
 
@@ -824,7 +824,7 @@ public class HtmlDocletWriter {
      */
     public String getEnclosingPackageName(TypeElement te) {
 
-        PackageElement encl = configuration.utils.containingPackage(te);
+        PackageElement encl = configuration.utils().containingPackage(te);
         return (encl.isUnnamed()) ? "" : (encl.getQualifiedName() + ".");
     }
 
@@ -1016,7 +1016,7 @@ public class HtmlDocletWriter {
                 return getPackageLink(refPackage, label);
             } else {
                 // @see is not referencing an included class, module or package. Check for cross links.
-                DocLink elementCrossLink = (configuration.extern.isModule(refClassName))
+                DocLink elementCrossLink = (configuration.extern().isModule(refClassName))
                         ? getCrossModuleLink(utils.elementUtils.getModuleElement(refClassName)) :
                         (refPackage != null) ? getCrossPackageLink(refPackage) : null;
                 if (elementCrossLink != null) {
@@ -1038,7 +1038,7 @@ public class HtmlDocletWriter {
                 /*
                  * it seems to me this is the right thing to do, but it causes comparator failures.
                  */
-                if (!configuration.backwardCompatibility) {
+                if (!configuration.backwardCompatibility()) {
                     StringContent content = utils.isEnclosingPackageIncluded(refClass)
                             ? new StringContent(utils.getSimpleName(refClass))
                             : new StringContent(utils.getFullyQualifiedName(refClass));
@@ -1214,7 +1214,7 @@ public class HtmlDocletWriter {
      */
     private void addCommentTags(Element element, DocTree holderTag, List<? extends DocTree> tags, boolean depr,
             boolean first, Content htmltree) {
-        if(configuration.nocomment){
+        if(configuration.nocomment()){
             return;
         }
         Content div;
@@ -1287,7 +1287,7 @@ public class HtmlDocletWriter {
         };
         CommentHelper ch = utils.getCommentHelper(element);
         // Array of all possible inline tags for this javadoc run
-        configuration.tagletManager.checkTags(element, tags, true);
+        configuration.tagletManager().checkTags(element, tags, true);
         commentRemoved = false;
 
         for (ListIterator<? extends DocTree> iterator = tags.listIterator(); iterator.hasNext();) {
@@ -1395,7 +1395,7 @@ public class HtmlDocletWriter {
                 @Override
                 public Boolean visitDocRoot(DocRootTree node, Content c) {
                     Content docRootContent = TagletWriter.getInlineTagOutput(element,
-                            configuration.tagletManager,
+                            configuration.tagletManager(),
                             holderTag,
                             node,
                             getTagletWriterInstance(isFirstSentence));
@@ -1431,7 +1431,7 @@ public class HtmlDocletWriter {
                 @Override
                 public Boolean visitInheritDoc(InheritDocTree node, Content c) {
                     Content output = TagletWriter.getInlineTagOutput(element,
-                            configuration.tagletManager, holderTag,
+                            configuration.tagletManager(), holderTag,
                             tag, getTagletWriterInstance(isFirstSentence));
                     result.addContent(output);
                     // if we obtained the first sentence successfully, nothing more to do
@@ -1441,7 +1441,7 @@ public class HtmlDocletWriter {
                 @Override
                 public Boolean visitIndex(IndexTree node, Content p) {
                     Content output = TagletWriter.getInlineTagOutput(element,
-                            configuration.tagletManager, holderTag, tag,
+                            configuration.tagletManager(), holderTag, tag,
                             getTagletWriterInstance(isFirstSentence));
                     if (output != null) {
                         result.addContent(output);
@@ -1489,7 +1489,7 @@ public class HtmlDocletWriter {
                 @Override
                 public Boolean visitSummary(SummaryTree node, Content c) {
                     Content output = TagletWriter.getInlineTagOutput(element,
-                            configuration.tagletManager, holderTag, tag,
+                            configuration.tagletManager(), holderTag, tag,
                             getTagletWriterInstance(isFirstSentence));
                     result.addContent(output);
                     return false;
@@ -1520,7 +1520,7 @@ public class HtmlDocletWriter {
                 @Override
                 protected Boolean defaultAction(DocTree node, Content c) {
                     Content output = TagletWriter.getInlineTagOutput(element,
-                            configuration.tagletManager, holderTag, tag,
+                            configuration.tagletManager(), holderTag, tag,
                             getTagletWriterInstance(isFirstSentence));
                     if (output != null) {
                         result.addContent(output);
@@ -1802,7 +1802,7 @@ public class HtmlDocletWriter {
                                                      LinkInfoImpl.Kind.ANNOTATION, annotationElement);
             Map<? extends ExecutableElement, ? extends AnnotationValue> pairs = aDesc.getElementValues();
             // If the annotation is synthesized, do not print the container.
-            if (utils.configuration.workArounds.isSynthesized(aDesc)) {
+            if (utils.configuration.workArounds().isSynthesized(aDesc)) {
                 for (ExecutableElement ee : pairs.keySet()) {
                     AnnotationValue annotationValue = pairs.get(ee);
                     List<AnnotationValue> annotationTypeValues = new ArrayList<>();

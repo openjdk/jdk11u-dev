@@ -143,11 +143,11 @@ public class HelpWriter extends HtmlDocletWriter {
             htmlTree = (configuration.allowTag(HtmlTag.SECTION))
                     ? HtmlTree.SECTION(overviewHeading)
                     : HtmlTree.LI(HtmlStyle.blockList, overviewHeading);
-            String overviewKey = configuration.showModules
+            String overviewKey = configuration.showModules()
                     ? "doclet.help.overview.modules.body"
                     : "doclet.help.overview.packages.body";
             Content overviewLink = links.createLink(
-                    DocPaths.overviewSummary(configuration.frames),
+                    DocPaths.overviewSummary(configuration.frames()),
                     resources.getText("doclet.Overview"));
             Content overviewBody = contents.getContent(overviewKey, overviewLink);
             Content overviewPara = HtmlTree.P(overviewBody);
@@ -160,7 +160,7 @@ public class HelpWriter extends HtmlDocletWriter {
         }
 
         // Module
-        if (configuration.showModules) {
+        if (configuration.showModules()) {
             Content moduleHead = HtmlTree.HEADING(HtmlConstants.CONTENT_HEADING,
                     contents.moduleLabel);
             htmlTree = (configuration.allowTag(HtmlTag.SECTION))
@@ -330,7 +330,7 @@ public class HelpWriter extends HtmlDocletWriter {
         }
 
         // Deprecated
-        if (!(configuration.nodeprecatedlist() || configuration.nodeprecated)) {
+        if (!(configuration.nodeprecatedlist() || configuration.nodeprecated())) {
             Content dHead = HtmlTree.HEADING(HtmlConstants.CONTENT_HEADING,
                     contents.deprecatedAPI);
             htmlTree = (configuration.allowTag(HtmlTag.SECTION))
@@ -374,7 +374,7 @@ public class HelpWriter extends HtmlDocletWriter {
         }
 
         // Frames
-        if (configuration.frames) {
+        if (configuration.frames()) {
             Content frameHead = HtmlTree.HEADING(HtmlConstants.CONTENT_HEADING,
                     contents.getContent("doclet.help.frames.head"));
             htmlTree = (configuration.allowTag(HtmlTag.SECTION))
@@ -398,7 +398,7 @@ public class HelpWriter extends HtmlDocletWriter {
                 ? HtmlTree.SECTION(allclassesHead)
                 : HtmlTree.LI(HtmlStyle.blockList, allclassesHead);
         Content allClassesBody = contents.getContent("doclet.help.all_classes.body",
-                links.createLink(DocPaths.AllClasses(configuration.frames),
+                links.createLink(DocPaths.AllClasses(configuration.frames()),
                 resources.getText("doclet.All_Classes")));
         Content allclassesPara = HtmlTree.P(allClassesBody);
         htmlTree.addContent(allclassesPara);

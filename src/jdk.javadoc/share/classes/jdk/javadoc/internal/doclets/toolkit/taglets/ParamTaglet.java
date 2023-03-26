@@ -129,7 +129,7 @@ public class ParamTaglet extends BaseTaglet implements InheritableTaglet {
 
     @Override
     public Content getTagletOutput(Element holder, TagletWriter writer) {
-        Utils utils = writer.configuration().utils;
+        Utils utils = writer.configuration().utils();
         if (utils.isExecutableElement(holder)) {
             ExecutableElement member = (ExecutableElement) holder;
             Content output = getTagletOutput(false, member, writer,
@@ -162,7 +162,7 @@ public class ParamTaglet extends BaseTaglet implements InheritableTaglet {
         if (!paramTags.isEmpty()) {
             result.addContent(
                 processParamTags(holder, isParameters, paramTags,
-                getRankMap(writer.configuration().utils, formalParameters), writer, alreadyDocumented)
+                getRankMap(writer.configuration().utils(), formalParameters), writer, alreadyDocumented)
             );
         }
         if (alreadyDocumented.size() != formalParameters.size()) {
@@ -181,7 +181,7 @@ public class ParamTaglet extends BaseTaglet implements InheritableTaglet {
     private Content getInheritedTagletOutput(boolean isParameters, Element holder,
             TagletWriter writer, List<? extends Element> formalParameters,
             Set<String> alreadyDocumented) {
-        Utils utils = writer.configuration().utils;
+        Utils utils = writer.configuration().utils();
         Content result = writer.getOutputInstance();
         if ((!alreadyDocumented.contains(null)) && utils.isExecutableElement(holder)) {
             for (int i = 0; i < formalParameters.size(); i++) {
@@ -190,7 +190,7 @@ public class ParamTaglet extends BaseTaglet implements InheritableTaglet {
                 }
                 // This parameter does not have any @param documentation.
                 // Try to inherit it.
-                Input input = new DocFinder.Input(writer.configuration().utils, holder, this,
+                Input input = new DocFinder.Input(writer.configuration().utils(), holder, this,
                         Integer.toString(i), !isParameters);
                 DocFinder.Output inheritedDoc = DocFinder.search(writer.configuration(), input);
                 if (inheritedDoc.inlineTags != null && !inheritedDoc.inlineTags.isEmpty()) {
@@ -236,7 +236,7 @@ public class ParamTaglet extends BaseTaglet implements InheritableTaglet {
         Messages messages = writer.configuration().getMessages();
         Content result = writer.getOutputInstance();
         if (!paramTags.isEmpty()) {
-            CommentHelper ch = writer.configuration().utils.getCommentHelper(e);
+            CommentHelper ch = writer.configuration().utils().getCommentHelper(e);
             for (DocTree dt : paramTags) {
                 String paramName = isParams
                         ? ch.getParameterName(dt)

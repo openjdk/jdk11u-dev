@@ -147,7 +147,7 @@ public class MethodWriterImpl extends AbstractExecutableMemberWriter
         addModifiers(method, pre);
         addTypeParameters(method, pre);
         addReturnType(method, pre);
-        if (configuration.linksource) {
+        if (configuration.linksource()) {
             Content methodName = new StringContent(name(method));
             writer.addSrcLink(method, methodName, pre);
         } else {
@@ -253,7 +253,7 @@ public class MethodWriterImpl extends AbstractExecutableMemberWriter
                 resources.getText("doclet.Method_Summary"),
                 resources.getText("doclet.methods"));
 
-        return new Table(configuration.htmlVersion, HtmlStyle.memberSummary)
+        return new Table(configuration.htmlVersion(), HtmlStyle.memberSummary)
                 .setSummary(summary)
                 .setHeader(getSummaryTableHeader(typeElement))
                 .setRowScopeColumn(1)
@@ -297,7 +297,7 @@ public class MethodWriterImpl extends AbstractExecutableMemberWriter
         Content classLink = writer.getPreQualifiedClassLink(
                 LinkInfoImpl.Kind.MEMBER, typeElement, false);
         Content label;
-        if (configuration.summarizeOverriddenMethods) {
+        if (configuration.summarizeOverriddenMethods()) {
             label = new StringContent(utils.isClass(typeElement)
                     ? configuration.getText("doclet.Methods_Declared_In_Class")
                     : configuration.getText("doclet.Methods_Declared_In_Interface"));
@@ -327,7 +327,7 @@ public class MethodWriterImpl extends AbstractExecutableMemberWriter
      */
     protected static void addOverridden(HtmlDocletWriter writer,
             TypeMirror overriddenType, ExecutableElement method, Content dl) {
-        if (writer.configuration.nocomment) {
+        if (writer.configuration.nocomment()) {
             return;
         }
         Utils utils = writer.utils;
@@ -378,7 +378,7 @@ public class MethodWriterImpl extends AbstractExecutableMemberWriter
     protected static void addImplementsInfo(HtmlDocletWriter writer,
             ExecutableElement method, Content dl) {
         Utils utils = writer.utils;
-        if (utils.isStatic(method) || writer.configuration.nocomment) {
+        if (utils.isStatic(method) || writer.configuration.nocomment()) {
             return;
         }
         Contents contents = writer.contents;

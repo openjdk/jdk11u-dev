@@ -181,7 +181,7 @@ public class ConstructorBuilder extends AbstractMemberBuilder {
      * @param constructorDocTree the content tree to which the documentation will be added
      */
     protected void buildConstructorComments(Content constructorDocTree) {
-        if (!configuration.nocomment) {
+        if (!configuration.nocomment()) {
             writer.addComments(currentConstructor, constructorDocTree);
         }
     }

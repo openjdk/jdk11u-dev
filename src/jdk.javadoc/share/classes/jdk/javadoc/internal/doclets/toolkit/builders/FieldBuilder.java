@@ -170,7 +170,7 @@ public class FieldBuilder extends AbstractMemberBuilder {
      * @param fieldDocTree the content tree to which the documentation will be added
      */
     protected void buildFieldComments(Content fieldDocTree) {
-        if (!configuration.nocomment) {
+        if (!configuration.nocomment()) {
             writer.addComments(currentElement, fieldDocTree);
         }
     }

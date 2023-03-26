@@ -78,12 +78,12 @@ public class DocFilesHandlerImpl implements DocFilesHandler {
         switch (element.getKind()) {
             case MODULE:
                 ModuleElement mdle = (ModuleElement)element;
-                location = configuration.utils.getLocationForModule(mdle);
+                location = configuration.utils().getLocationForModule(mdle);
                 source = DocPaths.DOC_FILES;
                 break;
             case PACKAGE:
                 PackageElement pkg = (PackageElement)element;
-                location = configuration.utils.getLocationForPackage(pkg);
+                location = configuration.utils().getLocationForPackage(pkg);
                 // Note, given that we have a module-specific location,
                 // we want a module-relative path for the source, and not the
                 // standard path that may include the module directory
@@ -149,7 +149,7 @@ public class DocFilesHandlerImpl implements DocFilesHandler {
                     destfile.copyFile(srcfile);
                 }
             } else if (srcfile.isDirectory()) {
-                if (configuration.copydocfilesubdirs
+                if (configuration.copydocfilesubdirs()
                         && !configuration.shouldExcludeDocFileDir(srcfile.getName())) {
                     DocPath dirDocPath = dstDocPath.resolve(srcfile.getName());
                     copyDirectory(srcfile, dirDocPath, first);
@@ -159,7 +159,7 @@ public class DocFilesHandlerImpl implements DocFilesHandler {
     }
 
     private boolean handleHtmlFile(DocFile srcfile, DocPath dstPath) throws DocFileIOException {
-        Utils utils = configuration.utils;
+        Utils utils = configuration.utils();
         FileObject fileObject = srcfile.getFileObject();
         DocFileElement dfElement = new DocFileElement(element, fileObject);
 
@@ -260,7 +260,7 @@ public class DocFilesHandlerImpl implements DocFilesHandler {
     }
 
     private String getWindowTitle(HtmlDocletWriter docletWriter, Element element) {
-        List<? extends DocTree> preamble = configuration.utils.getPreamble(element);
+        List<? extends DocTree> preamble = configuration.utils().getPreamble(element);
         StringBuilder sb = new StringBuilder();
         boolean titleFound = false;
         loop:
