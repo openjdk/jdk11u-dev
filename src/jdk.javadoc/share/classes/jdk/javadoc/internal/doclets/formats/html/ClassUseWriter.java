@@ -155,7 +155,7 @@ public class ClassUseWriter extends SubWriterHolderWriter {
         if (pkgSet.size() > 0 &&
             mapper.classToPackage.containsKey(this.typeElement) &&
             !pkgSet.equals(mapper.classToPackage.get(this.typeElement))) {
-            configuration.getReporter().print(Diagnostic.Kind.WARNING,
+            configuration.reporter.print(Diagnostic.Kind.WARNING,
                     "Internal error: package sets don't match: "
                     + pkgSet + " with: " + mapper.classToPackage.get(this.typeElement));
         }
