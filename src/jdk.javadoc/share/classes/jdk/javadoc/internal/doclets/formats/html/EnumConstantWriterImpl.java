@@ -127,7 +127,7 @@ public class EnumConstantWriterImpl extends AbstractMemberWriter
                 configuration, LinkInfoImpl.Kind.MEMBER, enumConstant.asType()));
         pre.addContent(enumConstantLink);
         pre.addContent(" ");
-        if (configuration.linksource()) {
+        if (configuration.linksource) {
             Content enumConstantName = new StringContent(name(enumConstant));
             writer.addSrcLink(enumConstant, enumConstantName, pre);
         } else {
@@ -208,7 +208,7 @@ public class EnumConstantWriterImpl extends AbstractMemberWriter
             resources.getText("doclet.Enum_Constant_Summary"),
             resources.getText("doclet.enum_constants"));
 
-        return new Table(configuration.htmlVersion(), HtmlStyle.memberSummary)
+        return new Table(configuration.htmlVersion, HtmlStyle.memberSummary)
                 .setSummary(summary)
                 .setCaption(contents.getContent("doclet.Enum_Constants"))
                 .setHeader(getSummaryTableHeader(typeElement))

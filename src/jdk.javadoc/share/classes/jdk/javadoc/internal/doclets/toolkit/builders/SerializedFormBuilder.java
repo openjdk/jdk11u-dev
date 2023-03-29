@@ -165,7 +165,7 @@ public class SerializedFormBuilder extends AbstractBuilder {
     protected void buildSerializedFormSummaries(Content serializedTree)
             throws DocletException {
         Content serializedSummariesTree = writer.getSerializedSummariesHeader();
-        for (PackageElement pkg : configuration.packages()) {
+        for (PackageElement pkg : configuration.packages) {
             currentPackage = pkg;
 
             buildPackageSerializedForm(serializedSummariesTree);
@@ -336,7 +336,7 @@ public class SerializedFormBuilder extends AbstractBuilder {
      * @throws DocletException if there is a problem while building the documentation
      */
     protected void buildMethodInfo(Content methodsContentTree) throws DocletException  {
-        if (configuration.nocomment()) {
+        if (configuration.nocomment) {
             return;
         }
 
@@ -363,7 +363,7 @@ public class SerializedFormBuilder extends AbstractBuilder {
         ExecutableElement method = (ExecutableElement)currentMember;
         if (method.getSimpleName().toString().compareTo("writeExternal") == 0
                 && utils.getSerialDataTrees(method).isEmpty()) {
-            if (configuration.serialwarn()) {
+            if (configuration.serialwarn) {
                 TypeElement encl  = (TypeElement) method.getEnclosingElement();
                 messages.warning(currentMember,
                         "doclet.MissingSerialDataTag", encl.getQualifiedName().toString(),
@@ -398,7 +398,7 @@ public class SerializedFormBuilder extends AbstractBuilder {
                 Content serializableFieldsTree = fieldWriter.getSerializableFieldsHeader();
                 Content fieldsOverviewContentTree = fieldWriter.getFieldsContentHeader(true);
                 fieldWriter.addMemberDeprecatedInfo(ve, fieldsOverviewContentTree);
-                if (!configuration.nocomment()) {
+                if (!configuration.nocomment) {
                     fieldWriter.addMemberDescription(ve, fieldsOverviewContentTree);
                     fieldWriter.addMemberTags(ve, fieldsOverviewContentTree);
                 }
@@ -474,7 +474,7 @@ public class SerializedFormBuilder extends AbstractBuilder {
      * @param serializableFieldsTree content tree to which the documentation will be added
      */
     protected void buildSerialFieldTagsInfo(Content serializableFieldsTree) {
-        if (configuration.nocomment()) {
+        if (configuration.nocomment) {
             return;
         }
         VariableElement field = (VariableElement)currentMember;
@@ -521,14 +521,14 @@ public class SerializedFormBuilder extends AbstractBuilder {
      * @param fieldsContentTree content tree to which the documentation will be added
      */
     protected void buildFieldInfo(Content fieldsContentTree) {
-        if (configuration.nocomment()) {
+        if (configuration.nocomment) {
             return;
         }
         VariableElement field = (VariableElement)currentMember;
         TypeElement te = utils.getEnclosingTypeElement(currentMember);
         // Process default Serializable field.
         if ((utils.getSerialTrees(field).isEmpty()) /*&& !field.isSynthetic()*/
-                && configuration.serialwarn()) {
+                && configuration.serialwarn) {
             messages.warning(field,
                     "doclet.MissingSerialTag", utils.getFullyQualifiedName(te),
                     utils.getSimpleName(field));

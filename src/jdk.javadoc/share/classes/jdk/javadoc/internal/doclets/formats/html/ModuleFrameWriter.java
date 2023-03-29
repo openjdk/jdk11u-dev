@@ -101,7 +101,7 @@ public class ModuleFrameWriter extends HtmlDocletWriter {
         HtmlTree htmlTree = (configuration.allowTag(HtmlTag.MAIN))
                 ? HtmlTree.MAIN()
                 : body;
-        DocPath moduleSummary = configuration.useModuleDirectories()
+        DocPath moduleSummary = configuration.useModuleDirectories
                 ? DocPaths.DOT_DOT.resolve(configuration.docPaths.moduleSummary(moduleElement))
                 : configuration.docPaths.moduleSummary(moduleElement);
         Content heading = HtmlTree.HEADING(HtmlConstants.TITLE_HEADING, HtmlStyle.bar,
@@ -115,7 +115,7 @@ public class ModuleFrameWriter extends HtmlDocletWriter {
             body.addContent(htmlTree);
         }
         mdlgen.printHtmlDocument(
-                configuration.metakeywords().getMetaKeywordsForModule(moduleElement), false, body);
+                configuration.metakeywords.getMetaKeywordsForModule(moduleElement), false, body);
     }
 
     /**
@@ -160,7 +160,7 @@ public class ModuleFrameWriter extends HtmlDocletWriter {
      */
     protected void addClassKindListing(Iterable<TypeElement> list, Content labelContent,
             HtmlTree contentTree) {
-        SortedSet<TypeElement> tset = utils.filterOutPrivateClasses(list, configuration.javafx());
+        SortedSet<TypeElement> tset = utils.filterOutPrivateClasses(list, configuration.javafx);
         if (!tset.isEmpty()) {
             boolean printedHeader = false;
             HtmlTree htmlTree = (configuration.allowTag(HtmlTag.SECTION))

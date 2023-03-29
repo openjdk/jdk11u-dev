@@ -89,7 +89,7 @@ public class ModuleIndexFrameWriter extends AbstractModuleIndexWriter {
         HtmlTree htmlTree = HtmlTree.DIV(HtmlStyle.indexContainer, heading);
         HtmlTree ul = new HtmlTree(HtmlTag.UL);
         ul.setTitle(contents.modulesLabel);
-        for (ModuleElement mdle: configuration.modules()) {
+        for (ModuleElement mdle: configuration.modules) {
             ul.addContent(getModuleLink(mdle));
         }
         htmlTree.addContent(ul);
@@ -126,10 +126,10 @@ public class ModuleIndexFrameWriter extends AbstractModuleIndexWriter {
      */
     protected void addNavigationBarHeader(Content header) {
         Content headerContent;
-        if (configuration.packagesheader().length() > 0) {
-            headerContent = new RawHtml(replaceDocRootDir(configuration.packagesheader()));
+        if (configuration.packagesheader.length() > 0) {
+            headerContent = new RawHtml(replaceDocRootDir(configuration.packagesheader));
         } else {
-            headerContent = new RawHtml(replaceDocRootDir(configuration.header()));
+            headerContent = new RawHtml(replaceDocRootDir(configuration.header));
         }
         Content heading = HtmlTree.HEADING(HtmlConstants.TITLE_HEADING, true,
                 HtmlStyle.bar, headerContent);

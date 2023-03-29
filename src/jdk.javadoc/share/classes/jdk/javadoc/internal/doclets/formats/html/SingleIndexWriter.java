@@ -150,7 +150,7 @@ public class SingleIndexWriter extends AbstractIndexWriter {
         contentTree.addContent(new HtmlTree(HtmlTag.BR));
         contentTree.addContent(links.createLink(DocPaths.ALLCLASSES_INDEX,
                 contents.allClassesLabel));
-        if (!configuration.packages().isEmpty()) {
+        if (!configuration.packages.isEmpty()) {
             contentTree.addContent(Contents.SPACE);
             contentTree.addContent(links.createLink(DocPaths.ALLPACKAGES_INDEX,
                     contents.allPackagesLabel));

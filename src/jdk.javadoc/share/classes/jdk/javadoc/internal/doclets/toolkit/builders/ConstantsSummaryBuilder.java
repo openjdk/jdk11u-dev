@@ -156,7 +156,7 @@ public class ConstantsSummaryBuilder extends AbstractBuilder {
     protected void buildContents(Content contentTree) {
         Content contentListTree = writer.getContentsHeader();
         printedPackageHeaders.clear();
-        for (PackageElement pkg : configuration.packages()) {
+        for (PackageElement pkg : configuration.packages) {
             if (hasConstantField(pkg) && !hasPrintedPackageIndex(pkg)) {
                 writer.addLinkToPackageContent(pkg, printedPackageHeaders, contentListTree);
             }
@@ -173,7 +173,7 @@ public class ConstantsSummaryBuilder extends AbstractBuilder {
     protected void buildConstantSummaries(Content contentTree) throws DocletException {
         printedPackageHeaders.clear();
         Content summariesTree = writer.getConstantSummaries();
-        for (PackageElement aPackage : configuration.packages()) {
+        for (PackageElement aPackage : configuration.packages) {
             if (hasConstantField(aPackage)) {
                 currentPackage = aPackage;
                 //Build the documentation for the current package.
@@ -193,7 +193,7 @@ public class ConstantsSummaryBuilder extends AbstractBuilder {
      * @param summariesTree the tree to which the package header will be added
      */
     protected void buildPackageHeader(Content summariesTree) {
-        PackageElement abbrevPkg = configuration.workArounds().getAbbreviatedPackageElement(currentPackage);
+        PackageElement abbrevPkg = configuration.workArounds.getAbbreviatedPackageElement(currentPackage);
         if (!printedPackageHeaders.contains(abbrevPkg)) {
             writer.addPackageName(currentPackage, summariesTree, first);
             printedPackageHeaders.add(abbrevPkg);
@@ -211,7 +211,7 @@ public class ConstantsSummaryBuilder extends AbstractBuilder {
             throws DocletException {
         SortedSet<TypeElement> classes = !currentPackage.isUnnamed()
                 ? utils.getAllClasses(currentPackage)
-                : configuration.typeElementCatalog().allUnnamedClasses();
+                : configuration.typeElementCatalog.allUnnamedClasses();
         Content classConstantTree = writer.getClassConstantHeader();
         for (TypeElement te : classes) {
             if (!typeElementsWithConstFields.contains(te) ||
@@ -246,7 +246,7 @@ public class ConstantsSummaryBuilder extends AbstractBuilder {
     private boolean hasConstantField(PackageElement pkg) {
         SortedSet<TypeElement> classes = !pkg.isUnnamed()
                   ? utils.getAllClasses(pkg)
-                  : configuration.typeElementCatalog().allUnnamedClasses();
+                  : configuration.typeElementCatalog.allUnnamedClasses();
         boolean found = false;
         for (TypeElement te : classes) {
             if (utils.isIncluded(te) && hasConstantField(te)) {

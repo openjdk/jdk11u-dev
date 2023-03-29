@@ -101,7 +101,7 @@ public class IndexBuilder {
     public IndexBuilder(BaseConfiguration configuration, boolean noDeprecated,
                         boolean classesOnly) {
         this.configuration  = configuration;
-        this.utils = configuration.utils();
+        this.utils = configuration.utils;
 
         Messages messages = configuration.getMessages();
         if (classesOnly) {
@@ -112,12 +112,12 @@ public class IndexBuilder {
 
         this.noDeprecated = noDeprecated;
         this.classesOnly = classesOnly;
-        this.javafx = configuration.javafx();
+        this.javafx = configuration.javafx;
         this.indexmap = new TreeMap<>();
         comparator = classesOnly
                 ? utils.makeAllClassesComparator()
                 : utils.makeIndexUseComparator();
-        buildIndexMap(configuration.docEnv());
+        buildIndexMap(configuration.docEnv);
     }
 
     /**
@@ -151,7 +151,7 @@ public class IndexBuilder {
                     putMembersInIndexMap(aClass);
                 }
             }
-            if (configuration.showModules()) {
+            if (configuration.showModules) {
                 addModulesToIndexMap();
             }
         }
@@ -201,7 +201,7 @@ public class IndexBuilder {
      * Add all the modules to index map.
      */
     protected void addModulesToIndexMap() {
-        for (ModuleElement mdle : configuration.modules()) {
+        for (ModuleElement mdle : configuration.modules) {
             String mdleName = mdle.getQualifiedName().toString();
             char ch = (mdleName.length() == 0)
                     ? '*'
@@ -224,14 +224,14 @@ public class IndexBuilder {
         if (utils.isPackage(element))
             // Do not add to index map if -nodeprecated option is set and the
             // package is marked as deprecated.
-            return !(noDeprecated && configuration.utils().isDeprecated(element));
+            return !(noDeprecated && configuration.utils.isDeprecated(element));
         else
             // Do not add to index map if -nodeprecated option is set and if the
             // element is marked as deprecated or the containing package is marked as
             // deprecated.
             return !(noDeprecated &&
-                    (configuration.utils().isDeprecated(element) ||
-                    configuration.utils().isDeprecated(utils.containingPackage(element))));
+                    (configuration.utils.isDeprecated(element) ||
+                    configuration.utils.isDeprecated(utils.containingPackage(element))));
     }
 
     /**

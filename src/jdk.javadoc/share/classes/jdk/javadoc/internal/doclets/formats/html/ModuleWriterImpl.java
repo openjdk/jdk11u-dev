@@ -183,7 +183,7 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
     public ModuleWriterImpl(HtmlConfiguration configuration, ModuleElement mdle) {
         super(configuration, configuration.docPaths.moduleSummary(mdle));
         this.mdle = mdle;
-        this.moduleMode = configuration.docEnv().getModuleMode();
+        this.moduleMode = configuration.docEnv.getModuleMode();
         this.navBar = new Navigation(mdle, configuration, fixedNavDiv, PageMode.MODULE, path);
         computeModulesData();
     }
@@ -200,7 +200,7 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
                 ? HtmlTree.HEADER()
                 : bodyTree;
         addTop(htmlTree);
-        navBar.setDisplaySummaryModuleDescLink(!utils.getFullBody(mdle).isEmpty() && !configuration.nocomment());
+        navBar.setDisplaySummaryModuleDescLink(!utils.getFullBody(mdle).isEmpty() && !configuration.nocomment);
         navBar.setDisplaySummaryModulesLink(display(requires) || display(indirectModules));
         navBar.setDisplaySummaryPackagesLink(display(packages) || display(indirectPackages)
                 || display(indirectOpenPackages));
@@ -215,7 +215,7 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
         Content annotationContent = new HtmlTree(HtmlTag.P);
         addAnnotationInfo(mdle, annotationContent);
         div.addContent(annotationContent);
-        Content label = mdle.isOpen() && (configuration.docEnv().getModuleMode() == ModuleMode.ALL)
+        Content label = mdle.isOpen() && (configuration.docEnv.getModuleMode() == ModuleMode.ALL)
                 ? contents.openModuleLabel : contents.moduleLabel;
         Content tHeading = HtmlTree.HEADING(HtmlConstants.TITLE_HEADING, true,
                 HtmlStyle.title, label);
@@ -483,7 +483,7 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
      */
     private Table getTable2(Content caption, String tableSummary, HtmlStyle tableStyle,
             TableHeader tableHeader) {
-        return new Table(configuration.htmlVersion(), tableStyle)
+        return new Table(configuration.htmlVersion, tableStyle)
                 .setSummary(tableSummary)
                 .setCaption(caption)
                 .setHeader(tableHeader)
@@ -501,7 +501,7 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
      */
     private Table getTable3(Content caption, String tableSummary, HtmlStyle tableStyle,
             TableHeader tableHeader) {
-        return new Table(configuration.htmlVersion(), tableStyle)
+        return new Table(configuration.htmlVersion, tableStyle)
                 .setSummary(tableSummary)
                 .setCaption(caption)
                 .setHeader(tableHeader)
@@ -616,7 +616,7 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
      * @param li
      */
     public void addPackageSummary(String tableSummary, HtmlTree li) {
-        Table table = new Table(configuration.htmlVersion(), HtmlStyle.packagesSummary)
+        Table table = new Table(configuration.htmlVersion, HtmlStyle.packagesSummary)
                 .setSummary(tableSummary)
                 .setDefaultTab(resources.getText("doclet.All_Packages"))
                 .addTab(resources.getText("doclet.Exported_Packages_Summary"), this::isExported)
@@ -958,7 +958,7 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
      */
     @Override
     public void printDocument(Content contentTree) throws DocFileIOException {
-        printHtmlDocument(configuration.metakeywords().getMetaKeywordsForModule(mdle),
+        printHtmlDocument(configuration.metakeywords.getMetaKeywordsForModule(mdle),
                 true, contentTree);
     }
 

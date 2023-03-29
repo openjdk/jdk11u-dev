@@ -163,7 +163,7 @@ public class SimpleTaglet extends BaseTaglet implements InheritableTaglet {
 
     @Override
     public Content getTagletOutput(Element holder, TagletWriter writer) {
-        Utils utils = writer.configuration().utils();
+        Utils utils = writer.configuration().utils;
         List<? extends DocTree> tags = utils.getBlockTags(holder, getName());
         if (header == null || tags.isEmpty()) {
             return null;

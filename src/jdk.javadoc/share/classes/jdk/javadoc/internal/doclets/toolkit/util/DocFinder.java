@@ -243,7 +243,7 @@ public class DocFinder {
      */
     public static Output search(BaseConfiguration configuration, Input input) {
         Output output = new Output();
-        Utils utils = configuration.utils();
+        Utils utils = configuration.utils;
         if (input.isInheritDocTag) {
             //Do nothing because "element" does not have any documentation.
             //All it has is {@inheritDoc}.
@@ -261,7 +261,7 @@ public class DocFinder {
             return output;
         }
         output.isValidInheritDocTag = false;
-        Input inheritedSearchInput = input.copy(configuration.utils());
+        Input inheritedSearchInput = input.copy(configuration.utils);
         inheritedSearchInput.isInheritDocTag = false;
         if (utils.isMethod(input.element)) {
             ExecutableElement overriddenMethod = utils.overriddenMethod((ExecutableElement) input.element);

@@ -348,7 +348,7 @@ public abstract class MemberSummaryBuilder extends AbstractMemberBuilder {
      */
     private void processProperty(Element member,
                                  Element property) {
-        CommentUtils cmtutils = configuration.cmtUtils();
+        CommentUtils cmtutils = configuration.cmtUtils;
         final boolean isSetter = isSetter(member);
         final boolean isGetter = isGetter(member);
 

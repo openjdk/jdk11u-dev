@@ -100,7 +100,7 @@ public abstract class AbstractBuilder {
         this.builderFactory = configuration.getBuilderFactory();
         this.messages = configuration.getMessages();
         this.resources = configuration.getResources();
-        this.utils = configuration.utils();
+        this.utils = configuration.utils;
         this.containingPackagesSeen = c.containingPackagesSeen;
     }
 

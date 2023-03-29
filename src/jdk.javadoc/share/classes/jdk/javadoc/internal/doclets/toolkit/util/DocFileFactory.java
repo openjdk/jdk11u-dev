@@ -52,7 +52,7 @@ public abstract class DocFileFactory {
      * @return the factory associated with this configuration
      */
     public static synchronized DocFileFactory getFactory(BaseConfiguration configuration) {
-        DocFileFactory f = configuration.docFileFactory();
+        DocFileFactory f = configuration.docFileFactory;
         if (f == null) {
             JavaFileManager fm = configuration.getFileManager();
             if (fm instanceof StandardJavaFileManager) {
@@ -60,7 +60,7 @@ public abstract class DocFileFactory {
             } else {
                 throw new IllegalStateException();
             }
-            configuration.setDocFileFactory(f);
+            configuration.docFileFactory = f;
         }
         return f;
     }

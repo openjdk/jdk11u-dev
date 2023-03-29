@@ -86,7 +86,7 @@ public class ClassBuilder extends AbstractBuilder {
         super(context);
         this.typeElement = typeElement;
         this.writer = writer;
-        this.utils = configuration.utils();
+        this.utils = configuration.utils;
         if (utils.isInterface(typeElement)) {
             isInterface = true;
             isEnum = false;
@@ -272,8 +272,8 @@ public class ClassBuilder extends AbstractBuilder {
      */
      private void copyDocFiles() throws DocletException {
         PackageElement containingPackage = utils.containingPackage(typeElement);
-        if ((configuration.packages() == null ||
-            !configuration.packages().contains(containingPackage)) &&
+        if ((configuration.packages == null ||
+            !configuration.packages.contains(containingPackage)) &&
             !containingPackagesSeen.contains(containingPackage)) {
             //Only copy doc files dir if the containing package is not
             //documented AND if we have not documented a class from the same

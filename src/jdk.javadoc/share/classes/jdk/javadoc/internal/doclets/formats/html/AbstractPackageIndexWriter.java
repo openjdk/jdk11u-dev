@@ -72,7 +72,7 @@ public abstract class AbstractPackageIndexWriter extends HtmlDocletWriter {
     public AbstractPackageIndexWriter(HtmlConfiguration configuration,
                                       DocPath filename) {
         super(configuration, filename);
-        packages = configuration.packages();
+        packages = configuration.packages;
         this.navBar = new Navigation(null, configuration, fixedNavDiv, PageMode.OVERVIEW, path);
     }
 
@@ -127,8 +127,8 @@ public abstract class AbstractPackageIndexWriter extends HtmlDocletWriter {
         body.addContent(header);
         body.addContent(main);
         body.addContent(footer);
-        printHtmlDocument(configuration.metakeywords().getOverviewMetaKeywords(title,
-                configuration.doctitle()), includeScript, body);
+        printHtmlDocument(configuration.metakeywords.getOverviewMetaKeywords(title,
+                configuration.doctitle), includeScript, body);
     }
 
     /**
@@ -161,7 +161,7 @@ public abstract class AbstractPackageIndexWriter extends HtmlDocletWriter {
             htmlTree.setStyle(HtmlStyle.indexNav);
             HtmlTree ul = new HtmlTree(HtmlTag.UL);
             addAllClassesLink(ul);
-            if (configuration.showModules()  && configuration.modules().size() > 1) {
+            if (configuration.showModules  && configuration.modules.size() > 1) {
                 addAllModulesLink(ul);
             }
             htmlTree.addContent(ul);
@@ -176,8 +176,8 @@ public abstract class AbstractPackageIndexWriter extends HtmlDocletWriter {
      * @param body the document tree to which the title will be added
      */
     protected void addConfigurationTitle(Content body) {
-        if (configuration.doctitle().length() > 0) {
-            Content title = new RawHtml(configuration.doctitle());
+        if (configuration.doctitle.length() > 0) {
+            Content title = new RawHtml(configuration.doctitle);
             Content heading = HtmlTree.HEADING(HtmlConstants.TITLE_HEADING,
                     HtmlStyle.title, title);
             Content div = HtmlTree.DIV(HtmlStyle.header, heading);

@@ -290,7 +290,7 @@ public class Group {
             groupList.add(defaultGroupName);
         }
         for (PackageElement pkg : packages) {
-            String pkgName = configuration.utils().getPackageName(pkg);
+            String pkgName = configuration.utils.getPackageName(pkg);
             String groupName = pkg.isUnnamed() ? null : elementNameGroupMap.get(pkgName);
             // if this package is not explicitly assigned to a group,
             // try matching it to group specified by regular expression
@@ -332,7 +332,7 @@ public class Group {
      */
     SortedSet<PackageElement> getPkgList(Map<String, SortedSet<PackageElement>> map,
             String groupname) {
-        return map.computeIfAbsent(groupname, g -> new TreeSet<>(configuration.utils().makePackageComparator()));
+        return map.computeIfAbsent(groupname, g -> new TreeSet<>(configuration.utils.makePackageComparator()));
     }
 
     /**
@@ -344,7 +344,7 @@ public class Group {
      */
     SortedSet<ModuleElement> getModuleList(Map<String, SortedSet<ModuleElement>> map,
             String groupname) {
-        return map.computeIfAbsent(groupname, g -> new TreeSet<>(configuration.utils().makeModuleComparator()));
+        return map.computeIfAbsent(groupname, g -> new TreeSet<>(configuration.utils.makeModuleComparator()));
     }
 
     /**

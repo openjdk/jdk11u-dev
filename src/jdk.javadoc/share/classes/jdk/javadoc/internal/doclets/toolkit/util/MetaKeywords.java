@@ -77,10 +77,10 @@ public class MetaKeywords {
         ArrayList<String> results = new ArrayList<>();
 
         // Add field and method keywords only if -keywords option is used
-        if (config.keywords()) {
+        if (config.keywords) {
             results.addAll(getClassKeyword(typeElement));
-            results.addAll(getMemberKeywords(config.utils().getFields(typeElement)));
-            results.addAll(getMemberKeywords(config.utils().getMethods(typeElement)));
+            results.addAll(getMemberKeywords(config.utils.getFields(typeElement)));
+            results.addAll(getMemberKeywords(config.utils.getMethods(typeElement)));
         }
         ((ArrayList)results).trimToSize();
         return results;
@@ -92,8 +92,8 @@ public class MetaKeywords {
      */
     protected List<String> getClassKeyword(TypeElement typeElement) {
         ArrayList<String> metakeywords = new ArrayList<>(1);
-        String cltypelower = config.utils().isInterface(typeElement) ? "interface" : "class";
-        metakeywords.add(config.utils().getFullyQualifiedName(typeElement) + " " + cltypelower);
+        String cltypelower = config.utils.isInterface(typeElement) ? "interface" : "class";
+        metakeywords.add(config.utils.getFullyQualifiedName(typeElement) + " " + cltypelower);
         return metakeywords;
     }
 
@@ -102,8 +102,8 @@ public class MetaKeywords {
      */
     public List<String> getMetaKeywords(PackageElement packageElement) {
         List<String> result = new ArrayList<>(1);
-        if (config.keywords()) {
-            String pkgName = config.utils().getPackageName(packageElement);
+        if (config.keywords) {
+            String pkgName = config.utils.getPackageName(packageElement);
             result.add(pkgName + " " + "package");
         }
         return result;
@@ -115,7 +115,7 @@ public class MetaKeywords {
      * @param mdle the module being documented
      */
     public List<String> getMetaKeywordsForModule(ModuleElement mdle) {
-        if (config.keywords()) {
+        if (config.keywords) {
             return Arrays.asList(mdle.getQualifiedName() + " " + "module");
         } else {
             return Collections.emptyList();
@@ -127,7 +127,7 @@ public class MetaKeywords {
      */
     public List<String> getOverviewMetaKeywords(String title, String docTitle) {
          List<String> result = new ArrayList<>(1);
-        if (config.keywords()) {
+        if (config.keywords) {
             String windowOverview = config.getText(title);
             if (docTitle.length() > 0) {
                 result.add(windowOverview + ", " + docTitle);
@@ -150,9 +150,9 @@ public class MetaKeywords {
     protected List<String> getMemberKeywords(List<? extends Element> members) {
         ArrayList<String> results = new ArrayList<>();
         for (Element member : members) {
-            String membername = config.utils().isMethod(member)
-                    ? config.utils().getSimpleName(member) + "()"
-                    : config.utils().getSimpleName(member);
+            String membername = config.utils.isMethod(member)
+                    ? config.utils.getSimpleName(member) + "()"
+                    : config.utils.getSimpleName(member);
             if (!results.contains(membername)) {
                 results.add(membername);
             }

@@ -116,7 +116,7 @@ public class NestedClassWriterImpl extends AbstractMemberWriter
         List<HtmlStyle> bodyRowStyles = Arrays.asList(HtmlStyle.colFirst, HtmlStyle.colSecond,
                 HtmlStyle.colLast);
 
-        return new Table(configuration.htmlVersion(), HtmlStyle.memberSummary)
+        return new Table(configuration.htmlVersion, HtmlStyle.memberSummary)
                 .setSummary(summary)
                 .setCaption(contents.getContent("doclet.Nested_Classes"))
                 .setHeader(getSummaryTableHeader(typeElement))
@@ -152,7 +152,7 @@ public class NestedClassWriterImpl extends AbstractMemberWriter
         Content classLink = writer.getPreQualifiedClassLink(
                 LinkInfoImpl.Kind.MEMBER, typeElement, false);
         Content label;
-        if (configuration.summarizeOverriddenMethods()) {
+        if (configuration.summarizeOverriddenMethods) {
             label = new StringContent(utils.isInterface(typeElement)
                     ? configuration.getText("doclet.Nested_Classes_Interfaces_Declared_In_Interface")
                     : configuration.getText("doclet.Nested_Classes_Interfaces_Declared_In_Class"));

@@ -72,7 +72,7 @@ public class FrameOutputWriter extends HtmlDocletWriter {
      */
     public FrameOutputWriter(HtmlConfiguration configuration, DocPath filename) {
         super(configuration, filename);
-        noOfPackages = configuration.packages().size();
+        noOfPackages = configuration.packages.size();
     }
 
     /**
@@ -112,8 +112,8 @@ public class FrameOutputWriter extends HtmlDocletWriter {
         } else {
             body.addContent(frame);
         }
-        if (configuration.windowtitle().length() > 0) {
-            printFramesDocument(configuration.windowtitle(), body);
+        if (configuration.windowtitle.length() > 0) {
+            printFramesDocument(configuration.windowtitle, body);
         } else {
             printFramesDocument(configuration.getText("doclet.Generated_Docs_Untitled"), body);
         }
@@ -128,12 +128,12 @@ public class FrameOutputWriter extends HtmlDocletWriter {
      * @throws DocFileIOException if there is an error writing the frames document
      */
     private void printFramesDocument(String title, HtmlTree body) throws DocFileIOException {
-        DocType htmlDocType = DocType.forVersion(configuration.htmlVersion());
+        DocType htmlDocType = DocType.forVersion(configuration.htmlVersion);
         Content htmlComment = contents.newPage;
-        Head head = new Head(path, configuration.htmlVersion(), configuration.docletVersion)
-                .setTimestamp(!configuration.notimestamp(), false)
+        Head head = new Head(path, configuration.htmlVersion, configuration.docletVersion)
+                .setTimestamp(!configuration.notimestamp, false)
                 .setTitle(title)
-                .setCharset(configuration.charset())
+                .setCharset(configuration.charset)
                 .setStylesheets(configuration.getMainStylesheet(), configuration.getAdditionalStylesheets())
                 .addDefaultScript(false)
                 .addScript(getFramesScript());
@@ -153,7 +153,7 @@ public class FrameOutputWriter extends HtmlDocletWriter {
         HtmlTree rightContainerDiv = new HtmlTree(HtmlTag.DIV);
         leftContainerDiv.setStyle(HtmlStyle.leftContainer);
         rightContainerDiv.setStyle(HtmlStyle.rightContainer);
-        if (configuration.showModules() && configuration.modules().size() > 1) {
+        if (configuration.showModules && configuration.modules.size() > 1) {
             addAllModulesFrameTag(leftContainerDiv);
         } else if (noOfPackages > 1) {
             addAllPackagesFrameTag(leftContainerDiv);

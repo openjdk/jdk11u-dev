@@ -78,11 +78,11 @@ public class InheritDocTaglet extends BaseTaglet {
         Content replacement = writer.getOutputInstance();
         BaseConfiguration configuration = writer.configuration();
         Messages messages = configuration.getMessages();
-        Utils utils = configuration.utils();
+        Utils utils = configuration.utils;
         CommentHelper ch = utils.getCommentHelper(e);
         Taglet inheritableTaglet = holderTag == null
                 ? null
-                : configuration.tagletManager().getTaglet(ch.getTagName(holderTag));
+                : configuration.tagletManager.getTaglet(ch.getTagName(holderTag));
         if (inheritableTaglet != null &&
             !(inheritableTaglet instanceof InheritableTaglet)) {
                 String message = utils.getSimpleName(e) +

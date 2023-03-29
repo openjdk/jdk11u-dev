@@ -127,16 +127,16 @@ public abstract class AbstractDoclet implements Doclet {
                     messages.error("doclet.exception.write.file",
                             e.fileName.getPath(), e.getCause());
             }
-            dumpStack(configuration.dumpOnError(), e);
+            dumpStack(configuration.dumpOnError, e);
 
         } catch (ResourceIOException e) {
             messages.error("doclet.exception.read.resource",
                     e.resource.getPath(), e.getCause());
-            dumpStack(configuration.dumpOnError(), e);
+            dumpStack(configuration.dumpOnError, e);
 
         } catch (SimpleDocletException e) {
             configuration.reporter.print(ERROR, e.getMessage());
-            dumpStack(configuration.dumpOnError(), e);
+            dumpStack(configuration.dumpOnError, e);
 
         } catch (InternalException e) {
             configuration.reporter.print(ERROR, e.getMessage());
@@ -202,7 +202,7 @@ public abstract class AbstractDoclet implements Doclet {
         }
         messages.notice("doclet.build_version",
             configuration.getDocletVersion());
-        ClassTree classtree = new ClassTree(configuration, configuration.nodeprecated());
+        ClassTree classtree = new ClassTree(configuration, configuration.nodeprecated);
 
         generateClassFiles(docEnv, classtree);
 
@@ -268,7 +268,7 @@ public abstract class AbstractDoclet implements Doclet {
         generateClassFiles(classtree);
         SortedSet<PackageElement> packages = new TreeSet<>(utils.makePackageComparator());
         packages.addAll(configuration.getSpecifiedPackageElements());
-        configuration.modulePackages().values().stream().forEach(packages::addAll);
+        configuration.modulePackages.values().stream().forEach(packages::addAll);
         for (PackageElement pkg : packages) {
             generateClassFiles(utils.getAllClasses(pkg), classtree);
         }
@@ -281,9 +281,9 @@ public abstract class AbstractDoclet implements Doclet {
      * @throws DocletException if there is a problem while generating the documentation
      */
     private void generateClassFiles(ClassTree classtree) throws DocletException {
-        SortedSet<PackageElement> packages = configuration.typeElementCatalog().packages();
+        SortedSet<PackageElement> packages = configuration.typeElementCatalog.packages();
         for (PackageElement pkg : packages) {
-            generateClassFiles(configuration.typeElementCatalog().allClasses(pkg), classtree);
+            generateClassFiles(configuration.typeElementCatalog.allClasses(pkg), classtree);
         }
     }
 }

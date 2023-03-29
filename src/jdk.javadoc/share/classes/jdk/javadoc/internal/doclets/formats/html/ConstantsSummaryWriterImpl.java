@@ -148,7 +148,7 @@ public class ConstantsSummaryWriterImpl extends HtmlDocletWriter implements Cons
             packageNameContent.addContent(".*");
             link = links.createLink(DocLink.fragment(parsedPackageName),
                     packageNameContent, "", "");
-            PackageElement abbrevPkg = configuration.workArounds().getAbbreviatedPackageElement(pkg);
+            PackageElement abbrevPkg = configuration.workArounds.getAbbreviatedPackageElement(pkg);
             printedPackageHeaders.add(abbrevPkg);
         }
         contentListTree.addContent(HtmlTree.LI(link));
@@ -260,7 +260,7 @@ public class ConstantsSummaryWriterImpl extends HtmlDocletWriter implements Cons
         }
         caption.addContent(classlink);
 
-        Table table = new Table(configuration.htmlVersion(), HtmlStyle.constantsSummary)
+        Table table = new Table(configuration.htmlVersion, HtmlStyle.constantsSummary)
                 .setSummary(constantsTableSummary)
                 .setCaption(caption)
                 .setHeader(constantsTableHeader)

@@ -174,12 +174,12 @@ public class TagletManager {
         this.showversion = showversion;
         this.showauthor = showauthor;
         this.javafx = javafx;
-        this.docEnv = configuration.docEnv();
-        this.doclet = configuration.doclet();
+        this.docEnv = configuration.docEnv;
+        this.doclet = configuration.doclet;
         this.messages = configuration.getMessages();
         this.resources = configuration.getResources();
-        this.showTaglets = configuration.showTaglets();
-        this.utils = configuration.utils();
+        this.showTaglets = configuration.showTaglets;
+        this.utils = configuration.utils;
         initStandardTaglets();
     }
 

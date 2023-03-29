@@ -75,7 +75,7 @@ public class ReturnTaglet extends BaseTaglet implements InheritableTaglet {
     @Override
     public Content getTagletOutput(Element holder, TagletWriter writer) {
         Messages messages = writer.configuration().getMessages();
-        Utils utils = writer.configuration().utils();
+        Utils utils = writer.configuration().utils;
         TypeMirror returnType = utils.getReturnType((ExecutableElement)holder);
         List<? extends DocTree> tags = utils.getBlockTags(holder, name);
 

@@ -160,7 +160,7 @@ public class PackageUseWriter extends SubWriterHolderWriter {
     protected void addPackageUse(Content contentTree) {
         HtmlTree ul = new HtmlTree(HtmlTag.UL);
         ul.setStyle(HtmlStyle.blockList);
-        if (configuration.packages().size() > 1) {
+        if (configuration.packages.size() > 1) {
             addPackageList(ul);
         }
         addClassList(ul);
@@ -176,7 +176,7 @@ public class PackageUseWriter extends SubWriterHolderWriter {
         Content caption = contents.getContent(
                 "doclet.ClassUse_Packages.that.use.0",
                 getPackageLink(packageElement, utils.getPackageName(packageElement)));
-        Table table = new Table(configuration.htmlVersion(), HtmlStyle.useSummary)
+        Table table = new Table(configuration.htmlVersion, HtmlStyle.useSummary)
                 .setSummary(packageUseTableSummary)
                 .setCaption(caption)
                 .setHeader(getPackageTableHeader())
@@ -218,7 +218,7 @@ public class PackageUseWriter extends SubWriterHolderWriter {
                     "doclet.ClassUse_Classes.in.0.used.by.1",
                     getPackageLink(packageElement, utils.getPackageName(packageElement)),
                     getPackageLink(usingPackage, utils.getPackageName(usingPackage)));
-            Table table = new Table(configuration.htmlVersion(), HtmlStyle.useSummary)
+            Table table = new Table(configuration.htmlVersion, HtmlStyle.useSummary)
                     .setSummary(tableSummary)
                     .setCaption(caption)
                     .setHeader(classTableHeader)

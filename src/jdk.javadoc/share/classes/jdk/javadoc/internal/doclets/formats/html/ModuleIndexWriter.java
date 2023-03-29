@@ -72,7 +72,7 @@ public class ModuleIndexWriter extends AbstractModuleIndexWriter {
      * @throws DocFileIOException if there is a problem generating the module index page
      */
     public static void generate(HtmlConfiguration configuration) throws DocFileIOException {
-        DocPath filename = DocPaths.overviewSummary(configuration.frames());
+        DocPath filename = DocPaths.overviewSummary(configuration.frames);
         ModuleIndexWriter mdlgen = new ModuleIndexWriter(configuration, filename);
         mdlgen.buildModuleIndexFile("doclet.Window_Overview_Summary", true);
     }
@@ -99,7 +99,7 @@ public class ModuleIndexWriter extends AbstractModuleIndexWriter {
         htmltree.setStyle(HtmlStyle.indexNav);
         HtmlTree ul = new HtmlTree(HtmlTag.UL);
         addAllClassesLink(ul);
-        if (configuration.showModules()) {
+        if (configuration.showModules) {
             addAllModulesLink(ul);
         }
         htmltree.addContent(ul);
@@ -115,13 +115,13 @@ public class ModuleIndexWriter extends AbstractModuleIndexWriter {
     @Override
     protected void addModulesList(Content main) {
         Map<String, SortedSet<ModuleElement>> groupModuleMap
-                = configuration.group().groupModules(configuration.modules());
+                = configuration.group.groupModules(configuration.modules);
 
         if (!groupModuleMap.keySet().isEmpty()) {
             String tableSummary = configuration.getText("doclet.Member_Table_Summary",
                     configuration.getText("doclet.Module_Summary"), configuration.getText("doclet.modules"));
             TableHeader header = new TableHeader(contents.moduleLabel, contents.descriptionLabel);
-            Table table =  new Table(configuration.htmlVersion(), HtmlStyle.overviewSummary)
+            Table table =  new Table(configuration.htmlVersion, HtmlStyle.overviewSummary)
                     .setSummary(tableSummary)
                     .setHeader(header)
                     .setColumnStyles(HtmlStyle.colFirst, HtmlStyle.colLast)
@@ -130,16 +130,16 @@ public class ModuleIndexWriter extends AbstractModuleIndexWriter {
                     .setTabId(i -> (i == 0) ? "t0" : ("t" + (1 << (i - 1))));
 
             // add the tabs in command-line order
-            for (String groupName : configuration.group().getGroupList()) {
+            for (String groupName : configuration.group.getGroupList()) {
                 Set<ModuleElement> groupModules = groupModuleMap.get(groupName);
                 if (groupModules != null) {
                     table.addTab(groupName, groupModules::contains);
                 }
             }
 
-            for (ModuleElement mdle : configuration.modules()) {
+            for (ModuleElement mdle : configuration.modules) {
                 if (!mdle.isUnnamed()) {
-                    if (!(configuration.nodeprecated() && utils.isDeprecated(mdle))) {
+                    if (!(configuration.nodeprecated && utils.isDeprecated(mdle))) {
                         Content moduleLinkContent = getModuleLink(mdle, new StringContent(mdle.getQualifiedName().toString()));
                         Content summaryContent = new ContentBuilder();
                         addSummaryComment(mdle, summaryContent);
@@ -167,7 +167,7 @@ public class ModuleIndexWriter extends AbstractModuleIndexWriter {
     @Override
     protected void addOverviewHeader(Content main) {
         addConfigurationTitle(main);
-        if (!utils.getFullBody(configuration.overviewElement()).isEmpty()) {
+        if (!utils.getFullBody(configuration.overviewElement).isEmpty()) {
             HtmlTree div = new HtmlTree(HtmlTag.DIV);
             div.setStyle(HtmlStyle.contentContainer);
             addOverviewComment(div);
@@ -183,8 +183,8 @@ public class ModuleIndexWriter extends AbstractModuleIndexWriter {
      *                 be added
      */
     protected void addOverviewComment(Content htmltree) {
-        if (!utils.getFullBody(configuration.overviewElement()).isEmpty()) {
-            addInlineComment(configuration.overviewElement(), htmltree);
+        if (!utils.getFullBody(configuration.overviewElement).isEmpty()) {
+            addInlineComment(configuration.overviewElement, htmltree);
         }
     }
 

@@ -116,9 +116,9 @@ public class Utils {
     public Utils(BaseConfiguration c) {
         configuration = c;
         messages = configuration.getMessages();
-        elementUtils = c.docEnv().getElementUtils();
-        typeUtils = c.docEnv().getTypeUtils();
-        docTrees = c.docEnv().getDocTrees();
+        elementUtils = c.docEnv.getElementUtils();
+        typeUtils = c.docEnv.getTypeUtils();
+        docTrees = c.docEnv.getDocTrees();
         javaScriptScanner = c.isAllowScriptInComments() ? null : new JavaScriptScanner();
     }
 
@@ -265,7 +265,7 @@ public class Utils {
     }
 
     public Location getLocationForPackage(PackageElement pd) {
-        ModuleElement mdle = configuration.docEnv().getElementUtils().getModuleOf(pd);
+        ModuleElement mdle = configuration.docEnv.getElementUtils().getModuleOf(pd);
 
         if (mdle == null)
             return defaultLocation();
@@ -274,7 +274,7 @@ public class Utils {
     }
 
     public Location getLocationForModule(ModuleElement mdle) {
-        Location loc = configuration.workArounds().getLocationForModule(mdle);
+        Location loc = configuration.workArounds.getLocationForModule(mdle);
         if (loc != null)
             return loc;
 
@@ -282,7 +282,7 @@ public class Utils {
     }
 
     private Location defaultLocation() {
-        JavaFileManager fm = configuration.docEnv().getJavaFileManager();
+        JavaFileManager fm = configuration.docEnv.getJavaFileManager();
         return fm.hasLocation(StandardLocation.SOURCE_PATH)
                 ? StandardLocation.SOURCE_PATH
                 : StandardLocation.CLASS_PATH;
@@ -382,7 +382,7 @@ public class Utils {
     }
 
     public boolean isProperty(String name) {
-        return configuration.javafx() && name.endsWith("Property");
+        return configuration.javafx && name.endsWith("Property");
     }
 
     public String getPropertyName(String name) {
@@ -412,15 +412,15 @@ public class Utils {
     }
 
     public SortedSet<VariableElement> serializableFields(TypeElement aclass) {
-        return configuration.workArounds().getSerializableFields(this, aclass);
+        return configuration.workArounds.getSerializableFields(this, aclass);
     }
 
     public SortedSet<ExecutableElement> serializationMethods(TypeElement aclass) {
-        return configuration.workArounds().getSerializationMethods(this, aclass);
+        return configuration.workArounds.getSerializationMethods(this, aclass);
     }
 
     public boolean definesSerializableFields(TypeElement aclass) {
-        return configuration.workArounds().definesSerializableFields(this, aclass);
+        return configuration.workArounds.definesSerializableFields(this, aclass);
     }
 
     public String modifiersToString(Element e, boolean trailingSpace) {
@@ -506,7 +506,7 @@ public class Utils {
 
     public boolean isFunctionalInterface(AnnotationMirror amirror) {
         return amirror.getAnnotationType().equals(getFunctionalInterface()) &&
-                configuration.docEnv().getSourceVersion()
+                configuration.docEnv.getSourceVersion()
                         .compareTo(SourceVersion.RELEASE_8) >= 0;
     }
 
@@ -766,7 +766,7 @@ public class Utils {
      * It may be a {@code TypeElement} or a {@code TypeParameterElement}.
      */
     public TypeMirror overriddenType(ExecutableElement method) {
-        return configuration.workArounds().overriddenType(method);
+        return configuration.workArounds.overriddenType(method);
     }
 
     private  TypeMirror getType(TypeMirror t) {
@@ -807,7 +807,7 @@ public class Utils {
             VisibleMemberTable vmt = configuration.getVisibleMemberTable(te);
             for (Element e : vmt.getMembers(VisibleMemberTable.Kind.METHODS)) {
                 ExecutableElement ee = (ExecutableElement)e;
-                if (configuration.workArounds().overrides(method, ee, origin) &&
+                if (configuration.workArounds.overrides(method, ee, origin) &&
                         !isSimpleOverride(ee)) {
                     return ee;
                 }
@@ -946,7 +946,7 @@ public class Utils {
     //### compiler would use.  Leave as specified or change it?
     public TypeElement findClass(Element element, String className) {
         TypeElement encl = getEnclosingTypeElement(element);
-        TypeElement searchResult = configuration.workArounds().searchClass(encl, className);
+        TypeElement searchResult = configuration.workArounds.searchClass(encl, className);
         if (searchResult == null) {
             encl = getEnclosingTypeElement(encl);
             //Expand search space to include enclosing class.
@@ -955,7 +955,7 @@ public class Utils {
             }
             searchResult = encl == null
                     ? null
-                    : configuration.workArounds().searchClass(encl, className);
+                    : configuration.workArounds.searchClass(encl, className);
         }
         return searchResult;
     }
@@ -1029,7 +1029,7 @@ public class Utils {
         return
             (typeElem != null &&
                 (isIncluded(typeElem) && configuration.isGeneratedDoc(typeElem))) ||
-            (configuration.extern().isExternal(typeElem) &&
+            (configuration.extern.isExternal(typeElem) &&
                 (isPublic(typeElem) || isProtected(typeElem)));
     }
 
@@ -1264,8 +1264,8 @@ public class Utils {
         if (!text.contains("\t"))
             return text;
 
-        final int tabLength = configuration.sourcetab();
-        final String whitespace = configuration.tabSpaces();
+        final int tabLength = configuration.sourcetab;
+        final String whitespace = configuration.tabSpaces;
         final int textLength = text.length();
         StringBuilder result = new StringBuilder(textLength);
         int pos = 0;
@@ -1329,11 +1329,11 @@ public class Utils {
                 continue;
             if (ee.getSimpleName().contentEquals("values") && ee.getParameters().isEmpty()) {
                 removeCommentHelper(ee); // purge previous entry
-                configuration.cmtUtils().setEnumValuesTree(configuration, e);
+                configuration.cmtUtils.setEnumValuesTree(configuration, e);
             }
             if (ee.getSimpleName().contentEquals("valueOf") && ee.getParameters().size() == 1) {
                 removeCommentHelper(ee); // purge previous entry
-                configuration.cmtUtils().setEnumValueOfTree(configuration, e);
+                configuration.cmtUtils.setEnumValueOfTree(configuration, e);
             }
         }
     }
@@ -1366,7 +1366,7 @@ public class Utils {
      */
     public boolean isDeprecated(Element e) {
         if (isPackage(e)) {
-            return configuration.workArounds().isDeprecated0(e);
+            return configuration.workArounds.isDeprecated0(e);
         }
         return elementUtils.isDeprecated(e);
     }
@@ -1379,7 +1379,7 @@ public class Utils {
      */
     public boolean isDeprecatedForRemoval(Element e) {
         List<? extends AnnotationMirror> annotationList = e.getAnnotationMirrors();
-        JavacTypes jctypes = ((DocEnvImpl) configuration.docEnv()).toolEnv.typeutils;
+        JavacTypes jctypes = ((DocEnvImpl) configuration.docEnv).toolEnv.typeutils;
         for (AnnotationMirror anno : annotationList) {
             if (jctypes.isSameType(anno.getAnnotationType().asElement().asType(), getDeprecatedType())) {
                 Map<? extends ExecutableElement, ? extends AnnotationValue> pairs = anno.getElementValues();
@@ -1428,7 +1428,7 @@ public class Utils {
         if (!isIncluded(e)) {
             return false;
         }
-        if (configuration.javafx() &&
+        if (configuration.javafx &&
                 hasBlockTag(e, DocTree.Kind.UNKNOWN_BLOCK_TAG, "treatAsPrivate")) {
             return true;
         }
@@ -1441,7 +1441,7 @@ public class Utils {
      * @return true if there are no comments, false otherwise
      */
     public boolean isSimpleOverride(ExecutableElement m) {
-        if (!configuration.summarizeOverriddenMethods() ||
+        if (!configuration.summarizeOverriddenMethods ||
                 !isIncluded(m)) {
             return false;
         }
@@ -2344,22 +2344,22 @@ public class Utils {
     private List<TypeElement> getInnerClasses(Element e, boolean filter) {
         List<TypeElement> olist = new ArrayList<>();
         for (TypeElement te : getClassesUnfiltered(e)) {
-            if (!filter || configuration.docEnv().isSelected(te)) {
+            if (!filter || configuration.docEnv.isSelected(te)) {
                 olist.add(te);
             }
         }
         for (TypeElement te : getInterfacesUnfiltered(e)) {
-            if (!filter || configuration.docEnv().isSelected(te)) {
+            if (!filter || configuration.docEnv.isSelected(te)) {
                 olist.add(te);
             }
         }
         for (TypeElement te : getAnnotationTypesUnfiltered(e)) {
-            if (!filter || configuration.docEnv().isSelected(te)) {
+            if (!filter || configuration.docEnv.isSelected(te)) {
                 olist.add(te);
             }
         }
         for (TypeElement te : getEnumsUnfiltered(e)) {
-            if (!filter || configuration.docEnv().isSelected(te)) {
+            if (!filter || configuration.docEnv.isSelected(te)) {
                 olist.add(te);
             }
         }
@@ -2452,7 +2452,7 @@ public class Utils {
         if (shouldDocumentVisitor == null) {
             shouldDocumentVisitor = new SimpleElementVisitor9<Boolean, Void>() {
                 private boolean hasSource(TypeElement e) {
-                    return configuration.docEnv().getFileKind(e) ==
+                    return configuration.docEnv.getFileKind(e) ==
                             javax.tools.JavaFileObject.Kind.SOURCE;
                 }
 
@@ -2463,13 +2463,13 @@ public class Utils {
                     if (e.getNestingKind().isNested()) {
                         return defaultAction(e, p);
                     }
-                    return configuration.docEnv().isSelected(e) && hasSource(e);
+                    return configuration.docEnv.isSelected(e) && hasSource(e);
                 }
 
                 // handle everything else
                 @Override
                 protected Boolean defaultAction(Element e, Void p) {
-                    return configuration.docEnv().isSelected(e);
+                    return configuration.docEnv.isSelected(e);
                 }
 
                 @Override
@@ -2558,7 +2558,7 @@ public class Utils {
     public String constantValueExpresion(VariableElement ve) {
         if (cve == null)
             cve = new ConstantValueExpression();
-        return cve.constantValueExpression(configuration.workArounds(), ve);
+        return cve.constantValueExpression(configuration.workArounds, ve);
     }
 
     private static class ConstantValueExpression {
@@ -2682,7 +2682,7 @@ public class Utils {
     }
 
     public boolean isIncluded(Element e) {
-        return configuration.docEnv().isIncluded(e);
+        return configuration.docEnv.isIncluded(e);
     }
 
     private SimpleElementVisitor9<Boolean, Void> specifiedVisitor = null;
@@ -2978,11 +2978,11 @@ public class Utils {
         if (duo != null && duo.treePath != null) {
             return duo.treePath;
         }
-        duo = configuration.cmtUtils().getSyntheticCommentDuo(e);
+        duo = configuration.cmtUtils.getSyntheticCommentDuo(e);
         if (duo != null && duo.treePath != null) {
             return duo.treePath;
         }
-        Map<Element, TreePath> elementToTreePath = configuration.workArounds().getElementToTreePath();
+        Map<Element, TreePath> elementToTreePath = configuration.workArounds.getElementToTreePath();
         TreePath path = elementToTreePath.get(e);
         if (path != null || elementToTreePath.containsKey(e)) {
             // expedite the path and one that is a null
@@ -3011,10 +3011,10 @@ public class Utils {
             }
             if (duo == null) {
                 // package.html or overview.html
-                duo = configuration.cmtUtils().getHtmlCommentDuo(element); // html source
+                duo = configuration.cmtUtils.getHtmlCommentDuo(element); // html source
             }
         } else {
-            duo = configuration.cmtUtils().getSyntheticCommentDuo(element);
+            duo = configuration.cmtUtils.getSyntheticCommentDuo(element);
             if (duo == null) {
                 duo = dcTreeCache.get(element); // local cache
             }
@@ -3037,7 +3037,7 @@ public class Utils {
                         throw new UncheckedDocletException(new SimpleDocletException(text, jsf));
                     }
                 }
-                configuration.workArounds().runDocLint(path);
+                configuration.workArounds.runDocLint(path);
             }
             dcTreeCache.put(element, duo);
         }
@@ -3058,7 +3058,7 @@ public class Utils {
 
     public void checkJavaScriptInOption(String name, String value) {
         if (!configuration.isAllowScriptInComments()) {
-            DocCommentTree dct = configuration.cmtUtils().parse(
+            DocCommentTree dct = configuration.cmtUtils.parse(
                     URI.create("option://" + name.replace("-", "")), "<body>" + value + "</body>");
 
             if (dct == null)

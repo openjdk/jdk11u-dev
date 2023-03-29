@@ -70,7 +70,7 @@ public class SeeTaglet extends BaseTaglet implements InheritableTaglet {
 
     @Override
     public Content getTagletOutput(Element holder, TagletWriter writer) {
-        Utils utils = writer.configuration().utils();
+        Utils utils = writer.configuration().utils;
         List<? extends DocTree> tags = utils.getSeeTrees(holder);
         Element e = holder;
         if (tags.isEmpty() && utils.isExecutableElement(holder)) {

@@ -84,9 +84,9 @@ public abstract class AbstractMemberWriter implements MemberSummaryWriter {
     public AbstractMemberWriter(SubWriterHolderWriter writer, TypeElement typeElement) {
         this.configuration = writer.configuration;
         this.writer = writer;
-        this.nodepr = configuration.nodeprecated();
+        this.nodepr = configuration.nodeprecated;
         this.typeElement = typeElement;
-        this.utils = configuration.utils();
+        this.utils = configuration.utils;
         this.contents = configuration.contents;
         this.resources = configuration.resources;
         this.links = writer.links;
@@ -418,7 +418,7 @@ public abstract class AbstractMemberWriter implements MemberSummaryWriter {
         List<? extends Element> members = mems;
         boolean printedUseTableHeader = false;
         if (members.size() > 0) {
-            Table useTable = new Table(configuration.htmlVersion(), HtmlStyle.useSummary)
+            Table useTable = new Table(configuration.htmlVersion, HtmlStyle.useSummary)
                     .setSummary(tableSummary)
                     .setCaption(heading)
                     .setRowScopeColumn(1)
@@ -457,7 +457,7 @@ public abstract class AbstractMemberWriter implements MemberSummaryWriter {
     }
 
     protected void serialWarning(Element e, String key, String a1, String a2) {
-        if (configuration.serialwarn()) {
+        if (configuration.serialwarn) {
             configuration.messages.warning(e, key, a1, a2);
         }
     }

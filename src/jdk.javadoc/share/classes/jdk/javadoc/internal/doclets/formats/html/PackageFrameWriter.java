@@ -98,7 +98,7 @@ public class PackageFrameWriter extends HtmlDocletWriter {
     public static void generate(HtmlConfiguration configuration, PackageElement packageElement)
             throws DocFileIOException {
         PackageFrameWriter packgen = new PackageFrameWriter(configuration, packageElement);
-        String pkgName = configuration.utils().getPackageName(packageElement);
+        String pkgName = configuration.utils.getPackageName(packageElement);
         HtmlTree body = packgen.getBody(false, packgen.getWindowTitle(pkgName));
         Content pkgNameContent = new StringContent(pkgName);
         HtmlTree htmlTree = (configuration.allowTag(HtmlTag.MAIN))
@@ -115,7 +115,7 @@ public class PackageFrameWriter extends HtmlDocletWriter {
             body.addContent(htmlTree);
         }
         packgen.printHtmlDocument(
-                configuration.metakeywords().getMetaKeywords(packageElement), false, body);
+                configuration.metakeywords.getMetaKeywords(packageElement), false, body);
     }
 
     /**
@@ -141,17 +141,17 @@ public class PackageFrameWriter extends HtmlDocletWriter {
             addClassKindListing(utils.getAnnotationTypes(packageElement),
                 contents.annotationTypes, contentTree);
         } else {
-            addClassKindListing(config.typeElementCatalog().interfaces(packageElement),
+            addClassKindListing(config.typeElementCatalog.interfaces(packageElement),
                 contents.interfaces, contentTree);
-            addClassKindListing(config.typeElementCatalog().ordinaryClasses(packageElement),
+            addClassKindListing(config.typeElementCatalog.ordinaryClasses(packageElement),
                 contents.classes, contentTree);
-            addClassKindListing(config.typeElementCatalog().enums(packageElement),
+            addClassKindListing(config.typeElementCatalog.enums(packageElement),
                 contents.enums, contentTree);
-            addClassKindListing(config.typeElementCatalog().exceptions(packageElement),
+            addClassKindListing(config.typeElementCatalog.exceptions(packageElement),
                 contents.exceptions, contentTree);
-            addClassKindListing(config.typeElementCatalog().errors(packageElement),
+            addClassKindListing(config.typeElementCatalog.errors(packageElement),
                 contents.errors, contentTree);
-            addClassKindListing(config.typeElementCatalog().annotationTypes(packageElement),
+            addClassKindListing(config.typeElementCatalog.annotationTypes(packageElement),
                 contents.annotationTypes, contentTree);
         }
     }
@@ -165,7 +165,7 @@ public class PackageFrameWriter extends HtmlDocletWriter {
      */
     protected void addClassKindListing(Iterable<TypeElement> list, Content labelContent,
             HtmlTree contentTree) {
-        SortedSet<TypeElement> tset = utils.filterOutPrivateClasses(list, configuration.javafx());
+        SortedSet<TypeElement> tset = utils.filterOutPrivateClasses(list, configuration.javafx);
         if(!tset.isEmpty()) {
             boolean printedHeader = false;
             HtmlTree htmlTree = (configuration.allowTag(HtmlTag.SECTION))

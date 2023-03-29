@@ -85,104 +85,104 @@ public class HtmlConfiguration extends BaseConfiguration {
     /**
      * Argument for command line option "-header".
      */
-    private String header = "";
+    public String header = "";
 
     /**
      * Argument for command line option "-packagesheader".
      */
-    private String packagesheader = "";
+    public String packagesheader = "";
 
     /**
      * Argument for command line option "-footer".
      */
-    private String footer = "";
+    public String footer = "";
 
     /**
      * Argument for command line option "-doctitle".
      */
-    private String doctitle = "";
+    public String doctitle = "";
 
     /**
      * Argument for command line option "-windowtitle".
      */
-    private String windowtitle = "";
+    public String windowtitle = "";
 
     /**
      * Argument for command line option "-top".
      */
-    private String top = "";
+    public String top = "";
 
     /**
      * Argument for command line option "-bottom".
      */
-    private String bottom = "";
+    public String bottom = "";
 
     /**
      * Argument for command line option "-helpfile".
      */
-    private String helpfile = "";
+    public String helpfile = "";
 
     /**
      * Argument for command-line option "--legal-notices".
      */
-    private String legalnotices = "";
+    public String legalnotices = "";
 
     /**
      * Argument for command line option "-stylesheetfile".
      */
-    private String stylesheetfile = "";
+    public String stylesheetfile = "";
 
     /**
      * Argument for command line option "--add-stylesheet".
      */
-    private List<String> additionalStylesheets = new ArrayList<>();
+    public List<String> additionalStylesheets = new ArrayList<>();
 
     /**
      * Argument for command line option "-Xdocrootparent".
      */
-    private String docrootparent = "";
+    public String docrootparent = "";
 
     /**
      * True if command line option "-nohelp" is used. Default value is false.
      */
-    private boolean nohelp = false;
+    public boolean nohelp = false;
 
     /**
      * True if command line option "-splitindex" is used. Default value is
      * false.
      */
-    private boolean splitindex = false;
+    public boolean splitindex = false;
 
     /**
      * False if command line option "-noindex" is used. Default value is true.
      */
-    private boolean createindex = true;
+    public boolean createindex = true;
 
     /**
      * True if command line option "-use" is used. Default value is false.
      */
-    private boolean classuse = false;
+    public boolean classuse = false;
 
     /**
      * False if command line option "-notree" is used. Default value is true.
      */
-    private boolean createtree = true;
+    public boolean createtree = true;
 
     /**
      * The META charset tag used for cross-platform viewing.
      */
-    private String charset = null;
+    public String charset = null;
 
     /**
      * True if command line option "-nodeprecated" is used. Default value is
      * false.
      */
-    private boolean nodeprecatedlist = false;
+    public boolean nodeprecatedlist = false;
 
     /**
      * True if command line option "-nonavbar" is used. Default value is false.
      */
-    private boolean nonavbar = false;
+    public boolean nonavbar = false;
 
     /**
      * True if command line option "-nooverview" is used. Default value is
@@ -193,30 +193,30 @@ public class HtmlConfiguration extends BaseConfiguration {
     /**
      * The overview path specified with "-overview" flag.
      */
-    private String overviewpath = null;
+    public String overviewpath = null;
 
     /**
      * This is true if option "-overview" is used or option "-overview" is not
      * used and number of packages is more than one.
      */
-    private boolean createoverview = false;
+    public boolean createoverview = false;
 
     /**
      * Specifies whether or not frames should be generated.
      * Defaults to false; can be set to true by --frames; can be set to false by --no-frames; last one wins.
      */
-    private boolean frames = false;
+    public boolean frames = false;
 
     /**
      * This is the HTML version of the generated pages.
      * The default value is determined later.
      */
-    private HtmlVersion htmlVersion = null;
+    public HtmlVersion htmlVersion = null;
 
     /**
      * Collected set of doclint options
      */
-    private Map<Doclet.Option, String> doclintOpts = new LinkedHashMap<>();
+    public Map<Doclet.Option, String> doclintOpts = new LinkedHashMap<>();
 
     public final Resources resources;
 
@@ -229,7 +229,7 @@ public class HtmlConfiguration extends BaseConfiguration {
     /**
      * The TypeElement for the class file getting generated.
      */
-    protected TypeElement currentTypeElement = null;  // Set this TypeElement in the ClassWriter.
+    public TypeElement currentTypeElement = null;  // Set this TypeElement in the ClassWriter.
 
     protected SortedSet<SearchIndexItem> memberSearchIndex;
 
@@ -881,186 +881,5 @@ public class HtmlConfiguration extends BaseConfiguration {
         packageSearchIndex = new TreeSet<>(utils.makeGenericSearchIndexComparator());
         tagSearchIndex = new TreeSet<>(utils.makeGenericSearchIndexComparator());
         typeSearchIndex = new TreeSet<>(utils.makeTypeSearchIndexComparator());
-    }
-
-    /**
-     * Argument for command line option "-header".
-     */
-    public String header() {
-        return header;
-    }
-
-    /**
-     * Argument for command line option "-packagesheader".
-     */
-    public String packagesheader() {
-        return packagesheader;
-    }
-
-    /**
-     * Argument for command line option "-footer".
-     */
-    public String footer() {
-        return footer;
-    }
-
-    /**
-     * Argument for command line option "-doctitle".
-     */
-    public String doctitle() {
-        return doctitle;
-    }
-
-    /**
-     * Argument for command line option "-windowtitle".
-     */
-    public String windowtitle() {
-        return windowtitle;
-    }
-
-    /**
-     * Argument for command line option "-top".
-     */
-    public String top() {
-        return top;
-    }
-
-    /**
-     * Argument for command line option "-bottom".
-     */
-    public String bottom() {
-        return bottom;
-    }
-
-    /**
-     * Argument for command line option "-helpfile".
-     */
-    public String helpfile() {
-        return helpfile;
-    }
-
-    /**
-     * Argument for command-line option "--legal-notices".
-     */
-    public String legalnotices() {
-        return legalnotices;
-    }
-
-    /**
-     * Argument for command line option "-stylesheetfile".
-     */
-    public String stylesheetfile() {
-        return stylesheetfile;
-    }
-
-    /**
-     * Argument for command line option "--add-stylesheet".
-     */
-    public List<String> additionalStylesheets() {
-        return additionalStylesheets;
-    }
-
-    /**
-     * Argument for command line option "-Xdocrootparent".
-     */
-    public String docrootparent() {
-        return docrootparent;
-    }
-
-    /**
-     * True if command line option "-nohelp" is used. Default value is false.
-     */
-    public boolean nohelp() {
-        return nohelp;
-    }
-
-    /**
-     * True if command line option "-splitindex" is used. Default value is
-     * false.
-     */
-    public boolean splitindex() {
-        return splitindex;
-    }
-
-    /**
-     * False if command line option "-noindex" is used. Default value is true.
-     */
-    public boolean createindex() {
-        return createindex;
-    }
-
-    /**
-     * True if command line option "-use" is used. Default value is false.
-     */
-    public boolean classuse() {
-        return classuse;
-    }
-
-    /**
-     * False if command line option "-notree" is used. Default value is true.
-     */
-    public boolean createtree() {
-        return createtree;
-    }
-
-    /**
-     * The META charset tag used for cross-platform viewing.
-     */
-    public String charset() {
-        return charset;
-    }
-
-    /**
-     * True if command line option "-nodeprecated" is used. Default value is
-     * false.
-     */
-    public boolean nodeprecatedlist() {
-        return nodeprecatedlist;
-    }
-
-    /**
-     * True if command line option "-nonavbar" is used. Default value is false.
-     */
-    public boolean nonavbar() {
-        return nonavbar;
-    }
-
-    /**
-     * True if command line option "-nooverview" is used. Default value is
-     * false
-     */
-    public boolean nooverview() {
-        return nooverview;
-    }
-
-    /**
-     * The overview path specified with "-overview" flag.
-     */
-    public String overviewpath() {
-        return overviewpath;
-    }
-
-    /**
-     * This is true if option "-overview" is used or option "-overview" is not
-     * used and number of packages is more than one.
-     */
-    public boolean createoverview() {
-        return createoverview;
-    }
-
-    /**
-     * Specifies whether or not frames should be generated.
-     * Defaults to false; can be set to true by --frames; can be set to false by --no-frames; last one wins.
-     */
-    public boolean frames() {
-        return frames;
-    }
-
-    /**
-     * This is the HTML version of the generated pages.
-     * The default value is determined later.
-     */
-    public HtmlVersion htmlVersion() {
-        return htmlVersion;
     }
 }

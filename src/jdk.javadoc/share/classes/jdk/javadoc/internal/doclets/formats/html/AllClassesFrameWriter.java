@@ -91,7 +91,7 @@ public class AllClassesFrameWriter extends HtmlDocletWriter {
      */
     public static void generate(HtmlConfiguration configuration,
             IndexBuilder indexBuilder) throws DocFileIOException {
-        if (configuration.frames()) {
+        if (configuration.frames) {
             generate(configuration, indexBuilder, DocPaths.ALLCLASSES_FRAME, true);
             generate(configuration, indexBuilder, DocPaths.ALLCLASSES_NOFRAME, false);
         } else {

@@ -212,7 +212,7 @@ class StandardDocFileFactory extends DocFileFactory {
 
             try {
                 OutputStream out = getFileObjectForOutput(path).openOutputStream();
-                return new BufferedWriter(new OutputStreamWriter(out, configuration.docencoding()));
+                return new BufferedWriter(new OutputStreamWriter(out, configuration.docencoding));
             } catch (IOException e) {
                 throw new DocFileIOException(this, DocFileIOException.Mode.WRITE, e);
             }

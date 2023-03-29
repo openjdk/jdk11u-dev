@@ -47,12 +47,12 @@ public class PropertyUtils {
 
     PropertyUtils(BaseConfiguration configuration) {
 
-        javafx = configuration.javafx();
+        javafx = configuration.javafx;
 
         typeUtils = configuration.docEnv.getTypeUtils();
 
         // Disable strict check for JDK's without FX.
-        TypeMirror jboType = configuration.disableJavaFxStrictChecks()
+        TypeMirror jboType = configuration.disableJavaFxStrictChecks
                 ? null
                 : configuration.utils.getSymbol("javafx.beans.Observable");
 

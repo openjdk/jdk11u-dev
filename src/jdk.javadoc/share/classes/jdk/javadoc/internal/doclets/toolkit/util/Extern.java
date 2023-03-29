@@ -137,7 +137,7 @@ public class Extern {
         if (packageItems.isEmpty()) {
             return false;
         }
-        PackageElement pe = configuration.utils().containingPackage(element);
+        PackageElement pe = configuration.utils.containingPackage(element);
         if (pe.isUnnamed()) {
             return false;
         }
@@ -265,13 +265,13 @@ public class Extern {
     private Item findElementItem(Element element) {
         Item item = null;
         if (element instanceof ModuleElement) {
-            item = moduleItems.get(configuration.utils().getModuleName((ModuleElement)element));
+            item = moduleItems.get(configuration.utils.getModuleName((ModuleElement)element));
         }
         else if (element instanceof PackageElement) {
             PackageElement packageElement = (PackageElement)element;
-            ModuleElement moduleElement = configuration.utils().containingModule(packageElement);
-            Map<String, Item> pkgMap = packageItems.get(configuration.utils().getModuleName(moduleElement));
-            item = (pkgMap != null) ? pkgMap.get(configuration.utils().getPackageName(packageElement)) : null;
+            ModuleElement moduleElement = configuration.utils.containingModule(packageElement);
+            Map<String, Item> pkgMap = packageItems.get(configuration.utils.getModuleName(moduleElement));
+            item = (pkgMap != null) ? pkgMap.get(configuration.utils.getPackageName(packageElement)) : null;
         }
         return item;
     }
@@ -386,7 +386,7 @@ public class Extern {
                         moduleItems.put(moduleName, item);
                     } else {
                         DocPath pkgPath = DocPath.create(elemname.replace('.', '/'));
-                        if (configuration.useModuleDirectories() && moduleName != null) {
+                        if (configuration.useModuleDirectories && moduleName != null) {
                             elempath = elempath.resolve(DocPath.create(moduleName).resolve(pkgPath));
                         } else {
                             elempath = elempath.resolve(pkgPath);
@@ -433,7 +433,7 @@ public class Extern {
      * @return the module name to use according to actual modularity of the package
      */
     private String checkLinkCompatibility(String packageName, String moduleName, String path)  {
-        PackageElement pe = configuration.utils().elementUtils.getPackageElement(packageName);
+        PackageElement pe = configuration.utils.elementUtils.getPackageElement(packageName);
         if (pe != null) {
             ModuleElement me = (ModuleElement)pe.getEnclosingElement();
             if (me == null || me.isUnnamed()) {
@@ -450,7 +450,7 @@ public class Extern {
                             configuration.getText("doclet.linkMismatch_ModuleLinkedtoPackage", path));
                 }
                 // library is modular, use module name for lookup even though documentation is not
-                return configuration.utils().getModuleName(me);
+                return configuration.utils.getModuleName(me);
             }
         }
         return moduleName == null ? DocletConstants.DEFAULT_ELEMENT_NAME : moduleName;

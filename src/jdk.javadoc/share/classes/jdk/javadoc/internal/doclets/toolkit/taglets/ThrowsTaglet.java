@@ -95,7 +95,7 @@ public class ThrowsTaglet extends BaseTaglet
      */
     private Content linkToUndocumentedDeclaredExceptions(List<? extends TypeMirror> declaredExceptionTypes,
             Set<String> alreadyDocumented, TagletWriter writer) {
-        Utils utils = writer.configuration().utils();
+        Utils utils = writer.configuration().utils;
         Content result = writer.getOutputInstance();
         //Add links to the exceptions declared but not documented.
         for (TypeMirror declaredExceptionType : declaredExceptionTypes) {
@@ -120,7 +120,7 @@ public class ThrowsTaglet extends BaseTaglet
     private Content inheritThrowsDocumentation(Element holder,
             List<? extends TypeMirror> declaredExceptionTypes, Set<String> alreadyDocumented,
             TagletWriter writer) {
-        Utils utils = writer.configuration().utils();
+        Utils utils = writer.configuration().utils;
         Content result = writer.getOutputInstance();
         if (utils.isExecutableElement(holder)) {
             Map<List<? extends DocTree>, ExecutableElement> declaredExceptionTags = new LinkedHashMap<>();
@@ -149,7 +149,7 @@ public class ThrowsTaglet extends BaseTaglet
      * {@inheritDoc}
      */
     public Content getTagletOutput(Element holder, TagletWriter writer) {
-        Utils utils = writer.configuration().utils();
+        Utils utils = writer.configuration().utils;
         ExecutableElement execHolder = (ExecutableElement) holder;
         Map<List<? extends DocTree>, ExecutableElement> tagsMap = new LinkedHashMap<>();
         tagsMap.put(utils.getThrowsTrees(execHolder), execHolder);
@@ -177,7 +177,7 @@ public class ThrowsTaglet extends BaseTaglet
      */
     protected Content throwsTagsOutput(Map<List<? extends DocTree>, ExecutableElement> throwTags,
         TagletWriter writer, Set<String> alreadyDocumented, boolean allowDups) {
-        Utils utils = writer.configuration().utils();
+        Utils utils = writer.configuration().utils;
         Content result = writer.getOutputInstance();
         if (!throwTags.isEmpty()) {
             for (Entry<List<? extends DocTree>, ExecutableElement> entry : throwTags.entrySet()) {

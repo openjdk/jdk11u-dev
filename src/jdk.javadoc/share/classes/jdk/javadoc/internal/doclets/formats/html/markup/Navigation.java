@@ -165,7 +165,7 @@ public class Navigation {
         this.documentedPage = page;
         this.path = path;
         this.pathToRoot = path.parent().invert();
-        this.links = new Links(path, configuration.htmlVersion());
+        this.links = new Links(path, configuration.htmlVersion);
         this.topBottomNavContents = new HashMap<>();
         this.rowListTitle = configuration.getText("doclet.Navigation");
         this.searchLabel = configuration.getContent("doclet.search");
@@ -261,11 +261,11 @@ public class Navigation {
     private void addMainNavLinks(Content tree) {
         switch (documentedPage) {
             case OVERVIEW:
-                addActivePageLink(tree, contents.overviewLabel, configuration.createoverview());
+                addActivePageLink(tree, contents.overviewLabel, configuration.createoverview);
                 addModuleLink(tree);
                 addPackageLink(tree);
                 addPageLabel(tree, contents.classLabel, true);
-                addPageLabel(tree, contents.useLabel, configuration.classuse());
+                addPageLabel(tree, contents.useLabel, configuration.classuse);
                 addTreeLink(tree);
                 addDeprecatedLink(tree);
                 addIndexLink(tree);
@@ -273,10 +273,10 @@ public class Navigation {
                 break;
             case MODULE:
                 addOverviewLink(tree);
-                addActivePageLink(tree, contents.moduleLabel, configuration.showModules());
+                addActivePageLink(tree, contents.moduleLabel, configuration.showModules);
                 addPackageLink(tree);
                 addPageLabel(tree, contents.classLabel, true);
-                addPageLabel(tree, contents.useLabel, configuration.classuse());
+                addPageLabel(tree, contents.useLabel, configuration.classuse);
                 addTreeLink(tree);
                 addDeprecatedLink(tree);
                 addIndexLink(tree);
@@ -287,11 +287,11 @@ public class Navigation {
                 addModuleOfElementLink(tree);
                 addActivePageLink(tree, contents.packageLabel, true);
                 addPageLabel(tree, contents.classLabel, true);
-                if (configuration.classuse()) {
+                if (configuration.classuse) {
                     addContentToTree(tree, links.createLink(DocPaths.PACKAGE_USE,
                             contents.useLabel, "", ""));
                 }
-                if (configuration.createtree()) {
+                if (configuration.createtree) {
                     addContentToTree(tree, links.createLink(DocPaths.PACKAGE_TREE,
                             contents.treeLabel, "", ""));
                 }
@@ -304,11 +304,11 @@ public class Navigation {
                 addModuleOfElementLink(tree);
                 addPackageSummaryLink(tree);
                 addActivePageLink(tree, contents.classLabel, true);
-                if (configuration.classuse()) {
+                if (configuration.classuse) {
                     addContentToTree(tree, links.createLink(DocPaths.CLASS_USE.resolve(path.basename()),
                             contents.useLabel));
                 }
-                if (configuration.createtree()) {
+                if (configuration.createtree) {
                     addContentToTree(tree, links.createLink(DocPaths.PACKAGE_TREE,
                             contents.treeLabel, "", ""));
                 }
@@ -326,11 +326,11 @@ public class Navigation {
                     addPackageOfElementLink(tree);
                     addContentToTree(tree, navLinkClass);
                 }
-                addActivePageLink(tree, contents.useLabel, configuration.classuse());
+                addActivePageLink(tree, contents.useLabel, configuration.classuse);
                 if (element instanceof PackageElement) {
                     addContentToTree(tree, links.createLink(DocPaths.PACKAGE_TREE, contents.treeLabel));
                 } else {
-                    addContentToTree(tree, configuration.utils().isEnclosingPackageIncluded((TypeElement) element)
+                    addContentToTree(tree, configuration.utils.isEnclosingPackageIncluded((TypeElement) element)
                             ? links.createLink(DocPath.parent.resolve(DocPaths.PACKAGE_TREE), contents.treeLabel)
                             : links.createLink(pathToRoot.resolve(DocPaths.OVERVIEW_TREE), contents.treeLabel));
                 }
@@ -341,15 +341,15 @@ public class Navigation {
             case TREE:
                 addOverviewLink(tree);
                 if (element == null) {
-                    addPageLabel(tree, contents.moduleLabel, configuration.showModules());
+                    addPageLabel(tree, contents.moduleLabel, configuration.showModules);
                     addPageLabel(tree, contents.packageLabel, true);
                 } else {
                     addModuleOfElementLink(tree);
                     addPackageSummaryLink(tree);
                 }
                 addPageLabel(tree, contents.classLabel, true);
-                addPageLabel(tree, contents.useLabel, configuration.classuse());
-                addActivePageLink(tree, contents.treeLabel, configuration.createtree());
+                addPageLabel(tree, contents.useLabel, configuration.classuse);
+                addActivePageLink(tree, contents.treeLabel, configuration.createtree);
                 addDeprecatedLink(tree);
                 addIndexLink(tree);
                 addHelpLink(tree);
@@ -361,21 +361,21 @@ public class Navigation {
                 addModuleLink(tree);
                 addPackageLink(tree);
                 addPageLabel(tree, contents.classLabel, true);
-                addPageLabel(tree, contents.useLabel, configuration.classuse());
+                addPageLabel(tree, contents.useLabel, configuration.classuse);
                 addTreeLink(tree);
                 if (documentedPage == PageMode.DEPRECATED) {
-                    addActivePageLink(tree, contents.deprecatedLabel, !(configuration.nodeprecated()
-                            || configuration.nodeprecatedlist()));
+                    addActivePageLink(tree, contents.deprecatedLabel, !(configuration.nodeprecated
+                            || configuration.nodeprecatedlist));
                 } else {
                     addDeprecatedLink(tree);
                 }
                 if (documentedPage == PageMode.INDEX) {
-                    addActivePageLink(tree, contents.indexLabel, configuration.createindex());
+                    addActivePageLink(tree, contents.indexLabel, configuration.createindex);
                 } else {
                     addIndexLink(tree);
                 }
                 if (documentedPage == PageMode.HELP) {
-                    addActivePageLink(tree, contents.helpLabel, !configuration.nohelp());
+                    addActivePageLink(tree, contents.helpLabel, !configuration.nohelp);
                 } else {
                     addHelpLink(tree);
                 }
@@ -388,7 +388,7 @@ public class Navigation {
                 addModuleLink(tree);
                 addPackageLink(tree);
                 addPageLabel(tree, contents.classLabel, true);
-                addPageLabel(tree, contents.useLabel, configuration.classuse());
+                addPageLabel(tree, contents.useLabel, configuration.classuse);
                 addTreeLink(tree);
                 addDeprecatedLink(tree);
                 addIndexLink(tree);
@@ -399,7 +399,7 @@ public class Navigation {
                 addModuleOfElementLink(tree);
                 addContentToTree(tree, navLinkPackage);
                 addPageLabel(tree, contents.classLabel, true);
-                addPageLabel(tree, contents.useLabel, configuration.classuse());
+                addPageLabel(tree, contents.useLabel, configuration.classuse);
                 addTreeLink(tree);
                 addDeprecatedLink(tree);
                 addIndexLink(tree);
@@ -429,10 +429,10 @@ public class Navigation {
                 } else {
                     TypeElement typeElement = (TypeElement) element;
                     for (VisibleMemberTable.Kind kind : summarySet) {
-                        if (kind == ENUM_CONSTANTS && !configuration.utils().isEnum(typeElement)) {
+                        if (kind == ENUM_CONSTANTS && !configuration.utils.isEnum(typeElement)) {
                             continue;
                         }
-                        if (kind == CONSTRUCTORS && configuration.utils().isEnum(typeElement)) {
+                        if (kind == CONSTRUCTORS && configuration.utils.isEnum(typeElement)) {
                             continue;
                         }
                         AbstractMemberWriter writer
@@ -581,7 +581,7 @@ public class Navigation {
                                 links.createLink(SectionName.NESTED_CLASS_SUMMARY, contents.navNested));
                     } else {
                         addContentToList(listContents, links.createLink(SectionName.NESTED_CLASSES_INHERITANCE,
-                                configuration.utils().getFullyQualifiedName(typeElement), contents.navNested));
+                                configuration.utils.getFullyQualifiedName(typeElement), contents.navNested));
                     }
                 } else {
                     addContentToList(listContents, contents.navNested);
@@ -669,10 +669,10 @@ public class Navigation {
                         AbstractMemberWriter writer
                                 = ((AbstractMemberWriter) memberSummaryBuilder.
                                         getMemberSummaryWriter(kind));
-                        if (kind == ENUM_CONSTANTS && !configuration.utils().isEnum(typeElement)) {
+                        if (kind == ENUM_CONSTANTS && !configuration.utils.isEnum(typeElement)) {
                             continue;
                         }
-                        if (kind == CONSTRUCTORS && configuration.utils().isEnum(typeElement)) {
+                        if (kind == CONSTRUCTORS && configuration.utils.isEnum(typeElement)) {
                             continue;
                         }
                         if (writer == null) {
@@ -761,7 +761,7 @@ public class Navigation {
                         getMemberSummaryWriter(ANNOTATION_TYPE_MEMBER_REQUIRED));
         if (writerField != null) {
             addAnnotationTypeDetailLink(ANNOTATION_TYPE_FIELDS,
-                    !configuration.utils().getAnnotationFields(annotationType).isEmpty(),
+                    !configuration.utils.getAnnotationFields(annotationType).isEmpty(),
                     listContents);
         } else {
             addContentToList(listContents, contents.navField);
@@ -842,38 +842,38 @@ public class Navigation {
     }
 
     private void addOverviewLink(Content tree) {
-        if (configuration.createoverview()) {
-            tree.addContent(HtmlTree.LI(links.createLink(pathToRoot.resolve(DocPaths.overviewSummary(configuration.frames())),
+        if (configuration.createoverview) {
+            tree.addContent(HtmlTree.LI(links.createLink(pathToRoot.resolve(DocPaths.overviewSummary(configuration.frames)),
                     contents.overviewLabel, "", "")));
         }
     }
 
     private void addModuleLink(Content tree) {
-        if (configuration.showModules()) {
-            if (configuration.modules().size() == 1) {
-                ModuleElement mdle = configuration.modules().first();
-                boolean included = configuration.utils().isIncluded(mdle);
+        if (configuration.showModules) {
+            if (configuration.modules.size() == 1) {
+                ModuleElement mdle = configuration.modules.first();
+                boolean included = configuration.utils.isIncluded(mdle);
                 tree.addContent(HtmlTree.LI((included)
                         ? links.createLink(pathToRoot.resolve(configuration.docPaths.moduleSummary(mdle)), contents.moduleLabel, "", "")
                         : contents.moduleLabel));
-            } else if (!configuration.modules().isEmpty()) {
+            } else if (!configuration.modules.isEmpty()) {
                 addPageLabel(tree, contents.moduleLabel, true);
             }
         }
     }
 
     private void addModuleOfElementLink(Content tree) {
-        if (configuration.showModules()) {
+        if (configuration.showModules) {
             tree.addContent(HtmlTree.LI(navLinkModule));
         }
     }
 
     private void addPackageLink(Content tree) {
-        if (configuration.packages().size() == 1) {
-            PackageElement packageElement = configuration.packages().first();
-            boolean included = packageElement != null && configuration.utils().isIncluded(packageElement);
+        if (configuration.packages.size() == 1) {
+            PackageElement packageElement = configuration.packages.first();
+            boolean included = packageElement != null && configuration.utils.isIncluded(packageElement);
             if (!included) {
-                for (PackageElement p : configuration.packages()) {
+                for (PackageElement p : configuration.packages) {
                     if (p.equals(packageElement)) {
                         included = true;
                         break;
@@ -885,7 +885,7 @@ public class Navigation {
                         pathToRoot.resolve(configuration.docPaths.forPackage(packageElement).resolve(DocPaths.PACKAGE_SUMMARY)),
                         contents.packageLabel)));
             } else {
-                DocLink crossPkgLink = configuration.extern().getExternalLink(
+                DocLink crossPkgLink = configuration.extern.getExternalLink(
                         packageElement, pathToRoot, DocPaths.PACKAGE_SUMMARY.getPath());
                 if (crossPkgLink != null) {
                     tree.addContent(HtmlTree.LI(links.createLink(crossPkgLink, contents.packageLabel)));
@@ -893,7 +893,7 @@ public class Navigation {
                     tree.addContent(HtmlTree.LI(contents.packageLabel));
                 }
             }
-        } else if (!configuration.packages().isEmpty()) {
+        } else if (!configuration.packages.isEmpty()) {
             addPageLabel(tree, contents.packageLabel, true);
         }
     }
@@ -908,7 +908,7 @@ public class Navigation {
     }
 
     private void addTreeLink(Content tree) {
-        if (configuration.createtree()) {
+        if (configuration.createtree) {
             List<PackageElement> packages = new ArrayList<>(configuration.getSpecifiedPackageElements());
             DocPath docPath = packages.size() == 1 && configuration.getSpecifiedTypeElements().isEmpty()
                     ? pathToRoot.resolve(configuration.docPaths.forPackage(packages.get(0)).resolve(DocPaths.PACKAGE_TREE))
@@ -918,16 +918,16 @@ public class Navigation {
     }
 
     private void addDeprecatedLink(Content tree) {
-        if (!(configuration.nodeprecated() || configuration.nodeprecatedlist())) {
+        if (!(configuration.nodeprecated || configuration.nodeprecatedlist)) {
             tree.addContent(HtmlTree.LI(links.createLink(pathToRoot.resolve(DocPaths.DEPRECATED_LIST),
                     contents.deprecatedLabel, "", "")));
         }
     }
 
     private void addIndexLink(Content tree) {
-        if (configuration.createindex()) {
+        if (configuration.createindex) {
             tree.addContent(HtmlTree.LI(links.createLink(pathToRoot.resolve(
-                    (configuration.splitindex()
+                    (configuration.splitindex
                             ? DocPaths.INDEX_FILES.resolve(DocPaths.indexN(1))
                             : DocPaths.INDEX_ALL)),
                     contents.indexLabel, "", "")));
@@ -935,8 +935,8 @@ public class Navigation {
     }
 
     private void addHelpLink(Content tree) {
-        if (!configuration.nohelp()) {
-            String helpfile = configuration.helpfile();
+        if (!configuration.nohelp) {
+            String helpfile = configuration.helpfile;
             DocPath helpfilenm;
             if (helpfile.isEmpty()) {
                 helpfilenm = DocPaths.HELP_DOC;
@@ -972,7 +972,7 @@ public class Navigation {
 
     private void addNavLinkClassIndex(Content tree) {
         Content allClassesContent = links.createLink(pathToRoot.resolve(
-                DocPaths.AllClasses(configuration.frames())),
+                DocPaths.AllClasses(configuration.frames)),
                 contents.allClassesLabel, "", "");
         tree.addContent(HtmlTree.LI(allClassesContent));
     }
@@ -1011,9 +1011,9 @@ public class Navigation {
      */
     public Content getContent(boolean top) {
         Content contentTree = new ContentBuilder();
-        if (!configuration.nonavbar()) {
+        if (!configuration.nonavbar) {
             Deque<Content> queue;
-            Content tree = (configuration.htmlVersion() == HtmlVersion.HTML5)
+            Content tree = (configuration.htmlVersion == HtmlVersion.HTML5)
                     ? HtmlTree.NAV()
                     : contentTree;
             HtmlTree navDiv = new HtmlTree(HtmlTag.DIV);
@@ -1047,8 +1047,8 @@ public class Navigation {
             subDiv.setStyle(HtmlStyle.subNav);
             HtmlTree ulFrames = new HtmlTree(HtmlTag.UL);
             ulFrames.setStyle(HtmlStyle.navList);
-            if (!configuration.nonavbar()) {
-                if (configuration.frames()) {
+            if (!configuration.nonavbar) {
+                if (configuration.frames) {
                     addNavShowLists(ulFrames);
                     addNavHideLists(ulFrames);
                 }
@@ -1061,7 +1061,7 @@ public class Navigation {
                     : Position.BOTTOM.allClassesLinkId());
             addNavLinkClassIndex(ulAllClasses);
             subDiv.addContent(ulAllClasses);
-            if (top && configuration.createindex()) {
+            if (top && configuration.createindex) {
                 addSearch(subDiv);
             }
             addAllClassesLinkScript(subDiv, top);

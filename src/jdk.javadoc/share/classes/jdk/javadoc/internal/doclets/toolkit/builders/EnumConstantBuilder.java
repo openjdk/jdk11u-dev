@@ -169,7 +169,7 @@ public class EnumConstantBuilder extends AbstractMemberBuilder {
      * @param enumConstantsTree the content tree to which the documentation will be added
      */
     protected void buildEnumConstantComments(Content enumConstantsTree) {
-        if (!configuration.nocomment()) {
+        if (!configuration.nocomment) {
             writer.addComments(currentElement, enumConstantsTree);
         }
     }

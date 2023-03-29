@@ -171,7 +171,7 @@ public class PropertyBuilder extends AbstractMemberBuilder {
      * @param propertyDocTree the content tree to which the documentation will be added
      */
     protected void buildPropertyComments(Content propertyDocTree) {
-        if (!configuration.nocomment()) {
+        if (!configuration.nocomment) {
             writer.addComments(currentProperty, propertyDocTree);
         }
     }

@@ -138,7 +138,7 @@ public class AllClassesIndexWriter extends HtmlDocletWriter {
      * @param content HtmlTree content to which the links will be added
      */
     protected void addContents(Content content) {
-        Table table = new Table(configuration.htmlVersion(), HtmlStyle.typeSummary)
+        Table table = new Table(configuration.htmlVersion, HtmlStyle.typeSummary)
                 .setSummary(resources.classTableSummary)
                 .setHeader(new TableHeader(contents.classLabel, contents.descriptionLabel))
                 .setRowScopeColumn(1)

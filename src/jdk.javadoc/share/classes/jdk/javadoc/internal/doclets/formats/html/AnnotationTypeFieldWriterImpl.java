@@ -139,7 +139,7 @@ public class AnnotationTypeFieldWriterImpl extends AbstractMemberWriter
                         LinkInfoImpl.Kind.MEMBER, getType(member)));
         pre.addContent(link);
         pre.addContent(Contents.SPACE);
-        if (configuration.linksource()) {
+        if (configuration.linksource) {
             Content memberName = new StringContent(name(member));
             writer.addSrcLink(member, memberName, pre);
         } else {
@@ -216,7 +216,7 @@ public class AnnotationTypeFieldWriterImpl extends AbstractMemberWriter
         TableHeader header = new TableHeader(contents.modifierAndTypeLabel, contents.fields,
             contents.descriptionLabel);
 
-        return new Table(configuration.htmlVersion(), HtmlStyle.memberSummary)
+        return new Table(configuration.htmlVersion, HtmlStyle.memberSummary)
                 .setSummary(summary)
                 .setCaption(caption)
                 .setHeader(header)

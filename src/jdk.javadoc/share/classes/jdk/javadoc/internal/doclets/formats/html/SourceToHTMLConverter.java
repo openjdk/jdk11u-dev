@@ -98,7 +98,7 @@ public class SourceToHTMLConverter {
         this.configuration  = configuration;
         this.messages = configuration.getMessages();
         this.resources = configuration.resources;
-        this.utils = configuration.utils();
+        this.utils = configuration.utils;
         this.docEnv = rd;
         this.outputdir = outputdir;
     }
@@ -124,14 +124,14 @@ public class SourceToHTMLConverter {
         for (PackageElement pkg : configuration.getSpecifiedPackageElements()) {
             // If -nodeprecated option is set and the package is marked as deprecated,
             // do not convert the package files to HTML.
-            if (!(configuration.nodeprecated() && utils.isDeprecated(pkg)))
+            if (!(configuration.nodeprecated && utils.isDeprecated(pkg)))
                 convertPackage(pkg, outputdir);
         }
         for (TypeElement te : configuration.getSpecifiedTypeElements()) {
             // If -nodeprecated option is set and the class is marked as deprecated
             // or the containing package is deprecated, do not convert the
             // package files to HTML.
-            if (!(configuration.nodeprecated() &&
+            if (!(configuration.nodeprecated &&
                   (utils.isDeprecated(te) || utils.isDeprecated(utils.containingPackage(te)))))
                 convertClass(te, outputdir);
         }
@@ -155,7 +155,7 @@ public class SourceToHTMLConverter {
             // do not convert the package files to HTML. We do not check for
             // containing package deprecation since it is already check in
             // the calling method above.
-            if (!(configuration.nodeprecated() && utils.isDeprecated(te)))
+            if (!(configuration.nodeprecated && utils.isDeprecated(te)))
                 convertClass((TypeElement)te, outputdir);
         }
     }
@@ -210,8 +210,8 @@ public class SourceToHTMLConverter {
      * @param path the path for the file.
      */
     private void writeToFile(Content body, DocPath path) throws DocFileIOException {
-        DocType htmlDocType = DocType.forVersion(configuration.htmlVersion());
-        Head head = new Head(path, configuration.htmlVersion(), configuration.docletVersion)
+        DocType htmlDocType = DocType.forVersion(configuration.htmlVersion);
+        Head head = new Head(path, configuration.htmlVersion, configuration.docletVersion)
 //                .setTimestamp(!configuration.notimestamp) // temporary: compatibility!
                 .setTitle(resources.getText("doclet.Window_Source_title"))
 //                .setCharset(configuration.charset) // temporary: compatibility!
@@ -230,7 +230,7 @@ public class SourceToHTMLConverter {
      * @param head an HtmlTree to which the stylesheet links will be added
      */
     public void addStyleSheetProperties(Content head) {
-        String filename = configuration.stylesheetfile();
+        String filename = configuration.stylesheetfile;
         DocPath stylesheet;
         if (filename.length() > 0) {
             DocFile file = DocFile.createFileForInput(configuration, filename);
@@ -245,7 +245,7 @@ public class SourceToHTMLConverter {
     }
 
     protected void addStylesheets(Content tree) {
-        List<String> stylesheets = configuration.additionalStylesheets();
+        List<String> stylesheets = configuration.additionalStylesheets;
         if (!stylesheets.isEmpty()) {
             stylesheets.forEach((ssheet) -> {
                 DocFile file = DocFile.createFileForInput(configuration, ssheet);
@@ -294,7 +294,7 @@ public class SourceToHTMLConverter {
      */
     private void addLine(Content pre, String line, int currentLineNo) {
         if (line != null) {
-            Content anchor = HtmlTree.A(configuration.htmlVersion(),
+            Content anchor = HtmlTree.A(configuration.htmlVersion,
                     "line." + Integer.toString(currentLineNo),
                     new StringContent(utils.replaceTabs(line)));
             pre.addContent(anchor);

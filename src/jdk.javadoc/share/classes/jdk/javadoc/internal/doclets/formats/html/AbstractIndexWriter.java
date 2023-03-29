@@ -181,7 +181,7 @@ public class AbstractIndexWriter extends HtmlDocletWriter {
 
             @Override
             public Void visitModule(ModuleElement e, Void p) {
-                if (configuration.showModules()) {
+                if (configuration.showModules) {
                     addDescription(e, dl, si);
                     configuration.moduleSearchIndex.add(si);
                 }
@@ -243,7 +243,7 @@ public class AbstractIndexWriter extends HtmlDocletWriter {
      */
     protected void addDescription(PackageElement pkg, Content dlTree, SearchIndexItem si) {
         Content link = getPackageLink(pkg, new StringContent(utils.getPackageName(pkg)));
-        if (configuration.showModules()) {
+        if (configuration.showModules) {
             si.setContainingModule(utils.getFullyQualifiedName(utils.containingModule(pkg)));
         }
         si.setLabel(utils.getPackageName(pkg));
@@ -433,11 +433,11 @@ public class AbstractIndexWriter extends HtmlDocletWriter {
      * @throws DocFileIOException if there is a problem creating any of the search index files
      */
     protected void createSearchIndexFiles() throws DocFileIOException {
-        if (configuration.showModules()) {
+        if (configuration.showModules) {
             createSearchIndexFile(DocPaths.MODULE_SEARCH_INDEX_JSON, DocPaths.MODULE_SEARCH_INDEX_ZIP,
                     DocPaths.MODULE_SEARCH_INDEX_JS, configuration.moduleSearchIndex, "moduleSearchIndex");
         }
-        if (!configuration.packages().isEmpty()) {
+        if (!configuration.packages.isEmpty()) {
             SearchIndexItem si = new SearchIndexItem();
             si.setCategory(resources.getText("doclet.Packages"));
             si.setLabel(configuration.getText("doclet.All_Packages"));

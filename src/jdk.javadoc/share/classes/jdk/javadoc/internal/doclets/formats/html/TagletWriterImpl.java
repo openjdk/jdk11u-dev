@@ -76,7 +76,7 @@ public class TagletWriterImpl extends TagletWriter {
         super(isFirstSentence);
         this.htmlWriter = htmlWriter;
         configuration = htmlWriter.configuration;
-        this.utils = configuration.utils();
+        this.utils = configuration.utils;
     }
 
     /**
@@ -108,7 +108,7 @@ public class TagletWriterImpl extends TagletWriter {
 
         String anchorName = htmlWriter.links.getName(tagText);
         Content result = HtmlTree.A_ID(HtmlStyle.searchTagResult, anchorName, new StringContent(tagText));
-        if (configuration.createindex() && !tagText.isEmpty()) {
+        if (configuration.createindex && !tagText.isEmpty()) {
             SearchIndexItem si = new SearchIndexItem();
             si.setLabel(tagText);
             si.setDescription(desc);

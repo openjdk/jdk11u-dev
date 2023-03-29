@@ -197,14 +197,14 @@ public class ClassUseWriter extends SubWriterHolderWriter {
             // as deprecated, do not generate the class-use page. We will still generate
             // the class-use page if the class is marked as deprecated but the containing
             // package is not since it could still be linked from that package-use page.
-            if (!(configuration.nodeprecated() &&
-                  configuration.utils().isDeprecated(configuration.utils().containingPackage(aClass))))
+            if (!(configuration.nodeprecated &&
+                  configuration.utils.isDeprecated(configuration.utils.containingPackage(aClass))))
                 ClassUseWriter.generate(configuration, mapper, aClass);
         }
-        for (PackageElement pkg : configuration.packages()) {
+        for (PackageElement pkg : configuration.packages) {
             // If -nodeprecated option is set and the package is marked
             // as deprecated, do not generate the package-use page.
-            if (!(configuration.nodeprecated() && configuration.utils().isDeprecated(pkg)))
+            if (!(configuration.nodeprecated && configuration.utils.isDeprecated(pkg)))
                 PackageUseWriter.generate(configuration, mapper, pkg);
         }
     }
@@ -284,7 +284,7 @@ public class ClassUseWriter extends SubWriterHolderWriter {
     protected void addClassUse(Content contentTree) {
         HtmlTree ul = new HtmlTree(HtmlTag.UL);
         ul.setStyle(HtmlStyle.blockList);
-        if (configuration.packages().size() > 1) {
+        if (configuration.packages.size() > 1) {
             addPackageList(ul);
             addPackageAnnotationList(ul);
         }
@@ -302,7 +302,7 @@ public class ClassUseWriter extends SubWriterHolderWriter {
                 "doclet.ClassUse_Packages.that.use.0",
                 getLink(new LinkInfoImpl(configuration,
                         LinkInfoImpl.Kind.CLASS_USE_HEADER, typeElement))));
-        Table table = new Table(configuration.htmlVersion(), HtmlStyle.useSummary)
+        Table table = new Table(configuration.htmlVersion, HtmlStyle.useSummary)
                 .setSummary(packageUseTableSummary)
                 .setCaption(caption)
                 .setHeader(getPackageTableHeader())
@@ -330,7 +330,7 @@ public class ClassUseWriter extends SubWriterHolderWriter {
                 getLink(new LinkInfoImpl(configuration,
                         LinkInfoImpl.Kind.CLASS_USE_HEADER, typeElement))));
 
-        Table table = new Table(configuration.htmlVersion(), HtmlStyle.useSummary)
+        Table table = new Table(configuration.htmlVersion, HtmlStyle.useSummary)
                 .setSummary(packageUseTableSummary)
                 .setCaption(caption)
                 .setHeader(getPackageTableHeader())

@@ -80,7 +80,7 @@ public class TreeWriter extends AbstractTreeWriter {
      */
     public TreeWriter(HtmlConfiguration configuration, DocPath filename, ClassTree classtree) {
         super(configuration, filename, classtree);
-        packages = configuration.packages();
+        packages = configuration.packages;
         classesOnly = packages.isEmpty();
         this.navBar = new Navigation(null, configuration, fixedNavDiv, PageMode.TREE, path);
     }
@@ -162,7 +162,7 @@ public class TreeWriter extends AbstractTreeWriter {
                 // is set and the package is marked as deprecated, do not include
                 // the page in the list of package hierarchies.
                 if (pkg.isUnnamed() ||
-                        (configuration.nodeprecated() && utils.isDeprecated(pkg))) {
+                        (configuration.nodeprecated && utils.isDeprecated(pkg))) {
                     i++;
                     continue;
                 }

@@ -155,7 +155,7 @@ public class ConstructorWriterImpl extends AbstractExecutableMemberWriter
         writer.addAnnotationInfo(constructor, pre);
         int annotationLength = pre.charCount();
         addModifiers(constructor, pre);
-        if (configuration.linksource()) {
+        if (configuration.linksource) {
             Content constructorName = new StringContent(name(constructor));
             writer.addSrcLink(constructor, constructorName, pre);
         } else {
@@ -263,7 +263,7 @@ public class ConstructorWriterImpl extends AbstractExecutableMemberWriter
                 resources.getText("doclet.Constructor_Summary"),
                 resources.getText("doclet.constructors"));
 
-        return new Table(configuration.htmlVersion(), HtmlStyle.memberSummary)
+        return new Table(configuration.htmlVersion, HtmlStyle.memberSummary)
                 .setSummary(summary)
                 .setCaption(contents.constructors)
                 .setHeader(getSummaryTableHeader(typeElement))

@@ -244,7 +244,7 @@ public class LinkInfoImpl extends LinkInfo {
      */
     public LinkInfoImpl(HtmlConfiguration configuration, Kind context, ExecutableElement ee) {
         this.configuration = configuration;
-        this.utils = configuration.utils();
+        this.utils = configuration.utils;
         this.executableElement = ee;
         setContext(context);
     }
@@ -266,7 +266,7 @@ public class LinkInfoImpl extends LinkInfo {
      */
     public LinkInfoImpl(HtmlConfiguration configuration, Kind context, TypeElement typeElement) {
         this.configuration = configuration;
-        this.utils = configuration.utils();
+        this.utils = configuration.utils;
         this.typeElement = typeElement;
         setContext(context);
     }
@@ -280,7 +280,7 @@ public class LinkInfoImpl extends LinkInfo {
      */
     public LinkInfoImpl(HtmlConfiguration configuration, Kind context, TypeMirror type) {
         this.configuration = configuration;
-        this.utils = configuration.utils();
+        this.utils = configuration.utils;
         this.type = type;
         setContext(context);
     }
@@ -421,7 +421,7 @@ public class LinkInfoImpl extends LinkInfo {
      */
     @Override
     public boolean isLinkable() {
-        return configuration.utils().isLinkable(typeElement);
+        return configuration.utils.isLinkable(typeElement);
     }
 
     @Override

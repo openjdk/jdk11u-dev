@@ -95,7 +95,7 @@ public class ModulePackageIndexFrameWriter extends AbstractModuleIndexWriter {
         ul.setTitle(contents.packagesLabel);
         List<PackageElement> packages = new ArrayList<>(modules.get(mdle));
         for (PackageElement pkg : packages) {
-            if ((!(configuration.nodeprecated() && utils.isDeprecated(pkg)))) {
+            if ((!(configuration.nodeprecated && utils.isDeprecated(pkg)))) {
                 ul.addContent(getPackage(pkg, mdle));
             }
         }
@@ -118,9 +118,9 @@ public class ModulePackageIndexFrameWriter extends AbstractModuleIndexWriter {
                 : HtmlTree.DIV(HtmlStyle.indexContainer, heading);
         HtmlTree ul = new HtmlTree(HtmlTag.UL);
         ul.setTitle(contents.packagesLabel);
-        Set<PackageElement> modulePackages = configuration.modulePackages().get(mdle);
+        Set<PackageElement> modulePackages = configuration.modulePackages.get(mdle);
         for (PackageElement pkg: modulePackages) {
-            if ((!(configuration.nodeprecated() && utils.isDeprecated(pkg)))) {
+            if ((!(configuration.nodeprecated && utils.isDeprecated(pkg)))) {
                 ul.addContent(getPackage(pkg, mdle));
             }
         }
@@ -157,10 +157,10 @@ public class ModulePackageIndexFrameWriter extends AbstractModuleIndexWriter {
      */
     protected void addNavigationBarHeader(Content header) {
         Content headerContent;
-        if (configuration.packagesheader().length() > 0) {
-            headerContent = new RawHtml(replaceDocRootDir(configuration.packagesheader()));
+        if (configuration.packagesheader.length() > 0) {
+            headerContent = new RawHtml(replaceDocRootDir(configuration.packagesheader));
         } else {
-            headerContent = new RawHtml(replaceDocRootDir(configuration.header()));
+            headerContent = new RawHtml(replaceDocRootDir(configuration.header));
         }
         Content heading = HtmlTree.HEADING(HtmlConstants.TITLE_HEADING, true,
                 HtmlStyle.bar, headerContent);
@@ -186,7 +186,7 @@ public class ModulePackageIndexFrameWriter extends AbstractModuleIndexWriter {
      * @param ul the Content object to which the all classes link should be added
      */
     protected void addAllClassesLink(Content ul) {
-        DocPath allClassesFrame = configuration.useModuleDirectories()
+        DocPath allClassesFrame = configuration.useModuleDirectories
                 ? DocPaths.DOT_DOT.resolve(DocPaths.ALLCLASSES_FRAME)
                 : DocPaths.ALLCLASSES_FRAME;
         Content linkContent = links.createLink(allClassesFrame,
@@ -202,7 +202,7 @@ public class ModulePackageIndexFrameWriter extends AbstractModuleIndexWriter {
      * @param ul the Content object to which the all packages link should be added
      */
     protected void addAllPackagesLink(Content ul) {
-        DocPath overviewFrame = configuration.useModuleDirectories()
+        DocPath overviewFrame = configuration.useModuleDirectories
                 ? DocPaths.DOT_DOT.resolve(DocPaths.OVERVIEW_FRAME)
                 : DocPaths.OVERVIEW_FRAME;
         Content linkContent = links.createLink(overviewFrame,
@@ -218,7 +218,7 @@ public class ModulePackageIndexFrameWriter extends AbstractModuleIndexWriter {
      * @param ul the Content object to which the all modules link should be added
      */
     protected void addAllModulesLink(Content ul) {
-        DocPath moduleOverviewFrame = configuration.useModuleDirectories()
+        DocPath moduleOverviewFrame = configuration.useModuleDirectories
                 ? DocPaths.DOT_DOT.resolve(DocPaths.MODULE_OVERVIEW_FRAME)
                 : DocPaths.MODULE_OVERVIEW_FRAME;
         Content linkContent = links.createLink(moduleOverviewFrame,

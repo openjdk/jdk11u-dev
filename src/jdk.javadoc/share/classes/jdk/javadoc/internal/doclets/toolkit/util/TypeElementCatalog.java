@@ -110,7 +110,7 @@ public class TypeElementCatalog {
      */
     public TypeElementCatalog(BaseConfiguration config) {
         this.configuration = config;
-        this.utils = config.utils();
+        this.utils = config.utils;
         comparator = utils.makeGeneralPurposeComparator();
         allClasses = new HashMap<>();
         ordinaryClasses = new HashMap<>();
@@ -156,7 +156,7 @@ public class TypeElementCatalog {
     private void addTypeElement(TypeElement typeElement, Map<PackageElement, SortedSet<TypeElement>> map) {
 
         PackageElement pkg = utils.containingPackage(typeElement);
-        if (utils.isSpecified(pkg) || configuration.nodeprecated() && utils.isDeprecated(pkg)) {
+        if (utils.isSpecified(pkg) || configuration.nodeprecated && utils.isDeprecated(pkg)) {
             // No need to catalog this class if it's package is
             // specified on the command line or if -nodeprecated option is set
             return;

@@ -74,7 +74,7 @@ public class DeprecatedAPIListBuilder {
      */
     public DeprecatedAPIListBuilder(BaseConfiguration configuration) {
         this.configuration = configuration;
-        this.utils = configuration.utils();
+        this.utils = configuration.utils;
         deprecatedMap = new EnumMap<>(DeprElementKind.class);
         for (DeprElementKind kind : DeprElementKind.values()) {
             deprecatedMap.put(kind,
@@ -92,7 +92,7 @@ public class DeprecatedAPIListBuilder {
      */
     private void buildDeprecatedAPIInfo() {
         SortedSet<Element> rset = deprecatedMap.get(DeprElementKind.REMOVAL);
-        SortedSet<ModuleElement> modules = configuration.modules();
+        SortedSet<ModuleElement> modules = configuration.modules;
         SortedSet<Element> mset = deprecatedMap.get(DeprElementKind.MODULE);
         for (Element me : modules) {
             if (utils.isDeprecatedForRemoval(me)) {
@@ -102,7 +102,7 @@ public class DeprecatedAPIListBuilder {
                 mset.add(me);
             }
         }
-        SortedSet<PackageElement> packages = configuration.packages();
+        SortedSet<PackageElement> packages = configuration.packages;
         SortedSet<Element> pset = deprecatedMap.get(DeprElementKind.PACKAGE);
         for (Element pe : packages) {
             if (utils.isDeprecatedForRemoval(pe)) {
