@@ -51,8 +51,8 @@ import sun.util.logging.PlatformLogger;
  * @author Dave Brown
  */
 public class KeepAliveCache
-        extends HashMap<KeepAliveKey, ClientVector>
-        implements Runnable {
+    extends HashMap<KeepAliveKey, ClientVector>
+    implements Runnable {
     private static final long serialVersionUID = -2937172892064557949L;
 
     // Keep alive time set according to priority specified here:
