@@ -72,7 +72,7 @@ public class KeepAliveCache
     @SuppressWarnings("removal")
     static int getUserKeepAliveSeconds(String type) {
         int v = AccessController.doPrivileged(
-                new GetIntegerAction(keepAliveProp + type, -1)).intValue();
+            new GetIntegerAction(keepAliveProp + type, -1)).intValue();
         return v < -1 ? -1 : v;
     }
 
