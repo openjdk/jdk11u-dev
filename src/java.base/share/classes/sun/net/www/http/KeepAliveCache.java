@@ -96,8 +96,8 @@ public class KeepAliveCache
     static int getMaxConnections() {
         if (result == -1) {
             result = AccessController.doPrivileged(
-                    new GetIntegerAction("http.maxConnections", MAX_CONNECTIONS))
-                    .intValue();
+                new GetIntegerAction("http.maxConnections", MAX_CONNECTIONS))
+                .intValue();
             if (result <= 0) {
                 result = MAX_CONNECTIONS;
             }
