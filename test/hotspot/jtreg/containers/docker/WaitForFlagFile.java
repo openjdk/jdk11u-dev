@@ -1,12 +1,10 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the LICENSE file that accompanied this code.
+ * published by the Free Software Foundation.
  *
  * This code is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -23,13 +21,23 @@
  * questions.
  */
 
-#import "JavaComponentAccessibility.h"
-#import "CommonComponentAccessibility.h"
+import java.io.File;
+import java.io.FileOutputStream;
 
-#import <AppKit/AppKit.h>
+public class WaitForFlagFile {
+    public static void main(String[] args) throws Exception {
+        System.out.println("WaitForFlagFile: Entering");
 
-@interface ToolbarAccessibility : CommonComponentAccessibility {
+        File started = new File("/tmp/started");
+        FileOutputStream fout = new FileOutputStream(started);
+        fout.close();
 
-};
-- (NSString * _Nonnull)accessibilityRole;
-@end
+        File flag = new File("/tmp/flag");
+        while (!flag.exists()) {
+            System.out.println("WaitForFlagFile: Waiting");
+            Thread.sleep(500);
+        }
+        System.out.println("WaitForFlagFile: Exiting");
+
+    }
+}
