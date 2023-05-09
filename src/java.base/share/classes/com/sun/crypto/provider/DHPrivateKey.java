@@ -71,8 +71,6 @@ javax.crypto.interfaces.DHPrivateKey, Serializable {
     // the private-value length (optional)
     private int l;
 
-    private int DH_data[] = { 1, 2, 840, 113549, 1, 3, 1 };
-
     /**
      * Make a DH private key out of a private value <code>x</code>, a prime
      * modulus <code>p</code>, and a base generator <code>g</code>.
@@ -219,7 +217,7 @@ javax.crypto.interfaces.DHPrivateKey, Serializable {
                 DerOutputStream algid = new DerOutputStream();
 
                 // store OID
-                algid.putOID(new ObjectIdentifier(DH_data));
+                algid.putOID(DHPublicKey.DH_OID);
                 // encode parameters
                 DerOutputStream params = new DerOutputStream();
                 params.putInteger(this.p);

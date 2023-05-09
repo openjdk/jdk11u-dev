@@ -108,12 +108,13 @@ public final class KeychainStore extends KeyStoreSpi {
     private Hashtable<String, Object> entries = new Hashtable<>();
 
     /**
-     * Algorithm identifiers and corresponding OIDs for the contents of the PKCS12 bag we get from the Keychain.
+     * Algorithm identifiers and corresponding OIDs for the contents of the
+     * PKCS12 bag we get from the Keychain.
      */
-    private static final int keyBag[]  = {1, 2, 840, 113549, 1, 12, 10, 1, 2};
-    private static final int pbeWithSHAAnd3KeyTripleDESCBC[] =     {1, 2, 840, 113549, 1, 12, 1, 3};
-    private static ObjectIdentifier PKCS8ShroudedKeyBag_OID;
-    private static ObjectIdentifier pbeWithSHAAnd3KeyTripleDESCBC_OID;
+    private static ObjectIdentifier PKCS8ShroudedKeyBag_OID =
+            ObjectIdentifier.of("1.2.840.113549.1.12.10.1.2");
+    private static ObjectIdentifier pbeWithSHAAnd3KeyTripleDESCBC_OID =
+            ObjectIdentifier.of("1.2.840.113549.1.12.1.3");
 
     /**
      * Constnats used in PBE decryption.
