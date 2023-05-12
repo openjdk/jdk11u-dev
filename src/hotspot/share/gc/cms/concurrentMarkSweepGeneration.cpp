@@ -5657,7 +5657,7 @@ bool CMSBitMap::allocate(MemRegion mr) {
     return false;
   }
 
-  // Record NMT memory type 
+  // Record NMT memory type
   MemTracker::record_virtual_memory_type(brs.base(), mtGC);
   assert(_virtual_space.committed_size() == brs.size(),
          "didn't reserve backing store for all of CMS bit map?");
