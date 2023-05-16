@@ -3233,7 +3233,7 @@ void JavaThread::print_jni_stack() {
   if (!has_last_Java_frame()) {
     ResourceMark rm(this);
     char* buf = NEW_RESOURCE_ARRAY_RETURN_NULL(char, O_BUFLEN);
-    if (buf == nullptr) {
+    if (buf == NULL) {
       tty->print_cr("Unable to print native stack - out of memory");
       return;
     }
