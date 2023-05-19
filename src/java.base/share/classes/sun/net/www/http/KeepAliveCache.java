@@ -113,7 +113,7 @@ public class KeepAliveCache
      * @param url  The URL contains info about the host and port
      * @param http The HttpClient to be cached
      */
-    public synchronized void put(final URL url, Object obj, HttpClient http) {
+    public void put(final URL url, Object obj, HttpClient http) {
         // this method may need to close an HttpClient, either because
         // it is not cacheable, or because the cache is at its capacity.
         // In the latter case, we close the least recently used client.
@@ -122,8 +122,8 @@ public class KeepAliveCache
         HttpClient oldClient = null;
         synchronized (this) {
             boolean startThread = (keepAliveTimer == null);
-                if (!startThread) {
-                    if (!keepAliveTimer.isAlive()) {
+            if (!startThread) {
+                if (!keepAliveTimer.isAlive()) {
                     startThread = true;
                 }
             }
@@ -152,39 +152,39 @@ public class KeepAliveCache
 
             if (v == null) {
                 int keepAliveTimeout = http.getKeepAliveTimeout();
-                    if (keepAliveTimeout == 0) {
-                        keepAliveTimeout = getUserKeepAlive(http.getUsingProxy());
-                        if (keepAliveTimeout == -1) {
-                            // same default for server and proxy
-                            keepAliveTimeout = 5;
-                        }
-                    } else if (keepAliveTimeout == -1) {
-                        keepAliveTimeout = getUserKeepAlive(http.getUsingProxy());
-                        if (keepAliveTimeout == -1) {
-                            // different default for server and proxy
-                            keepAliveTimeout = http.getUsingProxy() ? 60 : 5;
-                        }
-                    } else if (keepAliveTimeout == -2) {
-                        keepAliveTimeout = 0;
+                if (keepAliveTimeout == 0) {
+                    keepAliveTimeout = getUserKeepAlive(http.getUsingProxy());
+                    if (keepAliveTimeout == -1) {
+                        // same default for server and proxy
+                        keepAliveTimeout = 5;
                     }
-                    // at this point keepAliveTimeout is the number of seconds to keep
-                    // alive, which could be 0, if the user specified 0 for the property
-                    assert keepAliveTimeout >= 0;
-                    if (keepAliveTimeout == 0) {
-                        oldClient = http;
-                    } else {
-                        v = new ClientVector(keepAliveTimeout * 1000);
-                        v.put(http);
-                        super.put(key, v);
+                } else if (keepAliveTimeout == -1) {
+                    keepAliveTimeout = getUserKeepAlive(http.getUsingProxy());
+                    if (keepAliveTimeout == -1) {
+                        // different default for server and proxy
+                        keepAliveTimeout = http.getUsingProxy() ? 60 : 5;
                     }
+                } else if (keepAliveTimeout == -2) {
+                    keepAliveTimeout = 0;
+                }
+                // at this point keepAliveTimeout is the number of seconds to keep
+                // alive, which could be 0, if the user specified 0 for the property
+                assert keepAliveTimeout >= 0;
+                if (keepAliveTimeout == 0) {
+                    oldClient = http;
+                } else {
+                    v = new ClientVector(keepAliveTimeout * 1000);
+                    v.put(http);
+                    super.put(key, v);
+                }
             } else {
                 oldClient = v.put(http);
             }
         }
         // close after releasing locks
-	    if (oldClient != null) {
-	        oldClient.closeServer();
-	    }
+	if (oldClient != null) {
+	    oldClient.closeServer();
+	}
     }
 
     // returns the keep alive set by user in system property or -1 if not set
@@ -305,23 +305,23 @@ class ClientVector extends ArrayDeque<KeepAliveEntry> {
 
     synchronized HttpClient get() {
         // check the most recent connection, use if still valid
-            KeepAliveEntry e = peekFirst();
-            if (e == null) {
+        KeepAliveEntry e = peekFirst();
+        if (e == null) {
             return null;
         }
 
         long currentTime = System.currentTimeMillis();
         if ((currentTime - e.idleStartTime) > nap) {
-                return null; // all connections stale - will be cleaned up later
+            return null; // all connections stale - will be cleaned up later
         } else {
-             pollFirst();
-             if (KeepAliveCache.logger.isLoggable(PlatformLogger.Level.FINEST)) {
-                 String msg = "cached HttpClient was idle for "
-                         + Long.toString(currentTime - e.idleStartTime);
-                 KeepAliveCache.logger.finest(msg);
-             }
-             return e.hc;
-       }
+            pollFirst();
+            if (KeepAliveCache.logger.isLoggable(PlatformLogger.Level.FINEST)) {
+                String msg = "cached HttpClient was idle for "
+                        + Long.toString(currentTime - e.idleStartTime);
+                KeepAliveCache.logger.finest(msg);
+            }
+            return e.hc;
+        }
     }
 
     /* return a still valid, unused HttpClient */
