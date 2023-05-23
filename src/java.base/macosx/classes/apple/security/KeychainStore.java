@@ -132,12 +132,6 @@ public final class KeychainStore extends KeyStoreSpi {
                     return null;
                 }
             });
-        try {
-            PKCS8ShroudedKeyBag_OID = new ObjectIdentifier(keyBag);
-            pbeWithSHAAnd3KeyTripleDESCBC_OID = new ObjectIdentifier(pbeWithSHAAnd3KeyTripleDESCBC);
-        } catch (IOException ioe) {
-            // should not happen
-        }
     }
 
     private static void permissionCheck() {

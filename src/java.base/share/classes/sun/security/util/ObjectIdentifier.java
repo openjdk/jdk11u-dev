@@ -51,9 +51,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Hemma Prafullchandra
  */
 
-public final
-class ObjectIdentifier implements Serializable
-{
+public final class ObjectIdentifier implements Serializable {
     /*
      * The maximum encoded OID length, excluding the ASN.1 encoding tag and
      * length.
@@ -72,7 +70,6 @@ class ObjectIdentifier implements Serializable
      * as the restriction in JDK.
      */
     private static final int MAXIMUM_OID_SIZE = 4096;    // 2^12
-
 
     /**
      * We use the DER value (no tag, no length) as the internal format
@@ -324,24 +321,6 @@ class ObjectIdentifier implements Serializable
         System.arraycopy(tmp, 0, encoding, 0, pos);
     }
 
-    /**
-     * This method is kept for compatibility reasons. The new implementation
-     * does the check and conversion. All around the JDK, the method is called
-     * in static blocks to initialize pre-defined ObjectIdentifieies. No
-     * obvious performance hurt will be made after this change.
-     *
-     * Old doc: Create a new ObjectIdentifier for internal use. The values are
-     * neither checked nor cloned.
-     */
-    public static ObjectIdentifier newInternal(int[] values) {
-        try {
-            return new ObjectIdentifier(values);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-            // Should not happen, internal calls always uses legal values.
-        }
-    }
-
     // oid cache index'ed by the oid string
     private static ConcurrentHashMap<String,ObjectIdentifier> oidTable =
             new ConcurrentHashMap<>();
@@ -378,8 +357,7 @@ class ObjectIdentifier implements Serializable
     /*
      * n.b. the only public interface is DerOutputStream.putOID()
      */
-    void encode (DerOutputStream out) throws IOException
-    {
+    void encode(DerOutputStream out) throws IOException {
         out.write (DerValue.tag_ObjectId, encoding);
     }
 
@@ -420,17 +398,21 @@ class ObjectIdentifier implements Serializable
             if ((encoding[i] & 0x80) == 0) {
                 // one section [fromPos..i]
                 if (i - fromPos + 1 > 4) {
-                    BigInteger big = new BigInteger(1, pack(encoding, fromPos, i-fromPos+1, 7, 8));
+                    BigInteger big = new BigInteger(1, pack(encoding,
+                            fromPos, i-fromPos+1, 7, 8));
                     if (fromPos == 0) {
                         result[which++] = 2;
-                        BigInteger second = big.subtract(BigInteger.valueOf(80));
-                        if (second.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) == 1) {
+                        BigInteger second =
+                                big.subtract(BigInteger.valueOf(80));
+                        if (second.compareTo(
+                                BigInteger.valueOf(Integer.MAX_VALUE)) == 1) {
                             return null;
                         } else {
                             result[which++] = second.intValue();
                         }
                     } else {
-                        if (big.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) == 1) {
+                        if (big.compareTo(
+                                BigInteger.valueOf(Integer.MAX_VALUE)) == 1) {
                             return null;
                         } else {
                             result[which++] = big.intValue();
@@ -485,7 +467,8 @@ class ObjectIdentifier implements Serializable
                         sb.append('.');
                     }
                     if (i - fromPos + 1 > 4) { // maybe big integer
-                        BigInteger big = new BigInteger(1, pack(encoding, fromPos, i-fromPos+1, 7, 8));
+                        BigInteger big = new BigInteger(
+                                1, pack(encoding, fromPos, i-fromPos+1, 7, 8));
                         if (fromPos == 0) {
                             // first section encoded with more than 4 bytes,
                             // must be 2.something
