@@ -93,25 +93,25 @@ import sun.security.util.*;
 abstract class PBES2Parameters extends AlgorithmParametersSpi {
 
     private static ObjectIdentifier pkcs5PBKDF2_OID =
-            ObjectIdentifier.of("1.2.840.113549.1.5.12");
+            ObjectIdentifier.of1("1.2.840.113549.1.5.12");
     private static ObjectIdentifier pkcs5PBES2_OID =
-            ObjectIdentifier.of("1.2.840.113549.1.5.13");
+            ObjectIdentifier.of1("1.2.840.113549.1.5.13");
     private static ObjectIdentifier hmacWithSHA1_OID =
-            ObjectIdentifier.of("1.2.840.113549.2.7");
+            ObjectIdentifier.of1("1.2.840.113549.2.7");
     private static ObjectIdentifier hmacWithSHA224_OID =
-            ObjectIdentifier.of("1.2.840.113549.2.8");
+            ObjectIdentifier.of1("1.2.840.113549.2.8");
     private static ObjectIdentifier hmacWithSHA256_OID =
-            ObjectIdentifier.of("1.2.840.113549.2.9");
+            ObjectIdentifier.of1("1.2.840.113549.2.9");
     private static ObjectIdentifier hmacWithSHA384_OID =
-            ObjectIdentifier.of("1.2.840.113549.2.10");
+            ObjectIdentifier.of1("1.2.840.113549.2.10");
     private static ObjectIdentifier hmacWithSHA512_OID =
-            ObjectIdentifier.of("1.2.840.113549.2.11");
+            ObjectIdentifier.of1("1.2.840.113549.2.11");
     private static ObjectIdentifier aes128CBC_OID =
-            ObjectIdentifier.of("2.16.840.1.101.3.4.1.2");
+            ObjectIdentifier.of1("2.16.840.1.101.3.4.1.2");
     private static ObjectIdentifier aes192CBC_OID =
-            ObjectIdentifier.of("2.16.840.1.101.3.4.1.22");
+            ObjectIdentifier.of1("2.16.840.1.101.3.4.1.22");
     private static ObjectIdentifier aes256CBC_OID =
-            ObjectIdentifier.of("2.16.840.1.101.3.4.1.42");
+            ObjectIdentifier.of1("2.16.840.1.101.3.4.1.42");
 
     // the PBES2 algorithm name
     private String pbes2AlgorithmName = null;

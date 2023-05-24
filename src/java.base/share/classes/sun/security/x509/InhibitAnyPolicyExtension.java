@@ -76,7 +76,7 @@ implements CertAttrSet<String> {
      * Object identifier for "any-policy"
      */
     public static ObjectIdentifier AnyPolicy_Id =
-            ObjectIdentifier.of("2.5.29.32.0");
+            ObjectIdentifier.of1("2.5.29.32.0");
 
     /**
      * Attribute names.

@@ -1105,80 +1105,80 @@ public class X500Name implements GeneralNameInterface, Principal {
 
     // OID for the "CN=" attribute, denoting a person's common name.
     public static final ObjectIdentifier commonName_oid =
-            ObjectIdentifier.of("2.5.4.3");
+            ObjectIdentifier.of1("2.5.4.3");
 
     // OID for the "SURNAME=" attribute, denoting a person's surname.
     public static final ObjectIdentifier SURNAME_OID =
-            ObjectIdentifier.of("2.5.4.4");
+            ObjectIdentifier.of1("2.5.4.4");
 
     // OID for the "SERIALNUMBER=" attribute, denoting a serial number for.
     // a name. Do not confuse with PKCS#9 issuerAndSerialNumber or the
     // certificate serial number.
     public static final ObjectIdentifier SERIALNUMBER_OID =
-            ObjectIdentifier.of("2.5.4.5");
+            ObjectIdentifier.of1("2.5.4.5");
 
     // OID for the "C=" attribute, denoting a country.
     public static final ObjectIdentifier countryName_oid =
-            ObjectIdentifier.of("2.5.4.6");
+            ObjectIdentifier.of1("2.5.4.6");
 
     // OID for the "L=" attribute, denoting a locality (such as a city).
     public static final ObjectIdentifier localityName_oid =
-            ObjectIdentifier.of("2.5.4.7");
+            ObjectIdentifier.of1("2.5.4.7");
 
     // OID for the "S=" attribute, denoting a state (such as Delaware).
     public static final ObjectIdentifier stateName_oid =
-            ObjectIdentifier.of("2.5.4.8");
+            ObjectIdentifier.of1("2.5.4.8");
 
     // OID for the "STREET=" attribute, denoting a street address.
     public static final ObjectIdentifier streetAddress_oid =
-            ObjectIdentifier.of("2.5.4.9");
+            ObjectIdentifier.of1("2.5.4.9");
 
     // OID for the "O=" attribute, denoting an organization name.
     public static final ObjectIdentifier orgName_oid =
-            ObjectIdentifier.of("2.5.4.10");
+            ObjectIdentifier.of1("2.5.4.10");
 
     // OID for the "OU=" attribute, denoting an organizational unit name.
     public static final ObjectIdentifier orgUnitName_oid =
-            ObjectIdentifier.of("2.5.4.11");
+            ObjectIdentifier.of1("2.5.4.11");
 
     // OID for the "T=" attribute, denoting a person's title.
     public static final ObjectIdentifier title_oid =
-            ObjectIdentifier.of("2.5.4.12");
+            ObjectIdentifier.of1("2.5.4.12");
 
     // OID for the "GIVENNAME=" attribute, denoting a person's given name.
     public static final ObjectIdentifier GIVENNAME_OID =
-            ObjectIdentifier.of("2.5.4.42");
+            ObjectIdentifier.of1("2.5.4.42");
 
     // OID for the "INITIALS=" attribute, denoting a person's initials.
     public static final ObjectIdentifier INITIALS_OID =
-            ObjectIdentifier.of("2.5.4.43");
+            ObjectIdentifier.of1("2.5.4.43");
 
     // OID for the "GENERATION=" attribute, denoting Jr., II, etc.
     public static final ObjectIdentifier GENERATIONQUALIFIER_OID =
-            ObjectIdentifier.of("2.5.4.44");
+            ObjectIdentifier.of1("2.5.4.44");
 
     // OID for the "DNQUALIFIER=" or "DNQ=" attribute, denoting DN
     // disambiguating information.
     public static final ObjectIdentifier DNQUALIFIER_OID =
-            ObjectIdentifier.of("2.5.4.46");
+            ObjectIdentifier.of1("2.5.4.46");
 
     // OIDs from other sources which show up in X.500 names we
     // expect to deal with often.
     //
     // OID for "IP=" IP address attributes, used with SKIP.
     public static final ObjectIdentifier ipAddress_oid =
-            ObjectIdentifier.of("1.3.6.1.4.1.42.2.11.2.1");
+            ObjectIdentifier.of1("1.3.6.1.4.1.42.2.11.2.1");
 
     // Domain component OID from RFC 1274, RFC 2247, RFC 5280.
     //
     // OID for "DC=" domain component attributes.used with DNSNames in DN
     // format.
     public static final ObjectIdentifier DOMAIN_COMPONENT_OID =
-            ObjectIdentifier.of("0.9.2342.19200300.100.1.25");
+            ObjectIdentifier.of1("0.9.2342.19200300.100.1.25");
 
     // OID for "UID=" denoting a user id, defined in RFCs 1274 & 2798.
     public static final ObjectIdentifier userid_oid =
-            ObjectIdentifier.of("0.9.2342.19200300.100.1.1");
+            ObjectIdentifier.of1("0.9.2342.19200300.100.1.1");
 
     /**
      * Return constraint type:<ul>

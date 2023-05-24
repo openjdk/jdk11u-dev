@@ -59,7 +59,7 @@ import sun.security.util.ObjectIdentifier;
 public class SimpleOCSPServer {
     private final Debug debug = Debug.getInstance("oserv");
     private static final ObjectIdentifier OCSP_BASIC_RESPONSE_OID =
-            ObjectIdentifier.of("1.3.6.1.5.5.7.48.1.1");
+          ObjectIdentifier.of1("1.3.6.1.5.5.7.48.1.1");
     private static final SimpleDateFormat utcDateFmt =
             new SimpleDateFormat("MMM dd yyyy, HH:mm:ss z");
 

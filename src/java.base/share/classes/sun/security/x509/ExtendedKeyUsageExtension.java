@@ -100,16 +100,16 @@ implements CertAttrSet<String> {
             new HashMap<ObjectIdentifier, String>();
 
     static {
-        map.put(ObjectIdentifier.of("2.5.29.37.0"), "anyExtendedKeyUsage");
-        map.put(ObjectIdentifier.of("1.3.6.1.5.5.7.3.1"), "serverAuth");
-        map.put(ObjectIdentifier.of("1.3.6.1.5.5.7.3.2"), "clientAuth");
-        map.put(ObjectIdentifier.of("1.3.6.1.5.5.7.3.3"), "codeSigning");
-        map.put(ObjectIdentifier.of("1.3.6.1.5.5.7.3.4"), "emailProtection");
-        map.put(ObjectIdentifier.of("1.3.6.1.5.5.7.3.5"), "ipsecEndSystem");
-        map.put(ObjectIdentifier.of("1.3.6.1.5.5.7.3.6"), "ipsecTunnel");
-        map.put(ObjectIdentifier.of("1.3.6.1.5.5.7.3.7"), "ipsecUser");
-        map.put(ObjectIdentifier.of("1.3.6.1.5.5.7.3.8"), "timeStamping");
-        map.put(ObjectIdentifier.of("1.3.6.1.5.5.7.3.9"), "OCSPSigning");
+        map.put(ObjectIdentifier.of1("2.5.29.37.0"), "anyExtendedKeyUsage");
+        map.put(ObjectIdentifier.of1("1.3.6.1.5.5.7.3.1"), "serverAuth");
+        map.put(ObjectIdentifier.of1("1.3.6.1.5.5.7.3.2"), "clientAuth");
+        map.put(ObjectIdentifier.of1("1.3.6.1.5.5.7.3.3"), "codeSigning");
+        map.put(ObjectIdentifier.of1("1.3.6.1.5.5.7.3.4"), "emailProtection");
+        map.put(ObjectIdentifier.of1("1.3.6.1.5.5.7.3.5"), "ipsecEndSystem");
+        map.put(ObjectIdentifier.of1("1.3.6.1.5.5.7.3.6"), "ipsecTunnel");
+        map.put(ObjectIdentifier.of1("1.3.6.1.5.5.7.3.7"), "ipsecUser");
+        map.put(ObjectIdentifier.of1("1.3.6.1.5.5.7.3.8"), "timeStamping");
+        map.put(ObjectIdentifier.of1("1.3.6.1.5.5.7.3.9"), "OCSPSigning");
     };
 
     /**

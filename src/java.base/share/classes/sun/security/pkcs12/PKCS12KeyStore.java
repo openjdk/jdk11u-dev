@@ -143,19 +143,19 @@ public final class PKCS12KeyStore extends KeyStoreSpi {
     private static final Debug debug = Debug.getInstance("pkcs12");
 
     private static final ObjectIdentifier PKCS8ShroudedKeyBag_OID =
-            ObjectIdentifier.of("1.2.840.113549.1.12.10.1.2");
+            ObjectIdentifier.of1("1.2.840.113549.1.12.10.1.2");
     private static final ObjectIdentifier CertBag_OID =
-            ObjectIdentifier.of("1.2.840.113549.1.12.10.1.3");
+            ObjectIdentifier.of1("1.2.840.113549.1.12.10.1.3");
     private static final ObjectIdentifier SecretBag_OID =
-            ObjectIdentifier.of("1.2.840.113549.1.12.10.1.5");
+            ObjectIdentifier.of1("1.2.840.113549.1.12.10.1.5");
     private static final ObjectIdentifier PKCS9FriendlyName_OID =
-            ObjectIdentifier.of("1.2.840.113549.1.9.20");
+            ObjectIdentifier.of1("1.2.840.113549.1.9.20");
     private static final ObjectIdentifier PKCS9LocalKeyId_OID =
-            ObjectIdentifier.of("1.2.840.113549.1.9.21");
+            ObjectIdentifier.of1("1.2.840.113549.1.9.21");
     private static final ObjectIdentifier PKCS9CertType_OID =
-            ObjectIdentifier.of("1.2.840.113549.1.9.22.1");
+            ObjectIdentifier.of1("1.2.840.113549.1.9.22.1");
     private static final ObjectIdentifier pbes2_OID =
-            ObjectIdentifier.of("1.2.840.113549.1.5.13");
+            ObjectIdentifier.of1("1.2.840.113549.1.5.13");
 
     /*
      * Temporary Oracle OID
@@ -164,11 +164,11 @@ public final class PKCS12KeyStore extends KeyStoreSpi {
      *  oracle(113894) jdk(746875) crypto(1) id-at-trustedKeyUsage(1)}
      */
     private static final ObjectIdentifier TrustedKeyUsage_OID =
-            ObjectIdentifier.of("2.16.840.1.113894.746875.1.1");
+            ObjectIdentifier.of1("2.16.840.1.113894.746875.1.1");
 
     private static final ObjectIdentifier[] AnyUsage = new ObjectIdentifier[] {
                 // AnyExtendedKeyUsage
-                ObjectIdentifier.of("2.5.29.37.0")
+                ObjectIdentifier.of1("2.5.29.37.0")
             };
 
     private int counter = 0;
