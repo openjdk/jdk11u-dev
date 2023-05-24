@@ -126,13 +126,10 @@ public class MetricsMemoryTester {
             System.out.println("TEST PASSED!!!");
             long limit = getMemoryValue(value);
             long kmemlimit = mCgroupV1.getKernelMemoryLimit();
-            // Note that the kernel memory limit might get ignored by OCI runtimes
-            // This feature is deprecated. Only perform the check if we get an actual
-            // limit back.
             if (kmemlimit != UNLIMITED && limit != kmemlimit) {
                 throw new RuntimeException("Kernel Memory limit not equal, expected : ["
-                            + limit + "]" + ", got : ["
-                            + kmemlimit + "]");
+                        + limit + "]" + ", got : ["
+                        + kmemlimit + "]");
             }
         } else {
             throw new RuntimeException("kernel memory limit test not supported for cgroups v2");
