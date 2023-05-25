@@ -324,7 +324,7 @@ public final class ObjectIdentifier implements Serializable {
     // oid cache index'ed by the oid string
     private static ConcurrentHashMap<String,ObjectIdentifier> oidTable =
             new ConcurrentHashMap<>();
-    
+
     // To be removed once 8242151 is backported to 11.
     public static ObjectIdentifier of1(String oid) {
         try {
