@@ -25,8 +25,11 @@
 
 package sun.security.util;
 
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.PatternSyntaxException;
 import java.security.InvalidParameterException;
+import java.security.ProviderException;
 import javax.crypto.spec.DHParameterSpec;
 import sun.security.action.GetPropertyAction;
 
@@ -218,5 +221,39 @@ public final class SecurityProviderConstants {
         DEF_RSASSA_PSS_KEY_SIZE = rsaSsaPssKeySize;
         DEF_DH_KEY_SIZE = dhKeySize;
         DEF_EC_KEY_SIZE = ecKeySize;
+
+        // Set up aliases with default mappings
+        // This is needed when the mapping contains non-oid
+        // aliases
+        aliasesMap = new ConcurrentHashMap<>();
+
+        store("SHA1withDSA", KnownOIDs.SHA1withDSA,
+                KnownOIDs.OIW_JDK_SHA1withDSA.value(),
+                KnownOIDs.OIW_SHA1withDSA.value(),
+                "DSA", "SHA/DSA", "SHA-1/DSA",
+                "SHA1/DSA", "SHAwithDSA", "DSAWithSHA1");
+
+        store("DSA", KnownOIDs.DSA, KnownOIDs.OIW_DSA.value());
+
+        store("SHA1withRSA", KnownOIDs.SHA1withRSA,
+                KnownOIDs.OIW_SHA1withRSA.value());
+
+        store("SHA-1", KnownOIDs.SHA_1);
+
+        store("PBEWithMD5AndDES", KnownOIDs.PBEWithMD5AndDES, "PBE");
+
+        store("DiffieHellman", KnownOIDs.DiffieHellman);
+
+        store("AES", KnownOIDs.AES, "Rijndael");
+
+        store("EC", KnownOIDs.EC, "EllipticCurve");
+
+        store("X.509", null, "X509");
+        store("NONEwithDSA", null, "RawDSA");
+        store("DESede", null, "TripleDES");
+        store("ARCFOUR", KnownOIDs.ARCFOUR);
+        // For backward compatility, refer to PKCS1 mapping for RSA
+        // KeyPairGenerator and KeyFactory
+        store("PKCS1", KnownOIDs.PKCS1, KnownOIDs.RSA.value());
     }
 }

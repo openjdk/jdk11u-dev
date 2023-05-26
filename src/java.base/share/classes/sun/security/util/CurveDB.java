@@ -129,15 +129,16 @@ public class CurveDB {
         EllipticCurve curve = new EllipticCurve(field, bi(a), bi(b));
         ECPoint g = new ECPoint(bi(x), bi(y));
 
-        NamedCurve params = new NamedCurve(name, soid, curve, g, bi(n), h);
-        if (oidMap.put(soid, params) != null) {
-            throw new RuntimeException("Duplication oid: " + soid);
+        String oid = o.value();
+        NamedCurve params = new NamedCurve(o, curve, g, bi(n), h);
+        if (oidMap.put(oid, params) != null) {
+            throw new RuntimeException("Duplication oid: " + oid);
         }
 
-        String[] commonNames = nameSplitPattern.split(name);
-        for (String commonName : commonNames) {
-            if (nameMap.put(commonName.trim(), params) != null) {
-                throw new RuntimeException("Duplication name: " + commonName);
+        for (String cn : params.getNameAndAliases()) {
+            if (nameMap.put(cn.trim(),
+                        params) != null) {
+                throw new RuntimeException("Duplication name: " + cn);
             }
         }
 

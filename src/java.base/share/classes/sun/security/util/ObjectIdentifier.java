@@ -169,7 +169,7 @@ public final class ObjectIdentifier implements Serializable {
      * Constructs, from a string.  This string should be of the form 1.23.56.
      * Validity check included.
      */
-    public ObjectIdentifier(String oid) throws IOException {
+    private ObjectIdentifier(String oid) throws IOException {
         int ch = '.';
         int start = 0;
         int end = 0;
@@ -325,6 +325,11 @@ public final class ObjectIdentifier implements Serializable {
     private static ConcurrentHashMap<String,ObjectIdentifier> oidTable =
             new ConcurrentHashMap<>();
 
+    /**
+     * Returns an ObjectIdentifier instance for the specific String.
+     *
+     * If the String is not a valid OID string, an IOException is thrown.
+     */
     public static ObjectIdentifier of(String oidStr) throws IOException {
         // check cache first
         ObjectIdentifier oid = oidTable.get(oidStr);
