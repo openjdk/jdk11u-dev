@@ -39,35 +39,35 @@ public class ContentInfo {
 
     // pkcs7 pre-defined content types
     public static ObjectIdentifier PKCS7_OID =
-            ObjectIdentifier.of1("1.2.840.113549.1.7");
+            ObjectIdentifier.of("1.2.840.113549.1.7");
     public static ObjectIdentifier DATA_OID =
-            ObjectIdentifier.of1("1.2.840.113549.1.7.1");
+            ObjectIdentifier.of("1.2.840.113549.1.7.1");
     public static ObjectIdentifier SIGNED_DATA_OID =
-            ObjectIdentifier.of1("1.2.840.113549.1.7.2");
+            ObjectIdentifier.of("1.2.840.113549.1.7.2");
     public static ObjectIdentifier ENVELOPED_DATA_OID =
-            ObjectIdentifier.of1("1.2.840.113549.1.7.3");
+            ObjectIdentifier.of("1.2.840.113549.1.7.3");
     public static ObjectIdentifier SIGNED_AND_ENVELOPED_DATA_OID =
-            ObjectIdentifier.of1("1.2.840.113549.1.7.4");
+            ObjectIdentifier.of("1.2.840.113549.1.7.4");
     public static ObjectIdentifier DIGESTED_DATA_OID =
-            ObjectIdentifier.of1("1.2.840.113549.1.7.5");
+            ObjectIdentifier.of("1.2.840.113549.1.7.5");
     public static ObjectIdentifier ENCRYPTED_DATA_OID =
-            ObjectIdentifier.of1("1.2.840.113549.1.7.6");
+            ObjectIdentifier.of("1.2.840.113549.1.7.6");
 
     // this is for backwards-compatibility with JDK 1.1.x
     public static ObjectIdentifier OLD_SIGNED_DATA_OID =
-            ObjectIdentifier.of1("1.2.840.1113549.1.7.2");
+            ObjectIdentifier.of("1.2.840.1113549.1.7.2");
     public static ObjectIdentifier OLD_DATA_OID =
-            ObjectIdentifier.of1("1.2.840.1113549.1.7.1");
+            ObjectIdentifier.of("1.2.840.1113549.1.7.1");
 
     // The ASN.1 systax for the Netscape Certificate Sequence data type is
     // defined at:
     //      http://wp.netscape.com/eng/security/comm4-cert-download.html
     public static ObjectIdentifier NETSCAPE_CERT_SEQUENCE_OID =
-            ObjectIdentifier.of1("2.16.840.1.113730.2.5");
+            ObjectIdentifier.of("2.16.840.1.113730.2.5");
 
     // timestamp token (id-ct-TSTInfo) from RFC 3161
     public static ObjectIdentifier TIMESTAMP_TOKEN_INFO_OID =
-            ObjectIdentifier.of1("1.2.840.113549.1.9.16.1.4");
+            ObjectIdentifier.of("1.2.840.113549.1.9.16.1.4");
 
     ObjectIdentifier contentType;
     DerValue content; // OPTIONAL

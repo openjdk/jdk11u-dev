@@ -136,7 +136,7 @@ public class OIDMap {
         addInternal(POLICY_CONSTRAINTS, PKIXExtensions.PolicyConstraints_Id,
                     "sun.security.x509.PolicyConstraintsExtension");
         addInternal(NETSCAPE_CERT,
-                    ObjectIdentifier.of1("2.16.840.1.113730.1.1"),
+                    ObjectIdentifier.of("2.16.840.1.113730.1.1"),
                     "sun.security.x509.NetscapeCertTypeExtension");
         addInternal(CERT_POLICIES, PKIXExtensions.CertificatePolicies_Id,
                     "sun.security.x509.CertificatePoliciesExtension");
