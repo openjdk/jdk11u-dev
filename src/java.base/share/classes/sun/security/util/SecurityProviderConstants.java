@@ -35,11 +35,59 @@ import sun.security.action.GetPropertyAction;
  * the JDK security/crypto providers.
  */
 public final class SecurityProviderConstants {
+    // Cannot create one of these
+    private SecurityProviderConstants () {}
+
     private static final Debug debug =
         Debug.getInstance("jca", "ProviderConfig");
 
-    // Cannot create one of these
-    private SecurityProviderConstants () {
+    // cache for provider aliases; key is the standard algorithm name
+    // value is the associated aliases List
+    private static final ConcurrentHashMap<String, List<String>> aliasesMap;
+
+    // utility method for generating aliases list using the supplied
+    // 'oid' and 'extraAliases', then store into "aliasesMap" cache under the
+    // key 'stdName'
+    private static List<String> store(String stdName, KnownOIDs oid,
+            String ... extraAliases) {
+        List<String> value;
+        if (oid == null && extraAliases.length != 0) {
+            value = List.of(extraAliases);
+        } else {
+            value = new ArrayList<>();
+            if (oid != null) {
+                value.add("OID." + oid.value());
+                value.add(oid.value());
+                String[] knownAliases = oid.aliases();
+                if (knownAliases != null) {
+                    for (String ka : knownAliases) {
+                        value.add(ka);
+                    }
+                }
+            }
+            for (String ea : extraAliases) {
+                value.add(ea);
+            }
+        }
+        aliasesMap.put(stdName, value);
+        return value;
+    }
+
+    // returns an aliases List for the specified algorithm name o
+    // NOTE: exception is thrown if no aliases nor oid found, so
+    // only call this method if aliases are expected
+    public static List<String> getAliases(String o) {
+        List<String> res = aliasesMap.get(o);
+        if (res == null) {
+            KnownOIDs e = KnownOIDs.findMatch(o);
+            if (e != null) {
+                return store(o, e);
+            }
+            ProviderException pe =
+                    new ProviderException("Cannot find aliases for " + o);
+            throw pe;
+        }
+        return res;
     }
 
     public static final int getDefDSASubprimeSize(int primeSize) {
@@ -99,6 +147,7 @@ public final class SecurityProviderConstants {
 
     private static final String KEY_LENGTH_PROP =
         "jdk.security.defaultKeySize";
+
     static {
         String keyLengthStr = GetPropertyAction.privilegedGetProperty
             (KEY_LENGTH_PROP);

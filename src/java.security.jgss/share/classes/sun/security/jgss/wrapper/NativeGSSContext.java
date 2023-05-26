@@ -160,7 +160,7 @@ class NativeGSSContext implements GSSContextSpi {
                 SunNativeProvider.debug("Precomputed mechToken length: " +
                                          mechTokenLen);
                 GSSHeader gssHeader = new GSSHeader
-                    (new ObjectIdentifier(cStub.getMech().toString()),
+                    (ObjectIdentifier.of(cStub.getMech().toString()),
                      mechTokenLen);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream(600);
 

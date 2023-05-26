@@ -130,7 +130,7 @@ public class GSSNameElement implements GSSNameSpi {
                 DerOutputStream dout = new DerOutputStream();
                 Oid mech = cStub.getMech();
                 try {
-                    dout.putOID(new ObjectIdentifier(mech.toString()));
+                    dout.putOID(ObjectIdentifier.of(mech.toString()));
                 } catch (IOException e) {
                     throw new GSSExceptionImpl(GSSException.FAILURE, e);
                 }

@@ -412,7 +412,7 @@ public class GSSNameImpl implements GSSName {
         ObjectIdentifier oid = null;
 
         try {
-            oid = new ObjectIdentifier
+            oid = ObjectIdentifier.of
                 (mechElement.getMechanism().toString());
         } catch (IOException e) {
             throw new GSSExceptionImpl(GSSException.FAILURE,

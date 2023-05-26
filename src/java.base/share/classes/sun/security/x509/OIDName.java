@@ -69,7 +69,7 @@ public class OIDName implements GeneralNameInterface {
      */
     public OIDName(String name) throws IOException {
         try {
-            oid = new ObjectIdentifier(name);
+            oid = ObjectIdentifier.of(name);
         } catch (Exception e) {
             throw new IOException("Unable to create OIDName: " + e);
         }
