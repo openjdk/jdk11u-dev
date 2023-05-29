@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2021, Oracle and/or its affiliates. All rights reserved.
  */
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -41,7 +41,7 @@ import jdk.xml.internal.JdkXmlUtils;
  * because it is used from another package.
  *
  * @xsl.usage internal
- * @LastModified: May 2023
+ * @LastModified: July 2021
  */
 public final class ToHTMLStream extends ToStream
 {
