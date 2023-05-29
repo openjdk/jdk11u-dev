@@ -240,6 +240,20 @@ public final class ObjectIdentifier implements Serializable {
     }
 
     /**
+     * Constructor, from an array of integers.
+     * Validity check included.
+     */
+    public ObjectIdentifier(int[] values) throws IOException
+    {
+        checkCount(values.length);
+        checkFirstComponent(values[0]);
+        checkSecondComponent(values[0], values[1]);
+        for (int i=2; i<values.length; i++)
+            checkOtherComponent(i, values[i]);
+        init(values, values.length);
+    }
+
+    /**
      * Constructor, from an ASN.1 encoded input stream.
      * Validity check NOT included.
      * The encoding of the ID in the stream uses "DER", a BER/1 subset.
@@ -319,6 +333,24 @@ public final class ObjectIdentifier implements Serializable {
 
         encoding = new byte[pos];
         System.arraycopy(tmp, 0, encoding, 0, pos);
+    }
+
+    /**
+     * This method is kept for compatibility reasons. The new implementation
+     * does the check and conversion. All around the JDK, the method is called
+     * in static blocks to initialize pre-defined ObjectIdentifieies. No
+     * obvious performance hurt will be made after this change.
+     *
+     * Old doc: Create a new ObjectIdentifier for internal use. The values are
+     * neither checked nor cloned.
+     */
+    public static ObjectIdentifier newInternal(int[] values) {
+        try {
+            return new ObjectIdentifier(values);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+            // Should not happen, internal calls always uses legal values.
+        }
     }
 
     // oid cache index'ed by the oid string
