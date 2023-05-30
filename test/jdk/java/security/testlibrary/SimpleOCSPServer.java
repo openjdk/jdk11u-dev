@@ -179,7 +179,7 @@ public class SimpleOCSPServer {
                     issuerAlias + " not found");
             }
         }
-        sigAlgId = AlgorithmId.get(SignatureUtil.getDefaultSigAlgForKey(signerKey));
+        sigAlgId = AlgorithmId.get(AlgorithmId.getDefaultSigAlgForKey(signerKey));
         respId = new ResponderId(signerCert.getSubjectX500Principal());
         listenAddress = addr;
         listenPort = port;
