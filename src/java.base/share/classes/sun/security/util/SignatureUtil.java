@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -30,6 +30,7 @@ import java.security.*;
 import java.security.spec.*;
 import java.util.Locale;
 import sun.security.rsa.RSAUtil;
+import sun.security.x509.AlgorithmId;
 import jdk.internal.misc.SharedSecrets;
 
 /**
@@ -145,8 +146,7 @@ public class SignatureUtil {
     // for verification with the specified key and params (may be null)
     public static void initVerifyWithParam(Signature s, PublicKey key,
             AlgorithmParameterSpec params)
-            throws ProviderException, InvalidAlgorithmParameterException,
-            InvalidKeyException {
+            throws InvalidAlgorithmParameterException, InvalidKeyException {
         SharedSecrets.getJavaSecuritySignatureAccess().initVerify(s, key, params);
     }
 
@@ -155,8 +155,7 @@ public class SignatureUtil {
     public static void initVerifyWithParam(Signature s,
             java.security.cert.Certificate cert,
             AlgorithmParameterSpec params)
-            throws ProviderException, InvalidAlgorithmParameterException,
-            InvalidKeyException {
+            throws InvalidAlgorithmParameterException, InvalidKeyException {
         SharedSecrets.getJavaSecuritySignatureAccess().initVerify(s, cert, params);
     }
 
@@ -164,8 +163,83 @@ public class SignatureUtil {
     // for signing with the specified key and params (may be null)
     public static void initSignWithParam(Signature s, PrivateKey key,
             AlgorithmParameterSpec params, SecureRandom sr)
-            throws ProviderException, InvalidAlgorithmParameterException,
-            InvalidKeyException {
+            throws InvalidAlgorithmParameterException, InvalidKeyException {
         SharedSecrets.getJavaSecuritySignatureAccess().initSign(s, key, params, sr);
+    }
+
+    /**
+     * Create a Signature that has been initialized with proper key and params.
+     *
+     * @param sigAlg signature algorithms
+     * @param key private key
+     * @param provider (optional) provider
+     */
+    public static Signature fromKey(String sigAlg, PrivateKey key, String provider)
+        throws NoSuchAlgorithmException, NoSuchProviderException,
+        InvalidKeyException{
+        Signature sigEngine = (provider == null || provider.isEmpty())
+            ? Signature.getInstance(sigAlg)
+            : Signature.getInstance(sigAlg, provider);
+        return autoInitInternal(sigAlg, key, sigEngine);
+    }
+
+    /**
+     * Create a Signature that has been initialized with proper key and params.
+     *
+     * @param sigAlg signature algorithms
+     * @param key private key
+     * @param provider (optional) provider
+     */
+    public static Signature fromKey(String sigAlg, PrivateKey key, Provider provider)
+            throws NoSuchAlgorithmException, InvalidKeyException{
+        Signature sigEngine = (provider == null)
+                ? Signature.getInstance(sigAlg)
+                : Signature.getInstance(sigAlg, provider);
+        return autoInitInternal(sigAlg, key, sigEngine);
+    }
+
+    private static Signature autoInitInternal(String alg, PrivateKey key, Signature s)
+        throws InvalidKeyException {
+        AlgorithmParameterSpec params = AlgorithmId
+                .getDefaultAlgorithmParameterSpec(alg, key);
+        try {
+            SignatureUtil.initSignWithParam(s, key, params, null);
+        } catch (InvalidAlgorithmParameterException e) {
+            throw new AssertionError("Should not happen", e);
+        }
+        return s;
+    }
+
+    /**
+     * Derives AlgorithmId from a signature object and a key.
+     * @param sigEngine the signature object
+     * @param key the private key
+     * @return the AlgorithmId, not null
+     * @throws SignatureException if cannot find one
+     */
+    public static AlgorithmId fromSignature(Signature sigEngine, PrivateKey key)
+        throws SignatureException {
+        try {
+            AlgorithmParameters params = null;
+            try {
+                params = sigEngine.getParameters();
+            } catch (UnsupportedOperationException e) {
+                // some provider does not support it
+            }
+            if (params != null) {
+                return AlgorithmId.get(sigEngine.getParameters());
+            } else {
+                String sigAlg = sigEngine.getAlgorithm();
+                if (sigAlg.equalsIgnoreCase("EdDSA")) {
+                    // Hopefully key knows if it's Ed25519 or Ed448
+                    sigAlg = key.getAlgorithm();
+                }
+                return AlgorithmId.get(sigAlg);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            // This could happen if both sig alg and key alg is EdDSA,
+            // we don't know which provider does this.
+            throw new SignatureException("Cannot derive AlgorithmIdentifier", e);
+        }
     }
 }
