@@ -978,6 +978,7 @@ public class HTTPTestServer extends HTTPTest {
             implements Runnable {
 
         final ServerSocket ss;
+        private volatile boolean stop;
         public HttpsProxyTunnel(HttpServer server, HTTPTestServer target,
                                HttpHandler delegate)
                 throws IOException {
