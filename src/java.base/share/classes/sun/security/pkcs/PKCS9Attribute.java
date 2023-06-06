@@ -28,9 +28,7 @@ package sun.security.pkcs;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.cert.CertificateException;
-import java.util.Locale;
 import java.util.Date;
-import java.util.Hashtable;
 import sun.security.x509.CertificateExtensions;
 import sun.security.util.*;
 
