@@ -366,11 +366,6 @@ public final class ObjectIdentifier implements Serializable {
         }
     }
 
-    /**
-     * Returns an ObjectIdentifier instance for the specific String.
-     *
-     * If the String is not a valid OID string, an IOException is thrown.
-     */
     public static ObjectIdentifier of(String oidStr) throws IOException {
         // check cache first
         ObjectIdentifier oid = oidTable.get(oidStr);
