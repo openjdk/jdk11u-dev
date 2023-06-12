@@ -62,16 +62,16 @@ public class Unavailable {
             }
         };
 
-        Files.write(Path.of(OneKDC.KRB5_CONF), String.format("""
-                [libdefaults]
-                default_realm = RABBIT.HOLE
-
-                [realms]
-                RABBIT.HOLE = {
-                    kdc = kdc.rabbit.hole:%d
-                    kdc = kdc.rabbit.hole:%d
-                }
-                """, kdc2.getPort(), kdc1.getPort()).getBytes());
+        Files.write(Path.of(OneKDC.KRB5_CONF), String.format(
+                "[libdefaults]\n" +
+                "default_realm = RABBIT.HOLE\n" +
+                "\n" +
+                "[realms]\n" +
+                "RABBIT.HOLE = {\n" +
+                "    kdc = kdc.rabbit.hole:%d\n" +
+                "    kdc = kdc.rabbit.hole:%d\n" +
+                "}\n",
+                kdc2.getPort(), kdc1.getPort()).getBytes());
         System.setProperty("java.security.krb5.conf", OneKDC.KRB5_CONF);
         Config.refresh();
 
