@@ -27,7 +27,6 @@ package sun.security.ec;
 
 import java.util.*;
 import java.security.*;
-import java.util.regex.Pattern;
 import sun.security.util.CurveDB;
 import sun.security.util.NamedCurve;
 

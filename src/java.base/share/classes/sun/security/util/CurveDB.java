@@ -136,7 +136,7 @@ public class CurveDB {
         }
 
         for (String cn : params.getNameAndAliases()) {
-            if (nameMap.put(cn.trim(),
+            if (nameMap.put(cn,
                         params) != null) {
                 throw new RuntimeException("Duplication name: " + cn);
             }
