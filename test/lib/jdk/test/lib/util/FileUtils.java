@@ -264,17 +264,17 @@ public final class FileUtils {
                 try {
                     Process proc = new ProcessBuilder("df").start();
                     BufferedReader reader = new BufferedReader
-                            (new InputStreamReader(proc.getInputStream()));
+                        (new InputStreamReader(proc.getInputStream()));
                     // Skip the first line as it is the "df" output header.
                     if (reader.readLine() != null ) {
                         String prevMountPoint = null, mountPoint = null;
                         while ((mountPoint = reader.readLine()) != null) {
                             if (prevMountPoint != null &&
-                                    mountPoint.equals(prevMountPoint)) {
+                                mountPoint.equals(prevMountPoint)) {
                                 throw new RuntimeException
-                                        ("System configuration error: " +
-                                                "duplicate mount point " + mountPoint +
-                                                " detected");
+                                    ("System configuration error: " +
+                                    "duplicate mount point " + mountPoint +
+                                    " detected");
                             }
                             prevMountPoint = mountPoint;
                         }
@@ -288,7 +288,7 @@ public final class FileUtils {
                         int exitValue = proc.exitValue();
                         if (exitValue != 0) {
                             System.err.printf("df process exited with %d != 0%n",
-                                    exitValue);
+                                exitValue);
                             areMountPointsOK.set(false);
                         }
                     } catch (IllegalThreadStateException ignored) {
@@ -301,13 +301,13 @@ public final class FileUtils {
             });
 
             final AtomicReference throwableReference =
-                    new AtomicReference<Throwable>();
+                new AtomicReference<Throwable>();
             thr.setUncaughtExceptionHandler(
-                    new Thread.UncaughtExceptionHandler() {
-                        public void uncaughtException(Thread t, Throwable e) {
-                            throwableReference.set(e);
-                        }
-                    });
+                 new Thread.UncaughtExceptionHandler() {
+                     public void uncaughtException(Thread t, Throwable e) {
+                        throwableReference.set(e);
+                     }
+                 });
 
             thr.start();
             try {
