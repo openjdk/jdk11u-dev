@@ -96,7 +96,6 @@ public class UnreferencedDatagramSockets {
                 buffer[0] += 1;
                 ss.send(p);         // send back +1
                 latch.await(); // wait for the client to receive the packet
-
                 // do NOT close but 'forget' the datagram socket reference
                 ss = null;
             } catch (Exception ioe) {
@@ -138,6 +137,7 @@ public class UnreferencedDatagramSockets {
         p = new DatagramPacket(msg, msg.length);
         client.receive(p);
         svr.latch.countDown(); // unblock the server
+
 
         System.out.printf("echo received from: %s%n", p.getSocketAddress());
         if (msg[0] != 2) {
