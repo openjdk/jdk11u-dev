@@ -126,7 +126,6 @@ public class SocksIPv6Test {
 
     @Test(groups = "unit")
     public void testSocksOverIPv6() throws Exception {
-
         Proxy proxy = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("::1",
                 socks.getPort()));
         URL url = new URL("http://[::1]:" + server.getAddress().getPort());
@@ -141,7 +140,6 @@ public class SocksIPv6Test {
 
     @Test(groups = "unit")
     public void testSocksOverIPv6Hostname() throws Exception {
-
         InetAddress ipv6Loopback = InetAddress.getByName("::1");
         String ipv6Hostname = ipv6Loopback.getHostName();
         String ipv6HostAddress = ipv6Loopback.getHostAddress();
