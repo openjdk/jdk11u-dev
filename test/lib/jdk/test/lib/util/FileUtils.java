@@ -303,7 +303,7 @@ public final class FileUtils {
             final AtomicReference throwableReference =
                 new AtomicReference<Throwable>();
             thr.setUncaughtExceptionHandler(
-                 new Thread.UncaughtExceptionHandler() {
+                new Thread.UncaughtExceptionHandler() {
                      public void uncaughtException(Thread t, Throwable e) {
                         throwableReference.set(e);
                      }
