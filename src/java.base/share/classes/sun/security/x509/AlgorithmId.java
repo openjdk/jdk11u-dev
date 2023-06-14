@@ -637,11 +637,6 @@ public class AlgorithmId implements Serializable, DerEncoder {
     public static final ObjectIdentifier MGF1_oid =
             ObjectIdentifier.of(KnownOIDs.MGF1);
 
-    public static final ObjectIdentifier ed25519_oid =
-            ObjectIdentifier.of(KnownOIDs.Ed25519);
-    public static final ObjectIdentifier ed448_oid =
-            ObjectIdentifier.of(KnownOIDs.Ed448);
-
     /**
      * Creates a signature algorithm name from a digest algorithm
      * name and a encryption algorithm name.
