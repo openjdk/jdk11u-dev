@@ -487,3 +487,5 @@ void LoaderConstraintTable::print_on(outputStream* st) const {
     }
   }
 }
+
+void LoaderConstraintTable::print() const { print_on(tty); }

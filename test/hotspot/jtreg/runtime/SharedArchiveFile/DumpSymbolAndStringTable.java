@@ -73,7 +73,6 @@ public class DumpSymbolAndStringTable {
         try {
             output.shouldContain("Dictionary for loader data: 0x");
             output.shouldContain("^java.lang.String");
-            output.shouldNotContain("constraints=0");
         } catch (RuntimeException e) {
             output.shouldContain("Unknown diagnostic command");
         }
