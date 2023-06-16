@@ -383,6 +383,20 @@ class TestStringDeduplicationTools {
         output.shouldHaveExitValue(0);
     }
 
+    public static void testTableRehashFullGC() throws Exception {
+        // Test with StringDeduplicationRehashALot using full GCs
+        OutputAnalyzer output = DeduplicationTest.run(LargeNumberOfStrings,
+                                                      DefaultAgeThreshold,
+                                                      FullGC,
+                                                      "-Xlog:gc,gc+stringdedup=trace",
+                                                      "-XX:+StringDeduplicationRehashALot");
+        output.shouldContain("Concurrent String Deduplication");
+        output.shouldContain("Deduplicated:");
+        output.shouldNotContain("Rehash Count: 0");
+        output.shouldNotContain("Hash Seed: 0x0");
+        output.shouldHaveExitValue(0);
+    }
+
     public static void testAgeThreshold() throws Exception {
         OutputAnalyzer output;
 
