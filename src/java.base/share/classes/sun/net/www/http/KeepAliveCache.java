@@ -290,7 +290,7 @@ public class KeepAliveCache
     }
 }
 
- /* LIFO order for reusing HttpClients. Most recent entries at the front.
+/* LIFO order for reusing HttpClients. Most recent entries at the front.
  * If > maxConns are in use, discard oldest.
  */
 class ClientVector extends ArrayDeque<KeepAliveEntry> {
