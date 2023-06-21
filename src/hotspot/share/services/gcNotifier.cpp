@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2023, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -48,10 +48,14 @@ void GCNotifier::pushNotification(GCMemoryManager *mgr, const char *action, cons
   int num_pools = MemoryService::num_memory_pools();
   // stat is deallocated inside GCNotificationRequest
   GCStatInfo* stat = new(ResourceObj::C_HEAP, mtGC) GCStatInfo(num_pools);
-  mgr->get_last_gc_stat(stat);
-  GCNotificationRequest *request = new GCNotificationRequest(os::javaTimeMillis(),mgr,action,cause,stat);
-  addRequest(request);
- }
+  if (mgr->get_last_gc_stat(stat) == 0) {
+    // Don't push the notification if no data is available
+    delete stat;
+  } else {
+    GCNotificationRequest *request = new GCNotificationRequest(os::javaTimeMillis(),mgr,action,cause,stat);
+    addRequest(request);
+  }
+}
 
 void GCNotifier::addRequest(GCNotificationRequest *request) {
   MutexLockerEx ml(Service_lock, Mutex::_no_safepoint_check_flag);
