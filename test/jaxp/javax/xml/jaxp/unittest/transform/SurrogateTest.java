@@ -69,7 +69,7 @@ public class SurrogateTest {
         String xsl = TEST_SRC + File.separator + "SurrogateTest1.xsl";
 
         try (FileInputStream tFis = new FileInputStream(xsl);
-            InputStream fis = FileInputStream(xml);
+            InputStream fis = new FileInputStream(xml);
             FileOutputStream fos = new FileOutputStream(out)) {
 
             Source tSrc = new StreamSource(tFis);
