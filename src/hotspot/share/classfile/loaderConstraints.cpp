@@ -189,6 +189,7 @@ void log_ldr_constraint_msg(Symbol* class_name, const char* reason,
 bool LoaderConstraintTable::add_entry(Symbol* class_name,
                                       InstanceKlass* klass1, Handle class_loader1,
                                       InstanceKlass* klass2, Handle class_loader2) {
+
   LogTarget(Info, class, loader, constraints) lt;
   if (klass1 != NULL && klass2 != NULL) {
     if (klass1 == klass2) {
