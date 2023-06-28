@@ -624,8 +624,6 @@ sun/security/provider/KeyStore/DKSTest.sh                       8180266 windows-
 
 sun/security/pkcs11/KeyStore/SecretKeysBasic.java                 8209398 generic-all
 
-security/infra/java/security/cert/CertPathValidator/certification/ActalisCA.java  8224768 generic-all
-
 sun/security/smartcardio/TestChannel.java                       8039280 generic-all
 sun/security/smartcardio/TestConnect.java                       8039280 generic-all
 sun/security/smartcardio/TestConnectAgain.java                  8039280 generic-all
@@ -648,7 +646,7 @@ sun/security/provider/PolicyFile/GrantAllPermToExtWhenNoPolicy.java 8039280 gene
 sun/security/provider/PolicyParser/ExtDirsChange.java           8039280 generic-all
 sun/security/provider/PolicyParser/PrincipalExpansionError.java 8039280 generic-all
 
-sun/security/tools/keytool/NssTest.java                         8295343 linux-all
+sun/security/tools/keytool/NssTest.java                         8295343,8204203 linux-all,windows-all
 sun/security/pkcs11/Signature/TestRSAKeyLength.java             8295343 linux-all
 sun/security/pkcs11/rsa/TestSignatures.java                     8295343 linux-all
 sun/security/pkcs11/rsa/TestKeyPairGenerator.java               8295343 linux-all
@@ -666,7 +664,7 @@ javax/sound/sampled/Clip/Drain/ClipDrain.java          7062792 generic-all
 
 javax/sound/sampled/Mixers/DisabledAssertionCrash.java 7067310 generic-all
 
-javax/sound/midi/Sequencer/Recording.java 8167580 linux-all,solaris-all
+javax/sound/midi/Sequencer/Recording.java 8167580,8265485 linux-all,solaris-all,macosx-aarch64
 
 ############################################################################
 
