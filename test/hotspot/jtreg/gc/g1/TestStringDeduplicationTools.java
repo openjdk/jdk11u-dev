@@ -385,7 +385,9 @@ class TestStringDeduplicationTools {
 
     public static void testTableRehashFullGC() throws Exception {
         // Test with StringDeduplicationRehashALot using full GCs
-        OutputAnalyzer output = DeduplicationTest.run(LargeNumberOfStrings,
+        // Table resizing prevents table rehashing from happening, thus we use
+        // SmallNumberOfStrings to limit the number of table resizes.
+        OutputAnalyzer output = DeduplicationTest.run(SmallNumberOfStrings,
                                                       DefaultAgeThreshold,
                                                       FullGC,
                                                       "-Xlog:gc,gc+stringdedup=trace",
