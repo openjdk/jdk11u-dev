@@ -46,6 +46,7 @@ ifeq ($(ENABLE_INTREE_EC), true)
           -DMP_API_COMPATIBLE -DNSS_ECC_MORE_THAN_SUITE_B, \
       CXXFLAGS := $(BUILD_LIBSUNEC_CXXFLAGS_JDKLIB), \
       DISABLED_WARNINGS_gcc := sign-compare implicit-fallthrough, \
+      DISABLED_WARNINGS_clang := sign-compare, \
       DISABLED_WARNINGS_microsoft := 4101 4244 4146 4018, \
       LDFLAGS := $(LDFLAGS_JDKLIB) $(LDFLAGS_CXX_JDK), \
       LDFLAGS_macosx := $(call SET_SHARED_LIBRARY_ORIGIN), \

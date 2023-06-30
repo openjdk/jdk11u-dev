@@ -53,6 +53,7 @@ TARGETS += $(BUILD_LIBDT_SOCKET)
 $(eval $(call SetupJdkLibrary, BUILD_LIBJDWP, \
     NAME := jdwp, \
     OPTIMIZATION := LOW, \
+    DISABLED_WARNINGS_clang := format-nonliteral self-assign sometimes-uninitialized, \
     CFLAGS := $(CFLAGS_JDKLIB) -DJDWP_LOGGING, \
     EXTRA_HEADER_DIRS := \
       include \
