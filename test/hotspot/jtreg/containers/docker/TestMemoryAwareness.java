@@ -40,7 +40,7 @@
 import jdk.test.lib.containers.docker.Common;
 import jdk.test.lib.containers.docker.DockerRunOptions;
 import jdk.test.lib.containers.docker.DockerTestUtils;
-import jdk.test.lib.sun.hotspot.WhiteBox;
+import sun.hotspot.WhiteBox;
 import jdk.test.lib.process.OutputAnalyzer;
 
 import static jdk.test.lib.Asserts.assertNotNull;
