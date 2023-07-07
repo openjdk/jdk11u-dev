@@ -394,6 +394,7 @@ class TestStringDeduplicationTools {
                                                       "-XX:+StringDeduplicationRehashALot");
         output.shouldContain("Concurrent String Deduplication");
         output.shouldContain("Deduplicated:");
+        output.shouldContain("Full GC");
         output.shouldMatch("Rehash Count: [1-9]");
         output.shouldNotContain("Hash Seed: 0x0");
         output.shouldHaveExitValue(0);
