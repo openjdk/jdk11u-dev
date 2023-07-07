@@ -2289,7 +2289,8 @@ public class HttpURLConnection extends java.net.HttpURLConnection {
      * the connection.
      */
     @SuppressWarnings("fallthrough")
-    private AuthenticationInfo getHttpProxyAuthentication (AuthenticationHeader authhdr) {
+    private AuthenticationInfo getHttpProxyAuthentication (AuthenticationHeader authhdr)
+            throws IOException {
         /* get authorization from authenticator */
         AuthenticationInfo ret = null;
         String raw = authhdr.raw();
@@ -2385,6 +2386,7 @@ public class HttpURLConnection extends java.net.HttpURLConnection {
                                                 authenticator,
                                                 host, null, port, url.getProtocol(),
                                                 "", scheme, url, RequestorType.PROXY);
+                            validateNTLMCredentials(a);
                         }
                         /* If we are not trying transparent authentication then
                          * we need to have a PasswordAuthentication instance. For
@@ -2453,7 +2455,8 @@ public class HttpURLConnection extends java.net.HttpURLConnection {
      * preferred.
      */
     @SuppressWarnings("fallthrough")
-    private AuthenticationInfo getServerAuthentication (AuthenticationHeader authhdr) {
+    private AuthenticationInfo getServerAuthentication (AuthenticationHeader authhdr)
+            throws IOException {
         /* get authorization from authenticator */
         AuthenticationInfo ret = null;
         String raw = authhdr.raw();
@@ -2559,6 +2562,7 @@ public class HttpURLConnection extends java.net.HttpURLConnection {
                                 authenticator,
                                 url.getHost(), addr, port, url.getProtocol(),
                                 "", scheme, url, RequestorType.SERVER);
+                            validateNTLMCredentials(a);
                         }
 
                         /* If we are not trying transparent authentication then
@@ -3852,6 +3856,27 @@ public class HttpURLConnection extends java.net.HttpURLConnection {
             if (is != null) {
                 is.close();
             }
+        }
+    }
+
+    // ensure there are no null characters in username or password
+    private static void validateNTLMCredentials(PasswordAuthentication pw)
+        throws IOException {
+
+        if (pw == null) {
+            return;
+        }
+        char[] password = pw.getPassword();
+        if (password != null) {
+            for (int i=0; i<password.length; i++) {
+                if (password[i] == 0) {
+                    throw new IOException("NUL character not allowed in NTLM password");
+                }
+            }
+        }
+        String username = pw.getUserName();
+        if (username != null && username.indexOf(0) != -1) {
+            throw new IOException("NUL character not allowed in NTLM username or domain");
         }
     }
 }

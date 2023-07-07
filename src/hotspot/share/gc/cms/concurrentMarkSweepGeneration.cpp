@@ -80,6 +80,7 @@
 #include "runtime/timer.hpp"
 #include "runtime/vmThread.hpp"
 #include "services/memoryService.hpp"
+#include "services/memTracker.hpp"
 #include "services/runtimeService.hpp"
 #include "utilities/align.hpp"
 #include "utilities/stack.inline.hpp"
@@ -5068,8 +5069,9 @@ void CMSRefProcTaskProxy::work(uint worker_id) {
   CMSParDrainMarkingStackClosure par_drain_stack(_collector, _span,
                                                  _mark_bit_map,
                                                  work_queue(worker_id));
+  BarrierEnqueueDiscoveredFieldClosure enqueue;
   CMSIsAliveClosure is_alive_closure(_span, _mark_bit_map);
-  _task.work(worker_id, is_alive_closure, par_keep_alive, par_drain_stack);
+  _task.work(worker_id, is_alive_closure, par_keep_alive, enqueue, par_drain_stack);
   if (_task.marks_oops_alive()) {
     do_work_steal(worker_id, &par_drain_stack, &par_keep_alive,
                   _collector->hash_seed(worker_id));
@@ -5167,6 +5169,7 @@ void CMSCollector::refProcessingWork() {
     // Setup keep_alive and complete closures.
     CMSKeepAliveClosure cmsKeepAliveClosure(this, _span, &_markBitMap,
                                             &_markStack, false /* !preclean */);
+    BarrierEnqueueDiscoveredFieldClosure cmsEnqueue;
     CMSDrainMarkingStackClosure cmsDrainMarkingStackClosure(this,
                                   _span, &_markBitMap, &_markStack,
                                   &cmsKeepAliveClosure, false /* !preclean */);
@@ -5192,12 +5195,14 @@ void CMSCollector::refProcessingWork() {
       CMSRefProcTaskExecutor task_executor(*this);
       stats = rp->process_discovered_references(&_is_alive_closure,
                                         &cmsKeepAliveClosure,
+                                        &cmsEnqueue,
                                         &cmsDrainMarkingStackClosure,
                                         &task_executor,
                                         &pt);
     } else {
       stats = rp->process_discovered_references(&_is_alive_closure,
                                         &cmsKeepAliveClosure,
+                                        &cmsEnqueue,
                                         &cmsDrainMarkingStackClosure,
                                         NULL,
                                         &pt);
@@ -5651,6 +5656,9 @@ bool CMSBitMap::allocate(MemRegion mr) {
     log_warning(gc)("CMS bit map backing store failure");
     return false;
   }
+
+  // Record NMT memory type
+  MemTracker::record_virtual_memory_type(brs.base(), mtGC);
   assert(_virtual_space.committed_size() == brs.size(),
          "didn't reserve backing store for all of CMS bit map?");
   assert(_virtual_space.committed_size() << (_shifter + LogBitsPerByte) >=
@@ -5739,6 +5747,9 @@ bool CMSMarkStack::allocate(size_t size) {
     log_warning(gc)("CMSMarkStack backing store failure");
     return false;
   }
+
+  // Record NMT memory type
+  MemTracker::record_virtual_memory_type(rs.base(), mtGC);
   assert(_virtual_space.committed_size() == rs.size(),
          "didn't reserve backing store for all of CMS stack?");
   _base = (oop*)(_virtual_space.low());

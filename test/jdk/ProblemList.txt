@@ -617,14 +617,10 @@ sun/security/tools/jarsigner/compatibility/SignTwice.java       8217375 windows-
 sun/security/tools/jarsigner/warnings/BadKeyUsageTest.java      8026393 generic-all
 
 javax/net/ssl/DTLS/PacketLossRetransmission.java                8169086 macosx-x64
-javax/net/ssl/DTLS/RespondToRetransmit.java                     8169086 macosx-x64
+javax/net/ssl/DTLS/RespondToRetransmit.java                     8169086 macosx-all
 javax/net/ssl/DTLS/CipherSuite.java                             8202059 macosx-x64
 
 sun/security/provider/KeyStore/DKSTest.sh                       8180266 windows-all
-
-sun/security/pkcs11/KeyStore/SecretKeysBasic.java                 8209398 generic-all
-
-security/infra/java/security/cert/CertPathValidator/certification/ActalisCA.java  8224768 generic-all
 
 sun/security/smartcardio/TestChannel.java                       8039280 generic-all
 sun/security/smartcardio/TestConnect.java                       8039280 generic-all
@@ -648,7 +644,7 @@ sun/security/provider/PolicyFile/GrantAllPermToExtWhenNoPolicy.java 8039280 gene
 sun/security/provider/PolicyParser/ExtDirsChange.java           8039280 generic-all
 sun/security/provider/PolicyParser/PrincipalExpansionError.java 8039280 generic-all
 
-sun/security/tools/keytool/NssTest.java                         8295343 linux-all
+sun/security/tools/keytool/NssTest.java                         8295343,8204203 linux-all,windows-all
 sun/security/pkcs11/Signature/TestRSAKeyLength.java             8295343 linux-all
 sun/security/pkcs11/rsa/TestSignatures.java                     8295343 linux-all
 sun/security/pkcs11/rsa/TestKeyPairGenerator.java               8295343 linux-all
