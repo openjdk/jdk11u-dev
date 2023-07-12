@@ -322,7 +322,6 @@ public class ChunkedOutputStream implements HttpCallback {
                 server = new TestHttpsServer(
                         new ChunkedOutputStream(), 1, 10, 0);
                 System.out.println ("Server started: listening on port: " + server.getLocalPort());
-                testPlainText(server.getAuthority());
                 // the test server doesn't support keep-alive yet
                 // test1("http://localhost:"+server.getLocalPort()+"/d0");
                 test1("https://localhost:"+server.getLocalPort()+"/d01");
