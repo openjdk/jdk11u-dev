@@ -134,9 +134,20 @@ public class ChunkedOutputStream implements HttpCallback {
                 req.orderlyClose();
                 break;
             }
+            default:
+                req.sendResponse(404, "Not Found");
+                req.orderlyClose();
+                break;
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean dropPlainTextConnections() {
+        System.out.println("Unrecognized SSL message, plaintext connection?");
+        System.out.println("TestHttpsServer receveived rogue connection: ignoring it.");
+        rogueCount.incrementAndGet();
+        return true;
     }
 
     static void readAndCompare (InputStream is, String cmp) throws IOException {
