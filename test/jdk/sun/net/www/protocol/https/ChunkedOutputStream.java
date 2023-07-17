@@ -133,11 +133,11 @@ public class ChunkedOutputStream implements HttpCallback {
                 req.sendResponse (200, "OK");
                 req.orderlyClose();
                 break;
-            }
             default:
                 req.sendResponse(404, "Not Found");
                 req.orderlyClose();
                 break;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
