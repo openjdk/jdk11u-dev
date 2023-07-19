@@ -87,15 +87,13 @@ public class InitToBlack implements Printable {
 
     private static void createTestUI() {
         frame = new JFrame("Test InitToBlack");
-        String INSTRUCTION = """
-                Aim: This test checks whether the default foreground color on a printer
-                graphics object is black so that rendering will appear without having
-                to execute setColor.
-                Step:
-                1) Click on the "Print" button. Check whether page is printed on the printer.
-                2) Check whether "Test Passes" is printed on the page and it should be in
-                black color. If yes then press "Pass" button else press "Fail" button.
-                """;
+        String INSTRUCTION = "Aim: This test checks whether the default foreground color on a printer\n" +
+                "graphics object is black so that rendering will appear without having\n" +
+                "to execute setColor.\n" +
+                "Step:\n" +
+                "1) Click on the \"Print\" button. Check whether page is printed on the printer.\n" +
+                "2) Check whether \"Test Passes\" is printed on the page and it should be in\n" +
+                "black color. If yes then press \"Pass\" button else press \"Fail\" button.\n";
         JTextArea instructionTextArea = new JTextArea(INSTRUCTION, 4, 40);
         instructionTextArea.setEditable(false);
 
