@@ -165,6 +165,14 @@ public class TestHttpsServer {
         return schan.socket().getLocalPort ();
     }
 
+    public String getAuthority() {
+        InetAddress address = schan.socket().getInetAddress();
+        String hostaddr = address.getHostAddress();
+        if (address.isAnyLocalAddress()) hostaddr = "localhost";
+        if (hostaddr.indexOf(':') > -1) hostaddr = "[" + hostaddr + "]";
+        return hostaddr + ":" + getLocalPort();
+    }
+
     static class Server extends Thread {
 
         ServerSocketChannel schan;
