@@ -908,9 +908,10 @@ bool os::Linux::adjustStackSizeForGuardPages() {
   return _adjustStackSizeForGuardPages;
 }
 
-#if defined(__GLIBC__)
 // Dummy decl as substitute for cmdline parameter. TLS not in jdk11.
 static const bool AdjustStackSizeForTLS = false;
+
+#if defined(__GLIBC__)
 static void init_adjust_stacksize_for_guard_pages() {
   assert(_get_minstack_func == NULL, "initialization error");
   _get_minstack_func =(GetMinStack)dlsym(RTLD_DEFAULT, "__pthread_get_minstack");
@@ -967,13 +968,10 @@ bool os::create_thread(Thread* thread, ThreadType thr_type,
   // Apply stack size adjustments if needed. However, be careful not to end up
   // with a size of zero due to overflow. Don't add the adjustment in that case.
   size_t stack_adjust_size = 0;
-#if defined(__GLIBC__)
   if (AdjustStackSizeForTLS) {
     // Adjust the stack_size for on-stack TLS - see get_static_tls_area_size().
     stack_adjust_size += get_static_tls_area_size(&attr);
-  } else
-#endif
-  if (os::Linux::adjustStackSizeForGuardPages()) {
+  } else if (os::Linux::adjustStackSizeForGuardPages()) {
     stack_adjust_size += guard_size;
   }
 
