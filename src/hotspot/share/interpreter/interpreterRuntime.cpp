@@ -861,7 +861,6 @@ void InterpreterRuntime::resolve_invoke(JavaThread* thread, Bytecodes::Code byte
     LinkResolver::resolve_invoke(info, receiver, pool,
                                  last_frame.get_index_u2_cpcache(bytecode), bytecode,
                                  CHECK);
-
     if (JvmtiExport::can_hotswap_or_post_breakpoint() && info.resolved_method()->is_old()) {
       resolved_method = methodHandle(thread, info.resolved_method()->get_new_method());
     } else {
