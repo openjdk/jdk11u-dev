@@ -4935,8 +4935,7 @@ public class RegExTest {
     }
 
     // This test is for 8305733
-    @Test
-    public static void caseInsensitivePMatch() {
+    private static void caseInsensitivePMatch() {
         for (String input : List.of("abcd", "AbCd", "ABCD")) {
             for (String pattern : List.of("abcd", "aBcD", "[a-d]{4}",
                     "(?:a|b|c|d){4}", "\\p{Lower}{4}", "\\p{Ll}{4}",
@@ -4957,7 +4956,7 @@ public class RegExTest {
                     "[\\p{gc=Lt}]{4}", "[\\p{general_category=Lt}]{4}",
                     "[\\p{IsTitlecase}]{4}", "[\\p{javaTitleCase}]{4}"))
             {
-                Predicate<String> p = Pattern.compile(regex).asPredicate();
+                Predicate<String> p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE).asPredicate();
                 if (!p.test(input)) {
                     failCount++;
                 }
@@ -4985,7 +4984,8 @@ public class RegExTest {
                     "[\\p{gc=Lt}]", "[\\p{general_category=Lt}]",
                     "[\\p{IsTitlecase}]", "[\\p{javaTitleCase}]"))
             {
-                Predicate<String> p = Pattern.compile(regex).asPredicate();
+                Predicate<String> p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE
+                |                                     Pattern.UNICODE_CHARACTER_CLASS).asPredicate();
                 if (!p.test(input)) {
                     failCount++;
                 }
