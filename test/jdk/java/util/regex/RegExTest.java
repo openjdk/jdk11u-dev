@@ -170,6 +170,7 @@ public class RegExTest {
         grapheme();
         expoBacktracking();
         invalidGroupName();
+        caseInsensitivePMatch();
 
         if (failure) {
             throw new
@@ -4956,10 +4957,10 @@ public class RegExTest {
                     "[\\p{gc=Lt}]{4}", "[\\p{general_category=Lt}]{4}",
                     "[\\p{IsTitlecase}]{4}", "[\\p{javaTitleCase}]{4}"))
             {
-                assertTrue(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE)
-                            .matcher(input)
-                            .matches(),"Expected to match: " + "'" + input +
-                        "' =~ /" + pattern + "/");
+                Predicate<String> p = Pattern.compile(regex).asPredicate();
+                if (!p.test(input)) {
+                    failCount++;
+                }
             }
         }
 
@@ -4984,11 +4985,10 @@ public class RegExTest {
                     "[\\p{gc=Lt}]", "[\\p{general_category=Lt}]",
                     "[\\p{IsTitlecase}]", "[\\p{javaTitleCase}]"))
             {
-                assertTrue(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE
-                                            | Pattern.UNICODE_CHARACTER_CLASS)
-                            .matcher(input)
-                            .matches(), "Expected to match: " +
-                        "'" + input + "' =~ /" + pattern + "/");
+                Predicate<String> p = Pattern.compile(regex).asPredicate();
+                if (!p.test(input)) {
+                    failCount++;
+                }
             }
         }
     }
