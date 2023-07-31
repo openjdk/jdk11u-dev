@@ -4984,8 +4984,8 @@ public class RegExTest {
                     "[\\p{gc=Lt}]", "[\\p{general_category=Lt}]",
                     "[\\p{IsTitlecase}]", "[\\p{javaTitleCase}]"))
             {
-                Predicate<String> p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE | 
-                                                               Pattern.UNICODE_CHARACTER_CLASS).asPredicate();
+                Predicate<String> p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE 
+                                                       | Pattern.UNICODE_CHARACTER_CLASS).asPredicate();
                 if (!p.test(input)) {
                     failCount++;
                 }
