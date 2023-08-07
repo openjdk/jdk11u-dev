@@ -124,7 +124,7 @@ compiler/rtm/locking/TestRTMDeoptOnHighAbortRatio.java 8183263 generic-x64,gener
 compiler/rtm/locking/TestRTMDeoptOnLowAbortRatio.java 8183263 generic-x64,generic-i586
 compiler/rtm/locking/TestRTMLockingCalculationDelay.java 8183263 generic-x64,generic-i586
 compiler/rtm/locking/TestRTMLockingThreshold.java 8183263 generic-x64,generic-i586
-compiler/rtm/locking/TestRTMSpinLoopCount.java 8183263 generic-x64,generic-i586
+compiler/rtm/locking/TestRTMSpinLoopCount.java 8183263,8313877 generic-x64,generic-i586,linux-ppc64le
 compiler/rtm/locking/TestUseRTMDeopt.java 8183263 generic-x64,generic-i586
 compiler/rtm/locking/TestUseRTMXendForLockBusy.java 8183263 generic-x64,generic-i586
 compiler/rtm/print/TestPrintPreciseRTMLockingStatistics.java 8183263 generic-x64,generic-i586
