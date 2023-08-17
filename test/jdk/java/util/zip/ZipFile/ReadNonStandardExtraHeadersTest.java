@@ -21,11 +21,6 @@
  * questions.
  */
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.FileSystem;
@@ -41,7 +36,7 @@ import java.util.zip.ZipFile;
  * @bug 8313765
  * @summary Validate that a Zip File with an Extra Header with a data size
  * of 0 can be read.
- * @run junit ReadNonStandardExtraHeadersTest
+ * @run main ReadNonStandardExtraHeadersTest
  */
 public class ReadNonStandardExtraHeadersTest {
 
@@ -850,7 +845,6 @@ public class ReadNonStandardExtraHeadersTest {
      * Setup method used to create the Zip and Jar files used by the test
      * @throws IOException if an error occurs
      */
-    @BeforeAll
     public static void setup() throws IOException {
         Files.deleteIfExists(VALID_APK);
         Files.deleteIfExists(VALID_APACHE_COMPRESS_JAR);
@@ -877,8 +871,6 @@ public class ReadNonStandardExtraHeadersTest {
      * 0f 0 can be opened using ZipFile
      * @throws IOException if an error occurs
      */
-    @ParameterizedTest
-    @MethodSource("zipFilesToTest")
     public void zipFilesToTest(Path jar) throws IOException {
         try (ZipFile zf = new ZipFile(jar.toFile())) {
             System.out.printf("%s opened%n", jar.toAbsolutePath());
@@ -893,8 +885,6 @@ public class ReadNonStandardExtraHeadersTest {
      * 0f 0 can be opened using ZipFS
      * @throws IOException if an error occurs
      */
-    @ParameterizedTest
-    @MethodSource("zipFilesToTest")
     public void readZipFSTest(Path jar) throws IOException {
         URI uri = URI.create("jar:" + jar.toUri());
         try (FileSystem fs = FileSystems.newFileSystem(uri, Map.of())) {
@@ -932,5 +922,18 @@ public class ReadNonStandardExtraHeadersTest {
         }
         fmt.format("%n    };%n");
         return sb.toString();
+    }
+
+    public static void main(String[] args) throws Exception {
+        setup();
+        var test = new ReadNonStandardExtraHeadersTest();
+        zipFilesToTest().forEach(path -> {
+            try {
+                test.zipFilesToTest(path);
+                test.readZipFSTest(path);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }
