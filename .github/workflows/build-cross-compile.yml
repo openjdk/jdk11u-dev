@@ -40,6 +40,12 @@ on:
       extra-conf-options:
         required: false
         type: string
+      configure-arguments:
+        required: false
+        type: string
+      make-arguments:
+        required: false
+        type: string
 
 jobs:
   build-cross-compile:
@@ -145,7 +151,7 @@ jobs:
           --with-build-jdk=${{ steps.buildjdk.outputs.jdk-path }}
           CC=${{ matrix.gnu-arch }}-linux-gnu${{ matrix.gnu-abi}}-gcc-${{ inputs.gcc-major-version }}
           CXX=${{ matrix.gnu-arch }}-linux-gnu${{ matrix.gnu-abi}}-g++-${{ inputs.gcc-major-version }}
-          ${{ inputs.extra-conf-options }} || (
+          ${{ inputs.extra-conf-options }} ${{ inputs.configure-arguments }} || (
           echo "Dumping config.log:" &&
           cat config.log &&
           exit 1)
@@ -154,5 +160,5 @@ jobs:
         id: build
         uses: ./.github/actions/do-build
         with:
-          make-target: 'hotspot'
+          make-target: 'hotspot ${{ inputs.make-arguments }}'
           platform: linux-${{ matrix.target-cpu }}
