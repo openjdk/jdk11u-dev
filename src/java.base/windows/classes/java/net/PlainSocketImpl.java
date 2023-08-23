@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2007, 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -28,9 +28,14 @@ import java.io.IOException;
 import java.io.FileDescriptor;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.HashSet;
+import java.util.Set;
+
 import sun.security.action.GetPropertyAction;
 import jdk.internal.misc.SharedSecrets;
 import jdk.internal.misc.JavaIOFileDescriptorAccess;
+import sun.net.ext.ExtendedSocketOptions;
+import static sun.net.ext.ExtendedSocketOptions.SOCK_STREAM;
 
 /**
  * On Windows system we simply delegate to native methods.
@@ -51,6 +56,9 @@ class PlainSocketImpl extends AbstractPlainSocketImpl {
      * Empty value of sun.net.useExclusiveBind is treated as 'true'.
      */
     private static final boolean useExclusiveBind;
+
+    static final ExtendedSocketOptions extendedOptions =
+            ExtendedSocketOptions.getInstance();
 
     static {
         String exclBindProp = AccessController.doPrivileged(
@@ -300,6 +308,43 @@ class PlainSocketImpl extends AbstractPlainSocketImpl {
     void socketSendUrgentData(int data) throws IOException {
         int nativefd = checkAndReturnNativeFD();
         sendOOB(nativefd, data);
+    }
+
+    protected <T> void setOption(SocketOption<T> name, T value) throws IOException {
+        if (isClosedOrPending()) {
+            throw new SocketException("Socket closed");
+        }
+        if (supportedOptions().contains(name)) {
+            if (extendedOptions.isOptionSupported(name)) {
+                extendedOptions.setOption(fd, name, value);
+            } else {
+                super.setOption(name, value);
+            }
+        } else {
+            throw new UnsupportedOperationException("unsupported option");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> T getOption(SocketOption<T> name) throws IOException {
+        if (isClosedOrPending()) {
+            throw new SocketException("Socket closed");
+        }
+        if (supportedOptions().contains(name)) {
+            if (extendedOptions.isOptionSupported(name)) {
+                return (T) extendedOptions.getOption(fd, name);
+            } else {
+                return super.getOption(name);
+            }
+        } else {
+            throw new UnsupportedOperationException("unsupported option");
+        }
+    }
+
+    protected Set<SocketOption<?>> supportedOptions() {
+        HashSet<SocketOption<?>> options = new HashSet<>(super.supportedOptions());
+        options.addAll(ExtendedSocketOptions.options(SOCK_STREAM));
+        return options;
     }
 
     private int checkAndReturnNativeFD() throws SocketException {
