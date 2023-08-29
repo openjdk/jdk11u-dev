@@ -36,20 +36,20 @@ import java.util.jar.Pack200;
 
 @SuppressWarnings("removal")
 public class UnpackMalformed {
-  public static void main(String[] args) {
-    try {
-      ByteArrayInputStream in = new ByteArrayInputStream("foobar".getBytes());
-      for(int i=0; i < 1_000; i++) {
+    public static void main(String[] args) {
         try {
-          JarOutputStream out = new JarOutputStream(new ByteArrayOutputStream());
-          Pack200.Unpacker unpacker = Pack200.newUnpacker();
-          unpacker.unpack(in, out);
-        } catch (IOException e) {
+            ByteArrayInputStream in = new ByteArrayInputStream("foobar".getBytes());
+            for (int i=0; i < 1_000; i++) {
+                try {
+                    JarOutputStream out = new JarOutputStream(new ByteArrayOutputStream());
+                    Pack200.Unpacker unpacker = Pack200.newUnpacker();
+                    unpacker.unpack(in, out);
+                } catch (IOException e) {
+                }
+            }
+        } catch (OutOfMemoryError e) {
+            System.out.println(e);
+            throw e;
         }
-      }
-    } catch (OutOfMemoryError e) {
-      System.out.println(e);
-      throw e;
     }
-  }
 }
