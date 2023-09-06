@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2009, 2023, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -2561,6 +2561,11 @@ class ZipFileSystem extends FileSystem {
             if (extra == null)
                 return;
             int elen = extra.length;
+            // Extra field Length cannot exceed 65,535 bytes per the PKWare
+            // APP.note 4.4.11
+            if (elen > 0xFFFF) {
+                throw new ZipException("invalid extra field length");
+            }
             int off = 0;
             int newOff = 0;
             while (off + 4 < elen) {
@@ -2569,20 +2574,43 @@ class ZipFileSystem extends FileSystem {
                 int tag = SH(extra, pos);
                 int sz = SH(extra, pos + 2);
                 pos += 4;
-                if (pos + sz > elen)         // invalid data
-                    break;
+                if (pos + sz > elen) {       // invalid data
+                    throw new ZipException(String.format(
+                            "Invalid CEN header (invalid extra data field size for " +
+                                    "tag: 0x%04x size: %d)",
+                            tag, sz));
+                }
                 switch (tag) {
                 case EXTID_ZIP64 :
+                    // if ZIP64_EXTID blocksize == 0, which may occur with some older
+                    // versions of Apache Ant and Commons Compress, validate csize
+                    // size, and locoff to make sure the fields != ZIP64_MAGICVAL
+                    if (sz == 0) {
+                        if (csize == ZIP64_MINVAL || size == ZIP64_MINVAL || locoff == ZIP64_MINVAL) {
+                            throw new ZipException("Invalid CEN header (invalid zip64 extra data field size)");
+                        }
+                        break;
+                    }
+                    // Check to see if we have a valid block size
+                    if (!isZip64ExtBlockSizeValid(sz)) {
+                        throw new ZipException("Invalid CEN header (invalid zip64 extra data field size)");
+                    }
                     if (size == ZIP64_MINVAL) {
                         if (pos + 8 > elen)  // invalid zip64 extra
                             break;           // fields, just skip
                         size = LL(extra, pos);
+                        if (size < 0) {
+                            throw new ZipException("Invalid zip64 extra block size value");
+                        }
                         pos += 8;
                     }
                     if (csize == ZIP64_MINVAL) {
                         if (pos + 8 > elen)
                             break;
                         csize = LL(extra, pos);
+                        if (csize < 0) {
+                            throw new ZipException("Invalid zip64 extra block compressed size value");
+                        }
                         pos += 8;
                     }
                     if (locoff == ZIP64_MINVAL) {
@@ -2590,6 +2618,9 @@ class ZipFileSystem extends FileSystem {
                             break;
                         locoff = LL(extra, pos);
                         pos += 8;
+                        if (locoff < 0) {
+                            throw new ZipException("Invalid zip64 extra block LOC offset value");
+                        }
                     }
                     break;
                 case EXTID_NTFS:
@@ -2668,6 +2699,34 @@ class ZipFileSystem extends FileSystem {
                 extra = Arrays.copyOf(extra, newOff);
             else
                 extra = null;
+        }
+
+        /**
+         * Validate the size and contents of a Zip64 extended information field
+         * The order of the Zip64 fields is fixed, but the fields MUST
+         * only appear if the corresponding LOC or CEN field is set to 0xFFFF:
+         * or 0xFFFFFFFF:
+         * Uncompressed Size - 8 bytes
+         * Compressed Size   - 8 bytes
+         * LOC Header offset - 8 bytes
+         * Disk Start Number - 4 bytes
+         * See PKWare APP.Note Section 4.5.3 for more details
+         *
+         * @param blockSize the Zip64 Extended Information Extra Field size
+         * @return true if the extra block size is valid; false otherwise
+         */
+        private static boolean isZip64ExtBlockSizeValid(int blockSize) {
+            /*
+             * As the fields must appear in order, the block size indicates which
+             * fields to expect:
+             *  8 - uncompressed size
+             * 16 - uncompressed size, compressed size
+             * 24 - uncompressed size, compressed sise, LOC Header offset
+             * 28 - uncompressed size, compressed sise, LOC Header offset,
+             * and Disk start number
+             */
+            int i = blockSize;
+            return i == 8 || i == 16 || i == 24 || i == 28 ? true : false;
         }
 
         ///////// basic file attributes ///////////
