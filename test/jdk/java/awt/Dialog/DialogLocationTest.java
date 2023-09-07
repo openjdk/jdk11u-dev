@@ -101,8 +101,8 @@ public class DialogLocationTest extends Panel {
         insetY = screen.y;
 
         for (i = 0; i < 100; i++) {
-            newX = random.nextInt(width - 300) +  insetX;
-            newY = random.nextInt(height - 400) + insetY;
+            newX = random.nextInt(width - 300 - insetX) +  insetX;
+            newY = random.nextInt(height - 400 - insetY) + insetY;
 
             if (newX == 0 && newY == 0) {
                 i--;
