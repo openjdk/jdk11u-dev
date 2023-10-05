@@ -74,8 +74,7 @@ public class ChoiceCallback implements Callback, java.io.Serializable {
      *
      * @param prompt the prompt used to describe the list of choices.
      *
-     * @param choices the list of choices. The array is cloned to protect
-     *                  against subsequent modification.
+     * @param choices the list of choices.
      *
      * @param defaultChoice the choice to be used as the default choice
      *                  when the list of choices are displayed.  This value
@@ -127,7 +126,7 @@ public class ChoiceCallback implements Callback, java.io.Serializable {
     /**
      * Get the list of choices.
      *
-     * @return a copy of the list of choices.
+     * @return the list of choices.
      */
     public String[] getChoices() {
         return choices.clone();
@@ -170,8 +169,7 @@ public class ChoiceCallback implements Callback, java.io.Serializable {
      * Set the selected choices.
      *
      * @param selections the selections represented as indexes into the
-     *          {@code choices} list. The array is cloned to protect
-     *          against subsequent modification.
+     *          {@code choices} list.
      *
      * @exception UnsupportedOperationException if multiple selections are
      *          not allowed, as determined by
@@ -188,7 +186,7 @@ public class ChoiceCallback implements Callback, java.io.Serializable {
     /**
      * Get the selected choices.
      *
-     * @return a copy of the selected choices, represented as indexes into the
+     * @return the selected choices, represented as indexes into the
      *          {@code choices} list.
      *
      * @see #setSelectedIndexes
