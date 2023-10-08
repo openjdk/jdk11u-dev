@@ -151,7 +151,8 @@ public class ValidatePathWithURL {
             Throwable cause = e.getCause();
 
             while (cause != null) {
-                if (cause instanceof CertPathValidatorException cpve) {
+                if (cause instanceof CertPathValidatorException) {
+                    CertPathValidatorException cpve =(CertPathValidatorException)cause;
                     if (cpve.getReason() == CertPathValidatorException.BasicReason.REVOKED
                             || cpve.getCause() instanceof CertificateRevokedException) {
                         System.out.println("Certificate is revoked");
@@ -197,7 +198,8 @@ public class ValidatePathWithURL {
         } else {
             System.out.println("Finding intermediate certificate issued by CA");
             for (Certificate cert : chain) {
-                if (cert instanceof X509Certificate certificate) {
+                if (cert instanceof X509Certificate) {
+                    X509Certificate certificate = (X509Certificate)cert;
                     System.out.println("Checking: " + certificate.getSubjectX500Principal());
                     System.out.println("Issuer: " + certificate.getIssuerX500Principal());
                     if (certificate.getIssuerX500Principal().equals(rootPrincipal)) {

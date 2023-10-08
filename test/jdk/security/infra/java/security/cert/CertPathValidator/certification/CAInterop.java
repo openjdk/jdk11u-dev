@@ -364,123 +364,123 @@ public class CAInterop {
      * @return CATestURLs
      */
     private CATestURLs getTestURLs(String alias) {
-        return switch (alias) {
-            case "actalisauthenticationrootca" ->
-                    new CATestURLs("https://ssltest-active.actalis.it",
+        switch (alias) {
+            case "actalisauthenticationrootca":
+                    return new CATestURLs("https://ssltest-active.actalis.it",
                             "https://ssltest-revoked.actalis.it");
 
-            case "amazonrootca1" ->
-                    new CATestURLs("https://valid.rootca1.demo.amazontrust.com",
+            case "amazonrootca1":
+                    return new CATestURLs("https://valid.rootca1.demo.amazontrust.com",
                     "https://revoked.rootca1.demo.amazontrust.com");
-            case "amazonrootca2" ->
-                    new CATestURLs("https://valid.rootca2.demo.amazontrust.com",
+            case "amazonrootca2":
+                    return new CATestURLs("https://valid.rootca2.demo.amazontrust.com",
                     "https://revoked.rootca2.demo.amazontrust.com");
-            case "amazonrootca3" ->
-                    new CATestURLs("https://valid.rootca3.demo.amazontrust.com",
+            case "amazonrootca3":
+                    return new CATestURLs("https://valid.rootca3.demo.amazontrust.com",
                     "https://revoked.rootca3.demo.amazontrust.com");
-            case "amazonrootca4" ->
-                    new CATestURLs("https://valid.rootca4.demo.amazontrust.com",
+            case "amazonrootca4":
+                    return new CATestURLs("https://valid.rootca4.demo.amazontrust.com",
                     "https://revoked.rootca4.demo.amazontrust.com");
 
-            case "buypassclass2ca" ->
-                    new CATestURLs("https://valid.business.ca22.ssl.buypass.no",
+            case "buypassclass2ca":
+                    return new CATestURLs("https://valid.business.ca22.ssl.buypass.no",
                     "https://revoked.business.ca22.ssl.buypass.no");
-            case "buypassclass3ca" ->
-                    new CATestURLs("https://valid.qcevident.ca23.ssl.buypass.no",
+            case "buypassclass3ca":
+                    return new CATestURLs("https://valid.qcevident.ca23.ssl.buypass.no",
                     "https://revoked.qcevident.ca23.ssl.buypass.no");
 
-            case "comodorsaca" ->
-                    new CATestURLs("https://comodorsacertificationauthority-ev.comodoca.com",
+            case "comodorsaca":
+                    return new CATestURLs("https://comodorsacertificationauthority-ev.comodoca.com",
                     "https://comodorsacertificationauthority-ev.comodoca.com:444");
-            case "comodoeccca" ->
-                    new CATestURLs("https://comodoecccertificationauthority-ev.comodoca.com",
+            case "comodoeccca":
+                    return new CATestURLs("https://comodoecccertificationauthority-ev.comodoca.com",
                     "https://comodoecccertificationauthority-ev.comodoca.com:444");
-            case "usertrustrsaca" ->
-                    new CATestURLs("https://usertrustrsacertificationauthority-ev.comodoca.com",
+            case "usertrustrsaca":
+                    return new CATestURLs("https://usertrustrsacertificationauthority-ev.comodoca.com",
                     "https://usertrustrsacertificationauthority-ev.comodoca.com:444");
-            case "usertrusteccca" ->
-                    new CATestURLs("https://usertrustecccertificationauthority-ev.comodoca.com",
+            case "usertrusteccca":
+                    return new CATestURLs("https://usertrustecccertificationauthority-ev.comodoca.com",
                     "https://usertrustecccertificationauthority-ev.comodoca.com:444");
 
-            case "letsencryptisrgx1" ->
-                    new CATestURLs("https://valid-isrgrootx1.letsencrypt.org",
+            case "letsencryptisrgx1":
+                    return new CATestURLs("https://valid-isrgrootx1.letsencrypt.org",
                             "https://revoked-isrgrootx1.letsencrypt.org");
 
-            case "globalsignrootcar6" ->
-                    new CATestURLs("https://valid.r6.roots.globalsign.com",
+            case "globalsignrootcar6":
+                    return new CATestURLs("https://valid.r6.roots.globalsign.com",
                             "https://revoked.r6.roots.globalsign.com");
 
-            case "entrustrootcaec1" ->
-                    new CATestURLs("https://validec.entrust.net",
+            case "entrustrootcaec1":
+                    return new CATestURLs("https://validec.entrust.net",
                             "https://revokedec.entrust.net");
-            case "entrustrootcag4" ->
-                    new CATestURLs("https://validg4.entrust.net",
+            case "entrustrootcag4":
+                    return new CATestURLs("https://validg4.entrust.net",
                             "https://revokedg4.entrust.net");
 
-            case "godaddyrootg2ca" ->
-                    new CATestURLs("https://valid.gdig2.catest.godaddy.com",
+            case "godaddyrootg2ca":
+                    return new CATestURLs("https://valid.gdig2.catest.godaddy.com",
                     "https://revoked.gdig2.catest.godaddy.com");
-            case "starfieldrootg2ca" ->
-                    new CATestURLs("https://valid.sfig2.catest.starfieldtech.com",
+            case "starfieldrootg2ca":
+                    return new CATestURLs("https://valid.sfig2.catest.starfieldtech.com",
                     "https://revoked.sfig2.catest.starfieldtech.com");
 
-            case "globalsigneccrootcar4" ->
-                    new CATestURLs("https://good.gsr4.demo.pki.goog",
+            case "globalsigneccrootcar4":
+                    return new CATestURLs("https://good.gsr4.demo.pki.goog",
                     "https://revoked.gsr4.demo.pki.goog");
-            case "gtsrootcar1" ->
-                    new CATestURLs("https://good.gtsr1.demo.pki.goog",
+            case "gtsrootcar1":
+                    return new CATestURLs("https://good.gtsr1.demo.pki.goog",
                     "https://revoked.gtsr1.demo.pki.goog");
-            case "gtsrootcar2" ->
-                    new CATestURLs("https://good.gtsr2.demo.pki.goog",
+            case "gtsrootcar2":
+                    return new CATestURLs("https://good.gtsr2.demo.pki.goog",
                     "https://revoked.gtsr2.demo.pki.goog");
-            case "gtsrootecccar3" ->
-                    new CATestURLs("https://good.gtsr3.demo.pki.goog",
+            case "gtsrootecccar3":
+                    return new CATestURLs("https://good.gtsr3.demo.pki.goog",
                     "https://revoked.gtsr3.demo.pki.goog");
-            case "gtsrootecccar4" ->
-                    new CATestURLs("https://good.gtsr4.demo.pki.goog",
+            case "gtsrootecccar4":
+                    return new CATestURLs("https://good.gtsr4.demo.pki.goog",
                     "https://revoked.gtsr4.demo.pki.goog");
 
-            case "microsoftecc2017" ->
-                    new CATestURLs("https://acteccroot2017.pki.microsoft.com",
+            case "microsoftecc2017":
+                    return new CATestURLs("https://acteccroot2017.pki.microsoft.com",
                     "https://rvkeccroot2017.pki.microsoft.com");
-            case "microsoftrsa2017" ->
-                    new CATestURLs("https://actrsaroot2017.pki.microsoft.com",
+            case "microsoftrsa2017":
+                    return new CATestURLs("https://actrsaroot2017.pki.microsoft.com",
                     "https://rvkrsaroot2017.pki.microsoft.com");
 
-            case "quovadisrootca1g3" ->
-                    new CATestURLs("https://quovadis-root-ca-1-g3.chain-demos.digicert.com",
+            case "quovadisrootca1g3":
+                    return new CATestURLs("https://quovadis-root-ca-1-g3.chain-demos.digicert.com",
                     "https://quovadis-root-ca-1-g3-revoked.chain-demos.digicert.com");
-            case "quovadisrootca2g3" ->
-                    new CATestURLs("https://quovadis-root-ca-2-g3.chain-demos.digicert.com",
+            case "quovadisrootca2g3":
+                    return new CATestURLs("https://quovadis-root-ca-2-g3.chain-demos.digicert.com",
                     "https://quovadis-root-ca-2-g3-revoked.chain-demos.digicert.com");
-            case "quovadisrootca3g3" ->
-                    new CATestURLs("https://quovadis-root-ca-3-g3.chain-demos.digicert.com",
+            case "quovadisrootca3g3":
+                    return new CATestURLs("https://quovadis-root-ca-3-g3.chain-demos.digicert.com",
                     "https://quovadis-root-ca-3-g3-revoked.chain-demos.digicert.com");
 
-            case "sslrootrsaca" ->
-                    new CATestURLs("https://test-dv-rsa.ssl.com",
+            case "sslrootrsaca":
+                    return new CATestURLs("https://test-dv-rsa.ssl.com",
                     "https://revoked-rsa-dv.ssl.com");
-            case "sslrootevrsaca" ->
-                    new CATestURLs("https://test-ev-rsa.ssl.com",
+            case "sslrootevrsaca":
+                    return new CATestURLs("https://test-ev-rsa.ssl.com",
                     "https://revoked-rsa-ev.ssl.com");
-            case "sslrooteccca" ->
-                    new CATestURLs("https://test-dv-ecc.ssl.com",
+            case "sslrooteccca":
+                    return new CATestURLs("https://test-dv-ecc.ssl.com",
                     "https://revoked-ecc-dv.ssl.com");
 
-            case "teliasonerarootcav1" ->
-                    new CATestURLs("https://juolukka.cover.sonera.net:10443",
+            case "teliasonerarootcav1":
+                    return new CATestURLs("https://juolukka.cover.sonera.net:10443",
                             "https://juolukka.cover.sonera.net:10444");
 
-            case "twcaglobalrootca" ->
-                    new CATestURLs("https://evssldemo6.twca.com.tw",
+            case "twcaglobalrootca":
+                    return new CATestURLs("https://evssldemo6.twca.com.tw",
                             "https://evssldemo7.twca.com.tw");
 
-            case "certignarootca" ->
-                    new CATestURLs("https://valid.servicesca.dhimyotis.com",
+            case "certignarootca":
+                    return new CATestURLs("https://valid.servicesca.dhimyotis.com",
                             "https://revoked.servicesca.dhimyotis.com");
 
-            default -> throw new RuntimeException("No test setup found for: " + alias);
-        };
+            default: throw new RuntimeException("No test setup found for: " + alias);
+        }
     }
 
     public static void main(String[] args) throws Exception {
