@@ -30,6 +30,7 @@
  *          java.base/sun.security.x509
  *          java.xml.crypto/org.jcp.xml.dsig.internal.dom
  *          jdk.httpserver/com.sun.net.httpserver
+ * @library /test/lib
  * @build jdk.test.lib.Asserts
  * @compile -XDignore.symbol.file KeySelectors.java SignatureValidator.java
  *     X509KeySelector.java GenerationTests.java
