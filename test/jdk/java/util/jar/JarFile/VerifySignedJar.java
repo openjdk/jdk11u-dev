@@ -91,10 +91,11 @@ public class VerifySignedJar {
             throw new Exception("JarEntry has no certificates: " + e.getName());
         }
 
-        if (certs[0] instanceof X509Certificate x) {
+        if (certs[0] instanceof X509Certificate) {
+            X509Certificate x = (X509Certificate)certs[0];
             String name = x.getSubjectX500Principal().getName();
             if (!name.equalsIgnoreCase(expectedDn)) {
-                throw new Exception("Expected entry signed by %s, was %s".formatted(name, expectedDn));
+                throw new Exception(String.format("Expected entry signed by %s, was %s", name, expectedDn));
             }
         } else {
             throw new Exception("Expected JarEntry.getCertificate to return X509Certificate");
