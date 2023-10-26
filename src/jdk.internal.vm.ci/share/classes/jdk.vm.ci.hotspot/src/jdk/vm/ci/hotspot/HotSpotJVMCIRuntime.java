@@ -42,6 +42,7 @@ import java.util.function.Predicate;
 import jdk.internal.misc.VM;
 import jdk.internal.misc.Unsafe;
 import jdk.vm.ci.code.Architecture;
+import jdk.vm.ci.code.CompilationRequest;
 import jdk.vm.ci.code.CompilationRequestResult;
 import jdk.vm.ci.code.CompiledCode;
 import jdk.vm.ci.code.InstalledCode;
@@ -417,14 +418,34 @@ public final class HotSpotJVMCIRuntime implements JVMCIRuntime {
         return ((HotSpotResolvedJavaType) type).mirror();
     }
 
+    static class ErrorCreatingCompiler implements JVMCICompiler {
+        private final RuntimeException t;
+
+        ErrorCreatingCompiler(RuntimeException t) {
+            this.t = t;
+        }
+
+        @Override
+        public CompilationRequestResult compileMethod(CompilationRequest request) {
+            throw t;
+        }
+    }
+
     @Override
     public JVMCICompiler getCompiler() {
         if (compiler == null) {
             synchronized (this) {
                 if (compiler == null) {
-                    compiler = compilerFactory.createCompiler(this);
+                    try {
+                        compiler = compilerFactory.createCompiler(this);
+                    } catch (RuntimeException t) {
+                        compiler = new ErrorCreatingCompiler(t);
+                    }
                 }
             }
+        }
+        if (compiler instanceof ErrorCreatingCompiler) {
+            throw ((ErrorCreatingCompiler) compiler).t;
         }
         return compiler;
     }
