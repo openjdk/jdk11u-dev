@@ -28,38 +28,9 @@
 #include <stdio.h>
 
 #define GTEST_DONT_DEFINE_TEST 1
-
-// googlemock has ::testing::internal::Log function, so we need to temporary
-// undefine 'Log' from logging/log.hpp and define it back after gmock header
-// file is included. As SS compiler doesn't have push_/pop_macro pragmas and
-// log.hpp might have been already included, we have to copy-paste macro definition.
-#ifdef Log
-  #define UNDEFINED_Log
-  #undef Log
-#endif
-
-// R macro is defined by src/hotspot/cpu/arm/register_arm.hpp, F$n are defined
-// in ppc/register_ppc.hpp, these macros conflict with typenames used in
-// internal googlemock templates. As the macros are not expected to be used by
-// any of tests directly, and this header file is supposed to be the last
-// include, we just undefine it; if/when it changes, we will need to re-define
-// the macros after the following includes.
-#undef R
-#undef F1
-#undef F2
-
 #include "utilities/vmassert_uninstall.hpp"
-#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include "utilities/vmassert_reinstall.hpp"
-
-#ifdef UNDEFINED_Log
-  #define Log(...)  LogImpl<LOG_TAGS(__VA_ARGS__)> // copied from logging/log.hpp
-  #undef UNDEFINED_Log
-#endif
-
-// Wrapper around os::exit so we don't need to include os.hpp here.
-extern void gtest_exit_from_child_vm(int num);
 
 #define CONCAT(a, b) a ## b
 
