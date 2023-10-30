@@ -771,7 +771,7 @@
   product(uintx, TLABAllocationWeight, 35,                                  \
           "Allocation averaging weight")                                    \
           range(0, 100)                                                     \
-
+                                                                            \
   /* At GC all TLABs are retired, and each thread's active  */              \
   /* TLAB is assumed to be half full on average. The        */              \
   /* remaining space is waste, proportional to TLAB size.   */              \
