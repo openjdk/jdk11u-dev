@@ -267,10 +267,8 @@ public class SctpServerChannelImpl extends SctpServerChannel
         synchronized (stateLock) {
             if (state != ChannelState.KILLED)
                 SctpNet.preClose(fdVal);
-
             if (thread != 0)
                 NativeThread.signal(thread);
-                
             if (!isRegistered())
                 kill();
         }
