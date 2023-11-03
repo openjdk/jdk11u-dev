@@ -769,7 +769,7 @@ initialize(JNIEnv *env, jthread thread, EventIndex triggering_ei, EventInfo *opt
         JDI_ASSERT(triggering_ei == EI_EXCEPTION);
         JDI_ASSERT(opt_info != NULL);
         initEventBag = eventHelper_createEventBag();
-        threadControl_onEventHandlerEntry(currentSessionID, opt_info, thread, NULL);
+        threadControl_onEventHandlerEntry(currentSessionID, opt_info->ei, thread, NULL);
         eventHelper_recordEvent(opt_info, 0, suspendPolicy, initEventBag);
         (void)eventHelper_reportEvents(currentSessionID, initEventBag);
         bagDestroyBag(initEventBag);
