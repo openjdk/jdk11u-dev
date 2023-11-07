@@ -532,6 +532,7 @@ public class CAInterop {
             case "affirmtrustpremiumeccca":
                     return new CATestURLs("https://validpremiumecc.affirmtrust.com",
                             "https://revokedpremiumecc.affirmtrust.com");
+
             default: throw new RuntimeException("No test setup found for: " + alias);
         }
     }
