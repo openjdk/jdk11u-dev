@@ -24,6 +24,7 @@
 
 #include "precompiled.hpp"
 #include "gc/shared/gcTimer.hpp"
+#include "gc/shared/gc_globals.hpp"
 #include "utilities/growableArray.hpp"
 
 // the "time" parameter for most functions
