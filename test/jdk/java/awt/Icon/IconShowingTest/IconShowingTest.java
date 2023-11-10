@@ -62,17 +62,16 @@ public class IconShowingTest {
     private static final String INSTRUCTIONS =
             "Look at the icons shown on frames and dialogs, icons of minimized frames\n"
             + (isWindows() ? "are displayed in ALT+TAB window\n" : "") + "\n"+
-            """
-            Alpha-channel (transparency) should be supported
-            by Windows and may not be supported by other platforms.
-
-            Notes:
-              * Icons might appear in grayscale.
-              * Default icon might be either Duke or Java Cup.
-
-            Press PASS if the icons match label description in windows
-            and are shown correctly, FAIL otherwise.
-            """;
+            "Alpha-channel (transparency) should be supported\n"+
+            "by Windows and may not be supported by other platforms.\n"+
+            "                                                               \n"+
+            "Notes:\n"+
+            "  * Icons might appear in grayscale.\n"+
+            "  * Default icon might be either Duke or Java Cup.\n"+
+            "                                                               \n"+
+            "Press PASS if the icons match label description in windows\n"+
+            "and are shown correctly, FAIL otherwise.\n"
+            ;
 
     public static void main(String[] args) throws Exception {
         PassFailJFrame passFailJFrame = new PassFailJFrame("Icon Showing " +

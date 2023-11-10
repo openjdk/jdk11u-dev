@@ -72,21 +72,21 @@ public class IconChangingTest {
             {false, true, false, false}  //stack 4
     };
 
-    private static final String INSTRUCTIONS = """
-            The test is supposed to work on Windows.
-            It may not work on other platforms.
-
-            Icons and window decorations should change in windows
-            (frames & dialogs) every 3 seconds.
-
-            Notes:
-
-              * Icons might appear in grayscale.
-              * Default icon might be either Duke or Java Cup.
-
-            Press PASS if the icons match the labels
-            and are shown correctly, FAIL otherwise.
-            """;
+    private static final String INSTRUCTIONS =
+            "The test is supposed to work on Windows.\n"+
+            "It may not work on other platforms.\n"+
+            "                                                     \n"+
+            "Icons and window decorations should change in windows\n"+
+            "(frames & dialogs) every 3 seconds.\n"+
+            "                                                     \n"+
+            "Notes:\n"+
+            "                                                     \n"+
+            "  * Icons might appear in grayscale.\n"+
+            "  * Default icon might be either Duke or Java Cup.\n"+
+            "                                                     \n"+
+            "Press PASS if the icons match the labels\n"+
+            "and are shown correctly, FAIL otherwise.\n"
+            ;
 
     public static void main(String[] args) throws Exception {
         PassFailJFrame passFailJFrame = new PassFailJFrame("Icon Changing " +

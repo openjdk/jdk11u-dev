@@ -59,22 +59,21 @@ import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
  */
 
 public class IconTransparencyTest {
-    private static final String INSTRUCTIONS = """
-            The icon of the frame and the resized icon in the label should be transparent.
-            Transparency can be verified by checking if the background color (pink)
-            is visible in and around icon within the JLabel.
-
-            Press continue to view next icon (6 total).
-            Icon might be presented as grayscale image.
-
-            For the 3rd icon in JLabel, the 2nd vertical slot is transparent, hence
-            the background color (pink) should be visible at the 2nd vertical slot.
-
-            For the 4th icon in JLabel, the 5th vertical slot is transparent, hence
-            the background color (pink) should be visible at the 5th vertical slot.
-
-            Press Pass or Fail at the end of test.
-            """;
+    private static final String INSTRUCTIONS =
+            "The icon of the frame and the resized icon in the label should be transparent.\n"+
+            "Transparency can be verified by checking if the background color (pink)\n"+
+            "is visible in and around icon within the JLabel.\n"+
+            "                                                                       \n"+
+            "Press continue to view next icon (6 total).\n"+
+            "Icon might be presented as grayscale image.\n"+
+            "                                                                       \n"+
+            "For the 3rd icon in JLabel, the 2nd vertical slot is transparent, hence\n"+
+            "the background color (pink) should be visible at the 2nd vertical slot.\n"+
+            "                                                                       \n"+
+            "For the 4th icon in JLabel, the 5th vertical slot is transparent, hence\n"+
+            "the background color (pink) should be visible at the 5th vertical slot.\n"+
+            "                                                                       \n"+
+            "Press Pass or Fail at the end of test.\n";
 
     static class TestLabel extends JLabel {
         public void paint(Graphics g) {

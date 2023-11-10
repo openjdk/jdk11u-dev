@@ -43,13 +43,12 @@ import javax.swing.SwingUtilities;
  */
 
 public class SetLargeIconTest {
-    private static final String INSTRUCTIONS = """
-            Case 1: Press "Pass" button if this frame does not have icon with green color.
-
-            Case 2: Press "Change to red" if the frame icon is in green color.
-            For case 2, press "Pass" button if green icon changes to a larger red icon,
-            press "Fail" otherwise.
-            """;
+    private static final String INSTRUCTIONS =
+            "Case 1: Press \"Pass\" button if this frame does not have icon with green color.\n"+
+            "                                                                              \n"+
+            "Case 2: Press \"Change to red\" if the frame icon is in green color.\n"+
+            "For case 2, press \"Pass\" button if green icon changes to a larger red icon,\n"+
+            "press \"Fail\" otherwise.\n";
     private static JFrame frame;
 
     private static void createAndShowGUI() {
