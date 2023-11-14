@@ -4168,7 +4168,6 @@ bool os::Linux::setup_large_page_type(size_t page_size) {
 }
 
 void os::large_page_init() {
-
   // Always initialize the default large page size even if large pages are not being used.
   size_t large_page_size = Linux::setup_large_page_size();
 
