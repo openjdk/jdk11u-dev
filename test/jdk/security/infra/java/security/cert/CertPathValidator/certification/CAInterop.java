@@ -424,7 +424,7 @@ public class CAInterop {
             case "letsencryptisrgx1":
                     return new CATestURLs("https://valid-isrgrootx1.letsencrypt.org",
                             "https://revoked-isrgrootx1.letsencrypt.org");
-	    case "letsencryptisrgx2":
+            case "letsencryptisrgx2":
                     return new CATestURLs("https://valid-isrgrootx2.letsencrypt.org",
                             "https://revoked-isrgrootx2.letsencrypt.org");
 
