@@ -143,7 +143,7 @@ public class IconChangingTest {
                 }
             }
 
-            private static void setIcons(final ImageIcon icon1, final ImageIcon icon2) {
+            private void setIcons(final ImageIcon icon1, final ImageIcon icon2) {
                 Image i1 = (icon1 == null) ? null : icon1.getImage();
                 Image i2 = (icon2 == null) ? null : icon2.getImage();
                 ImageIcon li1 = (icon1 == null) ? ji : icon1;
