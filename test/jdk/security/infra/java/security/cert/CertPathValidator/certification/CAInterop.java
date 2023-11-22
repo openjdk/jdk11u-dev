@@ -541,10 +541,10 @@ public class CAInterop {
                     "https://quovadis-root-ca-3-g3-revoked.chain-demos.digicert.com");
             case "digicerttlseccrootg5":
                     return new CATestURLs("https://digicert-tls-ecc-p384-root-g5.chain-demos.digicert.com",
-                            "https://digicert-tls-ecc-p384-root-g5-revoked.chain-demos.digicert.com");
+                    "https://digicert-tls-ecc-p384-root-g5-revoked.chain-demos.digicert.com");
             case "digicerttlsrsarootg5":
                     return new CATestURLs("https://digicert-tls-rsa4096-root-g5.chain-demos.digicert.com",
-                            "https://digicert-tls-rsa4096-root-g5-revoked.chain-demos.digicert.com");
+                    "https://digicert-tls-rsa4096-root-g5-revoked.chain-demos.digicert.com");
 
             case "sslrootrsaca":
                     return new CATestURLs("https://test-dv-rsa.ssl.com",
