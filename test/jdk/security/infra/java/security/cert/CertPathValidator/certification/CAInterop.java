@@ -136,10 +136,19 @@
 /*
  * @test id=letsencryptisrgx1
  * @bug 8189131
- * @summary Interoperability tests with Let's Encrypt CA
+ * @summary Interoperability tests with Let's Encrypt ISRG Root X1 CA
  * @library /test/lib
  * @build jtreg.SkippedException ValidatePathWithURL CAInterop
  * @run main/othervm -Djava.security.debug=certpath,ocsp CAInterop letsencryptisrgx1 DEFAULT
+ */
+
+/*
+ * @test id=letsencryptisrgx2
+ * @bug 8317374
+ * @summary Interoperability tests with Let's Encrypt ISRG Root X2 CA
+ * @library /test/lib
+ * @build jtreg.SkippedException ValidatePathWithURL CAInterop
+ * @run main/othervm -Djava.security.debug=certpath,ocsp CAInterop letsencryptisrgx2 DEFAULT
  */
 
 /*
@@ -293,6 +302,26 @@
  */
 
 /*
+ * @test id=digicerttlseccrootg5
+ * @bug 8318759
+ * @summary Interoperability tests with DigiCert TLS ECC P384 Root G5
+ * @library /test/lib
+ * @build jtreg.SkippedException ValidatePathWithURL CAInterop
+ * @run main/othervm -Djava.security.debug=certpath,ocsp CAInterop digicerttlseccrootg5 OCSP
+ * @run main/othervm -Djava.security.debug=certpath CAInterop digicerttlseccrootg5 CRL
+ */
+
+/*
+ * @test id=digicerttlsrsarootg5
+ * @bug 8318759
+ * @summary Interoperability tests with DigiCert TLS RSA4096 Root G5
+ * @library /test/lib
+ * @build jtreg.SkippedException ValidatePathWithURL CAInterop
+ * @run main/othervm -Djava.security.debug=certpath,ocsp CAInterop digicerttlsrsarootg5 OCSP
+ * @run main/othervm -Djava.security.debug=certpath CAInterop digicerttlsrsarootg5 CRL
+ */
+
+/*
  * @test id=sslrootrsaca
  * @bug 8243320
  * @summary Interoperability tests with SSL.com's RSA CA
@@ -350,6 +379,46 @@
  * @build jtreg.SkippedException ValidatePathWithURL CAInterop
  * @run main/othervm -Djava.security.debug=certpath,ocsp CAInterop certignarootca OCSP
  * @run main/othervm -Djava.security.debug=certpath CAInterop certignarootca CRL
+ */
+
+/*
+ * @test id=affirmtrustcommercialca
+ * @bug 8040012
+ * @summary Interoperability tests with AffirmTrust Commercial CA
+ * @library /test/lib
+ * @build jtreg.SkippedException ValidatePathWithURL CAInterop
+ * @run main/othervm -Djava.security.debug=certpath,ocsp CAInterop affirmtrustcommercialca OCSP
+ * @run main/othervm -Djava.security.debug=certpath CAInterop affirmtrustcommercialca CRL
+ */
+
+/*
+ * @test id=affirmtrustnetworkingca
+ * @bug 8040012
+ * @summary Interoperability tests with AffirmTrust Networking CA
+ * @library /test/lib
+ * @build jtreg.SkippedException ValidatePathWithURL CAInterop
+ * @run main/othervm -Djava.security.debug=certpath,ocsp CAInterop affirmtrustnetworkingca OCSP
+ * @run main/othervm -Djava.security.debug=certpath CAInterop affirmtrustnetworkingca CRL
+ */
+
+/*
+ * @test id=affirmtrustpremiumca
+ * @bug 8040012
+ * @summary Interoperability tests with AffirmTrust Premium CA
+ * @library /test/lib
+ * @build jtreg.SkippedException ValidatePathWithURL CAInterop
+ * @run main/othervm -Djava.security.debug=certpath,ocsp CAInterop affirmtrustpremiumca OCSP
+ * @run main/othervm -Djava.security.debug=certpath CAInterop affirmtrustpremiumca CRL
+ */
+
+/*
+ * @test id=affirmtrustpremiumeccca
+ * @bug 8040012
+ * @summary Interoperability tests with AffirmTrust Premium ECC CA
+ * @library /test/lib
+ * @build jtreg.SkippedException ValidatePathWithURL CAInterop
+ * @run main/othervm -Djava.security.debug=certpath,ocsp CAInterop affirmtrustpremiumeccca OCSP
+ * @run main/othervm -Djava.security.debug=certpath CAInterop affirmtrustpremiumeccca CRL
  */
 
 /*
@@ -415,6 +484,9 @@ public class CAInterop {
             case "letsencryptisrgx1":
                     return new CATestURLs("https://valid-isrgrootx1.letsencrypt.org",
                             "https://revoked-isrgrootx1.letsencrypt.org");
+            case "letsencryptisrgx2":
+                    return new CATestURLs("https://valid-isrgrootx2.letsencrypt.org",
+                            "https://revoked-isrgrootx2.letsencrypt.org");
 
             case "globalsignrootcar6":
                     return new CATestURLs("https://valid.r6.roots.globalsign.com",
@@ -457,6 +529,7 @@ public class CAInterop {
                     return new CATestURLs("https://actrsaroot2017.pki.microsoft.com",
                     "https://rvkrsaroot2017.pki.microsoft.com");
 
+            // Test URLs are listed at https://www.digicert.com/kb/digicert-root-certificates.htm
             case "quovadisrootca1g3":
                     return new CATestURLs("https://quovadis-root-ca-1-g3.chain-demos.digicert.com",
                     "https://quovadis-root-ca-1-g3-revoked.chain-demos.digicert.com");
@@ -466,6 +539,12 @@ public class CAInterop {
             case "quovadisrootca3g3":
                     return new CATestURLs("https://quovadis-root-ca-3-g3.chain-demos.digicert.com",
                     "https://quovadis-root-ca-3-g3-revoked.chain-demos.digicert.com");
+            case "digicerttlseccrootg5":
+                    return new CATestURLs("https://digicert-tls-ecc-p384-root-g5.chain-demos.digicert.com",
+                    "https://digicert-tls-ecc-p384-root-g5-revoked.chain-demos.digicert.com");
+            case "digicerttlsrsarootg5":
+                    return new CATestURLs("https://digicert-tls-rsa4096-root-g5.chain-demos.digicert.com",
+                    "https://digicert-tls-rsa4096-root-g5-revoked.chain-demos.digicert.com");
 
             case "sslrootrsaca":
                     return new CATestURLs("https://test-dv-rsa.ssl.com",
@@ -492,6 +571,20 @@ public class CAInterop {
             case "teliarootcav2":
                     return new CATestURLs("https://juolukka.cover.telia.fi:10600",
                             "https://juolukka.cover.telia.fi:10601");
+
+            // These are listed at https://www.affirmtrust.com/resources/
+            case "affirmtrustcommercialca":
+                    return new CATestURLs("https://validcommercial.affirmtrust.com",
+                            "https://revokedcommercial.affirmtrust.com");
+            case "affirmtrustnetworkingca":
+                    return new CATestURLs("https://validnetworking.affirmtrust.com",
+                            "https://revokednetworking.affirmtrust.com");
+            case "affirmtrustpremiumca":
+                    return new CATestURLs("https://validpremium.affirmtrust.com",
+                            "https://revokedpremium.affirmtrust.com");
+            case "affirmtrustpremiumeccca":
+                    return new CATestURLs("https://validpremiumecc.affirmtrust.com",
+                            "https://revokedpremiumecc.affirmtrust.com");
 
             default: throw new RuntimeException("No test setup found for: " + alias);
         }
