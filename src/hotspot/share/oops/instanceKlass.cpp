@@ -3790,12 +3790,8 @@ void InstanceKlass::purge_previous_version_list() {
       // Unlink from previous version list.
       assert(pv_node->class_loader_data() == loader_data, "wrong loader_data");
       InstanceKlass* next = pv_node->previous_versions();
-<<<<<<< HEAD
-      pv_node->link_previous_versions(NULL);   // point next to NULL
-=======
       clear_jmethod_ids(pv_node); // jmethodID maintenance for the unloaded class
-      pv_node->link_previous_versions(nullptr);   // point next to null
->>>>>>> cdd1a6e851b (8313816: Accessing jmethodID might lead to spurious crashes)
+      pv_node->link_previous_versions(NULL);   // point next to NULL
       last->link_previous_versions(next);
       // Add to the deallocate list after unlinking
       loader_data->add_to_deallocate_list(pv_node);
