@@ -2090,6 +2090,71 @@ WB_ENTRY(jstring, WB_GetLibcName(JNIEnv* env, jobject o))
   return info_string;
 WB_END
 
+<<<<<<< HEAD
+=======
+WB_ENTRY(void, WB_LockCritical(JNIEnv* env, jobject wb))
+  GCLocker::lock_critical(thread);
+WB_END
+
+WB_ENTRY(void, WB_UnlockCritical(JNIEnv* env, jobject wb))
+  GCLocker::unlock_critical(thread);
+WB_END
+
+WB_ENTRY(void, WB_PinObject(JNIEnv* env, jobject wb, jobject o))
+#if INCLUDE_G1GC
+  if (!UseG1GC) {
+    ShouldNotReachHere();
+    return;
+  }
+  oop obj = JNIHandles::resolve(o);
+  G1CollectedHeap::heap()->pin_object(thread, obj);
+#else
+  ShouldNotReachHere();
+#endif // INCLUDE_G1GC
+WB_END
+
+WB_ENTRY(void, WB_UnpinObject(JNIEnv* env, jobject wb, jobject o))
+#if INCLUDE_G1GC
+  if (!UseG1GC) {
+    ShouldNotReachHere();
+    return;
+  }
+  oop obj = JNIHandles::resolve(o);
+  G1CollectedHeap::heap()->unpin_object(thread, obj);
+#else
+  ShouldNotReachHere();
+#endif // INCLUDE_G1GC
+WB_END
+
+WB_ENTRY(jboolean, WB_SetVirtualThreadsNotifyJvmtiMode(JNIEnv* env, jobject wb, jboolean enable))
+  if (!Continuations::enabled()) {
+    tty->print_cr("WB error: must be Continuations::enabled()!");
+    return JNI_FALSE;
+  }
+  jboolean result = false;
+#if INCLUDE_JVMTI
+  if (enable) {
+    result = JvmtiEnvBase::enable_virtual_threads_notify_jvmti();
+  } else {
+    result = JvmtiEnvBase::disable_virtual_threads_notify_jvmti();
+  }
+#endif
+  return result;
+WB_END
+
+WB_ENTRY(void, WB_PreTouchMemory(JNIEnv* env, jobject wb, jlong addr, jlong size))
+  void* const from = (void*)addr;
+  void* const to = (void*)(addr + size);
+  if (from > to) {
+    os::pretouch_memory(from, to, os::vm_page_size());
+  }
+WB_END
+
+WB_ENTRY(void, WB_CleanMetaspaces(JNIEnv* env, jobject target))
+  ClassLoaderDataGraph::safepoint_and_clean_metaspaces();
+WB_END
+
+>>>>>>> cdd1a6e851b (8313816: Accessing jmethodID might lead to spurious crashes)
 #define CC (char*)
 
 static JNINativeMethod methods[] = {
@@ -2324,6 +2389,17 @@ static JNINativeMethod methods[] = {
   {CC"disableElfSectionCache",    CC"()V",            (void*)&WB_DisableElfSectionCache },
   {CC"aotLibrariesCount", CC"()I",                    (void*)&WB_AotLibrariesCount },
   {CC"getLibcName",     CC"()Ljava/lang/String;",     (void*)&WB_GetLibcName},
+<<<<<<< HEAD
+=======
+
+  {CC"lockCritical",    CC"()V",                      (void*)&WB_LockCritical},
+  {CC"unlockCritical",  CC"()V",                      (void*)&WB_UnlockCritical},
+  {CC"pinObject",       CC"(Ljava/lang/Object;)V",    (void*)&WB_PinObject},
+  {CC"unpinObject",     CC"(Ljava/lang/Object;)V",    (void*)&WB_UnpinObject},
+  {CC"setVirtualThreadsNotifyJvmtiMode", CC"(Z)Z",    (void*)&WB_SetVirtualThreadsNotifyJvmtiMode},
+  {CC"preTouchMemory",  CC"(JJ)V",                    (void*)&WB_PreTouchMemory},
+  {CC"cleanMetaspaces", CC"()V",                      (void*)&WB_CleanMetaspaces},
+>>>>>>> cdd1a6e851b (8313816: Accessing jmethodID might lead to spurious crashes)
 };
 
 
