@@ -220,11 +220,19 @@ public class CDSTestUtils {
         }
     }
 
-    // Specify this property to copy sdandard output of the child test process to
-    // the parent/main stdout of the test.
-    // By default such output is logged into a file, and is copied into the main stdout.
-    public static final boolean CopyChildStdoutToMainStdout =
-        Boolean.valueOf(System.getProperty("test.cds.copy.child.stdout", "true"));
+    // A number to be included in the filename of the stdout and the stderr output file.
+    static int logCounter = 0;
+
+    private static int getNextLogCounter() {
+        return logCounter++;
+    }
+
+    // By default, stdout of child processes are logged in files such as
+    // <testname>-0000-exec.stdout. If you want to also include the stdout
+    // inside jtr files, you can override this in the jtreg command line like
+    // "jtreg -Dtest.cds.copy.child.stdout=true ...."
+    public static final boolean copyChildStdoutToMainStdout =
+        Boolean.getBoolean("test.cds.copy.child.stdout");
 
     // This property is passed to child test processes
     public static final String TestTimeoutFactor = System.getProperty("test.timeout.factor", "1.0");
@@ -489,7 +497,7 @@ public class CDSTestUtils {
     // create file containing the specified class list
     public static File makeClassList(String classes[])
         throws Exception {
-        return makeClassList(testName + "-", classes);
+        return makeClassList(getTestName() + "-", classes);
     }
 
     // create file containing the specified class list
@@ -519,7 +527,17 @@ public class CDSTestUtils {
         }
     }
 
-    private static String testName = Utils.TEST_NAME.replace('/', '.');
+    // Optimization for getting a test name.
+    // Test name does not change during execution of the test,
+    // but getTestName() uses stack walking hence it is expensive.
+    // Therefore cache it and reuse it.
+    private static String testName;
+    public static String getTestName() {
+        if (testName == null) {
+            testName = Utils.getTestName();
+        }
+        return testName;
+    }
 
     private static final SimpleDateFormat timeStampFormat =
         new SimpleDateFormat("HH'h'mm'm'ss's'SSS");
@@ -528,7 +546,7 @@ public class CDSTestUtils {
 
     // Call this method to start new archive with new unique name
     public static void startNewArchiveName() {
-        defaultArchiveName = testName +
+        defaultArchiveName = getTestName() +
             timeStampFormat.format(new Date()) + ".jsa";
     }
 
@@ -540,7 +558,7 @@ public class CDSTestUtils {
     // ===================== FILE ACCESS convenience methods
     public static File getOutputFile(String name) {
         File dir = new File(System.getProperty("test.classes", "."));
-        return new File(dir, testName + "-" + name);
+        return new File(dir, getTestName() + "-" + name);
     }
 
 
@@ -564,13 +582,17 @@ public class CDSTestUtils {
     public static OutputAnalyzer executeAndLog(Process process, String logName) throws Exception {
         long started = System.currentTimeMillis();
         OutputAnalyzer output = new OutputAnalyzer(process);
+        String outputFileNamePrefix =
+            getTestName() + "-" + String.format("%04d", getNextLogCounter()) + "-" + logName;
 
-        writeFile(getOutputFile(logName + ".stdout"), output.getStdout());
-        writeFile(getOutputFile(logName + ".stderr"), output.getStderr());
+        writeFile(getOutputFile(outputFileNamePrefix + ".stdout"), output.getStdout());
+        writeFile(getOutputFile(outputFileNamePrefix + ".stderr"), output.getStderr());
         System.out.println("[ELAPSED: " + (System.currentTimeMillis() - started) + " ms]");
+        System.out.println("[logging stdout to " + outputFileNamePrefix + ".stdout]");
+        System.out.println("[logging stderr to " + outputFileNamePrefix + ".stderr]");
         System.out.println("[STDERR]\n" + output.getStderr());
 
-        if (CopyChildStdoutToMainStdout)
+        if (copyChildStdoutToMainStdout)
             System.out.println("[STDOUT]\n" + output.getStdout());
 
         return output;
