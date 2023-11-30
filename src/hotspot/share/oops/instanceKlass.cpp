@@ -3739,7 +3739,7 @@ void InstanceKlass::clear_jmethod_ids(InstanceKlass* klass) {
   Array<Method*>* method_refs = klass->methods();
   for (int k = 0; k < method_refs->length(); k++) {
     Method* method = method_refs->at(k);
-    if (method != nullptr && method->is_obsolete()) {
+    if (method != NULL && method->is_obsolete()) {
       method->clear_jmethod_id();
     }
   }

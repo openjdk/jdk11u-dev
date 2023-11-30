@@ -145,7 +145,7 @@ create_raw_monitor(jvmtiEnv *jvmti, const char* name) {
   jrawMonitorID lock;
   jvmtiError err = jvmti->CreateRawMonitor(name, &lock);
   if (err != JVMTI_ERROR_NONE) {
-    return nullptr;
+    return NULL;
   }
   return lock;
 }

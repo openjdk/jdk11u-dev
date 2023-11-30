@@ -77,7 +77,7 @@ int compare_stack_trace(jvmtiEnv *jvmti, JNIEnv *jni, jthread thread,
       // Example: {"Ljava/lang/VirtualThread$VThreadContinuation$$Lambda.0x0000000800098340;"
       size_t lambda_idx = strlen(expected_frames[exp_idx].cls);
       const char *lambda = strstr(expected_frames[exp_idx].cls, "$$Lambda");
-      if (lambda != nullptr) {
+      if (lambda != NULL) {
         lambda_idx = lambda - expected_frames[exp_idx].cls;
         printf("Comparing only first %zu chars in classname.\n", lambda_idx);
       }

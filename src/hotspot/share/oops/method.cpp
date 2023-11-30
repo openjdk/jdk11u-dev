@@ -2223,8 +2223,8 @@ void Method::clear_jmethod_id() {
   // - multiple redefined versions may share jmethodID slots and if a method
   //   has already been rewired to a newer version we could be removing reference
   //   to a still existing method instance
-  if (methodid != nullptr && *((Method**)methodid) == this) {
-    *((Method**)methodid) = nullptr;
+  if (methodid != NULL && *((Method**)methodid) == this) {
+    *((Method**)methodid) = NULL;
   }
 }
 
