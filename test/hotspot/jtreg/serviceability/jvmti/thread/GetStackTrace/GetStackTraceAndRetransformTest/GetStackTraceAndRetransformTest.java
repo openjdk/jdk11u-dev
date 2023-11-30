@@ -27,31 +27,30 @@
  * @summary Test that a sequence of method retransformation and stacktrace capture while the old method
  *          version is still on stack does not lead to a crash when that method's jmethodID is used as
  *          an argument for JVMTI functions.
- * @requires vm.jvmti
- * @requires vm.flagless
  * @library /test/lib
- * @build jdk.test.whitebox.WhiteBox
- * @modules java.instrument
- *          java.compiler
- * @compile GetStackTraceAndRetransformTest.java
- * @run driver jdk.test.lib.helpers.ClassFileInstaller jdk.test.whitebox.WhiteBox
+ * @build sun.hotspot.WhiteBox
+ * @run driver ClassFileInstaller -jar whitebox.jar sun.hotspot.WhiteBox sun.hotspot.WhiteBox$WhiteBoxPermission
+ * @modules java.base/jdk.internal.misc
+ * @modules java.compiler
+ *          java.instrument
+ *          jdk.jartool/sun.tools.jar
  * @run main RedefineClassHelper
- * @run main/othervm/native -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -javaagent:redefineagent.jar -agentlib:GetStackTraceAndRetransformTest GetStackTraceAndRetransformTest
+ * @run main/othervm/native -Xbootclasspath/a:./whitebox.jar -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -javaagent:redefineagent.jar -agentlib:GetStackTraceAndRetransformTest GetStackTraceAndRetransformTest
  */
 
-import jdk.test.whitebox.WhiteBox;
+import sun.hotspot.WhiteBox;
 
 class Transformable {
-  static final String newClass = """
-    class Transformable {
-      static final String newClass = "";
-      static void redefineAndStacktrace() throws Exception {}
-      static void stacktrace() throws Exception {
-        capture(Thread.currentThread());
-      }
-      public static native void capture(Thread thread);
-    }
-  """;
+  static final String newClass =
+    "class Transformable {\n" +
+    "  static final String newClass = \"\";\n" +
+    "  static void redefineAndStacktrace() throws Exception {}\n" +
+    "  static void stacktrace() throws Exception {\n" +
+    "    capture(Thread.currentThread());\n" +
+    "  }\n" +
+    "  public static native void capture(Thread thread);\n" +
+    "}";
+
   static void redefineAndStacktrace() throws Exception {
     // This call will cause the class to be retransformed.
     // However, this method is still on stack so the subsequent attempt to capture the stacktrace
@@ -67,16 +66,16 @@ class Transformable {
 }
 
 public class GetStackTraceAndRetransformTest {
-    public static void main(String args[]) throws Throwable {
-        initialize(Transformable.class);
+  public static void main(String args[]) throws Throwable {
+    initialize(Transformable.class);
 
-        Transformable.redefineAndStacktrace();
-        Transformable.stacktrace();
+    Transformable.redefineAndStacktrace();
+    Transformable.stacktrace();
 
-        WhiteBox.getWhiteBox().cleanMetaspaces();
-        check(2);
-    }
+    WhiteBox.getWhiteBox().cleanMetaspaces();
+    check(2);
+  }
 
-    public static native void initialize(Class<?> target);
-    public static native void check(int expected);
+  public static native void initialize(Class<?> target);
+  public static native void check(int expected);
 }
