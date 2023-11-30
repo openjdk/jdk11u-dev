@@ -2091,7 +2091,7 @@ WB_ENTRY(jstring, WB_GetLibcName(JNIEnv* env, jobject o))
 WB_END
 
 WB_ENTRY(void, WB_CleanMetaspaces(JNIEnv* env, jobject target))
-  ClassLoaderDataGraph::safepoint_and_clean_metaspaces();
+  ClassLoaderDataGraph::do_unloading(true);
 WB_END
 
 #define CC (char*)
