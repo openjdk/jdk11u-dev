@@ -385,7 +385,6 @@ public class WhiteBox {
   public native long metaspaceCapacityUntilGC();
   public native boolean metaspaceShouldConcurrentCollect();
   public native long metaspaceReserveAlignment();
-  public native long metaspaceSharedRegionAlignment();
 
   public native void cleanMetaspaces();
 
