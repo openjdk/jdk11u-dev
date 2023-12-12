@@ -44,8 +44,8 @@ import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.CountDownLatch;
-
 import javax.imageio.ImageIO;
 import javax.swing.ComboBoxEditor;
 import javax.swing.JComboBox;
