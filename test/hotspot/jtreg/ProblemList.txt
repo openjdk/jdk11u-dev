@@ -110,10 +110,6 @@ compiler/types/correctness/OffTest.java 8225620 solaris-sparcv9
 
 compiler/c2/Test6852078.java 8194310 generic-all
 
-applications/ctw/modules/java_desktop.java 8189604 windows-all
-applications/ctw/modules/java_desktop_2.java 8189604,8204842 generic-all
-applications/ctw/modules/jdk_jconsole.java 8189604 windows-all
-
 compiler/cpuflags/TestAESIntrinsicsOnSupportedConfig.java 8190680 generic-all
 
 compiler/runtime/Test8168712.java 8211769,8211771 generic-ppc64,generic-ppc64le,linux-s390x
@@ -243,7 +239,6 @@ vmTestbase/nsk/jdi/EventRequest/setEnabled/setenabled003/TestDescription.java 80
 vmTestbase/nsk/jdi/StackFrame/_bounds_/bounds001/TestDescription.java 6604963 generic-all
 vmTestbase/nsk/jdi/VirtualMachine/redefineClasses/redefineclasses021/TestDescription.java 8065773 generic-all
 vmTestbase/nsk/jdi/VirtualMachine/redefineClasses/redefineclasses023/TestDescription.java 8065773 generic-all
-vmTestbase/nsk/jdi/EventQueue/remove_l/remove_l005/TestDescription.java 8068225 generic-all
 vmTestbase/nsk/jdi/stress/ClassPrepareEvents/ClassPrepareEvents001/ClassPrepareEvents001.java 6426321 generic-all
 
 vmTestbase/metaspace/gc/firstGC_10m/TestDescription.java 8208250 generic-all
