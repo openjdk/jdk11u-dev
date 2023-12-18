@@ -43,7 +43,7 @@
  * @build vm.mlvm.meth.stress.compiler.deoptimize.Test
  * @run driver vm.mlvm.share.IndifiedClassesBuilder
  *
- * @run main/othervm
+ * @run main/othervm/timeout=300
  *      -XX:ReservedCodeCacheSize=100m
  *      vm.mlvm.meth.stress.compiler.deoptimize.Test
  *      -threadsPerCpu 4
