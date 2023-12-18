@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,12 +27,10 @@
  * @summary Test that CDS still works when the JDK is moved to a new directory
  * @bug 8272345
  * @requires vm.cds
+ * @requires vm.flagless
  * @comment This test doesn't work on Windows because it depends on symlinks
  * @requires os.family != "windows"
  * @library /test/lib
- * @modules java.base/jdk.internal.misc
- *          java.management
- *          jdk.jartool/sun.tools.jar
  * @compile test-classes/Hello.java
  * @run driver MoveJDKTest
  */
@@ -42,19 +40,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import jdk.test.lib.cds.CDSTestUtils;
 import jdk.test.lib.process.OutputAnalyzer;
 
 public class MoveJDKTest {
     public static void main(String[] args) throws Exception {
         String java_home_src = System.getProperty("java.home");
-        String java_home_dst = System.getProperty("user.dir") + File.separator + "moved_jdk";
+        String java_home_dst = CDSTestUtils.getOutputDir() + File.separator + "moved_jdk";
 
         TestCommon.startNewArchiveName();
         String jsaFile = TestCommon.getCurrentArchiveName();
         String jsaOpt = "-XX:SharedArchiveFile=" + jsaFile;
         {
             ProcessBuilder pb = makeBuilder(java_home_src + "/bin/java", "-Xshare:dump", jsaOpt);
-            TestCommon.executeAndLog(pb, "dump");
+            TestCommon.executeAndLog(pb, "dump")
+                      .shouldHaveExitValue(0);
         }
         {
             ProcessBuilder pb = makeBuilder(java_home_src + "/bin/java",
@@ -63,6 +63,7 @@ public class MoveJDKTest {
                                             "-Xlog:class+path=info",
                                             "-version");
             OutputAnalyzer out = TestCommon.executeAndLog(pb, "exec-src");
+            out.shouldHaveExitValue(0);
             out.shouldNotContain("shared class paths mismatch");
             out.shouldNotContain("BOOT classpath mismatch");
         }
@@ -78,6 +79,7 @@ public class MoveJDKTest {
                                             "-Xlog:class+path=info",
                                             "-version");
             OutputAnalyzer out = TestCommon.executeAndLog(pb, "exec-dst");
+            out.shouldHaveExitValue(0);
             out.shouldNotContain("shared class paths mismatch");
             out.shouldNotContain("BOOT classpath mismatch");
         }
@@ -91,7 +93,8 @@ public class MoveJDKTest {
                                             "-Xshare:dump",
                                             dumptimeBootAppendOpt,
                                             jsaOpt);
-            TestCommon.executeAndLog(pb, "dump");
+            TestCommon.executeAndLog(pb, "dump")
+                      .shouldHaveExitValue(0);
         }
         {
             String runtimeBootAppendOpt = dumptimeBootAppendOpt + System.getProperty("path.separator") + helloJar;
@@ -102,8 +105,19 @@ public class MoveJDKTest {
                                             "-Xlog:class+path=info",
                                             "-version");
             OutputAnalyzer out = TestCommon.executeAndLog(pb, "exec-dst");
+            out.shouldHaveExitValue(0);
             out.shouldNotContain("shared class paths mismatch");
             out.shouldNotContain("BOOT classpath mismatch");
+        }
+
+        // Test with no modules image in the <java home>/lib directory
+        renameModulesFile(java_home_dst);
+        {
+            ProcessBuilder pb = makeBuilder(java_home_dst + "/bin/java",
+                                            "-version");
+            OutputAnalyzer out = TestCommon.executeAndLog(pb, "exec-missing-modules");
+            out.shouldHaveExitValue(1);
+            out.shouldContain("Failed setting boot class path.");
         }
     }
 
@@ -142,6 +156,24 @@ public class MoveJDKTest {
         }
     }
 
+    static void renameModulesFile(String javaHome) throws Exception {
+        String modulesDir = javaHome + File.separator + "lib";
+        File origModules = new File(modulesDir, "modules");
+        if (!origModules.exists()) {
+            throw new RuntimeException("modules file not found");
+        }
+
+        File renamedModules = new File(modulesDir, "orig_modules");
+        if (renamedModules.exists()) {
+            throw new RuntimeException("found orig_modules unexpectedly");
+        }
+
+        boolean success = origModules.renameTo(renamedModules);
+        if (!success) {
+            throw new RuntimeException("rename modules file failed");
+        }
+    }
+
     static ProcessBuilder makeBuilder(String... args) throws Exception {
         System.out.print("[");
         for (String s : args) {
@@ -152,12 +184,12 @@ public class MoveJDKTest {
     }
 
     private static String copyFakeModulesFromHelloJar() throws Exception {
-        String classDir = System.getProperty("test.classes");
+        String outDir = CDSTestUtils.getOutputDir();
         String newFile = "hello.modules";
-        String path = classDir + File.separator + newFile;
+        String path = outDir + File.separator + newFile;
 
-        Files.copy(Paths.get(classDir, "hello.jar"),
-            Paths.get(classDir, newFile),
+        Files.copy(Paths.get(outDir, "hello.jar"),
+            Paths.get(outDir, newFile),
             StandardCopyOption.REPLACE_EXISTING);
         return path;
     }
