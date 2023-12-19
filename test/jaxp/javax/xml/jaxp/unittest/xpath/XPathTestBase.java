@@ -49,22 +49,22 @@ class XPathTestBase {
     static final String DECLARATION = "<?xml version=\"1.0\" " +
             "encoding=\"UTF-8\" standalone=\"yes\"?>";
 
-    static final String DTD = """
-            <!DOCTYPE Customers [
-               <!ELEMENT Customers (Customer*)>
-               <!ELEMENT Customer (Name, Phone, Email, Address)>
-               <!ELEMENT Name (#PCDATA)>
-               <!ELEMENT Phone (#PCDATA)>
-               <!ELEMENT Email (#PCDATA)>
-               <!ELEMENT Address (Street, City, State)>
-               <!ELEMENT Street (#PCDATA)>
-               <!ELEMENT City (#PCDATA)>
-               <!ELEMENT State (#PCDATA)>
-               <!ATTLIST Customer id ID #REQUIRED>
-               <!ATTLIST Email id ID #REQUIRED>
-            ]>
-
-            """;
+    static final String DTD = String.join(System.lineSeparator(),
+            "<!DOCTYPE Customers [",
+            "   <!ELEMENT Customers (Customer*)>",
+            "   <!ELEMENT Customer (Name, Phone, Email, Address)>",
+            "   <!ELEMENT Name (#PCDATA)>",
+            "   <!ELEMENT Phone (#PCDATA)>",
+            "   <!ELEMENT Email (#PCDATA)>",
+            "   <!ELEMENT Address (Street, City, State)>",
+            "   <!ELEMENT Street (#PCDATA)>",
+            "   <!ELEMENT City (#PCDATA)>",
+            "   <!ELEMENT State (#PCDATA)>",
+            "   <!ATTLIST Customer id ID #REQUIRED>",
+            "   <!ATTLIST Email id ID #REQUIRED>",
+            "]>",
+            ""
+            );
 
     static final String RAW_XML
             = "<Customers xmlns:foo=\"foo\">"
