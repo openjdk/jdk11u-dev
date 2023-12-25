@@ -50,14 +50,14 @@ import static javax.swing.SwingUtilities.invokeAndWait;
  */
 public class OpenLineAfterScreenLock {
 
-    private static final String INSTRUCTIONS = """
-            This test verifies it can record sound from the first sound capture device after
-            locking and unlocking the screen. The first part of the test has already completed.
-
-            Lock the screen and unlock it. Then click Continue to complete the test.
-
-            The test will finish automatically.
-            """;
+    private static final String INSTRUCTIONS = String.join(System.lineSeparator(),
+            "This test verifies it can record sound from the first sound capture device after",
+            "locking and unlocking the screen. The first part of the test has already completed.",
+            "",
+            "Lock the screen and unlock it. Then click Continue to complete the test.",
+            "",
+            "The test will finish automatically."
+            );
 
     private static final CountDownLatch latch = new CountDownLatch(1);
 
