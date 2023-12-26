@@ -222,11 +222,6 @@ serviceability/sa/TestUniverse.java#id0 8193639,8211767 solaris-all,linux-ppc64l
 #############################################################################
 
 vmTestbase/nsk/monitoring/MemoryPoolMBean/isCollectionUsageThresholdExceeded/isexceeded003/TestDescription.java 8153598 generic-all
-vmTestbase/nsk/monitoring/MemoryPoolMBean/isUsageThresholdExceeded/isexceeded001/TestDescription.java 8198668 generic-all
-vmTestbase/nsk/monitoring/MemoryPoolMBean/isUsageThresholdExceeded/isexceeded002/TestDescription.java 8153598 generic-all
-vmTestbase/nsk/monitoring/MemoryPoolMBean/isUsageThresholdExceeded/isexceeded003/TestDescription.java 8198668 generic-all
-vmTestbase/nsk/monitoring/MemoryPoolMBean/isUsageThresholdExceeded/isexceeded004/TestDescription.java 8153598 generic-all
-vmTestbase/nsk/monitoring/MemoryPoolMBean/isUsageThresholdExceeded/isexceeded005/TestDescription.java 8153598 generic-all
 
 vmTestbase/nsk/jdi/AttachingConnector/attachnosuspend/attachnosuspend001/TestDescription.java 8153613 generic-all
 vmTestbase/nsk/jdi/ThreadReference/frameCount/framecount001/TestDescription.java 6530620 generic-all
@@ -274,7 +269,6 @@ vmTestbase/vm/mlvm/meth/stress/compiler/sequences/Test.java 8208255 generic-all
 vmTestbase/vm/mlvm/meth/stress/gc/callSequencesDuringGC/Test.java 8208255 generic-all
 vmTestbase/vm/mlvm/meth/stress/java/sequences/Test.java 8208255 generic-all
 vmTestbase/vm/mlvm/meth/stress/jdi/breakpointInCompiledCode/Test.java 8208255 generic-all
-vmTestbase/vm/mlvm/mixed/stress/java/findDeadlock/TestDescription.java 8208278 generic-all
 vmTestbase/vm/mlvm/mixed/stress/regression/b6969574/INDIFY_Test.java 8079650 generic-all
 vmTestbase/vm/mlvm/indy/func/jvmti/mergeCP_indy2none_a/TestDescription.java 8013267 generic-all
 vmTestbase/vm/mlvm/indy/func/jvmti/mergeCP_indy2manyDiff_b/TestDescription.java 8013267 generic-all
