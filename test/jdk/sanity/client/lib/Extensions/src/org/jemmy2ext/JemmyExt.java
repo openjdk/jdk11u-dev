@@ -22,14 +22,12 @@
  */
 package org.jemmy2ext;
 
-import java.awt.AWTException;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Robot;
-import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
@@ -38,11 +36,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -87,19 +82,6 @@ import static org.testng.AssertJUnit.*;
  * @author akouznet
  */
 public class JemmyExt {
-
-    private static Robot robot = null;
-
-    public static Robot getRobot() {
-        try {
-            if(robot == null) {
-                robot = new Robot();
-            }
-            return robot;
-        } catch (AWTException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     /**
      * Statically referencing all the classes that are needed by tests so that
@@ -169,62 +151,78 @@ public class JemmyExt {
         });
     }
 
-    private static final DateFormat timestampFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-    private static String timeStamp() {
-        return timestampFormat.format(new Date());
-    }
-
-    /**
-     * Constructs filename with a timestamp.
-     * @param name File name or a path without the extension
-     * @param extension File extension (without the dot). Could be null,
-     *                  in which case timestamp is simply added to the filename (no trailing dot).
-     * @return file name
-     */
-    public static String timeStamp(String name, String extension) {
-        return name + "-" + timeStamp() +
-                ((extension != null) ? ("." + extension) : "");
-    }
-
-    /**
-     * Saves an image into a file. Filename will be constructed from the given fileID and
-     * a timestamp.
-     * @param image
-     * @param fileID
-     */
-    public static void save(BufferedImage image, String fileID) {
-        doSave(image, timeStamp(fileID + "-" + lafShortName(), "png"));
-    }
-
-    //Saves an image into a file with the provided filename
-    private static void doSave(BufferedImage image, String filename) {
+    public static void assertEquals(String string, StrictImageComparator comparator, BufferedImage expected, BufferedImage actual) {
         try {
-            String filepath = new File(filename).getCanonicalPath();
+            assertTrue(string, comparator.compare(expected, actual));
+        } catch (Error err) {
+            save(expected, "expected.png");
+            save(actual, "actual.png");
+            throw err;
+        }
+    }
+
+    public static void assertNotEquals(String string, StrictImageComparator comparator, BufferedImage notExpected, BufferedImage actual) {
+        try {
+            assertFalse(string, comparator.compare(notExpected, actual));
+        } catch (Error err) {
+            save(notExpected, "notExpected.png");
+            save(actual, "actual.png");
+            throw err;
+        }
+    }
+
+    public static void save(BufferedImage image, String filename) {
+        String filepath = filename;
+        try {
+            filepath = new File(filename).getCanonicalPath();
             System.out.println("Saving screenshot to " + filepath);
             BufferedOutputStream file = new BufferedOutputStream(new FileOutputStream(filepath));
             new PNGEncoder(file, PNGEncoder.COLOR_MODE).encode(image);
         } catch (IOException ioe) {
-            throw new RuntimeException("Failed to save image to " + filename, ioe);
+            throw new RuntimeException("Failed to save image to " + filepath, ioe);
         }
     }
 
     /**
+     * Waits for a screen area taken by a component to not be completely black rectangle.
+     * @return last (non-black) image
+     * @throws TimeoutExpiredException if the waiting is unsuccessful
+     */
+    public static BufferedImage waitNotBlack(Robot rob, ComponentOperator operator, String imageName) {
+        class NonBlackImageChooser implements ComponentChooser {
+            private BufferedImage image = null;
+            @Override
+            public boolean checkComponent(Component comp) {
+                image = capture(rob, operator);
+                save(image, imageName);
+                return !isBlack(image);
+            }
+
+            @Override
+            public String getDescription() {
+                return "A non-black Image of " + operator;
+            }
+        }
+        NonBlackImageChooser chooser = new NonBlackImageChooser();
+        operator.waitState(chooser);
+        return chooser.image;
+    }
+
+    /**
      * Waits for the displayed image to be still.
-     * @param imageID an image ID with no extension. Timestamp and LAF information is added to the ID when saving.
      * @return last still image
      * @throws TimeoutExpiredException if the waiting is unsuccessful
      */
-    public static BufferedImage waitStillImage(ComponentOperator operator, String imageID) {
+    public static BufferedImage waitStillImage(Robot rob, ComponentOperator operator, String imageName) {
         operator.getTimeouts().setTimeout("Waiter.TimeDelta", 1000);
-        String timestampName = timeStamp(imageID + "-" + lafShortName(), "png");
         class StillImageChooser implements ComponentChooser {
             private BufferedImage previousImage = null;
             private final StrictImageComparator sComparator = new StrictImageComparator();
 
             @Override
             public boolean checkComponent(Component comp) {
-                BufferedImage currentImage = capture(operator);
-                doSave(currentImage, timestampName);
+                BufferedImage currentImage = capture(rob, operator);
+                save(currentImage, imageName);
                 boolean compareResult = previousImage == null ? false : sComparator.compare(currentImage, previousImage);
                 previousImage = currentImage;
                 return compareResult;
@@ -243,23 +241,22 @@ public class JemmyExt {
     /**
      * Waits for the displayed image to change.
      * @param reference image to compare to
-     * @param imageID an image ID with no extension. Timestamp and LAF information is added to the ID when saving.
      * @return last (changed) image
      * @throws TimeoutExpiredException if the waiting is unsuccessful
      */
-    public static BufferedImage waitChangedImage(Supplier<BufferedImage> supplier,
+    public static BufferedImage waitChangedImage(Robot rob,
+                                                 Supplier<BufferedImage> supplier,
                                                  BufferedImage reference,
                                                  Timeouts timeouts,
-                                                 String imageID) throws InterruptedException {
+                                                 String imageName) throws InterruptedException {
         ImageComparator comparator = new StrictImageComparator();
-        String timestampName = timeStamp(imageID + "-" + lafShortName(), "png");
         class ImageWaitable implements Waitable {
             BufferedImage image;
 
             @Override
             public Object actionProduced(Object obj) {
                 image = supplier.get();
-                doSave(image, timestampName);
+                save(image, imageName);
                 return comparator.compare(reference, image) ? null : image;
             }
 
@@ -319,10 +316,10 @@ public class JemmyExt {
         }
     }
 
-    public static BufferedImage capture(ComponentOperator operator) {
+    public static BufferedImage capture(Robot rob, ComponentOperator operator) {
         Rectangle boundary = new Rectangle(operator.getLocationOnScreen(),
                 operator.getSize());
-        return getRobot().createScreenCapture(boundary);
+        return rob.createScreenCapture(boundary);
     }
 
     /**
@@ -403,26 +400,26 @@ public class JemmyExt {
         }
     }
 
-    private static String lafShortName() { return UIManager.getLookAndFeel().getClass().getSimpleName(); }
-
     /**
      * Trying to capture as much information as possible. Currently it includes
      * full dump and a screenshot of the whole screen.
      */
     public static void captureAll() {
-        save(getRobot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize())), "failure");
+        String lookAndFeelClassName = UIManager.getLookAndFeel().getClass().getSimpleName();
+        PNGEncoder.captureScreen("failure_" + lookAndFeelClassName + ".png", PNGEncoder.COLOR_MODE);
         try {
-            Dumper.dumpAll(timeStamp("dumpAll-" + lafShortName(), "xml"));
+            Dumper.dumpAll("dumpAll_" + lookAndFeelClassName + ".xml");
         } catch (FileNotFoundException ex) {
             Logger.getLogger(JemmyExt.class.getName()).log(Level.SEVERE, null, ex);
         }
-        captureWindows();
+        captureWindows(lookAndFeelClassName);
     }
 
     /**
      * Captures each showing window image using Window.paint() method.
+     * @param lookAndFeelClassName
      */
-    private static void captureWindows() {
+    private static void captureWindows(String lookAndFeelClassName) {
         try {
             EventQueue.invokeAndWait(() -> {
                 Window[] windows = Window.getWindows();
@@ -437,14 +434,10 @@ public class JemmyExt {
                     g.dispose();
 
                     try {
-                        save(img, "window-" + index++);
-                    } catch (RuntimeException e) {
-                        if (e.getCause() instanceof IOException) {
-                            System.err.println("Failed to save screen images");
-                            e.printStackTrace();
-                        } else {
-                            throw e;
-                        }
+                        ImageIO.write(img, "png", new File("window_" + lookAndFeelClassName
+                                + "_" + index++ + ".png"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
             });
