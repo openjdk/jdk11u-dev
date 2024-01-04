@@ -87,7 +87,8 @@ public class bug4398059 {
         static class MyHTMLFactory extends HTMLEditorKit.HTMLFactory {
             public View create(Element elem) {
                 Object obj = elem.getAttributes().getAttribute(StyleConstants.NameAttribute);
-                if (obj instanceof HTML.Tag kind) {
+                if (obj instanceof HTML.Tag) {
+                    HTML.Tag kind = (HTML.Tag) obj;
                     if (kind == HTML.Tag.H1) {
                         return new MyParagraphView(elem);
                     }
