@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2019, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -1259,11 +1259,7 @@ public:
 
 private:
   // initialization state
-#ifdef ASSERT
   void set_init_state(ClassState state);
-#else
-  void set_init_state(ClassState state) { _init_state = (u1)state; }
-#endif
   void set_rewritten()                  { _misc_flags |= _misc_rewritten; }
   void set_init_thread(Thread *thread)  { _init_thread = thread; }
 
@@ -1274,6 +1270,8 @@ private:
   bool idnum_can_increment() const      { return has_been_redefined(); }
   inline jmethodID* methods_jmethod_ids_acquire() const;
   inline void release_set_methods_jmethod_ids(jmethodID* jmeths);
+  // This nulls out jmethodIDs for all methods in 'klass'
+  static void clear_jmethod_ids(InstanceKlass* klass);
 
   // Lock during initialization
 public:

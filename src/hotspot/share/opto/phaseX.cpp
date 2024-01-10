@@ -482,6 +482,14 @@ PhaseRenumberLive::PhaseRenumberLive(PhaseGVN* gvn,
 
   uint worklist_size = worklist->size();
 
+  GrowableArray<Node_Notes*>* old_node_note_array = C->node_note_array();
+  if (old_node_note_array != NULL) {
+    int new_size = (_useful.size() >> 8) + 1; // The node note array uses blocks, see C->_log2_node_notes_block_size
+    new_size = MAX2(8, new_size);
+    C->set_node_note_array(new (C->comp_arena()) GrowableArray<Node_Notes*> (C->comp_arena(), new_size, 0, NULL));
+    C->grow_node_notes(C->node_note_array(), new_size);
+  }
+
   // Iterate over the set of live nodes.
   for (uint current_idx = 0; current_idx < _useful.size(); current_idx++) {
     Node* n = _useful.at(current_idx);
@@ -496,6 +504,11 @@ PhaseRenumberLive::PhaseRenumberLive(PhaseGVN* gvn,
 
     assert(_old2new_map.at(n->_idx) == -1, "already seen");
     _old2new_map.at_put(n->_idx, current_idx);
+
+    if (old_node_note_array != NULL) {
+      Node_Notes* nn = C->locate_node_notes(old_node_note_array, n->_idx);
+      C->set_node_notes_at(current_idx, nn);
+    }
 
     n->set_idx(current_idx); // Update node ID.
 
@@ -1937,6 +1950,30 @@ void PhaseCCP::analyze() {
             }
           }
         }
+        push_cast_ii(worklist, n, m);
+      }
+    }
+  }
+}
+
+void PhaseCCP::push_if_not_bottom_type(Unique_Node_List& worklist, Node* n) const {
+  if (n->bottom_type() != type(n)) {
+    worklist.push(n);
+  }
+}
+
+// CastII::Value() optimizes CmpI/If patterns if the right input of the CmpI has a constant type. If the CastII input is
+// the same node as the left input into the CmpI node, the type of the CastII node can be improved accordingly. Add the
+// CastII node back to the worklist to re-apply Value() to either not miss this optimization or to undo it because it
+// cannot be applied anymore. We could have optimized the type of the CastII before but now the type of the right input
+// of the CmpI (i.e. 'parent') is no longer constant. The type of the CastII must be widened in this case.
+void PhaseCCP::push_cast_ii(Unique_Node_List& worklist, const Node* parent, const Node* use) const {
+  if (use->Opcode() == Op_CmpI && use->in(2) == parent) {
+    Node* other_cmp_input = use->in(1);
+    for (DUIterator_Fast imax, i = other_cmp_input->fast_outs(imax); i < imax; i++) {
+      Node* cast_ii = other_cmp_input->fast_out(i);
+      if (cast_ii->is_CastII()) {
+        push_if_not_bottom_type(worklist, cast_ii);
       }
     }
   }
@@ -2000,7 +2037,6 @@ Node *PhaseCCP::transform( Node *n ) {
   }
   return new_node;
 }
-
 
 //------------------------------transform_once---------------------------------
 // For PhaseCCP, transformation is IDENTITY unless Node computed a constant.

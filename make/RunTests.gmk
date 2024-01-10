@@ -60,18 +60,13 @@ define SetTestOpt
   endif
 endef
 
-# Setup _NT_SYMBOL_PATH on Windows
-ifeq ($(OPENJDK_TARGET_OS), windows)
+# Setup _NT_SYMBOL_PATH on Windows, which points to our pdb files.
+ifeq ($(call isTargetOs, windows), true)
   ifndef _NT_SYMBOL_PATH
-    # Can't use PathList here as it adds quotes around the value.
-    _NT_SYMBOL_PATH := \
-        $(subst $(SPACE),;,$(strip \
-            $(foreach p, $(sort $(dir $(wildcard \
-                $(addprefix $(SYMBOLS_IMAGE_DIR)/bin/, *.pdb */*.pdb)))), \
-              $(call FixPath, $p) \
-            ) \
-        ))
-    export _NT_SYMBOL_PATH
+    SYMBOL_PATH := $(call PathList, $(sort $(patsubst %/, %, $(dir $(wildcard \
+        $(addprefix $(SYMBOLS_IMAGE_DIR)/bin/, *.pdb */*.pdb))))))
+    export _NT_SYMBOL_PATH := $(subst \\,\, $(call FixPath, \
+        $(subst $(DQUOTE),, $(SYMBOL_PATH))))
     $(info _NT_SYMBOL_PATH=$(_NT_SYMBOL_PATH))
   endif
 endif
@@ -205,7 +200,7 @@ TEST_JOBS_FACTOR_MACHINE ?= 1
 
 ifeq ($(TEST_JOBS), 0)
   CORES_DIVIDER := 2
-  ifeq ($(OPENJDK_TARGET_CPU_ARCH), sparc)
+  ifeq ($(call isTargetCpuArch, sparc), true)
     # For smaller SPARC machines we see reasonable scaling of throughput up to
     # cpus/4 without affecting test reliability. On the bigger machines, cpus/4
     # causes intermittent timeouts.
@@ -269,7 +264,7 @@ $(eval $(call SetTestOpt,TIMEOUT_FACTOR,JTREG))
 
 $(eval $(call ParseKeywordVariable, JTREG, \
     SINGLE_KEYWORDS := JOBS TIMEOUT_FACTOR TEST_MODE ASSERT VERBOSE RETAIN \
-        MAX_MEM RETRY_COUNT REPEAT_COUNT, \
+        MAX_MEM RUN_PROBLEM_LISTS RETRY_COUNT REPEAT_COUNT, \
     STRING_KEYWORDS := OPTIONS JAVA_OPTIONS VM_OPTIONS KEYWORDS \
         EXTRA_PROBLEM_LISTS AOT_MODULES, \
 ))
@@ -637,13 +632,14 @@ define SetupRunJtregTestBody
   $1_JTREG_MAX_RAM_PERCENTAGE := $$(shell $(AWK) 'BEGIN { print 25 / $$($1_JTREG_JOBS); }')
 
   # SPARC is in general slower per core so need to scale up timeouts a bit.
-  ifeq ($(OPENJDK_TARGET_CPU_ARCH), sparc)
+  ifeq ($(call isTargetCpuArch, sparc), true)
     JTREG_TIMEOUT_FACTOR ?= 8
   else
     JTREG_TIMEOUT_FACTOR ?= 4
   endif
   JTREG_VERBOSE ?= fail,error,summary
   JTREG_RETAIN ?= fail,error
+  JTREG_RUN_PROBLEM_LISTS ?= false
   JTREG_RETRY_COUNT ?= 0
   JTREG_REPEAT_COUNT ?= 0
 
@@ -678,8 +674,10 @@ define SetupRunJtregTestBody
   $1_JTREG_BASIC_OPTIONS += -e:JDK8_HOME=$$(BOOT_JDK)
   # If running on Windows, propagate the _NT_SYMBOL_PATH to enable
   # symbol lookup in hserr files
-  ifeq ($$(OPENJDK_TARGET_OS), windows)
+  # The minidumps are disabled by default on client Windows, so enable them
+  ifeq ($$(call isTargetOs, windows), true)
     $1_JTREG_BASIC_OPTIONS += -e:_NT_SYMBOL_PATH
+    $1_JTREG_BASIC_OPTIONS += -vmoption:-XX:+CreateCoredumpOnCrash
   endif
 
   $1_JTREG_BASIC_OPTIONS += \
@@ -695,13 +693,19 @@ define SetupRunJtregTestBody
     $1_JTREG_BASIC_OPTIONS += -nativepath:$$($1_JTREG_NATIVEPATH)
   endif
 
+  ifeq ($$(JTREG_RUN_PROBLEM_LISTS), true)
+    JTREG_PROBLEM_LIST_PREFIX := -match:
+  else
+    JTREG_PROBLEM_LIST_PREFIX := -exclude:
+  endif
+
   ifneq ($$($1_JTREG_PROBLEM_LIST), )
-    $1_JTREG_BASIC_OPTIONS += $$(addprefix -exclude:, $$($1_JTREG_PROBLEM_LIST))
+    $1_JTREG_BASIC_OPTIONS += $$(addprefix $$(JTREG_PROBLEM_LIST_PREFIX), $$($1_JTREG_PROBLEM_LIST))
   endif
 
   ifneq ($$(JTREG_EXTRA_PROBLEM_LISTS), )
     # Accept both absolute paths as well as relative to the current test root.
-    $1_JTREG_BASIC_OPTIONS += $$(addprefix -exclude:, $$(wildcard \
+    $1_JTREG_BASIC_OPTIONS += $$(addprefix $$(JTREG_PROBLEM_LIST_PREFIX), $$(wildcard \
         $$(JTREG_EXTRA_PROBLEM_LISTS) \
         $$(addprefix $$($1_TEST_ROOT)/, $$(JTREG_EXTRA_PROBLEM_LISTS)) \
     ))
@@ -740,8 +744,9 @@ define SetupRunJtregTestBody
     $1_JTREG_BASIC_OPTIONS += -vmoptions:"$$($1_AOT_OPTIONS)"
   endif
 
-  clean-workdir-$1:
+  clean-outputdirs-$1:
 	$$(RM) -r $$($1_TEST_SUPPORT_DIR)
+	$$(RM) -r $$($1_TEST_RESULTS_DIR)
 
   $1_COMMAND_LINE := \
       $$(JAVA) $$($1_JTREG_LAUNCHER_OPTIONS) \
@@ -785,7 +790,7 @@ define SetupRunJtregTestBody
         done
   endif
 
-  run-test-$1: clean-workdir-$1 $$($1_AOT_TARGETS)
+  run-test-$1: clean-outputdirs-$1 $$($1_AOT_TARGETS)
 	$$(call LogWarn)
 	$$(call LogWarn, Running test '$$($1_TEST)')
 	$$(call MakeDir, $$($1_TEST_RESULTS_DIR) $$($1_TEST_SUPPORT_DIR) \

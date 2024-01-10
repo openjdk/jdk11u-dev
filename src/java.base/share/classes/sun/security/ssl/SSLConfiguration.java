@@ -112,6 +112,9 @@ final class SSLConfiguration implements Cloneable {
     static final int maxCertificateChainLength = GetIntegerAction.privilegedGetProperty(
             "jdk.tls.maxCertificateChainLength", 10);
 
+    static final boolean enableDtlsResumeCookie = Utilities.getBooleanProperty(
+            "jdk.tls.enableDtlsResumeCookie", true);
+
     // Is the extended_master_secret extension supported?
     static {
         boolean supportExtendedMasterSecret = Utilities.getBooleanProperty(
@@ -140,7 +143,7 @@ final class SSLConfiguration implements Cloneable {
         this.identificationProtocol = null;
         this.serverNames = Collections.<SNIServerName>emptyList();
         this.sniMatchers = Collections.<SNIMatcher>emptyList();
-        this.preferLocalCipherSuites = false;
+        this.preferLocalCipherSuites = true;
 
         this.applicationProtocols = new String[0];
         this.enableRetransmissions = sslContext.isDTLS();

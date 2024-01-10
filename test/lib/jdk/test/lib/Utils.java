@@ -107,7 +107,12 @@ public final class Utils {
      */
     public static final String TEST_NAME = System.getProperty("test.name", ".");
 
-   /**
+    /**
+     * Returns the value of 'test.nativepath' system property
+     */
+    public static final String TEST_NATIVE_PATH = System.getProperty("test.nativepath", ".");
+
+    /**
      * Defines property name for seed value.
      */
     public static final String SEED_PROPERTY_NAME = "jdk.test.lib.random.seed";
@@ -182,6 +187,18 @@ public final class Utils {
      * @return The combination of JTReg test java options and user args.
      */
     public static String[] addTestJavaOpts(String... userArgs) {
+        List<String> opts = new ArrayList<String>();
+        Collections.addAll(opts, getTestJavaOpts());
+        Collections.addAll(opts, userArgs);
+        return opts.toArray(new String[0]);
+    }
+
+    /**
+     * Combines given arguments with default JTReg arguments for a jvm running a test.
+     * This is the combination of JTReg arguments test.vm.opts and test.java.opts
+     * @return The combination of JTReg test java options and user args.
+     */
+    public static String[] prependTestJavaOpts(String... userArgs) {
         List<String> opts = new ArrayList<String>();
         Collections.addAll(opts, getTestJavaOpts());
         Collections.addAll(opts, userArgs);

@@ -622,7 +622,9 @@ public:
   bool policy_align( PhaseIdealLoop *phase ) const;
 
   // Return TRUE if "iff" is a range check.
-  bool is_range_check_if(IfNode *iff, PhaseIdealLoop *phase, Invariance& invar DEBUG_ONLY(COMMA ProjNode *predicate_proj)) const;
+  bool is_range_check_if(IfProjNode* if_success_proj, PhaseIdealLoop *phase, Invariance& invar DEBUG_ONLY(COMMA ProjNode *predicate_proj)) const;
+  // GLGL bool is_range_check_if(IfProjNode* if_success_proj, PhaseIdealLoop* phase, BasicType bt, Node* iv, Node*& range, Node*& offset,
+  // GLGL                        jlong& scale) const;
 
   // Estimate the number of nodes required when cloning a loop (body).
   uint est_loop_clone_sz(uint factor) const;
@@ -657,11 +659,6 @@ public:
   bool is_innermost() { return is_loop() && _child == NULL; }
 
   void remove_main_post_loops(CountedLoopNode *cl, PhaseIdealLoop *phase);
-
-#ifdef ASSERT
-  // Tell whether the body contains nodes marked as reductions.
-  bool has_reduction_nodes() const;
-#endif // ASSERT
 
 #ifndef PRODUCT
   void dump_head() const;       // Dump loop head only
@@ -1151,15 +1148,12 @@ public:
   // Find a predicate
   static Node* find_predicate(Node* entry);
   // Construct a range check for a predicate if
-  BoolNode* rc_predicate(IdealLoopTree *loop, Node* ctrl,
-                         int scale, Node* offset,
-                         Node* init, Node* limit, jint stride,
-                         Node* range, bool upper, bool &overflow,
-                         bool negate);
+  BoolNode* rc_predicate(IdealLoopTree *loop, Node* ctrl, int scale, Node* offset,Node* init, Node* limit,
+                         jint stride, Node* range, bool upper, bool &overflow/* GLGL, bool negate*/);
 
   // Implementation of the loop predication to promote checks outside the loop
   bool loop_predication_impl(IdealLoopTree *loop);
-  bool loop_predication_impl_helper(IdealLoopTree *loop, ProjNode* proj, ProjNode *predicate_proj,
+  bool loop_predication_impl_helper(IdealLoopTree *loop, ProjNode* if_success_proj, ProjNode *predicate_proj,
                                     CountedLoopNode *cl, ConNode* zero, Invariance& invar,
                                     Deoptimization::DeoptReason reason);
   bool loop_predication_should_follow_branches(IdealLoopTree *loop, ProjNode *predicate_proj, float& loop_trip_cnt);
@@ -1349,6 +1343,9 @@ SHENANDOAHGC_ONLY(public:)
   bool identical_backtoback_ifs(Node *n);
   bool can_split_if(Node *n_ctrl);
 SHENANDOAHGC_ONLY(private:)
+  bool cannot_split_division(const Node* n, const Node* region) const;
+  static bool is_divisor_counted_loop_phi(const Node* divisor, const Node* loop);
+  bool loop_phi_backedge_type_contains_zero(const Node* phi_divisor, const Type* zero) const;
 
   // Clone loop predicates to slow and fast loop when unswitching a loop
   void clone_predicates_to_unswitched_loop(IdealLoopTree* loop, const Node_List& old_new, ProjNode*& iffast_pred, ProjNode*& ifslow_pred);
@@ -1434,10 +1431,8 @@ SHENANDOAHGC_ONLY(private:)
   }
 
   bool _created_loop_node;
-#ifdef ASSERT
-  void dump_real_LCA(Node* early, Node* wrong_lca);
-  bool check_idom_chains_intersection(const Node* n, uint& idom_idx_new, uint& idom_idx_other, const Node_List* nodes_seen) const;
-#endif
+  DEBUG_ONLY(void dump_idoms(Node* early, Node* wrong_lca);)
+  NOT_PRODUCT(void dump_idoms_in_reverse(const Node* n, const Node_List& idom_list) const;)
 
 public:
   void set_created_loop_node() { _created_loop_node = true; }
@@ -1450,7 +1445,9 @@ public:
 
 #ifndef PRODUCT
   void dump() const;
-  void dump_idom(Node* n) const;
+  void dump_idom(Node* n) const { dump_idom(n, 1000); } // For debugging
+  void dump_idom(Node* n, uint count) const;
+  void get_idoms(Node* n, uint count, Unique_Node_List& idoms) const;
   void dump(IdealLoopTree* loop, uint rpo_idx, Node_List &rpo_list) const;
   void verify() const;          // Major slow  :-)
   void verify_compare(Node* n, const PhaseIdealLoop* loop_verify, VectorSet &visited) const;

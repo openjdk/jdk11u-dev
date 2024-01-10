@@ -56,23 +56,21 @@ public class TestDockerMemoryMetrics {
         try {
             testMemoryLimit("200m");
             testMemoryLimit("1g");
+            // Memory limit test with additional cgroup fs mounted
+            testMemoryLimit("500m", true /* cgroup fs mount */);
 
             testMemoryAndSwapLimit("200m", "1g");
             testMemoryAndSwapLimit("100m", "200m");
 
             Metrics m = Metrics.systemMetrics();
-            // kernel memory, '--kernel-memory' switch, and OOM killer,
-            // '--oom-kill-disable' switch, tests not supported by cgroupv2
-            // runtimes
+            // OOM killer disable, '--oom-kill-disable' switch, test not supported
+            // by cgroupv2
             if (m != null) {
                 if ("cgroupv1".equals(m.getProvider())) {
-                    testKernelMemoryLimit("100m");
-                    testKernelMemoryLimit("1g");
-
                     testOomKillFlag("100m", false);
                 } else {
-                    System.out.println("kernel memory tests and OOM Kill flag tests not " +
-                                       "possible with cgroupv2.");
+                    System.out.println("OOM kill disable test not " +
+                                       "supported with cgroupv2.");
                 }
             }
             testOomKillFlag("100m", true);
@@ -89,6 +87,10 @@ public class TestDockerMemoryMetrics {
     }
 
     private static void testMemoryLimit(String value) throws Exception {
+        testMemoryLimit(value, false);
+    }
+
+    private static void testMemoryLimit(String value, boolean addCgroupMount) throws Exception {
         Common.logNewTestCase("testMemoryLimit, value = " + value);
         DockerRunOptions opts =
                 new DockerRunOptions(imageName, "/jdk/bin/java", "MetricsMemoryTester");
@@ -97,6 +99,10 @@ public class TestDockerMemoryMetrics {
                 .addJavaOpts("-cp", "/test-classes/")
                 .addJavaOpts("--add-exports", "java.base/jdk.internal.platform=ALL-UNNAMED")
                 .addClassOptions("memory", value);
+        if (addCgroupMount) {
+            // Extra cgroup mount should be ignored by product code
+            opts.addDockerOpts("--volume", "/sys/fs/cgroup:/cgroup-in:ro");
+        }
         DockerTestUtils.dockerRunJava(opts).shouldHaveExitValue(0).shouldContain("TEST PASSED!!!");
     }
 
@@ -123,18 +129,6 @@ public class TestDockerMemoryMetrics {
                 .addJavaOpts("-cp", "/test-classes/")
                 .addJavaOpts("--add-exports", "java.base/jdk.internal.platform=ALL-UNNAMED")
                 .addClassOptions("memoryswap", memory, memandswap);
-        DockerTestUtils.dockerRunJava(opts).shouldHaveExitValue(0).shouldContain("TEST PASSED!!!");
-    }
-
-    private static void testKernelMemoryLimit(String value) throws Exception {
-        Common.logNewTestCase("testKernelMemoryLimit, value = " + value);
-        DockerRunOptions opts =
-                new DockerRunOptions(imageName, "/jdk/bin/java", "MetricsMemoryTester");
-        opts.addDockerOpts("--volume", Utils.TEST_CLASSES + ":/test-classes/")
-                .addDockerOpts("--kernel-memory=" + value)
-                .addJavaOpts("-cp", "/test-classes/")
-                .addJavaOpts("--add-exports", "java.base/jdk.internal.platform=ALL-UNNAMED")
-                .addClassOptions("kernelmem", value);
         DockerTestUtils.dockerRunJava(opts).shouldHaveExitValue(0).shouldContain("TEST PASSED!!!");
     }
 

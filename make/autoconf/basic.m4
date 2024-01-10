@@ -55,6 +55,7 @@ AC_DEFUN([BASIC_CHECK_LEFTOVER_OVERRIDDEN],
 
 ###############################################################################
 # Setup basic configuration paths, and platform-specific stuff related to PATHs.
+# Make sure to only use tools set up in BASIC_SETUP_FUNDAMENTAL_TOOLS.
 AC_DEFUN_ONCE([BASIC_SETUP_PATHS],
 [
   # Save the current directory this script was started from
@@ -70,23 +71,18 @@ AC_DEFUN_ONCE([BASIC_SETUP_PATHS],
   fi
 
   if test "x$OPENJDK_TARGET_OS" = "xwindows"; then
-    PATH_SEP=";"
-    EXE_SUFFIX=".exe"
-    BASIC_CHECK_PATHS_WINDOWS
-  else
-    PATH_SEP=":"
-    EXE_SUFFIX=""
+    BASIC_SETUP_PATHS_WINDOWS
   fi
-  AC_SUBST(PATH_SEP)
-  AC_SUBST(EXE_SUFFIX)
 
   # We get the top-level directory from the supporting wrappers.
+  BASIC_WINDOWS_VERIFY_DIR($TOPDIR, source)
+  UTIL_FIXUP_PATH(TOPDIR)
   AC_MSG_CHECKING([for top-level directory])
   AC_MSG_RESULT([$TOPDIR])
   AC_SUBST(TOPDIR)
-  AC_SUBST(CONFIGURE_START_DIR)
 
   if test "x$CUSTOM_ROOT" != x; then
+    BASIC_WINDOWS_VERIFY_DIR($CUSTOM_ROOT, custom root)
     UTIL_FIXUP_PATH(CUSTOM_ROOT)
     WORKSPACE_ROOT="${CUSTOM_ROOT}"
   else
@@ -97,6 +93,8 @@ AC_DEFUN_ONCE([BASIC_SETUP_PATHS],
   # We can only call UTIL_FIXUP_PATH after BASIC_CHECK_PATHS_WINDOWS.
   UTIL_FIXUP_PATH(CONFIGURE_START_DIR)
   UTIL_FIXUP_PATH(TOPDIR)
+
+  AC_SUBST(CONFIGURE_START_DIR)
 
   # Locate the directory of this script.
   AUTOCONF_DIR=$TOPDIR/make/autoconf
@@ -223,6 +221,18 @@ AC_DEFUN_ONCE([BASIC_SETUP_DEVKIT],
       [UTIL_PREPEND_TO_PATH([TOOLCHAIN_PATH],$with_toolchain_path)]
   )
 
+  AC_ARG_WITH([xcode-path], [AS_HELP_STRING([--with-xcode-path],
+      [set up toolchain on Mac OS using a path to an Xcode installation])])
+
+  if test "x$with_xcode_path" != x; then
+    if test "x$OPENJDK_BUILD_OS" = "xmacosx"; then
+      UTIL_PREPEND_TO_PATH([TOOLCHAIN_PATH],
+          $with_xcode_path/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:$with_xcode_path/Contents/Developer/usr/bin)
+    else
+      AC_MSG_WARN([Option --with-xcode-path is only valid on Mac OS, ignoring.])
+    fi
+  fi
+
   AC_ARG_WITH([extra-path], [AS_HELP_STRING([--with-extra-path],
       [prepend these directories to the default path])],
       [UTIL_PREPEND_TO_PATH([EXTRA_PATH],$with_extra_path)]
@@ -233,10 +243,13 @@ AC_DEFUN_ONCE([BASIC_SETUP_DEVKIT],
     # If not, detect if Xcode is installed by running xcodebuild -version
     # if no Xcode installed, xcodebuild exits with 1
     # if Xcode is installed, even if xcode-select is misconfigured, then it exits with 0
-    if test "x$DEVKIT_ROOT" != x || /usr/bin/xcodebuild -version >/dev/null 2>&1; then
-      # We need to use xcodebuild in the toolchain dir provided by the user, this will
-      # fall back on the stub binary in /usr/bin/xcodebuild
-      AC_PATH_PROG([XCODEBUILD], [xcodebuild], [/usr/bin/xcodebuild], [$TOOLCHAIN_PATH])
+    if test "x$DEVKIT_ROOT" != x || test "x$TOOLCHAIN_PATH" != x || /usr/bin/xcodebuild -version >/dev/null 2>&1; then
+      # We need to use xcodebuild in the toolchain dir provided by the user
+      UTIL_LOOKUP_PROGS(XCODEBUILD, xcodebuild, $TOOLCHAIN_PATH)
+      if test x$XCODEBUILD = x; then
+        # fall back on the stub binary in /usr/bin/xcodebuild
+        XCODEBUILD=/usr/bin/xcodebuild
+      fi
     else
       # this should result in SYSROOT being empty, unless --with-sysroot is provided
       # when only the command line tools are installed there are no SDKs, so headers
@@ -306,6 +319,7 @@ AC_DEFUN_ONCE([BASIC_SETUP_DEVKIT],
   AC_MSG_RESULT([$SYSROOT])
   AC_MSG_CHECKING([for toolchain path])
   AC_MSG_RESULT([$TOOLCHAIN_PATH])
+  AC_SUBST(TOOLCHAIN_PATH)
   AC_MSG_CHECKING([for extra path])
   AC_MSG_RESULT([$EXTRA_PATH])
 ])
@@ -380,6 +394,7 @@ AC_DEFUN_ONCE([BASIC_SETUP_OUTPUT_DIR],
   AC_MSG_CHECKING([what configuration name to use])
   AC_MSG_RESULT([$CONF_NAME])
 
+  BASIC_WINDOWS_VERIFY_DIR($OUTPUTDIR, output)
   UTIL_FIXUP_PATH(OUTPUTDIR)
 
   CONFIGURESUPPORT_OUTPUTDIR="$OUTPUTDIR/configure-support"
@@ -416,18 +431,8 @@ AC_DEFUN([BASIC_CHECK_DIR_ON_LOCAL_DISK],
   # df -l lists only local disks; if the given directory is not found then
   # a non-zero exit code is given
   if test "x$DF" = x; then
-    if test "x$OPENJDK_BUILD_OS_ENV" = "xwindows.msys"; then
-      # msys does not have df; use Windows "net use" instead.
-      IS_NETWORK_DISK=`net use | grep \`pwd -W | cut -d ":" -f 1 | tr a-z A-Z\`:`
-      if test "x$IS_NETWORK_DISK" = x; then
-        $2
-      else
-        $3
-      fi
-    else
-      # No df here, say it's local
-      $2
-    fi
+    # No df here, say it's local
+    $2
   else
     # JDK-8189619
     # df on AIX does not understand -l. On modern AIXes it understands "-T local" which

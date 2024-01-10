@@ -24,42 +24,61 @@
 #
 
 ###############################################################################
-# Setup the most fundamental tools that relies on not much else to set up,
-# but is used by much of the early bootstrap code.
+# Setup the most fundamental tools, used for setting up build platform and
+# path handling.
 AC_DEFUN_ONCE([BASIC_SETUP_FUNDAMENTAL_TOOLS],
 [
-  # Start with tools that do not need have cross compilation support
-  # and can be expected to be found in the default PATH. These tools are
-  # used by configure.
+  # Bootstrapping: These tools are needed by UTIL_LOOKUP_PROGS
+  AC_PATH_PROGS(BASENAME, basename)
+  UTIL_CHECK_NONEMPTY(BASENAME)
+  AC_PATH_PROGS(DIRNAME, dirname)
+  UTIL_CHECK_NONEMPTY(DIRNAME)
+  AC_PATH_PROGS(FILE, file)
+  UTIL_CHECK_NONEMPTY(FILE)
+  AC_PATH_PROGS(LDD, ldd)
 
-  # First are all the simple required tools.
-  UTIL_REQUIRE_PROGS(BASENAME, basename)
+  # Required tools
+  UTIL_REQUIRE_PROGS(ECHO, echo)
+  UTIL_REQUIRE_PROGS(TR, tr)
+  UTIL_REQUIRE_PROGS(UNAME, uname)
+  UTIL_REQUIRE_PROGS(WC, wc)
+
+  # Required tools with some special treatment
+  UTIL_REQUIRE_SPECIAL(GREP, [AC_PROG_GREP])
+  UTIL_REQUIRE_SPECIAL(EGREP, [AC_PROG_EGREP])
+  UTIL_REQUIRE_SPECIAL(SED, [AC_PROG_SED])
+
+  # Tools only needed on some platforms
+  UTIL_LOOKUP_PROGS(PATHTOOL, cygpath wslpath)
+  UTIL_LOOKUP_PROGS(CMD, cmd.exe, $PATH:/cygdrive/c/windows/system32:/mnt/c/windows/system32:/c/windows/system32)
+])
+
+###############################################################################
+# Setup further tools that should be resolved early but after setting up
+# build platform and path handling.
+AC_DEFUN_ONCE([BASIC_SETUP_TOOLS],
+[
+  # Required tools
   UTIL_REQUIRE_PROGS(BASH, bash)
   UTIL_REQUIRE_PROGS(CAT, cat)
   UTIL_REQUIRE_PROGS(CHMOD, chmod)
-  UTIL_REQUIRE_PROGS(CMP, cmp)
-  UTIL_REQUIRE_PROGS(COMM, comm)
   UTIL_REQUIRE_PROGS(CP, cp)
   UTIL_REQUIRE_PROGS(CUT, cut)
   UTIL_REQUIRE_PROGS(DATE, date)
-  UTIL_REQUIRE_PROGS(DIFF, [gdiff diff])
-  UTIL_REQUIRE_PROGS(DIRNAME, dirname)
-  UTIL_REQUIRE_PROGS(ECHO, echo)
+  UTIL_REQUIRE_PROGS(DIFF, gdiff diff)
   UTIL_REQUIRE_PROGS(EXPR, expr)
-  UTIL_REQUIRE_PROGS(FILE, file)
   UTIL_REQUIRE_PROGS(FIND, find)
-  UTIL_REQUIRE_PROGS(HEAD, head)
   UTIL_REQUIRE_PROGS(GUNZIP, gunzip)
   UTIL_REQUIRE_PROGS(GZIP, pigz gzip)
+  UTIL_REQUIRE_PROGS(HEAD, head)
   UTIL_REQUIRE_PROGS(LN, ln)
   UTIL_REQUIRE_PROGS(LS, ls)
   # gmkdir is known to be safe for concurrent invocations with -p flag.
-  UTIL_REQUIRE_PROGS(MKDIR, [gmkdir mkdir])
+  UTIL_REQUIRE_PROGS(MKDIR, gmkdir mkdir)
   UTIL_REQUIRE_PROGS(MKTEMP, mktemp)
   UTIL_REQUIRE_PROGS(MV, mv)
-  UTIL_REQUIRE_PROGS(NAWK, [nawk gawk awk])
+  UTIL_REQUIRE_PROGS(NAWK, nawk gawk awk)
   UTIL_REQUIRE_PROGS(PRINTF, printf)
-  UTIL_REQUIRE_PROGS(READLINK, [greadlink readlink])
   UTIL_REQUIRE_PROGS(RM, rm)
   UTIL_REQUIRE_PROGS(RMDIR, rmdir)
   UTIL_REQUIRE_PROGS(SH, sh)
@@ -68,33 +87,27 @@ AC_DEFUN_ONCE([BASIC_SETUP_FUNDAMENTAL_TOOLS],
   UTIL_REQUIRE_PROGS(TAR, gtar tar)
   UTIL_REQUIRE_PROGS(TEE, tee)
   UTIL_REQUIRE_PROGS(TOUCH, touch)
-  UTIL_REQUIRE_PROGS(TR, tr)
-  UTIL_REQUIRE_PROGS(UNAME, uname)
-  UTIL_REQUIRE_PROGS(UNIQ, uniq)
-  UTIL_REQUIRE_PROGS(WC, wc)
   UTIL_REQUIRE_PROGS(WHICH, which)
   UTIL_REQUIRE_PROGS(XARGS, xargs)
 
-  # Then required tools that require some special treatment.
+  # Required tools with some special treatment
   UTIL_REQUIRE_SPECIAL(AWK, [AC_PROG_AWK])
-  UTIL_REQUIRE_SPECIAL(GREP, [AC_PROG_GREP])
-  UTIL_REQUIRE_SPECIAL(EGREP, [AC_PROG_EGREP])
   UTIL_REQUIRE_SPECIAL(FGREP, [AC_PROG_FGREP])
-  UTIL_REQUIRE_SPECIAL(SED, [AC_PROG_SED])
+
+  # Optional tools, we can do without them
+  UTIL_LOOKUP_PROGS(DF, df)
+  UTIL_LOOKUP_PROGS(NICE, nice)
+  UTIL_LOOKUP_PROGS(READLINK, greadlink readlink)
+
+  # Tools only needed on some platforms
+  UTIL_LOOKUP_PROGS(LSB_RELEASE, lsb_release)
+
+  # For compare.sh only
+  UTIL_LOOKUP_PROGS(CMP, cmp)
+  UTIL_LOOKUP_PROGS(UNIQ, uniq)
 
   # Always force rm.
   RM="$RM -f"
-
-  # pwd behaves differently on various platforms and some don't support the -L flag.
-  # Always use the bash builtin pwd to get uniform behavior.
-  THEPWDCMD=pwd
-
-  # These are not required on all platforms
-  UTIL_PATH_PROGS(CYGPATH, cygpath)
-  UTIL_PATH_PROGS(WSLPATH, wslpath)
-  UTIL_PATH_PROGS(DF, df)
-  UTIL_PATH_PROGS(CPIO, [cpio bsdcpio])
-  UTIL_PATH_PROGS(NICE, nice)
 ])
 
 ###############################################################################
@@ -129,7 +142,7 @@ AC_DEFUN([BASIC_CHECK_MAKE_VERSION],
         if test "x$OPENJDK_BUILD_OS" = "xwindows"; then
           if test "x$OPENJDK_BUILD_OS_ENV" = "xwindows.cygwin"; then
             MAKE_EXPECTED_ENV='cygwin'
-          elif test "x$OPENJDK_BUILD_OS_ENV" = "xwindows.msys"; then
+          elif test "x$OPENJDK_BUILD_OS_ENV" = "xwindows.msys2"; then
             MAKE_EXPECTED_ENV='msys'
           else
             AC_MSG_ERROR([Unknown Windows environment])
@@ -155,25 +168,23 @@ AC_DEFUN([BASIC_CHECK_MAKE_VERSION],
 AC_DEFUN([BASIC_CHECK_MAKE_OUTPUT_SYNC],
 [
   # Check if make supports the output sync option and if so, setup using it.
-  AC_MSG_CHECKING([if make --output-sync is supported])
-  if $MAKE --version -O > /dev/null 2>&1; then
-    OUTPUT_SYNC_SUPPORTED=true
-    AC_MSG_RESULT([yes])
-    AC_MSG_CHECKING([for output-sync value])
-    AC_ARG_WITH([output-sync], [AS_HELP_STRING([--with-output-sync],
-      [set make output sync type if supported by make. @<:@recurse@:>@])],
-      [OUTPUT_SYNC=$with_output_sync])
-    if test "x$OUTPUT_SYNC" = "x"; then
-      OUTPUT_SYNC=none
-    fi
-    AC_MSG_RESULT([$OUTPUT_SYNC])
-    if ! $MAKE --version -O$OUTPUT_SYNC > /dev/null 2>&1; then
-      AC_MSG_ERROR([Make did not the support the value $OUTPUT_SYNC as output sync type.])
-    fi
-  else
-    OUTPUT_SYNC_SUPPORTED=false
-    AC_MSG_RESULT([no])
-  fi
+  UTIL_ARG_WITH(NAME: output-sync, TYPE: literal,
+      VALID_VALUES: [none recurse line target], DEFAULT: none,
+      OPTIONAL: true, ENABLED_DEFAULT: true,
+      ENABLED_RESULT: OUTPUT_SYNC_SUPPORTED,
+      CHECKING_MSG: [for make --output-sync value],
+      DESC: [set make --output-sync type if supported by make],
+      CHECK_AVAILABLE:
+      [
+        AC_MSG_CHECKING([if make --output-sync is supported])
+        if ! $MAKE --version -O > /dev/null 2>&1; then
+          AC_MSG_RESULT([no])
+          AVAILABLE=false
+        else
+          AC_MSG_RESULT([yes])
+        fi
+      ]
+  )
   AC_SUBST(OUTPUT_SYNC_SUPPORTED)
   AC_SUBST(OUTPUT_SYNC)
 ])
@@ -182,14 +193,14 @@ AC_DEFUN([BASIC_CHECK_MAKE_OUTPUT_SYNC],
 # Goes looking for a usable version of GNU make.
 AC_DEFUN([BASIC_CHECK_GNU_MAKE],
 [
-  UTIL_SETUP_TOOL([MAKE],
+  UTIL_SETUP_TOOL(MAKE,
   [
     # Try our hardest to locate a correct version of GNU make
-    AC_PATH_PROGS(CHECK_GMAKE, gmake)
+    UTIL_LOOKUP_PROGS(CHECK_GMAKE, gmake)
     BASIC_CHECK_MAKE_VERSION("$CHECK_GMAKE", [gmake in PATH])
 
     if test "x$FOUND_MAKE" = x; then
-      AC_PATH_PROGS(CHECK_MAKE, make)
+      UTIL_LOOKUP_PROGS(CHECK_MAKE, make)
       BASIC_CHECK_MAKE_VERSION("$CHECK_MAKE", [make in PATH])
     fi
 
@@ -198,10 +209,10 @@ AC_DEFUN([BASIC_CHECK_GNU_MAKE],
         # We have a toolchain path, check that as well before giving up.
         OLD_PATH=$PATH
         PATH=$TOOLCHAIN_PATH:$PATH
-        AC_PATH_PROGS(CHECK_TOOLSDIR_GMAKE, gmake)
+        UTIL_LOOKUP_PROGS(CHECK_TOOLSDIR_GMAKE, gmake)
         BASIC_CHECK_MAKE_VERSION("$CHECK_TOOLSDIR_GMAKE", [gmake in tools-dir])
         if test "x$FOUND_MAKE" = x; then
-          AC_PATH_PROGS(CHECK_TOOLSDIR_MAKE, make)
+          UTIL_LOOKUP_PROGS(CHECK_TOOLSDIR_MAKE, make)
           BASIC_CHECK_MAKE_VERSION("$CHECK_TOOLSDIR_MAKE", [make in tools-dir])
         fi
         PATH=$OLD_PATH
@@ -345,24 +356,17 @@ AC_DEFUN_ONCE([BASIC_SETUP_COMPLEX_TOOLS],
 
   # Non-required basic tools
 
-  UTIL_PATH_PROGS(LDD, ldd)
-  if test "x$LDD" = "x"; then
-    # List shared lib dependencies is used for
-    # debug output and checking for forbidden dependencies.
-    # We can build without it.
-    LDD="true"
-  fi
-  UTIL_PATH_PROGS(READELF, [greadelf readelf])
-  UTIL_PATH_PROGS(DOT, dot)
-  UTIL_PATH_PROGS(HG, hg)
-  UTIL_PATH_PROGS(GIT, git)
-  UTIL_PATH_PROGS(STAT, stat)
-  UTIL_PATH_PROGS(TIME, time)
-  UTIL_PATH_PROGS(FLOCK, flock)
+  UTIL_LOOKUP_PROGS(READELF, greadelf readelf)
+  UTIL_LOOKUP_PROGS(DOT, dot)
+  UTIL_LOOKUP_PROGS(HG, hg)
+  UTIL_LOOKUP_PROGS(GIT, git)
+  UTIL_LOOKUP_PROGS(STAT, stat)
+  UTIL_LOOKUP_PROGS(TIME, time)
+  UTIL_LOOKUP_PROGS(FLOCK, flock)
   # Dtrace is usually found in /usr/sbin on Solaris, but that directory may not
   # be in the user path.
-  UTIL_PATH_PROGS(DTRACE, dtrace, $PATH:/usr/sbin)
-  UTIL_PATH_PROGS(PATCH, [gpatch patch])
+  UTIL_LOOKUP_PROGS(DTRACE, dtrace, $PATH:/usr/sbin)
+  UTIL_LOOKUP_PROGS(PATCH, gpatch patch)
   # Check if it's GNU time
   IS_GNU_TIME=`$TIME --version 2>&1 | $GREP 'GNU time'`
   if test "x$IS_GNU_TIME" != x; then
@@ -376,50 +380,13 @@ AC_DEFUN_ONCE([BASIC_SETUP_COMPLEX_TOOLS],
     UTIL_REQUIRE_PROGS(DSYMUTIL, dsymutil)
     UTIL_REQUIRE_PROGS(MIG, mig)
     UTIL_REQUIRE_PROGS(XATTR, xattr)
-    UTIL_PATH_PROGS(CODESIGN, codesign)
-
-    if test "x$CODESIGN" != "x"; then
-      # Check for user provided code signing identity.
-      # If no identity was provided, fall back to "openjdk_codesign".
-      AC_ARG_WITH([macosx-codesign-identity], [AS_HELP_STRING([--with-macosx-codesign-identity],
-        [specify the code signing identity])],
-        [MACOSX_CODESIGN_IDENTITY=$with_macosx_codesign_identity],
-        [MACOSX_CODESIGN_IDENTITY=openjdk_codesign]
-      )
-
-      AC_SUBST(MACOSX_CODESIGN_IDENTITY)
-
-      # Verify that the codesign certificate is present
-      AC_MSG_CHECKING([if codesign certificate is present])
-      $RM codesign-testfile
-      $TOUCH codesign-testfile
-      $CODESIGN -s "$MACOSX_CODESIGN_IDENTITY" codesign-testfile 2>&AS_MESSAGE_LOG_FD \
-          >&AS_MESSAGE_LOG_FD || CODESIGN=
-      $RM codesign-testfile
-      if test "x$CODESIGN" = x; then
-        AC_MSG_RESULT([no])
-      else
-        AC_MSG_RESULT([yes])
-        # Verify that the codesign has --option runtime
-        AC_MSG_CHECKING([if codesign has --option runtime])
-        $RM codesign-testfile
-        $TOUCH codesign-testfile
-        $CODESIGN --option runtime -s "$MACOSX_CODESIGN_IDENTITY" codesign-testfile \
-            2>&AS_MESSAGE_LOG_FD >&AS_MESSAGE_LOG_FD || CODESIGN=
-        $RM codesign-testfile
-        if test "x$CODESIGN" = x; then
-          AC_MSG_ERROR([codesign does not have --option runtime. macOS 10.13.6 and above is required.])
-        else
-          AC_MSG_RESULT([yes])
-        fi
-      fi
-    fi
+    UTIL_LOOKUP_PROGS(CODESIGN, codesign)
     UTIL_REQUIRE_PROGS(SETFILE, SetFile)
   elif test "x$OPENJDK_TARGET_OS" = "xsolaris"; then
     UTIL_REQUIRE_PROGS(ELFEDIT, elfedit)
   fi
   if ! test "x$OPENJDK_TARGET_OS" = "xwindows"; then
-    UTIL_REQUIRE_BUILTIN_PROGS(ULIMIT, ulimit)
+    UTIL_REQUIRE_PROGS(ULIMIT, ulimit)
   fi
 ])
 
@@ -465,7 +432,7 @@ AC_DEFUN_ONCE([BASIC_CHECK_BASH_OPTIONS],
 #
 AC_DEFUN_ONCE([BASIC_SETUP_PANDOC],
 [
-  UTIL_PATH_PROGS(PANDOC, pandoc)
+  UTIL_LOOKUP_PROGS(PANDOC, pandoc)
   PANDOC_MARKDOWN_FLAG="markdown"
   if test -n "$PANDOC"; then
     AC_MSG_CHECKING(if the pandoc smart extension needs to be disabled for markdown)

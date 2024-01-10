@@ -148,7 +148,7 @@ bool MetaspaceGC::inc_capacity_until_GC(size_t v, size_t* new_cap_until_GC, size
 
   if (new_value < old_capacity_until_GC) {
     // The addition wrapped around, set new_value to aligned max value.
-    new_value = align_down(max_uintx, Metaspace::commit_alignment());
+    new_value = align_down(max_uintx, Metaspace::reserve_alignment());
   }
 
   if (new_value > MaxMetaspaceSize) {
@@ -758,6 +758,7 @@ void MetaspaceUtils::print_report(outputStream* out, size_t scale, int flags) {
       out->print_cr("   Non-Class:");
     }
     Metaspace::space_list()->print_on(out, scale);
+    out->cr();
     if (Metaspace::using_class_space()) {
       out->print_cr("       Class:");
       Metaspace::class_space_list()->print_on(out, scale);

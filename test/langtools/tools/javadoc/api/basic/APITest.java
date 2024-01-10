@@ -149,7 +149,9 @@ class APITest {
             missing.removeAll(foundFiles);
             if (!missing.isEmpty())
                 error("the following files were not found in " + where + ": " + missing);
-            Set<String> unexpected = new TreeSet<String>(foundFiles);
+            Set<String> unexpected = foundFiles.stream()
+                    .filter(p -> !p.startsWith("legal"))
+                    .collect(Collectors.toCollection(TreeSet::new));
             unexpected.removeAll(expectFiles);
             if (!unexpected.isEmpty())
                 error("the following unexpected files were found in " + where + ": " + unexpected);
@@ -198,7 +200,7 @@ class APITest {
             "help-doc.html",
             "index-all.html",
             "index.html",
-            "jquery/jquery-3.6.0.min.js",
+            "jquery/jquery-3.6.1.min.js",
             "jquery/jquery-ui.min.js",
             "jquery/jquery-ui.min.css",
             "jquery/external/jquery/jquery.js",

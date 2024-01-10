@@ -22,6 +22,9 @@
 # the command line, set the key security.overridePropertiesFile
 # to false in the master security properties file. It is set to true
 # by default.
+#
+# If this properties file fails to load, the JDK implementation will throw
+# an unspecified error when initializing the java.security.Security class.
 
 # In this file, various security properties are set for use by
 # java.security classes. This is where users can statically register
@@ -910,7 +913,8 @@ jdk.tls.legacyAlgorithms= \
 # Note: This property is currently used by OpenJDK's JSSE implementation. It
 # is not guaranteed to be examined and used by other implementations.
 #
-jdk.tls.keyLimits=AES/GCM/NoPadding KeyUpdate 2^37
+jdk.tls.keyLimits=AES/GCM/NoPadding KeyUpdate 2^37, \
+                  ChaCha20-Poly1305 KeyUpdate 2^37
 
 #
 # Cryptographic Jurisdiction Policy defaults
