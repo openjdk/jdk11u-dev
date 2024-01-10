@@ -764,7 +764,7 @@ protected:
 #endif // __APPLE__ && AARCH64
 
  private:
-  bool _in_asgct = false;
+  bool _in_asgct;
  public:
   bool in_asgct() const { return _in_asgct; }
   void set_in_asgct(bool value) { _in_asgct = value; }
