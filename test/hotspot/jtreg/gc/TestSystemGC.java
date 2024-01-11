@@ -78,7 +78,7 @@ package gc;
  * @comment ZGC will not start when LargePages cannot be allocated, therefore
  *          we do not run such configuration.
  * @summary Runs System.gc() with different flags.
- * @run main/othervm -XX:+UseZGC gc.TestSystemGC
+ * @run main/othervm -XX:+UseZGC -XX:+UnlockExperimentalVMOptions gc.TestSystemGC
  */
 
 public class TestSystemGC {
