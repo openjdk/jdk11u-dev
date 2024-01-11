@@ -189,44 +189,19 @@ public class XMLUtils {
 
     public static class Signer {
 
-        PrivateKey privateKey;  // signer key, never null
+        final PrivateKey privateKey;  // signer key, never null
         X509Certificate cert;   // certificate, optional
         PublicKey publicKey;    // public key, optional
         String keyName;         // alias, optional
 
-        SignatureMethod sm;     // default determined by privateKey
-        DigestMethod dm;        // default SHA-256
-        CanonicalizationMethod cm;  // default EXCLUSIVE
-        Transform tr;           // default ENVELOPED
+        String sm = null;       // default determined by privateKey
+        SignatureMethodParameterSpec smSpec = null;
+        String dm = DigestMethod.SHA256;
+        String cm = CanonicalizationMethod.EXCLUSIVE;
+        String tr = Transform.ENVELOPED;
 
-        public Signer(PrivateKey privateKey) throws Exception {
-            this.privateKey = privateKey;
-            dm(DigestMethod.SHA256);
-            tr(Transform.ENVELOPED);
-            cm(CanonicalizationMethod.EXCLUSIVE);
-            String alg = privateKey.getAlgorithm();
-            if (alg.equals("RSASSA-PSS")) {
-                PSSParameterSpec pspec
-                        = (PSSParameterSpec) ((RSAKey) privateKey).getParams();
-                /*
-                if (pspec != null) {
-                    sm(SignatureMethod.RSA_PSS, new RSAPSSParameterSpec(pspec));
-                } else {
-                    sm(SignatureMethod.RSA_PSS);
-                }
-                */
-                throw new Exception("Code not expected to be used in tests for 11. Backport 8241306.");
-            } else {
-                if (alg.equals("RSA")) {
-                    sm(SignatureMethod.RSA_SHA256);
-                } else if (alg.equals("DSA")) {
-                    sm(SignatureMethod.DSA_SHA256);
-                } else if (alg.equals("EC")) {
-                    sm(SignatureMethod.ECDSA_SHA256);
-                } else {
-                    throw new InvalidKeyException();
-                }
-            }
+        public Signer(PrivateKey privateKey) {
+            this.privateKey = Objects.requireNonNull(privateKey);
         }
 
         // Change KeyInfo source
@@ -379,12 +354,15 @@ public class XMLUtils {
                 if (alg.equals("RSASSA-PSS")) {
                     PSSParameterSpec pspec
                             = (PSSParameterSpec) ((RSAKey) privateKey).getParams();
+                    /*
                     if (pspec != null) {
                         signatureMethod = FAC.newSignatureMethod(
                                 SignatureMethod.RSA_PSS, new RSAPSSParameterSpec(pspec));
                     } else {
                         signatureMethod = FAC.newSignatureMethod(SignatureMethod.RSA_PSS, null);
                     }
+                    */
+                    throw new Exception("Code not expected to be used in tests for 11. Backport 8241306.");
                 } else {
                     signatureMethod = FAC.newSignatureMethod(switch (alg) {
                         case "RSA" -> SignatureMethod.RSA_SHA256;

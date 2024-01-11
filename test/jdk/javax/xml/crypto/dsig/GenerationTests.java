@@ -24,7 +24,7 @@
 /**
  * @test
  * @bug 4635230 6283345 6303830 6824440 6867348 7094155 8038184 8038349 8046949
- *      8046724 8079693 8177334 8205507 8210736 8217878
+ *      8046724 8079693 8177334 8205507 8210736 8217878 8305972
  * @summary Basic unit tests for generating XML Signatures with JSR 105
  * @modules java.base/sun.security.util
  *          java.base/sun.security.x509
@@ -100,11 +100,12 @@ public class GenerationTests {
             rsaSha1, rsaSha224, rsaSha256, rsaSha384, rsaSha512,
             ecdsaSha1, ecdsaSha224, ecdsaSha256, ecdsaSha384, ecdsaSha512,
             hmacSha1, hmacSha224, hmacSha256, hmacSha384, hmacSha512,
-            rsaSha1mgf1, rsaSha224mgf1, rsaSha256mgf1, rsaSha384mgf1, rsaSha512mgf1;
+            rsaSha1mgf1, rsaSha224mgf1, rsaSha256mgf1, rsaSha384mgf1, rsaSha512mgf1,
+            ed25519, ed448;
     private static DigestMethod sha1, sha224, sha256, sha384, sha512,
                                 sha3_224, sha3_256, sha3_384, sha3_512;
     private static KeyInfo dsa1024, dsa2048, rsa, rsa1024, rsa2048,
-                           p256ki, p384ki, p521ki;
+                           p256ki, p384ki, p521ki, ed25519ki, ed448ki;
     private static KeySelector kvks = new KeySelectors.KeyValueKeySelector();
     private static KeySelector sks;
     private static Key signingKey;
@@ -206,7 +207,8 @@ public class GenerationTests {
             SignatureMethod.RSA_SHA256,
             SignatureMethod.ECDSA_SHA256,
             SignatureMethod.HMAC_SHA256,
-            SignatureMethod.SHA256_RSA_MGF1);
+            SignatureMethod.SHA256_RSA_MGF1,
+            "http://www.w3.org/2021/04/xmldsig-more#eddsa-ed25519");
 
     private static final String[] allSignatureMethods
             = Stream.of(SignatureMethod.class.getDeclaredFields())

@@ -210,6 +210,7 @@ jdk_security1 = \
 jdk_security2 = \
     javax/crypto \
     javax/xml/crypto \
+    com/sun/org/apache/xml/internal/security \
     com/oracle/security/ucrypto \
     com/sun/crypto
 
