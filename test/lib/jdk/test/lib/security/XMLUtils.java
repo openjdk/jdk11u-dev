@@ -53,7 +53,8 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.security.*;
 import java.security.cert.X509Certificate;
-import java.security.interfaces.EdECPrivateKey;
+// "8166597: Crypto support for the EdDSA Signature Algorithm" missing in 11.
+//import java.security.interfaces.EdECPrivateKey;
 import java.security.interfaces.RSAKey;
 import java.security.spec.NamedParameterSpec;
 import java.security.spec.PSSParameterSpec;
@@ -332,17 +333,20 @@ public class XMLUtils {
 
         // Builds a SignedInfo for a string reference
         private SignedInfo buildSignedInfo(String ref) throws Exception {
+            TransformParameterSpec pSpec;
+            if (tr.equals(Transform.XPATH)) {
+                pSpec = new XPathFilterParameterSpec("//.");
+            } else if (tr.equals(Transform.XPATH2)) {
+                pSpec = new XPathFilter2ParameterSpec(
+                               Collections.singletonList(new XPathType("//.",
+                                       XPathType.Filter.INTERSECT)));
+            } else {
+                pSpec = null;
+            }
             return buildSignedInfo(FAC.newReference(
                             ref,
                             FAC.newDigestMethod(dm, null),
-                            List.of(FAC.newTransform(tr, switch (tr) {
-                                case Transform.XPATH ->
-                                    new XPathFilterParameterSpec("//.");
-                                case Transform.XPATH2 -> new XPathFilter2ParameterSpec(
-                                            Collections.singletonList(new XPathType("//.",
-                                                    XPathType.Filter.INTERSECT)));
-                                default -> null;
-                            })),
+                            List.of(FAC.newTransform(tr, pSpec)),
                             null, null));
         }
 
@@ -364,24 +368,32 @@ public class XMLUtils {
                     */
                     throw new Exception("Code not expected to be used in tests for 11. Backport 8241306.");
                 } else {
-                    signatureMethod = FAC.newSignatureMethod(switch (alg) {
-                        case "RSA" -> SignatureMethod.RSA_SHA256;
-                        case "DSA" -> SignatureMethod.DSA_SHA256;
-                        case "EC" -> SignatureMethod.ECDSA_SHA256;
-                        case "ED25519" -> "http://www.w3.org/2021/04/xmldsig-more#eddsa-ed25519";
-                        case "ED448" -> "http://www.w3.org/2021/04/xmldsig-more#eddsa-ed448";
-                        case "EDDSA" -> {
-                            if (privateKey instanceof EdECPrivateKey edsk) {
-                                yield edsk.getParams().getName()
-                                        .equals(NamedParameterSpec.ED25519.getName())
-                                        ? "http://www.w3.org/2021/04/xmldsig-more#eddsa-ed25519"
-                                        : "http://www.w3.org/2021/04/xmldsig-more#eddsa-ed448";
-                            } else {
-                                throw new InvalidKeyException();
-                            }
+                    if (alg.equals("RSA")) {
+                        signatureMethod = FAC.newSignatureMethod(SignatureMethod.RSA_SHA256, null);
+                    } else if (alg.equals("DSA")) {
+                        signatureMethod = FAC.newSignatureMethod(SignatureMethod.DSA_SHA256, null);
+                    } else if (alg.equals("EC")) {
+                        signatureMethod = FAC.newSignatureMethod(SignatureMethod.ECDSA_SHA256, null);
+                    } else if (alg.equals("ED25519")) {
+                        signatureMethod = FAC.newSignatureMethod("http://www.w3.org/2021/04/xmldsig-more#eddsa-ed25519", null);
+                    } else if (alg.equals("ED448")) {
+                        signatureMethod = FAC.newSignatureMethod("http://www.w3.org/2021/04/xmldsig-more#eddsa-ed448", null);
+                    } else if (alg.equals("EDDSA")) {
+                        /*
+                        if (privateKey instanceof EdECPrivateKey) {
+                            EdECPrivateKey edsk = (EdECPrivateKey)privateKey;
+                            FAC.newSignatureMethod(edsk.getParams().getName()
+                                .equals(NamedParameterSpec.ED25519.getName())
+                                ? "http://www.w3.org/2021/04/xmldsig-more#eddsa-ed25519"
+                                : "http://www.w3.org/2021/04/xmldsig-more#eddsa-ed448", null);
+                        } else {
+                            throw new InvalidKeyException();
                         }
-                        default -> throw new InvalidKeyException();
-                    }, null);
+                        */
+                        throw new Exception("Code not expected to be used in tests for 11. Backport 8166597.");
+                    } else {
+                        throw new InvalidKeyException();
+                    }
                 }
             } else {
                 signatureMethod = FAC.newSignatureMethod(sm, smSpec);

@@ -85,8 +85,10 @@ public class HereFunction {
         if (!args[0].equals("default")) {
             Security.setProperty("jdk.xml.dsig.hereFunctionSupported", args[0]);
         }
+        /* "8259709: Disable SHA-1 XML Signatures" not in 11.
         // Re-enable sha1 algs
         SecurityUtils.removeAlgsFromDSigPolicy("sha1");
+        */
 
         boolean expected = Boolean.parseBoolean(args[1]);
 

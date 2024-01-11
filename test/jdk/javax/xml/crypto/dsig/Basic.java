@@ -49,7 +49,7 @@ public class Basic {
         var b = Path.of("").toUri().toString();
         var d = string2doc(x);
         var pass = "changeit".toCharArray();
-        for (String alg: List.of("DSA", "RSA", "RSASSA-PSS", "EC", "EdDSA", "Ed25519", "Ed448")) {
+        for (String alg: List.of("DSA", "RSA", /*"RSASSA-PSS", 8241305 not in 11*/ "EC" /*, "EdDSA", "Ed25519", "Ed448" 8166597 not in 11*/)) {
             SecurityTools.keytool(String.format(
                     "-keystore ks -keyalg %s -storepass changeit -genkeypair -alias %s -dname CN=%s",
                     alg, alg, alg)).shouldHaveExitValue(0);

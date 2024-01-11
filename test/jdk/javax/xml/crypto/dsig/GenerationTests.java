@@ -85,6 +85,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.*;
 
 import jdk.test.lib.Asserts;
+import jdk.test.lib.Utils;
 
 /**
  * Test that recreates merlin-xmldsig-twenty-three test vectors (and more)
@@ -107,6 +108,7 @@ public class GenerationTests {
     private static KeyInfo dsa1024, dsa2048, rsa, rsa1024, rsa2048,
                            p256ki, p384ki, p521ki, ed25519ki, ed448ki;
     private static KeySelector kvks = new KeySelectors.KeyValueKeySelector();
+    private static KeySelector x5ks = new KeySelectors.RawX509KeySelector();
     private static KeySelector sks;
     private static Key signingKey;
     private static PublicKey validatingKey;
@@ -300,8 +302,10 @@ public class GenerationTests {
         test_create_signature_enveloping_p256_sha512();
         test_create_signature_enveloping_p384_sha1();
         test_create_signature_enveloping_p521_sha1();
+        /* "8166597: Crypto support for the EdDSA Signature Algorithm" missing in 11.
         test_create_signature_enveloping_ed25519();
         test_create_signature_enveloping_ed448();
+        */
         test_create_signature_external_b64_dsa();
         test_create_signature_external_dsa();
         test_create_signature_keyname();
@@ -849,6 +853,7 @@ public class GenerationTests {
         System.out.println();
     }
 
+    /* "8166597: Crypto support for the EdDSA Signature Algorithm" missing in 11.
     static void test_create_signature_enveloping_ed25519() throws Exception {
         System.out.println("* Generating signature-enveloping-ed25519.xml");
         test_create_signature_enveloping(sha1, ed25519, ed25519ki,
@@ -862,6 +867,7 @@ public class GenerationTests {
                 getEd448PrivateKey(), x5ks, false, true);
         System.out.println();
     }
+    */
 
     static void test_create_signature_external_b64_dsa() throws Exception {
         System.out.println("* Generating signature-external-b64-dsa.xml");
@@ -2180,12 +2186,12 @@ public class GenerationTests {
 
     private static X509Certificate getEd25519Certificate() throws Exception {
         return (X509Certificate) CertificateFactory.getInstance("X.509")
-                .generateCertificate(new ByteArrayInputStream(HexFormat.of().parseHex(ED25519_CERT)));
+                .generateCertificate(new ByteArrayInputStream(Utils.toByteArray(ED25519_CERT)));
     }
 
     private static X509Certificate getEd448Certificate() throws Exception {
         return (X509Certificate) CertificateFactory.getInstance("X.509")
-                .generateCertificate(new ByteArrayInputStream(HexFormat.of().parseHex(ED448_CERT)));
+                .generateCertificate(new ByteArrayInputStream(Utils.toByteArray(ED448_CERT)));
     }
 
     private static PrivateKey getPrivateKey(String algo, int keysize)
@@ -2241,15 +2247,17 @@ public class GenerationTests {
         return kf.generatePrivate(kspec);
     }
 
+    /* "8166597: Crypto support for the EdDSA Signature Algorithm" missing in 11.
     private static PrivateKey getEd25519PrivateKey() throws Exception {
         return KeyFactory.getInstance("Ed25519").generatePrivate(new EdECPrivateKeySpec(
-                NamedParameterSpec.ED25519, HexFormat.of().parseHex(ED25519_KEY)));
+                NamedParameterSpec.ED25519, Utils.toByteArray(ED25519_KEY)));
     }
 
     private static PrivateKey getEd448PrivateKey() throws Exception {
         return KeyFactory.getInstance("Ed448").generatePrivate(new EdECPrivateKeySpec(
-                NamedParameterSpec.ED448, HexFormat.of().parseHex(ED448_KEY)));
+                NamedParameterSpec.ED448, Utils.toByteArray(ED448_KEY)));
     }
+    */
 
     private static SecretKey getSecretKey(final byte[] secret) {
         return new SecretKey() {
