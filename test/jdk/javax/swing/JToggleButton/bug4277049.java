@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1999, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2001, 2023, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,20 +21,37 @@
  * questions.
  */
 
-package nsk.stress.except;
 
-/**
- * This class throws exception while static initialization.
- * The test should load this class via reflection in order
- * to hold the exception until runtime.
- *
- * @see nsk.stress.except.except011
+import javax.swing.JCheckBox;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
+/*
+ * @test
+ * @bug 4277049
+ * @summary Tests that ToggleButtonModel doesn't fire extra ChangeEvents
  */
-public class except011oops {
-    static boolean truth = true;
 
-    static {
-        if (truth)
-            throw new RuntimeException("except011oops");
+public class bug4277049 implements ItemListener {
+
+    public static void main(String[] args) throws Exception {
+        JCheckBox box = new JCheckBox();
+        box.setSelected(false);
+        box.addItemListener(e -> fail());
+        box.setSelected(false);
+
+        if (failed()) {
+            throw new RuntimeException("Failed: extra ChangeEvent was fired");
+        }
+    }
+
+    private static boolean failed_flag = false;
+    synchronized static void fail() {
+        failed_flag = true;
+    }
+    synchronized static boolean failed() { return failed_flag; }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
     }
 }
