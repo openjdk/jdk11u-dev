@@ -191,6 +191,7 @@ public class XMLUtils {
     public static class Signer {
 
         final PrivateKey privateKey;  // signer key, never null
+
         X509Certificate cert;   // certificate, optional
         PublicKey publicKey;    // public key, optional
         String keyName;         // alias, optional
