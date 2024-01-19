@@ -87,28 +87,23 @@ public class Init {
         if (alreadyInitialized) {
             return;
         }
-
-        InputStream is =
-            AccessController.doPrivileged(
-                (PrivilegedAction<InputStream>)
-                    () -> {
-                        String cfile =
-                            System.getProperty("com.sun.org.apache.xml.internal.security.resource.config");
-                        if (cfile == null) {
-                            return null;
-                        }
-                        return getResourceAsStream(cfile, Init.class);
-                    }
-                );
-        if (is == null) {
-            dynamicInit();
-        } else {
-            fileInit(is);
-            try {
-                is.close();
-            } catch (IOException ex) {
-                LOG.warn(ex.getMessage());
+        PrivilegedAction<InputStream> action = () -> {
+            String cfile = System.getProperty("com.sun.org.apache.xml.internal.security.resource.config");
+            if (cfile == null) {
+                return null;
             }
+            return getResourceAsStream(cfile, Init.class);
+        };
+
+        try (@SuppressWarnings("removal")
+             InputStream is = AccessController.doPrivileged(action)) {
+            if (is == null) {
+                dynamicInit();
+            } else {
+                fileInit(is);
+             }
+        } catch (IOException ex) {
+            LOG.warn(ex.getMessage(), ex);
         }
 
         alreadyInitialized = true;
