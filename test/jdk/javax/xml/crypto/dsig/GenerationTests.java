@@ -1960,7 +1960,7 @@ public class GenerationTests {
                             || sm.contains("-rsa-MGF1")) {
                         kpg = KeyPairGenerator.getInstance("RSA");
                         kpg.initialize(
-                                sm.contains("#sha512-rsa-MGF1") ? 2048 : 1024);
+                                sm.contains("512-rsa-MGF1") ? 2048 : 1024);
                     } else if (sm.contains("#dsa-")) {
                         kpg = KeyPairGenerator.getInstance("DSA");
                         kpg.initialize(1024);

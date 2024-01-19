@@ -57,17 +57,22 @@ import org.w3c.dom.Node;
  */
 public class Init {
 
-    /** The namespace for CONF file **/
+    /**
+     * The namespace for CONF file
+     **/
     public static final String CONF_NS = "http://www.xmlsecurity.org/NS/#configuration";
 
     private static final com.sun.org.slf4j.internal.Logger LOG =
-        com.sun.org.slf4j.internal.LoggerFactory.getLogger(Init.class);
+            com.sun.org.slf4j.internal.LoggerFactory.getLogger(Init.class);
 
-    /** Field alreadyInitialized */
+    /**
+     * Field alreadyInitialized
+     */
     private static boolean alreadyInitialized = false;
 
     /**
      * Method isInitialized
+     *
      * @return true if the library is already initialized.
      */
     public static final synchronized boolean isInitialized() {
@@ -410,9 +415,11 @@ public class Init {
         }
         List<URL> ret = new ArrayList<>();
         Enumeration<URL> urls = new Enumeration<URL>() {
+            @Override
             public boolean hasMoreElements() {
                 return false;
             }
+            @Override
             public URL nextElement() {
                 return null;
             }
