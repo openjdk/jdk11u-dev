@@ -22,7 +22,7 @@
  */
 package gc.lock;
 
-import jdk.test.whitebox.WhiteBox;
+import sun.hotspot.WhiteBox;
 import nsk.share.runner.*;
 import nsk.share.gc.*;
 import nsk.share.gc.gp.GarbageUtils;

@@ -28,7 +28,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.invoke.*;
 import java.util.*;
-import jdk.test.whitebox.WhiteBox;
+import sun.hotspot.WhiteBox;
 import nsk.share.gc.gp.array.*;
 import nsk.share.gc.gp.string.*;
 import nsk.share.gc.gp.list.*;
