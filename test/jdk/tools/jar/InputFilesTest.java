@@ -181,11 +181,11 @@ public class InputFilesTest {
     public void testNonExistentFileInputClassList() throws IOException {
         touch("existingTestFile.txt");
         touch("classes.list");
-        Files.writeString(Path.of("classes.list"), """
-                existingTestFile.txt
-                nonExistentTestFile.txt
-                nonExistentDirectory
-                 """);
+        Files.writeString(Path.of("classes.list"),
+                "existingTestFile.txt\n" +
+                "nonExistentTestFile.txt\n" +
+                "nonExistentDirectory\n"
+                );
         onCompletion = () -> rm("existingTestFile.txt classes.list");
         try {
             jar("cf test.jar @classes.list");
@@ -210,11 +210,11 @@ public class InputFilesTest {
         touch("existingTestFileUpdate.txt");
         touch("existingTestFileUpdate2.txt");
         touch("classesUpdate.list");
-        Files.writeString(Path.of("classesUpdate.list"), """
-                existingTestFileUpdate2.txt
-                nonExistentTestFileUpdate.txt
-                nonExistentDirectoryUpdate
-                 """);
+        Files.writeString(Path.of("classesUpdate.list"),
+                "existingTestFileUpdate2.txt\n" +
+                "nonExistentTestFileUpdate.txt\n" +
+                "nonExistentDirectoryUpdate\n"
+                 );
         onCompletion = () -> rm("existingTestFileUpdate.txt existingTestFileUpdate2.txt " +
                 "classesUpdate.list testUpdate.jar");
         try {
