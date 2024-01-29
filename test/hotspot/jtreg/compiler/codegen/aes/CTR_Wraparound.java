@@ -34,6 +34,9 @@
  * @run main/othervm -Xbatch
  * -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
  * compiler.codegen.aes.CTR_Wraparound 32
+ * @run main/othervm -Xint
+ * -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
+ * compiler.codegen.aes.CTR_Wraparound 32
  * @run main/othervm -Xbatch
  * -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
  * compiler.codegen.aes.CTR_Wraparound 1009

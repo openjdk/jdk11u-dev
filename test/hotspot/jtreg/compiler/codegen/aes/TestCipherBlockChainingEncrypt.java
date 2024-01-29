@@ -33,6 +33,9 @@
  * @run main/othervm -Xbatch
  *     -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
  *      compiler.codegen.aes.TestCipherBlockChainingEncrypt
+ * @run main/othervm -Xint
+ *     -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
+ *      compiler.codegen.aes.TestCipherBlockChainingEncrypt
  */
 
 package compiler.codegen.aes;

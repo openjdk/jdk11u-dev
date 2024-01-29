@@ -709,7 +709,15 @@ static jmethodID reflected_method_to_jmid(JavaThread* thread, JNIEnv* env, jobje
 }
 
 static CompLevel highestCompLevel() {
-  return TieredCompilation ? MIN2((CompLevel) TieredStopAtLevel, CompLevel_highest_tier) : CompLevel_highest_tier;
+  CompLevel level = CompLevel_none;
+  if (!Arguments::is_interpreter_only()) {
+    if (TieredCompilation) {
+      level = MIN2((CompLevel) TieredStopAtLevel, CompLevel_highest_tier);
+    } else {
+      level = CompLevel_highest_tier;
+    }
+  }
+  return level;
 }
 
 // Deoptimizes all compiled frames and makes nmethods not entrant if it's requested

@@ -32,6 +32,9 @@
  * @run main/othervm/timeout=600 -Xbatch -DcheckOutput=true
  *       -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
  *      compiler.intrinsics.base64.TestBase64
+ * @run main/othervm/timeout=600 -Xint -DcheckOutput=true
+ *       -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
+ *      compiler.intrinsics.base64.TestBase64
  */
 
 package compiler.intrinsics.base64;

@@ -40,6 +40,12 @@
  *                   -XX:+WhiteBoxAPI
  *                   -XX:-UseCRC32Intrinsics
  *                   compiler.intrinsics.IntrinsicAvailableTest
+ * @run main/othervm -Xbootclasspath/a:.
+ *                   -Xint
+ *                   -XX:+UnlockDiagnosticVMOptions
+ *                   -XX:+WhiteBoxAPI
+ *                   -XX:-UseCRC32Intrinsics
+ *                   compiler.intrinsics.IntrinsicAvailableTest
  */
 
 
@@ -47,6 +53,7 @@ package compiler.intrinsics;
 
 import compiler.whitebox.CompilerWhiteBoxTest;
 import jdk.test.lib.Platform;
+import jtreg.SkippedException;
 
 import java.lang.reflect.Executable;
 import java.util.concurrent.Callable;
@@ -113,6 +120,9 @@ public class IntrinsicAvailableTest extends CompilerWhiteBoxTest {
     }
 
     public void test() throws Exception {
+        if (Platform.isInt()) {
+            throw new SkippedException("Compiler not available with -Xint");
+        }
         Executable intrinsicMethod = testCase.getExecutable();
         if (Platform.isServer() && !Platform.isEmulatedClient() && (TIERED_STOP_AT_LEVEL == COMP_LEVEL_FULL_OPTIMIZATION)) {
             if (TIERED_COMPILATION) {
