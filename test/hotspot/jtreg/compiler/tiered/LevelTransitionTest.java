@@ -205,7 +205,7 @@ public class LevelTransitionTest extends TieredLevelsTest {
         }
 
         private static class CompileMethodHolder {
-            private final int iter = 1;
+            private final int iter = 10;
             private int field = 42;
 
             /**
