@@ -24,8 +24,11 @@
 /*
  * @test
  * @bug 8013827 8011950 8017212 8025128
+ * @library /test/lib
  * @modules java.base/jdk.internal.util
  * @summary Check whether File.createTempFile can handle special parameters
+ * @build jdk.test.lib.OSVersion jdk.test.lib.Platform
+   @run main SpecialTempFile
  * @author Dan Xu
  */
 
@@ -34,8 +37,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import jdk.internal.util.OperatingSystem;
-import jdk.internal.util.OSVersion;
+import jdk.test.lib.Platform;
+import jdk.test.lib.OSVersion;
 
 public class SpecialTempFile {
     private static void test(String name, String[] prefix, String[] suffix,
@@ -101,7 +104,7 @@ public class SpecialTempFile {
         test("SlashedName", slashPre, slashSuf, true);
 
         // Windows tests
-        if (!OperatingSystem.isWindows())
+        if (!Platform.isWindows())
             return;
 
         // Test JDK-8013827
