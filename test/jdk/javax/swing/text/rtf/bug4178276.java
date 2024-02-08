@@ -26,7 +26,7 @@
  * @bug 4178276
  * @key headful
  * @summary  RTFEditorkit.write(...) doesn't throw NPE when used in SecurityManager
- * @run main/othervm/secure=allow bug4178276
+ * @run main/othervm bug4178276
  */
 
 import java.io.ByteArrayInputStream;
