@@ -55,29 +55,57 @@ import javax.imageio.stream.ImageOutputStream;
 /*
  * @test id=Poly
  * @bug 8191814
- * @summary Runs the test with "-poly" option
+ * @summary Runs the test with "-poly" option, single-precision
  * @run main/othervm/timeout=300 -Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine ClipShapeTest -poly
  */
 
 /*
  * @test id=PolyDoDash
  * @bug 8191814
- * @summary Runs the test with "-poly -doDash" options
+ * @summary Runs the test with "-poly -doDash" options, single-precision
  * @run main/othervm/timeout=300 -Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine ClipShapeTest -poly -doDash
  */
 
 /*
  * @test id=Cubic
  * @bug 8191814
- * @summary Runs the test with "-cubic" option
+ * @summary Runs the test with "-cubic" option, single-precision
  * @run main/othervm/timeout=300 -Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine ClipShapeTest -cubic
  */
 
 /*
  * @test id=CubicDoDash
  * @bug 8191814
- * @summary Runs the test with "-cubic -doDash" options
+ * @summary Runs the test with "-cubic -doDash" options, single-precision
  * @run main/othervm/timeout=300 -Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine ClipShapeTest -cubic -doDash
+ */
+
+/*
+ * @test id=Poly
+ * @bug 8191814
+ * @summary Runs the test with "-poly" option, double-precision
+ * @run main/othervm/timeout=300 -Dsun.java2d.renderer=sun.java2d.marlin.DMarlinRenderingEngine ClipShapeTest -poly
+ */
+
+/*
+ * @test id=PolyDoDash
+ * @bug 8191814
+ * @summary Runs the test with "-poly -doDash" options, double-precision
+ * @run main/othervm/timeout=300 -Dsun.java2d.renderer=sun.java2d.marlin.DMarlinRenderingEngine ClipShapeTest -poly -doDash
+ */
+
+/*
+ * @test id=Cubic
+ * @bug 8191814
+ * @summary Runs the test with "-cubic" option, double-precision
+ * @run main/othervm/timeout=300 -Dsun.java2d.renderer=sun.java2d.marlin.DMarlinRenderingEngine ClipShapeTest -cubic
+ */
+
+/*
+ * @test id=CubicDoDash
+ * @bug 8191814
+ * @summary Runs the test with "-cubic -doDash" options, double-precision
+ * @run main/othervm/timeout=300 -Dsun.java2d.renderer=sun.java2d.marlin.DMarlinRenderingEngine ClipShapeTest -cubic -doDash
  */
 
 /**
