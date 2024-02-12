@@ -53,28 +53,28 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 
 /*
- * @test id=Poly
+ * @test id=PolySingle
  * @bug 8191814
  * @summary Runs the test with "-poly" option, single-precision
  * @run main/othervm/timeout=300 -Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine ClipShapeTest -poly
  */
 
 /*
- * @test id=PolyDoDash
+ * @test id=PolyDoDashSingle
  * @bug 8191814
  * @summary Runs the test with "-poly -doDash" options, single-precision
  * @run main/othervm/timeout=300 -Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine ClipShapeTest -poly -doDash
  */
 
 /*
- * @test id=Cubic
+ * @test id=CubicSingle
  * @bug 8191814
  * @summary Runs the test with "-cubic" option, single-precision
  * @run main/othervm/timeout=300 -Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine ClipShapeTest -cubic
  */
 
 /*
- * @test id=CubicDoDash
+ * @test id=CubicDoDashSingle
  * @bug 8191814
  * @summary Runs the test with "-cubic -doDash" options, single-precision
  * @run main/othervm/timeout=300 -Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine ClipShapeTest -cubic -doDash
