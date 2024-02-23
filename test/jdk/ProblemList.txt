@@ -540,6 +540,8 @@ javax/management/remote/mandatory/notif/NotifReconnectDeadlockTest.java 8042215 
 
 # jdk_net
 
+java/net/HttpURLConnection/HttpURLConnectionExpectContinueTest.java 8326549 generic-all
+
 java/net/MulticastSocket/NoLoopbackPackets.java                 7122846 macosx-all
 java/net/MulticastSocket/SetLoopbackMode.java                   7122846 macosx-all
 
