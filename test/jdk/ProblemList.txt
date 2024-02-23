@@ -549,6 +549,8 @@ java/net/DatagramSocket/SendDatagramToBadAddress.java           7143960 macosx-a
 
 java/net/ServerSocket/AcceptInheritHandle.java                  8211854 aix-ppc64
 
+java/net/HttpURLConnection/HttpURLConnectionExpectContinueTest.java 8326503 generic-all
+
 ############################################################################
 
 # jdk_nio
