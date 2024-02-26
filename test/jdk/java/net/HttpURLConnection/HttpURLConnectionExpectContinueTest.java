@@ -29,10 +29,9 @@
  * @run junit/othervm HttpURLConnectionExpectContinueTest
  */
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,9 +43,8 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertTrue;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class HttpURLConnectionExpectContinueTest {
 
     class Control {
@@ -67,7 +65,7 @@ public class HttpURLConnectionExpectContinueTest {
         Logger.getLogger("").getHandlers()[0].setLevel(Level.ALL);
     }
 
-    @BeforeAll
+    @Before
     public void startServerSocket() throws Exception {
         Control control = this.control = new Control();
 
@@ -170,7 +168,7 @@ public class HttpURLConnectionExpectContinueTest {
         serverThread.start();
     }
 
-    @AfterAll
+    @After
     public void stopServerSocket() throws Exception {
         Control control = this.control;
         control.stop = true;
@@ -198,10 +196,10 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     @Test
@@ -224,10 +222,10 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     @Test
@@ -250,10 +248,10 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     @Test
@@ -277,10 +275,10 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     @Test
@@ -304,10 +302,10 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     @Test
@@ -331,10 +329,10 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     @Test
@@ -358,10 +356,10 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     @Test
@@ -385,10 +383,10 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     @Test
@@ -412,10 +410,10 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     // Creates a connection with all the common settings used in each test
