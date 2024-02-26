@@ -187,37 +187,36 @@ public class PathHitTest {
     }
 
     static class PathHitTestManual extends Panel {
-        private static final String INSTRUCTIONS = """
-            This test displays the results of hit testing 5 different Shape
-            objects one at a time.
-
-            You can switch between shapes using the Choice component located
-            at the bottom of the window.
-
-            Each square in the test represents the
-            return values of the hit testing operators for that square region:
-
-                yellow - not yet tested
-                translucent blue overlay - the shape being tested
-
-                black - all outside
-                dark gray - rectangle intersects shape
-                light gray - rectangle intersects and center point is inside shape
-                white - rectangle is entirely contained in shape
-                red - some constraint was violated, including:
-                    rectangle is contained, but center point is not
-                    rectangle is contained, but rectangle.intersects is false
-                    centerpoint is contained, but rectangle.intersects is false
-
-            Visually inspect the results to see if they match the above table.
-            Note that it is not a violation for rectangles that are entirely
-            inside the path to be light gray instead of white since sometimes
-            the path is complex enough to make an exact determination expensive.
-            You might see this on the GeneralPath NonZero example where the
-            circles that make up the path cross over the interior of the shape
-            and cause the hit testing methods to guess that the rectangle is
-            not guaranteed to be contained within the shape.
-            """;
+        private static final String INSTRUCTIONS =
+            "This test displays the results of hit testing 5 different Shape\n" +
+            "objects one at a time.\n" +
+            "                                                                \n" +
+            "You can switch between shapes using the Choice component located\n" +
+            "at the bottom of the window.\n" +
+            "                                                                \n" +
+            "Each square in the test represents the\n" +
+            "return values of the hit testing operators for that square region:\n" +
+            "                                                                \n" +
+                "yellow - not yet tested\n" +
+                "translucent blue overlay - the shape being tested\n" +
+            "                                                                \n" +
+                "black - all outside\n" +
+                "dark gray - rectangle intersects shape\n" +
+                "light gray - rectangle intersects and center point is inside shape\n" +
+                "white - rectangle is entirely contained in shape\n" +
+                "red - some constraint was violated, including:\n" +
+                    "rectangle is contained, but center point is not\n" +
+                    "rectangle is contained, but rectangle.intersects is false\n" +
+                    "centerpoint is contained, but rectangle.intersects is false\n" +
+            "                                                                 \n" +
+            "Visually inspect the results to see if they match the above table.\n" +
+            "Note that it is not a violation for rectangles that are entirely\n" +
+            "inside the path to be light gray instead of white since sometimes\n" +
+            "the path is complex enough to make an exact determination expensive.\n" +
+            "You might see this on the GeneralPath NonZero example where the\n" +
+            "circles that make up the path cross over the interior of the shape\n" +
+            "and cause the hit testing methods to guess that the rectangle is\n" +
+            "not guaranteed to be contained within the shape.\n";
 
         PathHitTestCanvas phtc;
 
