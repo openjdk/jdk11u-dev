@@ -208,7 +208,7 @@ public class PathHitTest {
                     "rectangle is contained, but center point is not\n" +
                     "rectangle is contained, but rectangle.intersects is false\n" +
                     "centerpoint is contained, but rectangle.intersects is false\n" +
-            "                                                                 \n" +
+            "                                                                  \n" +
             "Visually inspect the results to see if they match the above table.\n" +
             "Note that it is not a violation for rectangles that are entirely\n" +
             "inside the path to be light gray instead of white since sometimes\n" +
