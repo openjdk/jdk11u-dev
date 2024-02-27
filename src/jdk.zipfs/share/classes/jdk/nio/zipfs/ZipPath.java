@@ -416,7 +416,7 @@ final class ZipPath implements Path {
             index = 0;
             if (path.length == 0) {
                 // empty path has one name
-                count = 1;
+                count = 0;
             } else {
                 while (index < path.length) {
                     byte c = path[index++];
