@@ -49,16 +49,8 @@ char* findLastPathComponent(char *buffer, const char *comp) {
  * Ex: if a buffer contains "/foo/bin/javac" or "/foo/bin/x64/javac", the
  * truncated resulting buffer will contain "/foo".
  */
-<<<<<<< HEAD
 jboolean
-TruncatePath(char *buf)
-||||||| parent of 984003d5c96 (8268974: GetJREPath() JLI function fails to locate libjava.so if not standard Java launcher is used)
-static jboolean
-TruncatePath(char *buf)
-=======
-static jboolean
 TruncatePath(char *buf, jboolean pathisdll)
->>>>>>> 984003d5c96 (8268974: GetJREPath() JLI function fails to locate libjava.so if not standard Java launcher is used)
 {
     /*
      * If the file is a library, try lib directory first and then bin
