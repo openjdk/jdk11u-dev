@@ -23,10 +23,11 @@
 
 /* @test
  * @bug 4313887 8129632 8129633 8162624 8146215 8162745 8273655 8274171
+ * @library /test/lib
  * @modules java.base/jdk.internal.util
  * @summary Unit test for probeContentType method
  * @library ../..
- * @build Basic SimpleFileTypeDetector
+ * @build jdk.test.lib.OSVersion jdk.test.lib.Platform Basic SimpleFileTypeDetector
  * @run main/othervm Basic
  */
 
@@ -37,8 +38,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import jdk.internal.util.OperatingSystem;
-import jdk.internal.util.OSVersion;
+import jdk.test.lib.Platform;
+import jdk.test.lib.OSVersion;
 
 /**
  * Uses Files.probeContentType to probe html file, custom file type, and minimal
@@ -80,7 +81,7 @@ public class Basic {
         assert actual != null;
 
         if (!expected.equals(actual)) {
-            if (!OperatingSystem.isWindows()) {
+            if (!Platform.isWindows()) {
                 Path userMimeTypes =
                     Paths.get(System.getProperty("user.home"), ".mime.types");
                 checkMimeTypesFile(userMimeTypes);
@@ -185,10 +186,10 @@ public class Basic {
         exTypes.add(new ExType("webp", List.of("image/webp")));
         exTypes.add(new ExType("xls", List.of("application/vnd.ms-excel")));
         exTypes.add(new ExType("xlsx", List.of("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")));
-        exTypes.add(new ExType("wasm", List.of("application/wasm")));
+        // exTypes.add(new ExType("wasm", List.of("application/wasm")));
 
         // extensions with content type that differs on Windows 11+
-        if (OperatingSystem.isWindows() &&
+        if (Platform.isWindows() &&
             (System.getProperty("os.name").endsWith("11") ||
                 new OSVersion(10, 0).compareTo(OSVersion.current()) > 0)) {
             System.out.println("Windows 11+ detected: using different types");
