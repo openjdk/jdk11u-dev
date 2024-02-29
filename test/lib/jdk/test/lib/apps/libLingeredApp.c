@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,10 +21,22 @@
  * questions.
  */
 
-/**
- * @test TestJmapCoreMetaspace
- * @summary Test verifies that jhsdb jmap could generate heap dump from core when metaspace is full
- * @requires vm.hasSA
- * @library /test/lib
- * @run driver/timeout=480 TestJmapCore run metaspace
- */
+#include <jni.h>
+
+// Borrowed from hotspot vmError.cpp.
+// Returns an address which is guaranteed to generate a SIGSEGV on read,
+// which is not NULL and contains bits in every word
+void* get_segfault_address() {
+  return (void*)
+#ifdef _LP64
+    0xABC0000000000ABCULL;
+#else
+    0x00000ABC;
+#endif
+}
+
+JNIEXPORT jint JNICALL
+Java_jdk_test_lib_apps_LingeredApp_crash(JNIEnv *env, jclass clss)
+{
+    return *(jint *)get_segfault_address();
+}
