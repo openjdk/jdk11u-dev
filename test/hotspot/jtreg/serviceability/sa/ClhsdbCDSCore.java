@@ -51,6 +51,7 @@ import jdk.test.lib.Asserts;
 import jdk.internal.misc.Unsafe;
 import jdk.test.lib.Utils;
 import jtreg.SkippedException;
+import jdk.test.lib.util.CoreUtils;
 
 class CrashApp {
     public static void main(String[] args) {
