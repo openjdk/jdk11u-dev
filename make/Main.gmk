@@ -554,6 +554,18 @@ test-image-jdk-jtreg-native:
 	+($(CD) $(TOPDIR)/make/test && $(MAKE) $(MAKE_ARGS) -f JtregNativeJdk.gmk \
 	    test-image-jdk-jtreg-native)
 
+# Native files needed by the testlib
+
+build-test-lib-native:
+	+($(CD) $(TOPDIR)/make/test && $(MAKE) $(MAKE_ARGS) -f BuildTestLibNative.gmk \
+	    build-test-lib-native)
+
+test-image-lib-native:
+	+($(CD) $(TOPDIR)/make/test && $(MAKE) $(MAKE_ARGS) -f BuildTestLibNative.gmk \
+	    test-image-lib-native)
+
+# Native files needed when testing the testlib itself
+
 build-test-hotspot-jtreg-graal:
 	+($(CD) $(TOPDIR)/make/test && $(MAKE) $(MAKE_ARGS) -f JtregGraalUnit.gmk \
 	     build-test-hotspot-jtreg-graal)
@@ -1142,6 +1154,7 @@ endif
 # This target builds the test image
 test-image: prepare-test-image \
     test-image-jdk-jtreg-native test-image-failure-handler \
+    test-image-lib-native \
     test-image-demos-jdk $(JVM_TEST_IMAGE_TARGETS)
 
 ################################################################################
