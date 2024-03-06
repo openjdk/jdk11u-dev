@@ -34,6 +34,7 @@ import jtreg.SkippedException;
  * @test
  * @bug 8193124
  * @summary Test the clhsdb 'findpc' command with Xcomp on live process
+ * @requires vm.compMode != "Xcomp"
  * @requires vm.hasSA
  * @requires vm.compiler1.enabled
  * @library /test/lib
@@ -47,6 +48,7 @@ import jtreg.SkippedException;
  * @requires vm.compMode != "Xcomp"
  * @requires vm.hasSA
  * @requires vm.compiler1.enabled
+ * @requires vm.opt.DeoptimizeALot != true
  * @library /test/lib
  * @run main/othervm/timeout=480 ClhsdbFindPC true true
  */
@@ -57,7 +59,6 @@ import jtreg.SkippedException;
  * @summary Test the clhsdb 'findpc' command w/o Xcomp on live process
  * @requires vm.hasSA
  * @requires vm.compiler1.enabled
- * @requires vm.opt.DeoptimizeALot != true
  * @library /test/lib
  * @run main/othervm/timeout=480 ClhsdbFindPC false false
  */
@@ -66,7 +67,6 @@ import jtreg.SkippedException;
  * @test
  * @bug 8193124
  * @summary Test the clhsdb 'findpc' command w/o Xcomp on core file
- * @requires vm.compMode != "Xcomp"
  * @requires vm.hasSA
  * @requires vm.compiler1.enabled
  * @library /test/lib
