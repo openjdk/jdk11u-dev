@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,12 +27,14 @@
  * @summary Verify that expect 100-continue doesn't hang
  * @library /test/lib
  * @run junit/othervm HttpURLConnectionExpectContinueTest
+ * @run junit/othervm -Djava.net.preferIPv4Stack=true HttpURLConnectionExpectContinueTest
+ * @run junit/othervm -Djava.net.preferIPv6Addresses=true HttpURLConnectionExpectContinueTest
  */
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import jdk.test.lib.net.URIBuilder;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,12 +46,11 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertTrue;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class HttpURLConnectionExpectContinueTest {
 
-    class Control {
+    private static class Control {
         volatile ServerSocket serverSocket = null;
         volatile boolean stop = false;
         volatile boolean respondWith100Continue = false;
@@ -57,23 +58,23 @@ public class HttpURLConnectionExpectContinueTest {
         volatile String response = null;
     }
 
-    private Thread serverThread = null;
-    private volatile Control control;
+    private static Thread serverThread = null;
+    private static volatile Control control;
     static final Logger logger;
 
     static {
+        control = new Control();
         logger = Logger.getLogger("sun.net.www.protocol.http.HttpURLConnection");
         logger.setLevel(Level.ALL);
         Logger.getLogger("").getHandlers()[0].setLevel(Level.ALL);
     }
 
-    @BeforeAll
-    public void startServerSocket() throws Exception {
-        Control control = this.control = new Control();
+    @BeforeClass
+    public static void startServerSocket() throws Exception {
 
         control.serverSocket = new ServerSocket();
         control.serverSocket.setReuseAddress(true);
-        control.serverSocket.bind(new InetSocketAddress("127.0.0.1", 54321));
+        control.serverSocket.bind(new InetSocketAddress(InetAddress.getLoopbackAddress(), 0));
         Runnable runnable = () -> {
             while (!control.stop) {
                 try {
@@ -170,9 +171,8 @@ public class HttpURLConnectionExpectContinueTest {
         serverThread.start();
     }
 
-    @AfterAll
-    public void stopServerSocket() throws Exception {
-        Control control = this.control;
+    @AfterClass
+    public static void stopServerSocket() throws Exception {
         control.stop = true;
         control.serverSocket.close();
         serverThread.join();
@@ -181,7 +181,6 @@ public class HttpURLConnectionExpectContinueTest {
     @Test
     public void testNonChunkedRequestAndNoExpect100ContinueResponse() throws Exception {
         String body = "testNonChunkedRequestAndNoExpect100ContinueResponse";
-        Control control = this.control;
         control.response = "HTTP/1.1 200 OK\r\n" +
                 "Connection: close\r\n" +
                 "Content-Length: " + body.length() + "\r\n" +
@@ -198,16 +197,15 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     @Test
     public void testNonChunkedRequestWithExpect100ContinueResponse() throws Exception {
         String body = "testNonChunkedRequestWithExpect100ContinueResponse";
-        Control control = this.control;
         control.response = "HTTP/1.1 200 OK\r\n" +
                 "Connection: close\r\n" +
                 "Content-Length: " + body.length() + "\r\n" +
@@ -224,16 +222,15 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     @Test
     public void testNonChunkedRequestWithDoubleExpect100ContinueResponse() throws Exception {
         String body = "testNonChunkedRequestWithDoubleExpect100ContinueResponse";
-        Control control = this.control;
         control.response = "HTTP/1.1 200 OK\r\n" +
                 "Connection: close\r\n" +
                 "Content-Length: " + body.length() + "\r\n" +
@@ -250,16 +247,15 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     @Test
     public void testChunkedRequestAndNoExpect100ContinueResponse() throws Exception {
         String body = "testChunkedRequestAndNoExpect100ContinueResponse";
-        Control control = this.control;
         control.response = "HTTP/1.1 200 OK\r\n" +
                 "Connection: close\r\n" +
                 "Content-Length: " + body.length() + "\r\n" +
@@ -277,16 +273,15 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     @Test
     public void testChunkedRequestWithExpect100ContinueResponse() throws Exception {
         String body = "testChunkedRequestWithExpect100ContinueResponse";
-        Control control = this.control;
         control.response = "HTTP/1.1 200 OK\r\n" +
                 "Connection: close\r\n" +
                 "Content-Length: " + body.length() + "\r\n" +
@@ -304,16 +299,15 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     @Test
     public void testChunkedRequestWithDoubleExpect100ContinueResponse() throws Exception {
         String body = "testChunkedRequestWithDoubleExpect100ContinueResponse";
-        Control control = this.control;
         control.response = "HTTP/1.1 200 OK\r\n" +
                 "Connection: close\r\n" +
                 "Content-Length: " + body.length() + "\r\n" +
@@ -331,16 +325,15 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     @Test
     public void testFixedLengthRequestAndNoExpect100ContinueResponse() throws Exception {
         String body = "testFixedLengthRequestAndNoExpect100ContinueResponse";
-        Control control = this.control;
         control.response = "HTTP/1.1 200 OK\r\n" +
                 "Connection: close\r\n" +
                 "Content-Length: " + body.length() + "\r\n" +
@@ -358,16 +351,15 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     @Test
     public void testFixedLengthRequestWithExpect100ContinueResponse() throws Exception {
         String body = "testFixedLengthRequestWithExpect100ContinueResponse";
-        Control control = this.control;
         control.response = "HTTP/1.1 200 OK\r\n" +
                 "Connection: close\r\n" +
                 "Content-Length: " + body.length() + "\r\n" +
@@ -385,16 +377,15 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     @Test
     public void testFixedLengthRequestWithDoubleExpect100ContinueResponse() throws Exception {
         String body = "testFixedLengthRequestWithDoubleExpect100ContinueResponse";
-        Control control = this.control;
         control.response = "HTTP/1.1 200 OK\r\n" +
                 "Connection: close\r\n" +
                 "Content-Length: " + body.length() + "\r\n" +
@@ -412,19 +403,22 @@ public class HttpURLConnectionExpectContinueTest {
         int responseCode = connection.getResponseCode();
         String responseBody = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
         System.err.println("response body: " + responseBody);
-        assertTrue(responseCode == 200,
-                String.format("Expected 200 response, instead received %s", responseCode));
-        assertTrue(body.equals(responseBody),
-                String.format("Expected response %s, instead received %s", body, responseBody));
+        assertTrue(String.format("Expected 200 response, instead received %s", responseCode),
+                responseCode == 200);
+        assertTrue(String.format("Expected response %s, instead received %s", body, responseBody),
+                body.equals(responseBody));
     }
 
     // Creates a connection with all the common settings used in each test
-    private HttpURLConnection createConnection() throws IOException {
-        URL url = new URL("http://localhost:" + control.serverSocket.getLocalPort());
+    private HttpURLConnection createConnection() throws Exception {
+        URL url = URIBuilder.newBuilder()
+                .scheme("http")
+                .loopback()
+                .port(control.serverSocket.getLocalPort())
+                .toURL();
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
-        connection.setConnectTimeout(1000);
         connection.setReadTimeout(5000);
         connection.setUseCaches(false);
         connection.setInstanceFollowRedirects(false);
