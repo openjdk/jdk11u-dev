@@ -149,7 +149,7 @@ public class CoreUtils {
 
     private static String parseCoreFileLocationFromOutput(String crashOutputString) {
         System.out.println("crashOutputString = [" + crashOutputString + "]");
-        if(crashOutputString.equals("")) {
+        if(crashOutputString == null || crashOutputString.equals("")) {
             return null;
         }
         // Find the line of output that contains LOCATION_STRING
