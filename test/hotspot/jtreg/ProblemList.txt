@@ -167,7 +167,8 @@ serviceability/sa/ClhsdbCDSCore.java 8294316,8193639,8267433 solaris-all,macosx-
 serviceability/sa/ClhsdbCDSJstackPrintAll.java 8193639 solaris-all
 serviceability/sa/CDSJMapClstats.java 8193639 solaris-all
 serviceability/sa/ClhsdbField.java 8193639 solaris-all
-serviceability/sa/ClhsdbFindPC.java 8294316,8193639,8267433 solaris-all,macosx-x64
+serviceability/sa/ClhsdbFindPC.java#id1 8294316,8193639,8267433 solaris-all,macosx-x64
+serviceability/sa/ClhsdbFindPC.java#id3 8294316,8193639,8267433 solaris-all,macosx-x64
 serviceability/sa/ClhsdbFlags.java 8193639 solaris-all
 serviceability/sa/ClhsdbInspect.java 8193639 solaris-all
 serviceability/sa/ClhsdbJdis.java 8193639 solaris-all
