@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2022, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,14 +25,24 @@
  * @test
  * @bug 6498566
  * @summary URL.openConnection(Proxy.NO_PROXY) may connect through a proxy.
- * @modules java.base/sun.net.www
+ * @library /test/lib
  * @run main/othervm ProxyFromCache
  */
 
-import java.net.*;
-import java.io.*;
-import sun.net.www.MessageHeader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.URL;
 
+import jdk.test.lib.net.HttpHeaderParser;
+import jdk.test.lib.net.URIBuilder;
+ 
 /* Creates a simple proxy and http server that just return 200 OK.
  * Open a URL pointing to the http server and specify that the
  * connection should use the proxy. Now make a second connection
