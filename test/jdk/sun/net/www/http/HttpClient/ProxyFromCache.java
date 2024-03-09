@@ -124,15 +124,12 @@ class SimpleServer extends Thread
             connectionCount++;
             InputStream is = sock.getInputStream();
             OutputStream os = sock.getOutputStream();
-
-            MessageHeader headers =  new MessageHeader (is);
+            HttpHeaderParser httpHeaderParser = new HttpHeaderParser(is);
             os.write(replyOK.getBytes("UTF-8"));
-
-            headers =  new MessageHeader (is);
+            httpHeaderParser = new HttpHeaderParser(is);
             // If we get here then we received a second request.
             connectionCount++;
             os.write(replyOK.getBytes("UTF-8"));
-
             sock.close();
         } catch (Exception e) {
             //e.printStackTrace();
