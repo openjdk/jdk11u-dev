@@ -186,7 +186,7 @@ public class Basic {
         exTypes.add(new ExType("webp", List.of("image/webp")));
         exTypes.add(new ExType("xls", List.of("application/vnd.ms-excel")));
         exTypes.add(new ExType("xlsx", List.of("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")));
-        // exTypes.add(new ExType("wasm", List.of("application/wasm")));
+        // exTypes.add(new ExType("wasm", List.of("application/wasm")));  Note. "wasm" is added via JDK-8297609 (Java 20) which not exist in current java version yet
 
         // extensions with content type that differs on Windows 11+
         if (Platform.isWindows() &&
