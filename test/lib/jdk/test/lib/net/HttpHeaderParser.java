@@ -119,16 +119,16 @@ public class HttpHeaderParser {
         requireNonNull(input, "null input");
         while (canContinueParsing()) {
             switch (state) {
-                case INITIAL                                    ->  state = HttpHeaderParser.State.STATUS_OR_REQUEST_LINE;
-                case STATUS_OR_REQUEST_LINE ->  readResumeStatusLine(input);
-                case STATUS_OR_REQUEST_LINE_FOUND_CR, STATUS_OR_REQUEST_LINE_FOUND_LF ->  readStatusLineFeed(input);
-                case STATUS_OR_REQUEST_LINE_END ->  maybeStartHeaders(input);
-                case STATUS_OR_REQUEST_LINE_END_CR, STATUS_OR_REQUEST_LINE_END_LF ->  maybeEndHeaders(input);
-                case HEADER                                     ->  readResumeHeader(input);
-                case HEADER_FOUND_CR, HEADER_FOUND_LF           ->  resumeOrLF(input);
-                case HEADER_FOUND_CR_LF                         ->  resumeOrSecondCR(input);
-                case HEADER_FOUND_CR_LF_CR                      ->  resumeOrEndHeaders(input);
-                default -> throw new InternalError("Unexpected state: " + state);
+                case INITIAL                                    :  state = HttpHeaderParser.State.STATUS_OR_REQUEST_LINE; break;
+                case STATUS_OR_REQUEST_LINE :  readResumeStatusLine(input); break;
+                case STATUS_OR_REQUEST_LINE_FOUND_CR: case STATUS_OR_REQUEST_LINE_FOUND_LF :  readStatusLineFeed(input); break;
+                case STATUS_OR_REQUEST_LINE_END :  maybeStartHeaders(input); break;
+                case STATUS_OR_REQUEST_LINE_END_CR: case STATUS_OR_REQUEST_LINE_END_LF :  maybeEndHeaders(input); break;
+                case HEADER                                     :  readResumeHeader(input); break;
+                case HEADER_FOUND_CR: case HEADER_FOUND_LF      :  resumeOrLF(input); break;
+                case HEADER_FOUND_CR_LF                         :  resumeOrSecondCR(input); break;
+                case HEADER_FOUND_CR_LF_CR                      :  resumeOrEndHeaders(input); break;
+                default : throw new InternalError("Unexpected state: " + state);
             }
         }
         return state == HttpHeaderParser.State.FINISHED;
@@ -137,11 +137,11 @@ public class HttpHeaderParser {
     private boolean canContinueParsing() {
         // some states don't require any input to transition
         // to the next state.
-        return switch (state) {
-            case FINISHED -> false;
-            case STATUS_OR_REQUEST_LINE_FOUND_LF, STATUS_OR_REQUEST_LINE_END_LF, HEADER_FOUND_LF -> true;
-            default -> !eof;
-        };
+        switch (state) {
+            case FINISHED : return false;
+            case STATUS_OR_REQUEST_LINE_FOUND_LF: STATUS_OR_REQUEST_LINE_END_LF: HEADER_FOUND_LF : return true;
+            default : return !eof;
+        }
     }
 
     /**
