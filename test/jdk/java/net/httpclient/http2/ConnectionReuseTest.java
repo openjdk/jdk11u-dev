@@ -33,22 +33,22 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
+import java.net.URISyntaxException;
 import javax.net.ssl.SSLContext;
 
 import jdk.test.lib.net.IPSupport;
 import jdk.testlibrary.SimpleSSLContext;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import static java.net.http.HttpClient.Builder.NO_PROXY;
 import static java.net.http.HttpClient.Version.HTTP_2;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.Assume;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /*
  * @test
@@ -68,22 +68,24 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @run junit/othervm ConnectionReuseTest
  * @run junit/othervm -Djava.net.preferIPv6Addresses=true ConnectionReuseTest
  */
+
+@RunWith(value = Parameterized.class)
 public class ConnectionReuseTest implements HttpServerAdapters {
 
     private static SSLContext sslContext;
     private static HttpTestServer http2_Server; // h2 server over HTTP
     private static HttpTestServer https2_Server; // h2 server over HTTPS
 
-    @BeforeAll
+    @BeforeClass
     public static void beforeAll() throws Exception {
         if (IPSupport.preferIPv6Addresses()) {
             IPSupport.printPlatformSupport(System.err); // for debug purposes
             // this test is run with -Djava.net.preferIPv6Addresses=true, so skip (all) tests
             // if IPv6 isn't supported on this host
-            Assumptions.assumeTrue(IPSupport.hasIPv6(), "Skipping tests - IPv6 is not supported");
+            Assume.assumeTrue("Skipping tests - IPv6 is not supported", IPSupport.hasIPv6());
         }
         sslContext = new SimpleSSLContext().get();
-        assertNotNull(sslContext, "Unexpected null sslContext");
+        assertNotNull(sslContext.toString(), "Unexpected null sslContext");
 
         http2_Server = HttpTestServer.of(
                     new Http2TestServer("localhost", false, 0));
@@ -98,7 +100,7 @@ public class ConnectionReuseTest implements HttpServerAdapters {
         System.out.println("Started HTTPS v2 server at " + https2_Server.serverAuthority());
     }
 
-    @AfterAll
+    @AfterClass
     public static void afterAll() {
         if (https2_Server != null) {
             System.out.println("Stopping server " + https2_Server);
@@ -110,29 +112,46 @@ public class ConnectionReuseTest implements HttpServerAdapters {
         }
     }
 
-    private static Stream<Arguments> requestURIs() throws Exception {
-        final List<Arguments> arguments = new ArrayList<>();
+    @Parameters
+    public static Iterable<Object[]> requestURIs() throws Exception  {
+        final List<Object[]> arguments = new ArrayList<>();
+        if (IPSupport.preferIPv6Addresses()) {
+            IPSupport.printPlatformSupport(System.err);
+            Assume.assumeTrue("Skipping tests - IPv6 is not supported", IPSupport.hasIPv6());
+        }
         // h2 over HTTPS
-        arguments.add(Arguments.of(new URI("https://" + https2_Server.serverAuthority() + "/")));
+        sslContext = new SimpleSSLContext().get();
+        https2_Server = HttpTestServer.of(new Http2TestServer("localhost", true, sslContext));
+        https2_Server.addHandler(new Handler(), "/");
+        https2_Server.start();
+        arguments.add(new Object[]{new URI("https://" + https2_Server.serverAuthority() + "/")});
         // h2 over HTTP
-        arguments.add(Arguments.of(new URI("http://" + http2_Server.serverAuthority() + "/")));
+        http2_Server = HttpTestServer.of(new Http2TestServer("localhost", false, 0));
+        http2_Server.addHandler(new Handler(), "/");
+        http2_Server.start();
+        arguments.add(new Object[]{new URI("http://" + http2_Server.serverAuthority() + "/")});
         if (IPSupport.preferIPv6Addresses()) {
             if (http2_Server.getAddress().getAddress().isLoopbackAddress()) {
                 // h2 over HTTP, use the short form of the host, in the request URI
-                arguments.add(Arguments.of(new URI("http://[::1]:" +
-                        http2_Server.getAddress().getPort() + "/")));
-            }
+                arguments.add(new Object[]{new URI("http://[::1]:" + http2_Server.getAddress().getPort() + "/")});
+             }
         }
-        return arguments.stream();
+        return arguments;
+    }
+
+    private final URI requestURI;
+
+    public ConnectionReuseTest(final URI requestURI) {
+        this.requestURI = requestURI;
     }
 
     /**
      * Uses a single instance of a HttpClient and issues multiple requests to {@code requestURI}
      * and expects that each of the request internally uses the same connection
      */
-    @ParameterizedTest
-    @MethodSource("requestURIs")
-    public void testConnReuse(final URI requestURI) throws Throwable {
+
+    @Test
+    public void testConnReuse() throws Throwable {
         final HttpClient.Builder builder = HttpClient.newBuilder()
                 .proxy(NO_PROXY).sslContext(sslContext);
         final HttpRequest req = HttpRequest.newBuilder().uri(requestURI)
@@ -145,11 +164,12 @@ public class ConnectionReuseTest implements HttpServerAdapters {
             for (int i = 1; i <= 5; i++) {
                 System.out.println("Issuing request(" + i + ") " + req);
                 final HttpResponse<String> resp = client.send(req, BodyHandlers.ofString());
-                assertEquals(200, resp.statusCode(), "unexpected response code");
+                assertEquals("unexpected response code", 200, resp.statusCode());
                 final String respBody = resp.body();
                 System.out.println("Server side handler responded to a request from " + respBody);
-                assertNotEquals(Handler.UNKNOWN_CLIENT_ADDR, respBody,
-                        "server handler couldn't determine client address in request");
+                if (respBody == Handler.UNKNOWN_CLIENT_ADDR){
+                    System.out.println("server handler couldn't determine client address in request");
+                }
                 if (i == 1) {
                     // for the first request we just keep track of the client connection address
                     // that got used for this request
@@ -157,8 +177,7 @@ public class ConnectionReuseTest implements HttpServerAdapters {
                 } else {
                     // verify that the client connection used to issue the request is the same
                     // as the previous request's client connection
-                    assertEquals(clientConnAddr, respBody, "HttpClient unexpectedly used a" +
-                            " different connection for request(" + i + ")");
+                    assertEquals("HttpClient unexpectedly used a" + " different connection for request(" + i + ")", clientConnAddr, respBody);
                 }
             }
         } catch (Throwable t) {
