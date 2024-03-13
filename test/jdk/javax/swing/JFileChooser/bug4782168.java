@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2002, 2023, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,16 +23,18 @@
 
 /*
  * @test
- * @summary run CTW for all classes from jdk.jfr module
- *
- * @library /test/lib / /testlibrary/ctw/src
- * @modules java.base/jdk.internal.jimage
- *          java.base/jdk.internal.misc
- *          java.base/jdk.internal.reflect
- * @modules jdk.jfr
- *
- * @build sun.hotspot.WhiteBox
- * @run driver ClassFileInstaller sun.hotspot.WhiteBox
- *                                sun.hotspot.WhiteBox$WhiteBoxPermission
- * @run driver/timeout=7200 sun.hotspot.tools.ctw.CtwRunner modules:jdk.jfr
+ * @bug 4782168
+ * @summary Tests if DefaultShellFolder.isHidden() crashes for the
+           root folder on Solaris
+ * @modules java.desktop/sun.awt.shell
+ * @run main bug4782168
  */
+
+public class bug4782168 {
+
+    public static void main(String args[]) throws Exception {
+        sun.awt.shell.ShellFolder sf = sun.awt.shell.ShellFolder.
+                getShellFolder(new java.io.File("/"));
+        sf.isHidden();
+    }
+}
