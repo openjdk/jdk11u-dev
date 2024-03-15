@@ -42,7 +42,7 @@ import java.net.URL;
 
 import jdk.test.lib.net.HttpHeaderParser;
 import jdk.test.lib.net.URIBuilder;
- 
+
 /* Creates a simple proxy and http server that just return 200 OK.
  * Open a URL pointing to the http server and specify that the
  * connection should use the proxy. Now make a second connection
