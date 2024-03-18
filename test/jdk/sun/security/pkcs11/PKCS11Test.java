@@ -933,8 +933,8 @@ public abstract class PKCS11Test {
             case "Linux-aarch64-64":
                 return fetchNssLib(LINUX_AARCH64.class);
 
-        default:
-            return null;
+            default:
+                return null;
         }
     }
 
