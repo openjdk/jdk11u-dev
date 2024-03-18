@@ -930,8 +930,8 @@ public abstract class PKCS11Test {
         String path = null;
         try {
             path = ArtifactResolver.resolve(clazz).entrySet().stream()
-                    .findAny().get().getValue() + File.separator + "nsslib"
-                    + File.separator;
+                    .findAny().get().getValue() + File.separator + "nss"
+                    + File.separator + "lib" + File.separator;
         } catch (ArtifactResolverException e) {
             Throwable cause = e.getCause();
             if (cause == null) {
@@ -1027,33 +1027,33 @@ public abstract class PKCS11Test {
     public static enum ECCState {None, Basic, Extended}
 
     @Artifact(
-            organization = "jpg.tests.jdk.nsslib",
+            organization = NSSLIB,
             name = "nsslib-windows_x64",
-            revision = "3.46-VS2017",
+            revision = NSS_BUNDLE_VERSION,
             extension = "zip")
     private static class WINDOWS_X64 {
     }
 
     @Artifact(
-            organization = "jpg.tests.jdk.nsslib",
-            name = "nsslib-windows_x86",
-            revision = "3.46-VS2017",
+            organization = NSSLIB,
+            name = "nsslib-macosx_x64",
+            revision = NSS_BUNDLE_VERSION,
             extension = "zip")
     private static class WINDOWS_X86 {
     }
 
     @Artifact(
-            organization = "jpg.tests.jdk.nsslib",
-            name = "nsslib-macosx_x64",
-            revision = "3.46",
+            organization = NSSLIB,
+            name = "nsslib-macosx_aarch64",
+            revision = NSS_BUNDLE_VERSION,
             extension = "zip")
     private static class MACOSX_X64 {
     }
 
     @Artifact(
-            organization = "jpg.tests.jdk.nsslib",
+            organization = NSSLIB,
             name = "nsslib-linux_x64",
-            revision = "3.46",
+            revision = NSS_BUNDLE_VERSION,
             extension = "zip")
     private static class LINUX_X64 {
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,18 +21,22 @@
  * questions.
  */
 
-/*
- * @test
- * @summary run CTW for all classes from jdk.jfr module
- *
- * @library /test/lib / /testlibrary/ctw/src
- * @modules java.base/jdk.internal.jimage
- *          java.base/jdk.internal.misc
- *          java.base/jdk.internal.reflect
- * @modules jdk.jfr
- *
- * @build sun.hotspot.WhiteBox
- * @run driver ClassFileInstaller sun.hotspot.WhiteBox
- *                                sun.hotspot.WhiteBox$WhiteBoxPermission
- * @run driver/timeout=7200 sun.hotspot.tools.ctw.CtwRunner modules:jdk.jfr
- */
+#include <jni.h>
+
+// Borrowed from hotspot vmError.cpp.
+// Returns an address which is guaranteed to generate a SIGSEGV on read,
+// which is not NULL and contains bits in every word
+void* get_segfault_address() {
+  return (void*)
+#ifdef _LP64
+    0xABC0000000000ABCULL;
+#else
+    0x00000ABC;
+#endif
+}
+
+JNIEXPORT jint JNICALL
+Java_jdk_test_lib_apps_LingeredApp_crash(JNIEnv *env, jclass clss)
+{
+    return *(jint *)get_segfault_address();
+}
