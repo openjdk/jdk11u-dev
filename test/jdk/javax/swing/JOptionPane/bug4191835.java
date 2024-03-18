@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1999, 2023, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,16 +23,21 @@
 
 /*
  * @test
- * @summary run CTW for all classes from jdk.jfr module
- *
- * @library /test/lib / /testlibrary/ctw/src
- * @modules java.base/jdk.internal.jimage
- *          java.base/jdk.internal.misc
- *          java.base/jdk.internal.reflect
- * @modules jdk.jfr
- *
- * @build sun.hotspot.WhiteBox
- * @run driver ClassFileInstaller sun.hotspot.WhiteBox
- *                                sun.hotspot.WhiteBox$WhiteBoxPermission
- * @run driver/timeout=7200 sun.hotspot.tools.ctw.CtwRunner modules:jdk.jfr
+ * @bug 4191835
+ * @summary JOptionPane should allow Dialog as window owner.
+ * @key headful
+ * @run main bug4191835
  */
+
+import java.awt.Dialog;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+
+public class bug4191835 {
+
+  public static void main(String[] args) {
+    JOptionPane op = new JOptionPane();
+    Dialog dlg = new Dialog(new JDialog());
+    JDialog jd = op.createDialog(dlg, "Dialog");
+  }
+}
