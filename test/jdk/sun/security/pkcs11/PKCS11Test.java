@@ -72,9 +72,6 @@ public abstract class PKCS11Test {
     static final String TEST_CLASSES = System.getProperty("test.classes", ".");
     static final char SEP = File.separatorChar;
 
-    private static final String DEFAULT_POLICY =
-            BASE + SEP + ".." + SEP + "policy";
-
     // Version of the NSS artifact. This coincides with the version of
     // the NSS version
     private static final String NSS_BUNDLE_VERSION = "3.91";
