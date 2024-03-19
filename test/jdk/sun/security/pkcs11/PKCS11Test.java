@@ -65,7 +65,6 @@ import jdk.test.lib.Platform;
 import jdk.test.lib.artifacts.Artifact;
 import jdk.test.lib.artifacts.ArtifactResolver;
 import jdk.test.lib.artifacts.ArtifactResolverException;
-import jtreg.SkippedException;
 
 public abstract class PKCS11Test {
 
