@@ -943,7 +943,7 @@ public abstract class PKCS11Test {
                 }
             default:
                 return null;
-            }
+        }
     }
 
     private static String fetchNssLib(Class<?> clazz) {
