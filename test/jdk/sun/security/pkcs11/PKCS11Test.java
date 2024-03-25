@@ -928,22 +928,22 @@ public abstract class PKCS11Test {
             case "MacOSX-aarch64-64":
                 return fetchNssLib(MACOSX_AARCH64.class);
 
-        case "Linux-amd64-64":
-            if (Platform.isOracleLinux7()) {
-                throw new SkippedException("Skipping Oracle Linux prior to v8");
-            } else {
-                return fetchNssLib(LINUX_X64.class);
-            }
+            case "Linux-amd64-64":
+                if (Platform.isOracleLinux7()) {
+                    throw new SkippedException("Skipping Oracle Linux prior to v8");
+                } else {
+                    return fetchNssLib(LINUX_X64.class);
+                }
 
-        case "Linux-aarch64-64":
-            if (Platform.isOracleLinux7()) {
-                throw new SkippedException("Skipping Oracle Linux prior to v8");
-            } else {
-                return fetchNssLib(LINUX_AARCH64.class);
+            case "Linux-aarch64-64":
+                if (Platform.isOracleLinux7()) {
+                    throw new SkippedException("Skipping Oracle Linux prior to v8");
+                } else {
+                    return fetchNssLib(LINUX_AARCH64.class);
+                }
+            default:
+                return null;
             }
-        default:
-            return null;
-        }
     }
 
     private static String fetchNssLib(Class<?> clazz) {
