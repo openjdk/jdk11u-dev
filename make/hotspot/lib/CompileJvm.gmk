@@ -185,8 +185,7 @@ $(eval $(call SetupNativeCompilation, BUILD_LIBJVM, \
     DISABLED_WARNINGS_clang := $(DISABLED_WARNINGS_clang), \
     DISABLED_WARNINGS_solstudio := $(DISABLED_WARNINGS_solstudio), \
     DISABLED_WARNINGS_xlc := $(DISABLED_WARNINGS_xlc), \
-    DISABLED_WARNINGS_microsoft := $(DISABLED_WARNINGS_microsoft)
-    4146, \
+    DISABLED_WARNINGS_microsoft := 4146, \
     ASFLAGS := $(JVM_ASFLAGS), \
     LDFLAGS := $(JVM_LDFLAGS), \
     LIBS := $(JVM_LIBS), \
