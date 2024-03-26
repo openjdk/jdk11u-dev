@@ -249,7 +249,7 @@ public class ValidateISO4217 {
 
     // Test a Currency built from country
     private static void countryTest(String country, String currencyCode) {
-        Locale loc = Locale.of("", country);
+        Locale loc = new Locale("", country);
         Currency currency = Currency.getInstance(loc);
         assertEquals(currency.getCurrencyCode(), currencyCode);
     }
@@ -274,12 +274,12 @@ public class ValidateISO4217 {
             // if a code is undefined / 0, creating a Currency from it
             // should throw an IllegalArgumentException
             assertThrows(IllegalArgumentException.class,
-                    ()-> Currency.getInstance(Locale.of("", country)),
+                    ()-> Currency.getInstance(new Locale("", country)),
                     "Error: This should be an undefined code and throw IllegalArgumentException: " + country);
         } else if (codes[toIndex(country)] == SKIPPED) {
             // if a code is marked as skipped / 2, creating a Currency from it
             // should return null
-            assertNull(Currency.getInstance(Locale.of("", country)),
+            assertNull(Currency.getInstance(new Locale("", country)),
                     "Error: Currency.getInstance() for this locale should return null: " + country);
         }
     }

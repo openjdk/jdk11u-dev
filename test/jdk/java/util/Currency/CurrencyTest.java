@@ -49,6 +49,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -66,6 +67,7 @@ public class CurrencyTest {
     }
 
     @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class CodeValidationTests {
         // Calling getInstance() on equal currency codes should return equal currencies
         @ParameterizedTest
@@ -74,7 +76,7 @@ public class CurrencyTest {
             compareCurrencies(currencyCode);
         }
 
-        private static Stream<String> validCurrencies() {
+        public Stream<String> validCurrencies() {
             return Stream.of("USD", "EUR", "GBP", "JPY", "CNY", "CHF");
         }
 
@@ -86,12 +88,13 @@ public class CurrencyTest {
                     Currency.getInstance(currencyCode), "getInstance() did not throw IAE");
         }
 
-        private static Stream<String> invalidCurrencies() {
+        public Stream<String> invalidCurrencies() {
             return Stream.of("AQD", "US$", "\u20AC");
         }
     }
 
     @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class FundsCodesTests {
         // Calling getInstance() on equal currency codes should return equal currencies
         @ParameterizedTest
@@ -117,7 +120,7 @@ public class CurrencyTest {
                     currencyCode, expectedNumeric, numeric));
         }
 
-        private static Stream<Arguments> fundsCodes() {
+        public Stream<Arguments> fundsCodes() {
             return Stream.of(
                     Arguments.of("BOV", 2, 984), Arguments.of("CHE", 2, 947),
                     Arguments.of("CHW", 2, 948), Arguments.of("CLF", 4, 990),
@@ -128,6 +131,7 @@ public class CurrencyTest {
     }
 
     @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class LocaleMappingTests {
 
         // very basic test: most countries have their own currency, and then
@@ -164,21 +168,21 @@ public class CurrencyTest {
         @Test
         public void invalidCountryTest() {
             assertThrows(IllegalArgumentException.class, ()->
-                    Currency.getInstance(Locale.of("", "EU")), "Did not throw IAE");
+                    Currency.getInstance(new Locale("", "EU")), "Did not throw IAE");
         }
 
         // Ensure a selection of countries have the expected currency
         @ParameterizedTest
         @MethodSource({"countryProvider", "switchedOverCountries"})
         public void countryCurrencyTest(String countryCode, String expected) {
-            Locale locale = Locale.of("", countryCode);
+            Locale locale = new Locale("", countryCode);
             Currency currency = Currency.getInstance(locale);
             String code = (currency != null) ? currency.getCurrencyCode() : null;
             assertEquals(expected, code, generateErrMsg(
                     "currency for", locale.getDisplayCountry(), expected, code));
         }
 
-        private static Stream<Arguments> countryProvider() {
+        public Stream<Arguments> countryProvider() {
             return Stream.of(
                     // Check country that does not have a currency
                     Arguments.of("AQ", null),
@@ -200,7 +204,7 @@ public class CurrencyTest {
          * currency and transition date are necessary for any country, the
          * arrays here can be updated so that the program can check the currency switch.
          */
-        private static List<Arguments> switchedOverCountries() {
+        private List<Arguments> switchedOverCountries() {
             List<Arguments> switched = new ArrayList<Arguments>();
             String[] switchOverCtry = {};
             String[] switchOverOld = {};
@@ -301,11 +305,11 @@ public class CurrencyTest {
                 Arguments.of("USD", Locale.ENGLISH, "US Dollar"),
                 Arguments.of("FRF", Locale.FRENCH, "franc fran\u00e7ais"),
                 Arguments.of("DEM", Locale.GERMAN, "Deutsche Mark"),
-                Arguments.of("ESP", Locale.of("es"), "peseta espa\u00f1ola"),
+                Arguments.of("ESP", new Locale("es"), "peseta espa\u00f1ola"),
                 Arguments.of("ITL", Locale.ITALIAN, "lira italiana"),
                 Arguments.of("JPY", Locale.JAPANESE, "\u65e5\u672c\u5186"),
                 Arguments.of("KRW", Locale.KOREAN, "\ub300\ud55c\ubbfc\uad6d \uc6d0"),
-                Arguments.of("SEK", Locale.of("sv"), "svensk krona"),
+                Arguments.of("SEK", new Locale("sv"), "svensk krona"),
                 Arguments.of("CNY", Locale.SIMPLIFIED_CHINESE, "\u4eba\u6c11\u5e01"),
                 Arguments.of("TWD", Locale.TRADITIONAL_CHINESE, "\u65b0\u53f0\u5e63")
         );
