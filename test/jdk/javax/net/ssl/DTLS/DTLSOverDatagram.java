@@ -162,7 +162,8 @@ public class DTLSOverDatagram {
             log(side, "=======handshake(" + loops + ", " + hs + ")=======");
 
             switch (hs) {
-                case NEED_UNWRAP, NEED_UNWRAP_AGAIN -> {
+                case NEED_UNWRAP:
+                case NEED_UNWRAP_AGAIN: {
                     log(side, "Receive DTLS records, handshake status is " + hs);
 
                     ByteBuffer iNet;
@@ -215,8 +216,8 @@ public class DTLSOverDatagram {
                         log(side, "Handshake status is FINISHED, finish the loop");
                         endLoops = true;
                     }
-                }
-                case NEED_WRAP -> {
+                } break;
+                case NEED_WRAP: {
                     List<DatagramPacket> packets = new ArrayList<>();
                     boolean finished = produceHandshakePackets(
                             engine, peerAddr, side, packets);
@@ -232,16 +233,16 @@ public class DTLSOverDatagram {
                                 + "finish the loop");
                         endLoops = true;
                     }
-                }
-                case NEED_TASK -> runDelegatedTasks(engine);
-                case NOT_HANDSHAKING -> {
+                } break;
+                case NEED_TASK: runDelegatedTasks(engine); break;
+                case NOT_HANDSHAKING: {
                     log(side,
                             "Handshake status is NOT_HANDSHAKING, finish the loop");
                     endLoops = true;
-                }
-                case FINISHED -> throw new Exception( "Unexpected status, " +
+                } break;
+                case FINISHED: throw new Exception( "Unexpected status, " +
                         "SSLEngine.getHandshakeStatus() shouldn't return FINISHED");
-                default -> throw new Exception("Can't reach here, " +
+                default: throw new Exception("Can't reach here, " +
                         "handshake status is " + hs);
             }
         }
@@ -274,14 +275,14 @@ public class DTLSOverDatagram {
         SSLEngineResult.Status rs = r.getStatus();
         SSLEngineResult.HandshakeStatus hs = r.getHandshakeStatus();
         switch (rs) {
-            case OK -> log(side, "SSLEngineResult status OK");
-            case BUFFER_OVERFLOW -> {
+            case OK: log(side, "SSLEngineResult status OK"); break;
+            case BUFFER_OVERFLOW: {
                 log(side, "BUFFER_OVERFLOW, handshake status is " + hs);
                 // the client maximum fragment size config does not work?
                 throw new Exception("Buffer overflow: " +
                         "incorrect client maximum fragment size");
             }
-            case BUFFER_UNDERFLOW -> {
+            case BUFFER_UNDERFLOW: {
                 log(side, "BUFFER_UNDERFLOW, handshake status is " + hs);
                 // bad packet, or the client maximum fragment size
                 // config does not work?
@@ -289,10 +290,10 @@ public class DTLSOverDatagram {
                     throw new Exception("Buffer underflow: " +
                             "incorrect client maximum fragment size");
                 } // otherwise, ignore this packet
-            }
-            case CLOSED -> throw new Exception(
+            } break;
+            case CLOSED: throw new Exception(
                     "SSL engine closed, handshake status is " + hs);
-            default -> throw new Exception("Can't reach here, result is " + rs);
+            default: throw new Exception("Can't reach here, result is " + rs);
         }
     }
 
@@ -381,16 +382,18 @@ public class DTLSOverDatagram {
             SSLEngineResult.HandshakeStatus nhs = hs;
             while (!endInnerLoop) {
                 switch (nhs) {
-                    case NEED_TASK -> runDelegatedTasks(engine);
-                    case NEED_UNWRAP, NEED_UNWRAP_AGAIN, NOT_HANDSHAKING -> {
+                    case NEED_TASK: runDelegatedTasks(engine); break;
+                    case NEED_UNWRAP:
+                    case NEED_UNWRAP_AGAIN:
+                    case NOT_HANDSHAKING: {
                         endInnerLoop = true;
                         endLoops = true;
-                    }
-                    case NEED_WRAP -> endInnerLoop = true;
-                    case FINISHED ->  throw new Exception(
+                    } break;
+                    case NEED_WRAP: endInnerLoop = true; break;
+                    case FINISHED:  throw new Exception(
                             "Unexpected status, SSLEngine.getHandshakeStatus() "
                                     + "should not return FINISHED");
-                    default -> throw new Exception("Can't reach here, handshake status is "
+                    default: throw new Exception("Can't reach here, handshake status is "
                             + nhs);
                 }
 
@@ -581,8 +584,19 @@ public class DTLSOverDatagram {
         }
     }
 
-    record ServerCallable(DTLSOverDatagram testCase, DatagramSocket socket,
-                          InetSocketAddress clientSocketAddr) implements Callable<String> {
+    final static class ServerCallable implements Callable<String> {
+
+        private final DTLSOverDatagram testCase;
+        private final DatagramSocket socket;
+        private final InetSocketAddress clientSocketAddr;
+
+        ServerCallable(DTLSOverDatagram testCase, DatagramSocket socket,
+                InetSocketAddress clientSocketAddr) {
+
+            this.testCase = testCase;
+            this.socket = socket;
+            this.clientSocketAddr = clientSocketAddr;
+        }
 
         @Override
         public String call() throws Exception {
@@ -608,8 +622,19 @@ public class DTLSOverDatagram {
         }
     }
 
-    record ClientCallable(DTLSOverDatagram testCase, DatagramSocket socket,
-                          InetSocketAddress serverSocketAddr) implements Callable<String> {
+    final static class ClientCallable implements Callable<String> {
+
+        private final DTLSOverDatagram testCase;
+        private final DatagramSocket socket;
+        private final InetSocketAddress serverSocketAddr;
+
+        ClientCallable(DTLSOverDatagram testCase, DatagramSocket socket,
+                InetSocketAddress serverSocketAddr) {
+
+            this.testCase = testCase;
+            this.socket = socket;
+            this.serverSocketAddr = serverSocketAddr;
+        }
 
         @Override
         public String call() throws Exception {
