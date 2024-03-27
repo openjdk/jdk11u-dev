@@ -855,10 +855,10 @@ public final class HexPrinter {
 
         public void annotate(DataInputStream in, Appendable out) throws IOException {
             switch (this) {
-                case PRINTABLE -> bytePrintable(in, out);
-                case ASCII -> byteASCII(in, out);
-                case UTF8 -> utf8Parser(in, out);
-                case NONE -> byteNoneParser(in, out);
+                case PRINTABLE: bytePrintable(in, out); break;
+                case ASCII: byteASCII(in, out); break;
+                case UTF8: utf8Parser(in, out); break;
+                case NONE: byteNoneParser(in, out); break;
             }
         }
 
