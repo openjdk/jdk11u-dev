@@ -33,6 +33,9 @@
  * @run main/othervm -Xbatch
  * -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
  * compiler.codegen.aes.Test8292158
+ * @run main/othervm -Xint
+ * -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
+ * compiler.codegen.aes.Test8292158
  */
 
 package compiler.codegen.aes;

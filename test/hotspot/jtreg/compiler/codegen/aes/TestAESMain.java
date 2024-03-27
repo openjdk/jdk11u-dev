@@ -36,6 +36,9 @@
  * @run main/othervm/timeout=600 -Xbatch -DcheckOutput=true -Dmode=CBC
  *      -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
  *      compiler.codegen.aes.TestAESMain
+ * @run main/othervm/timeout=600 -Xint -DcheckOutput=true -Dmode=CBC
+ *      -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
+ *      compiler.codegen.aes.TestAESMain
  * @run main/othervm/timeout=600 -Xbatch -DcheckOutput=true -Dmode=CBC -DencInputOffset=1
  *      -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
  *      compiler.codegen.aes.TestAESMain
@@ -56,6 +59,9 @@
  *      compiler.codegen.aes.TestAESMain
  *
  * @run main/othervm/timeout=600 -Xbatch -DcheckOutput=true -Dmode=ECB
+ *      -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
+ *      compiler.codegen.aes.TestAESMain
+ * @run main/othervm/timeout=600 -Xint -DcheckOutput=true -Dmode=ECB
  *      -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
  *      compiler.codegen.aes.TestAESMain
  * @run main/othervm/timeout=600 -Xbatch -DcheckOutput=true -Dmode=ECB -DencInputOffset=1
@@ -80,6 +86,9 @@
  * @run main/othervm/timeout=600 -Xbatch -DcheckOutput=true -Dmode=GCM
  *      -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
  *      compiler.codegen.aes.TestAESMain
+ * @run main/othervm/timeout=600 -Xint -DcheckOutput=true -Dmode=GCM
+ *      -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
+ *      compiler.codegen.aes.TestAESMain
  * @run main/othervm/timeout=600 -Xbatch -DcheckOutput=true -Dmode=GCM -DencInputOffset=1
  *      -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
  *      compiler.codegen.aes.TestAESMain
@@ -100,6 +109,9 @@
  *      compiler.codegen.aes.TestAESMain
  *
  * @run main/othervm/timeout=600 -Xbatch -DcheckOutput=true -Dmode=CTR
+ *      -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
+ *      compiler.codegen.aes.TestAESMain
+ * @run main/othervm/timeout=600 -Xint -DcheckOutput=true -Dmode=CTR
  *      -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -Xbootclasspath/a:.
  *      compiler.codegen.aes.TestAESMain
  * @run main/othervm/timeout=600 -Xbatch -DcheckOutput=true -Dmode=CTR -DencInputOffset=1

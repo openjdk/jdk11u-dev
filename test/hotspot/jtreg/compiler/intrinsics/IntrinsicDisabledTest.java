@@ -32,6 +32,11 @@
  * @build sun.hotspot.WhiteBox
  * @run driver ClassFileInstaller sun.hotspot.WhiteBox
  *                                sun.hotspot.WhiteBox$WhiteBoxPermission
+ * @run main/othervm -Xint
+ *                   -Xbootclasspath/a:.
+ *                   -XX:+UnlockDiagnosticVMOptions
+ *                   -XX:+WhiteBoxAPI
+ *                   compiler.intrinsics.IntrinsicDisabledTest
  * @run main/othervm -Xbootclasspath/a:.
  *                   -XX:+UnlockDiagnosticVMOptions
  *                   -XX:+WhiteBoxAPI
@@ -47,6 +52,7 @@ package compiler.intrinsics;
 import jdk.test.lib.Platform;
 import sun.hotspot.WhiteBox;
 import compiler.whitebox.CompilerWhiteBoxTest;
+import jtreg.SkippedException;
 
 import java.lang.reflect.Executable;
 import java.util.Objects;
@@ -199,7 +205,9 @@ public class IntrinsicDisabledTest {
     }
 
     public static void main(String args[]) {
-        if (Platform.isServer() && !Platform.isEmulatedClient() &&
+        if (Platform.isInt()) {
+            throw new SkippedException("Compiler not available with -Xint");
+        } else if (Platform.isServer() && !Platform.isEmulatedClient() &&
                                    (TIERED_STOP_AT_LEVEL == CompilerWhiteBoxTest.COMP_LEVEL_FULL_OPTIMIZATION)) {
             if (TIERED_COMPILATION) {
                 test(CompilerWhiteBoxTest.COMP_LEVEL_SIMPLE);
