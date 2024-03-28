@@ -76,7 +76,7 @@ public class CurrencyTest {
             compareCurrencies(currencyCode);
         }
 
-        public Stream<String> validCurrencies() {
+        private Stream<String> validCurrencies() {
             return Stream.of("USD", "EUR", "GBP", "JPY", "CNY", "CHF");
         }
 
@@ -88,7 +88,7 @@ public class CurrencyTest {
                     Currency.getInstance(currencyCode), "getInstance() did not throw IAE");
         }
 
-        public Stream<String> invalidCurrencies() {
+        private Stream<String> invalidCurrencies() {
             return Stream.of("AQD", "US$", "\u20AC");
         }
     }
@@ -120,7 +120,7 @@ public class CurrencyTest {
                     currencyCode, expectedNumeric, numeric));
         }
 
-        public Stream<Arguments> fundsCodes() {
+        private Stream<Arguments> fundsCodes() {
             return Stream.of(
                     Arguments.of("BOV", 2, 984), Arguments.of("CHE", 2, 947),
                     Arguments.of("CHW", 2, 948), Arguments.of("CLF", 4, 990),
@@ -182,7 +182,7 @@ public class CurrencyTest {
                     "currency for", locale.getDisplayCountry(), expected, code));
         }
 
-        public Stream<Arguments> countryProvider() {
+        private Stream<Arguments> countryProvider() {
             return Stream.of(
                     // Check country that does not have a currency
                     Arguments.of("AQ", null),
