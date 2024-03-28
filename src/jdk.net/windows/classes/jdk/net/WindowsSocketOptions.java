@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,24 +29,11 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import jdk.net.ExtendedSocketOptions.PlatformSocketOptions;
 
-class LinuxSocketOptions extends PlatformSocketOptions {
 
-    public LinuxSocketOptions() {
-    }
+@SuppressWarnings("removal")
+class WindowsSocketOptions extends PlatformSocketOptions {
 
-    @Override
-    void setQuickAck(int fd, boolean on) throws SocketException {
-        setQuickAck0(fd, on);
-    }
-
-    @Override
-    boolean getQuickAck(int fd) throws SocketException {
-        return getQuickAck0(fd);
-    }
-
-    @Override
-    public boolean quickAckSupported() {
-        return quickAckSupported0();
+    public WindowsSocketOptions() {
     }
 
     @Override
@@ -60,18 +47,13 @@ class LinuxSocketOptions extends PlatformSocketOptions {
     }
 
     @Override
-    void setTcpKeepAliveTime(int fd, final int value) throws SocketException {
-        setTcpKeepAliveTime0(fd, value);
-    }
-
-    @Override
-    void setTcpKeepAliveIntvl(int fd, final int value) throws SocketException {
-        setTcpKeepAliveIntvl0(fd, value);
-    }
-
-    @Override
     int getTcpKeepAliveProbes(int fd) throws SocketException {
         return getTcpKeepAliveProbes0(fd);
+    }
+
+    @Override
+    void setTcpKeepAliveTime(int fd, final int value) throws SocketException {
+        setTcpKeepAliveTime0(fd, value);
     }
 
     @Override
@@ -80,24 +62,31 @@ class LinuxSocketOptions extends PlatformSocketOptions {
     }
 
     @Override
+    void setTcpKeepAliveIntvl(int fd, final int value) throws SocketException {
+        setTcpKeepAliveIntvl0(fd, value);
+    }
+
+    @Override
     int getTcpKeepAliveIntvl(int fd) throws SocketException {
         return getTcpKeepAliveIntvl0(fd);
     }
 
-    private static native void setTcpKeepAliveProbes0(int fd, int value) throws SocketException;
-    private static native void setTcpKeepAliveTime0(int fd, int value) throws SocketException;
-    private static native void setTcpKeepAliveIntvl0(int fd, int value) throws SocketException;
-    private static native int getTcpKeepAliveProbes0(int fd) throws SocketException;
-    private static native int getTcpKeepAliveTime0(int fd) throws SocketException;
-    private static native int getTcpKeepAliveIntvl0(int fd) throws SocketException;
-    private static native void setQuickAck0(int fd, boolean on) throws SocketException;
-    private static native boolean getQuickAck0(int fd) throws SocketException;
     private static native boolean keepAliveOptionsSupported0();
-    private static native boolean quickAckSupported0();
+    private static native void setTcpKeepAliveProbes0(int fd, int value) throws SocketException;
+    private static native int getTcpKeepAliveProbes0(int fd) throws SocketException;
+    private static native void setTcpKeepAliveTime0(int fd, int value) throws SocketException;
+    private static native int getTcpKeepAliveTime0(int fd) throws SocketException;
+    private static native void setTcpKeepAliveIntvl0(int fd, int value) throws SocketException;
+    private static native int getTcpKeepAliveIntvl0(int fd) throws SocketException;
+
     static {
-        AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+        if (System.getSecurityManager() == null) {
             System.loadLibrary("extnet");
-            return null;
-        });
+        } else {
+            AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                System.loadLibrary("extnet");
+                return null;
+            });
+        }
     }
 }
