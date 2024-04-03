@@ -182,3 +182,4 @@ class AnimatingFrame extends JFrame implements Runnable {
         }
     }
 }
+
