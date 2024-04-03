@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1999, 2023, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,10 +21,29 @@
  * questions.
  */
 
-/**
- * @test TestJmapCoreMetaspace
- * @summary Test verifies that jhsdb jmap could generate heap dump from core when metaspace is full
- * @requires vm.hasSA
- * @library /test/lib
- * @run driver/timeout=480 TestJmapCore run metaspace
- */
+/* @test
+   @bug 4211454
+   @summary Verifies ClassCastException in AbstractAction
+   @run main bug4211454
+*/
+
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
+
+public class bug4211454 {
+
+    public static void main(String[] args) {
+        AbstractAction at = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Action!");
+            }
+        };
+        for (int i = 0; i<9; i++) {
+            at.putValue("key " + i, "name");
+        }
+        for (int i = 9; i>3; i--) {
+            at.putValue("key " + i, null);
+            at.putValue("Not a key " + i, null);
+        }
+    }
+}

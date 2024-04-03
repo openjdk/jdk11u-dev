@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1999, 2023, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,10 +21,24 @@
  * questions.
  */
 
-/**
- * @test TestJmapCoreMetaspace
- * @summary Test verifies that jhsdb jmap could generate heap dump from core when metaspace is full
- * @requires vm.hasSA
- * @library /test/lib
- * @run driver/timeout=480 TestJmapCore run metaspace
- */
+/* @test
+   @bug 4160240
+   @summary InternalFrameEvent has getInternalFrame() method.
+   @run main bug4160240
+*/
+
+import javax.swing.JInternalFrame;
+import javax.swing.event.InternalFrameEvent;
+
+public class bug4160240 {
+
+    public static void main(String[] argv) throws Exception {
+        JInternalFrame jif = new JInternalFrame();
+        InternalFrameEvent ife = new InternalFrameEvent(jif,
+                                    InternalFrameEvent.INTERNAL_FRAME_OPENED);
+        if (ife.getInternalFrame() != jif) {
+            throw new RuntimeException("JInternalFrame.getInternalFrame " +
+                                        " doesn't work correctly...");
+        }
+    }
+}
