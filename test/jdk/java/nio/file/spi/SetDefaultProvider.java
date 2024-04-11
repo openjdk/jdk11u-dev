@@ -104,7 +104,7 @@ public class SetDefaultProvider {
             List<String> paths = stream
                     .map(path -> path.getFileName().toString())
                     .filter(f -> f.startsWith("TestProvider"))
-                    .toList();
+                    .collect(Collectors.toList());
             for(var p : paths) {
                 args.add("-C");
                 args.add(dir.toString());

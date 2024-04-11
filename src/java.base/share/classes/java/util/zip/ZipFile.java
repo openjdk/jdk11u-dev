@@ -1375,23 +1375,38 @@ class ZipFile implements ZipConstants, Closeable {
         private int[] table;                 // Hash chain heads: indexes into entries
         private int tablelen;                // number of hash heads
 
+        /**
+         * A class representing a key to a ZIP file. A key is based
+         * on the file key if available, or the path value if the
+         * file key is not available. The key is also based on the
+         * file's last modified time to allow for cases where a ZIP
+         * file is re-opened after it has been modified.
+         */
         private static class Key {
-            BasicFileAttributes attrs;
+            final BasicFileAttributes attrs;
             File file;
+            final boolean utf8;
 
-            public Key(File file, BasicFileAttributes attrs) {
+            public Key(File file, BasicFileAttributes attrs, ZipCoder zc) {
                 this.attrs = attrs;
                 this.file = file;
+                this.utf8 = zc.isUTF8();
             }
 
             public int hashCode() {
-                long t = attrs.lastModifiedTime().toMillis();
-                return ((int)(t ^ (t >>> 32))) + file.hashCode();
+                long t = utf8 ? 0 : Long.MAX_VALUE;
+                t += attrs.lastModifiedTime().toMillis();
+                Object fk = attrs.fileKey();
+                return Long.hashCode(t) +
+                        (fk != null ? fk.hashCode() : file.hashCode());
             }
 
             public boolean equals(Object obj) {
                 if (obj instanceof Key) {
-                    Key key = (Key)obj;
+                    Key key = (Key) obj;
+                    if (key.utf8 != utf8) {
+                        return false;
+                    }
                     if (!attrs.lastModifiedTime().equals(key.attrs.lastModifiedTime())) {
                         return false;
                     }
