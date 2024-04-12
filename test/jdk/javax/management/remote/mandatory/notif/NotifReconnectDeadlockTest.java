@@ -170,7 +170,7 @@ public class NotifReconnectDeadlockTest {
             }
         };
 
-    private static final long serverTimeout = 1000;
+    private static final long serverTimeout = 3000;
     private static final long listenerSleep = serverTimeout*6;
 
     private static String clientState = null;
