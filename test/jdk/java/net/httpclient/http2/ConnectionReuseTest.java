@@ -54,7 +54,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @test
  * @bug 8305906
  * @summary verify that the HttpClient pools and reuses a connection for HTTP/2 requests
- * @library /test/lib /lib/testlibrary server/ ../
+ * @library /test/lib server/ ../
  * @build jdk.test.lib.net.SimpleSSLContext HttpServerAdapters
  *        ReferenceTracker jdk.test.lib.net.IPSupport
  * @modules java.net.http/jdk.internal.net.http.common
