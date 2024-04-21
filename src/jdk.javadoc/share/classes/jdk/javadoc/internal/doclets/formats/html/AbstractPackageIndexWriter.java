@@ -164,8 +164,8 @@ public abstract class AbstractPackageIndexWriter extends HtmlDocletWriter {
             if (configuration.showModules  && configuration.modules.size() > 1) {
                 addAllModulesLink(ul);
             }
-            htmlTree.addContent(ul);
-            header.addContent(htmlTree);
+            htmlTree.add(ul);
+            header.add(htmlTree);
             addPackagesList(main);
         }
     }
@@ -181,7 +181,7 @@ public abstract class AbstractPackageIndexWriter extends HtmlDocletWriter {
             Content heading = HtmlTree.HEADING(HtmlConstants.TITLE_HEADING,
                     HtmlStyle.title, title);
             Content div = HtmlTree.DIV(HtmlStyle.header, heading);
-            body.addContent(div);
+            body.add(div);
         }
     }
 

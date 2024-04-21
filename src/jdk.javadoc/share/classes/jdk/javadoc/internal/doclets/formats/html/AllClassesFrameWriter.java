@@ -168,7 +168,7 @@ public class AllClassesFrameWriter extends HtmlDocletWriter {
                 linkContent = getLink(new LinkInfoImpl(configuration, LinkInfoImpl.Kind.DEFAULT, typeElement).label(label));
             }
             Content li = HtmlTree.LI(linkContent);
-            content.addContent(li);
+            content.add(li);
         }
     }
 }

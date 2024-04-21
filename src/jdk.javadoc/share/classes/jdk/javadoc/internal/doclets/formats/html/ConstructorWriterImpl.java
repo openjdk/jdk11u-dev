@@ -229,7 +229,7 @@ public class ConstructorWriterImpl extends AbstractExecutableMemberWriter
     public void addSummaryLabel(Content memberTree) {
         Content label = HtmlTree.HEADING(HtmlConstants.SUMMARY_HEADING,
                 contents.constructorSummaryLabel);
-        memberTree.addContent(label);
+        memberTree.add(label);
     }
 
     /**
@@ -277,7 +277,7 @@ public class ConstructorWriterImpl extends AbstractExecutableMemberWriter
      */
     @Override
     public void addSummaryAnchor(TypeElement typeElement, Content memberTree) {
-        memberTree.addContent(links.createAnchor(SectionName.CONSTRUCTOR_SUMMARY));
+        memberTree.add(links.createAnchor(SectionName.CONSTRUCTOR_SUMMARY));
     }
 
     /**

@@ -164,7 +164,7 @@ public class PackageUseWriter extends SubWriterHolderWriter {
             addPackageList(ul);
         }
         addClassList(ul);
-        contentTree.addContent(ul);
+        contentTree.add(ul);
     }
 
     /**
@@ -189,12 +189,12 @@ public class PackageUseWriter extends SubWriterHolderWriter {
             if (pkg != null && !pkg.isUnnamed()) {
                 addSummaryComment(pkg, summary);
             } else {
-                summary.addContent(Contents.SPACE);
+                summary.add(Contents.SPACE);
             }
             table.addRow(packageLink, summary);
         }
         Content li = HtmlTree.LI(HtmlStyle.blockList, table.toContent());
-        contentTree.addContent(li);
+        contentTree.add(li);
     }
 
     /**
@@ -234,8 +234,8 @@ public class PackageUseWriter extends SubWriterHolderWriter {
 
                 table.addRow(typeContent, summary);
             }
-            li.addContent(table.toContent());
-            contentTree.addContent(li);
+            li.add(table.toContent());
+            contentTree.add(li);
         }
     }
 

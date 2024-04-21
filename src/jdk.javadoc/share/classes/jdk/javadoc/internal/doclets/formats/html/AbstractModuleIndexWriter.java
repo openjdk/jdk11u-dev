@@ -226,8 +226,8 @@ public abstract class AbstractModuleIndexWriter extends HtmlDocletWriter {
         HtmlTree ul = new HtmlTree(HtmlTag.UL);
         addAllClassesLink(ul);
         addAllPackagesLink(ul);
-        htmlTree.addContent(ul);
-        header.addContent(htmlTree);
+        htmlTree.add(ul);
+        header.add(htmlTree);
         addModulesList(main);
     }
 
@@ -249,8 +249,8 @@ public abstract class AbstractModuleIndexWriter extends HtmlDocletWriter {
         addAllClassesLink(ul);
         addAllPackagesLink(ul);
         addAllModulesLink(ul);
-        htmlTree.addContent(ul);
-        header.addContent(htmlTree);
+        htmlTree.add(ul);
+        header.add(htmlTree);
         addModulePackagesList(modules, text, tableSummary, main, mdle);
     }
 
@@ -265,7 +265,7 @@ public abstract class AbstractModuleIndexWriter extends HtmlDocletWriter {
             Content heading = HtmlTree.HEADING(HtmlConstants.TITLE_HEADING,
                     HtmlStyle.title, title);
             Content div = HtmlTree.DIV(HtmlStyle.header, heading);
-            body.addContent(div);
+            body.add(div);
         }
     }
 

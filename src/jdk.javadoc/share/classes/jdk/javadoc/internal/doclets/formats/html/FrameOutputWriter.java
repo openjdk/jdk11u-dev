@@ -26,7 +26,6 @@
 package jdk.javadoc.internal.doclets.formats.html;
 
 import jdk.javadoc.internal.doclets.formats.html.markup.Head;
-import jdk.javadoc.internal.doclets.formats.html.markup.DocType;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlAttr;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlDocument;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle;
@@ -161,7 +160,7 @@ public class FrameOutputWriter extends HtmlDocletWriter {
         addAllClassesFrameTag(leftContainerDiv);
         addClassFrameTag(rightContainerDiv);
         HtmlTree mainContainer = HtmlTree.DIV(HtmlStyle.mainContainer, leftContainerDiv);
-        mainContainer.addContent(rightContainerDiv);
+        mainContainer.add(rightContainerDiv);
         return mainContainer;
     }
 
@@ -174,7 +173,7 @@ public class FrameOutputWriter extends HtmlDocletWriter {
         HtmlTree frame = HtmlTree.IFRAME(DocPaths.MODULE_OVERVIEW_FRAME.getPath(),
                 "packageListFrame", configuration.getText("doclet.All_Modules"));
         HtmlTree leftTop = HtmlTree.DIV(HtmlStyle.leftTop, frame);
-        contentTree.addContent(leftTop);
+        contentTree.add(leftTop);
     }
 
     /**
@@ -186,7 +185,7 @@ public class FrameOutputWriter extends HtmlDocletWriter {
         HtmlTree frame = HtmlTree.IFRAME(DocPaths.OVERVIEW_FRAME.getPath(),
                 "packageListFrame", configuration.getText("doclet.All_Packages"));
         HtmlTree leftTop = HtmlTree.DIV(HtmlStyle.leftTop, frame);
-        contentTree.addContent(leftTop);
+        contentTree.add(leftTop);
     }
 
     /**
@@ -198,7 +197,7 @@ public class FrameOutputWriter extends HtmlDocletWriter {
         HtmlTree frame = HtmlTree.IFRAME(DocPaths.ALLCLASSES_FRAME.getPath(),
                 "packageFrame", configuration.getText("doclet.All_classes_and_interfaces"));
         HtmlTree leftBottom = HtmlTree.DIV(HtmlStyle.leftBottom, frame);
-        contentTree.addContent(leftBottom);
+        contentTree.add(leftBottom);
     }
 
     /**
@@ -210,7 +209,7 @@ public class FrameOutputWriter extends HtmlDocletWriter {
         HtmlTree frame = HtmlTree.IFRAME(configuration.topFile.getPath(), "classFrame",
                 configuration.getText("doclet.Package_class_and_interface_descriptions"));
         frame.setStyle(HtmlStyle.rightIframe);
-        contentTree.addContent(frame);
+        contentTree.add(frame);
     }
 
     /**

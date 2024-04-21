@@ -163,16 +163,16 @@ public class SplitIndexWriter extends AbstractIndexWriter {
     protected void addLinksForIndexes(Content contentTree) {
         for (int i = 0; i < indexElements.size(); i++) {
             int j = i + 1;
-            contentTree.addContent(links.createLink(DocPaths.indexN(j),
+            contentTree.add(links.createLink(DocPaths.indexN(j),
                     new StringContent(indexElements.get(i).toString())));
-            contentTree.addContent(Contents.SPACE);
+            contentTree.add(Contents.SPACE);
         }
-        contentTree.addContent(new HtmlTree(HtmlTag.BR));
-        contentTree.addContent(links.createLink(pathToRoot.resolve(DocPaths.ALLCLASSES_INDEX),
+        contentTree.add(new HtmlTree(HtmlTag.BR));
+        contentTree.add(links.createLink(pathToRoot.resolve(DocPaths.ALLCLASSES_INDEX),
                 contents.allClassesLabel));
         if (!configuration.packages.isEmpty()) {
-            contentTree.addContent(Contents.SPACE);
-            contentTree.addContent(links.createLink(pathToRoot.resolve(DocPaths.ALLPACKAGES_INDEX),
+            contentTree.add(Contents.SPACE);
+            contentTree.add(links.createLink(pathToRoot.resolve(DocPaths.ALLPACKAGES_INDEX),
                     contents.allPackagesLabel));
     }
 }

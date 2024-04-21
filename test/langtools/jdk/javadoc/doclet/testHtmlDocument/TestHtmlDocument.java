@@ -75,31 +75,31 @@ public class TestHtmlDocument extends JavadocTester {
         HtmlTree title = new HtmlTree(HtmlTag.TITLE);
         // String content within the document
         StringContent titleContent = new StringContent("Markup test");
-        title.addContent(titleContent);
-        head.addContent(title);
+        title.add(titleContent);
+        head.add(title);
         // Test META tag
         HtmlTree meta = new HtmlTree(HtmlTag.META);
-        meta.addAttr(HtmlAttr.NAME, "keywords");
-        meta.addAttr(HtmlAttr.CONTENT, "testContent");
-        head.addContent(meta);
+        meta.put(HtmlAttr.NAME, "keywords");
+        meta.put(HtmlAttr.CONTENT, "testContent");
+        head.add(meta);
         // Test invalid META tag
         HtmlTree invmeta = new HtmlTree(HtmlTag.META);
-        head.addContent(invmeta);
+        head.add(invmeta);
         // Test LINK tag
         HtmlTree link = new HtmlTree(HtmlTag.LINK);
-        link.addAttr(HtmlAttr.REL, "testRel");
-        link.addAttr(HtmlAttr.HREF, "testLink.html");
-        head.addContent(link);
+        link.put(HtmlAttr.REL, "testRel");
+        link.put(HtmlAttr.HREF, "testLink.html");
+        head.add(link);
         // Test invalid LINK tag
         HtmlTree invlink = new HtmlTree(HtmlTag.LINK);
-        head.addContent(invlink);
-        html.addContent(head);
+        head.add(invlink);
+        html.add(head);
         // Comment within the document
         Comment bodyMarker = new Comment("======== START OF BODY ========");
-        html.addContent(bodyMarker);
+        html.add(bodyMarker);
         HtmlTree body = new HtmlTree(HtmlTag.BODY);
         Comment pMarker = new Comment("======== START OF PARAGRAPH ========");
-        body.addContent(pMarker);
+        body.add(pMarker);
         HtmlTree p = new HtmlTree(HtmlTag.P);
         StringContent bodyContent = new StringContent(
                 "This document is generated from sample source code and HTML " +

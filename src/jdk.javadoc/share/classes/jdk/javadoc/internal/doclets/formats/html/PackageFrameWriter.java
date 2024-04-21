@@ -183,7 +183,7 @@ public class PackageFrameWriter extends HtmlDocletWriter {
                 if (!printedHeader) {
                     Content heading = HtmlTree.HEADING(HtmlConstants.CONTENT_HEADING,
                                                        true, labelContent);
-                    htmlTree.addContent(heading);
+                    htmlTree.add(heading);
                     printedHeader = true;
                 }
                 Content arr_i_name = new StringContent(utils.getSimpleName(typeElement));

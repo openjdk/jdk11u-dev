@@ -166,14 +166,14 @@ public class AllClassesIndexWriter extends HtmlDocletWriter {
         Content pHeading = HtmlTree.HEADING(HtmlConstants.TITLE_HEADING, true,
                 HtmlStyle.title, titleContent);
         Content headerDiv = HtmlTree.DIV(HtmlStyle.header, pHeading);
-        content.addContent(headerDiv);
+        content.add(headerDiv);
         if (!table.isEmpty()) {
             HtmlTree li = HtmlTree.LI(HtmlStyle.blockList, table.toContent());
             HtmlTree ul = HtmlTree.UL(HtmlStyle.blockList, li);
             HtmlTree div = new HtmlTree(HtmlTag.DIV);
             div.setStyle(HtmlStyle.allClassesContainer);
-            div.addContent(ul);
-            content.addContent(div);
+            div.add(ul);
+            content.add(div);
             if (table.needsScript()) {
                 getMainBodyScript().append(table.getScript());
             }
@@ -192,7 +192,7 @@ public class AllClassesIndexWriter extends HtmlDocletWriter {
                 configuration, LinkInfoImpl.Kind.INDEX, klass));
         ContentBuilder description = new ContentBuilder();
         if (utils.isDeprecated(klass)) {
-            description.addContent(getDeprecatedPhrase(klass));
+            description.add(getDeprecatedPhrase(klass));
             List<? extends DocTree> tags = utils.getDeprecatedTrees(klass);
             if (!tags.isEmpty()) {
                 addSummaryDeprecatedComment(klass, tags.get(0), description);

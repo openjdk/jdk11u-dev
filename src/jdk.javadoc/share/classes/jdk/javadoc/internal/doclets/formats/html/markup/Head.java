@@ -324,13 +324,13 @@ public class Head {
     }
 
     private void addStylesheet(HtmlTree tree, DocPath stylesheet) {
-        tree.addContent(HtmlTree.LINK("stylesheet", "text/css",
+        tree.add(HtmlTree.LINK("stylesheet", "text/css",
                 pathToRoot.resolve(stylesheet).getPath(), "Style"));
     }
 
     private void addScripts(HtmlTree tree) {
         if (addDefaultScript) {
-            tree.addContent(HtmlTree.SCRIPT(pathToRoot.resolve(DocPaths.JAVASCRIPT).getPath()));
+            tree.add(HtmlTree.SCRIPT(pathToRoot.resolve(DocPaths.JAVASCRIPT).getPath()));
         }
         if (index) {
             if (pathToRoot != null && mainBodyScript != null) {

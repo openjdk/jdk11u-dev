@@ -289,7 +289,7 @@ public class ClassUseWriter extends SubWriterHolderWriter {
             addPackageAnnotationList(ul);
         }
         addClassList(ul);
-        contentTree.addContent(ul);
+        contentTree.add(ul);
     }
 
     /**
@@ -311,7 +311,7 @@ public class ClassUseWriter extends SubWriterHolderWriter {
             addPackageUse(pkg, table);
         }
         Content li = HtmlTree.LI(HtmlStyle.blockList, table.toContent());
-        contentTree.addContent(li);
+        contentTree.add(li);
     }
 
     /**
@@ -341,7 +341,7 @@ public class ClassUseWriter extends SubWriterHolderWriter {
             table.addRow(getPackageLink(pkg), summary);
         }
         Content li = HtmlTree.LI(HtmlStyle.blockList, table.toContent());
-        contentTree.addContent(li);
+        contentTree.add(li);
     }
 
     /**

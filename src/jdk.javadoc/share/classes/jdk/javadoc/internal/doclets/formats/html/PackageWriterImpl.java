@@ -169,14 +169,14 @@ public class PackageWriterImpl extends HtmlDocletWriter
             HtmlTree deprDiv = new HtmlTree(HtmlTag.DIV);
             deprDiv.setStyle(HtmlStyle.deprecationBlock);
             Content deprPhrase = HtmlTree.SPAN(HtmlStyle.deprecatedLabel, getDeprecatedPhrase(packageElement));
-            deprDiv.addContent(deprPhrase);
+            deprDiv.add(deprPhrase);
             if (!deprs.isEmpty()) {
                 List<? extends DocTree> commentTags = ch.getDescription(configuration, deprs.get(0));
                 if (!commentTags.isEmpty()) {
                     addInlineDeprecatedComment(packageElement, deprs.get(0), deprDiv);
                 }
             }
-            div.addContent(deprDiv);
+            div.add(deprDiv);
         }
     }
 
@@ -267,7 +267,7 @@ public class PackageWriterImpl extends HtmlDocletWriter
                         configuration, LinkInfoImpl.Kind.PACKAGE, klass));
                 ContentBuilder description = new ContentBuilder();
                 if (utils.isDeprecated(klass)) {
-                    description.addContent(getDeprecatedPhrase(klass));
+                    description.add(getDeprecatedPhrase(klass));
                     List<? extends DocTree> tags = utils.getDeprecatedTrees(klass);
                     if (!tags.isEmpty()) {
                         addSummaryDeprecatedComment(klass, tags.get(0), description);
@@ -278,7 +278,7 @@ public class PackageWriterImpl extends HtmlDocletWriter
                 table.addRow(classLink, description);
             }
             Content li = HtmlTree.LI(HtmlStyle.blockList, table.toContent());
-            summaryContentTree.addContent(li);
+            summaryContentTree.add(li);
         }
     }
 

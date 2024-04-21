@@ -137,8 +137,8 @@ public class SerializedFormWriterImpl extends SubWriterHolderWriter
     public Content getPackageHeader(String packageName) {
         Content heading = HtmlTree.HEADING(HtmlConstants.PACKAGE_HEADING, true,
                 contents.packageLabel);
-        heading.addContent(Contents.SPACE);
-        heading.addContent(packageName);
+        heading.add(Contents.SPACE);
+        heading.add(packageName);
         return heading;
     }
 
@@ -215,9 +215,9 @@ public class SerializedFormWriterImpl extends SubWriterHolderWriter
     public void addSerialUIDInfo(String header, String serialUID,
             Content serialUidTree) {
         Content headerContent = new StringContent(header);
-        serialUidTree.addContent(HtmlTree.DT(headerContent));
+        serialUidTree.add(HtmlTree.DT(headerContent));
         Content serialContent = new StringContent(serialUID);
-        serialUidTree.addContent(HtmlTree.DD(serialContent));
+        serialUidTree.add(HtmlTree.DD(serialContent));
     }
 
     /**

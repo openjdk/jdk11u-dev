@@ -170,7 +170,7 @@ public class SerializedFormBuilder extends AbstractBuilder {
 
             buildPackageSerializedForm(serializedSummariesTree);
         }
-        serializedTree.addContent(writer.getSerializedContent(
+        serializedTree.add(writer.getSerializedContent(
                 serializedSummariesTree));
     }
 
@@ -205,7 +205,7 @@ public class SerializedFormBuilder extends AbstractBuilder {
      * @param packageSerializedTree content tree to which the documentation will be added
      */
     protected void buildPackageHeader(Content packageSerializedTree) {
-        packageSerializedTree.addContent(writer.getPackageHeader(
+        packageSerializedTree.add(writer.getPackageHeader(
                 utils.getPackageName(currentPackage)));
     }
 
@@ -232,10 +232,10 @@ public class SerializedFormBuilder extends AbstractBuilder {
                 buildSerialUIDInfo(classTree);
                 buildClassContent(classTree);
 
-                classSerializedTree.addContent(classTree);
+                classSerializedTree.add(classTree);
             }
         }
-        packageSerializedTree.addContent(classSerializedTree);
+        packageSerializedTree.add(classSerializedTree);
     }
 
     /**
@@ -254,7 +254,7 @@ public class SerializedFormBuilder extends AbstractBuilder {
                 break;
             }
         }
-        classTree.addContent(serialUidTree);
+        classTree.add(serialUidTree);
     }
 
     /**
@@ -270,7 +270,7 @@ public class SerializedFormBuilder extends AbstractBuilder {
         buildFieldHeader(classContentTree);
         buildSerializableFields(classContentTree);
 
-        classTree.addContent(classContentTree);
+        classTree.add(classContentTree);
     }
 
     /**
@@ -511,7 +511,7 @@ public class SerializedFormBuilder extends AbstractBuilder {
             fieldWriter.addMemberHeader(te, fieldType, "",
                     tag.getName().getName().toString(), fieldsContentTree);
             fieldWriter.addMemberDescription(field, tag, fieldsContentTree);
-            serializableFieldsTree.addContent(fieldsContentTree);
+            serializableFieldsTree.add(fieldsContentTree);
         }
     }
 

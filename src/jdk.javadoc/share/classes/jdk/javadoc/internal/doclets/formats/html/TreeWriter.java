@@ -153,7 +153,7 @@ public class TreeWriter extends AbstractTreeWriter {
         if (!classesOnly) {
             Content span = HtmlTree.SPAN(HtmlStyle.packageHierarchyLabel,
                     contents.packageHierarchies);
-            contentTree.addContent(span);
+            contentTree.add(span);
             HtmlTree ul = new HtmlTree(HtmlTag.UL);
             ul.setStyle(HtmlStyle.horizontal);
             int i = 0;
@@ -170,12 +170,12 @@ public class TreeWriter extends AbstractTreeWriter {
                 Content li = HtmlTree.LI(links.createLink(link,
                         new StringContent(utils.getPackageName(pkg))));
                 if (i < packages.size() - 1) {
-                    li.addContent(", ");
+                    li.add(", ");
                 }
-                ul.addContent(li);
+                ul.add(li);
                 i++;
             }
-            contentTree.addContent(ul);
+            contentTree.add(ul);
         }
     }
 

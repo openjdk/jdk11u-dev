@@ -141,6 +141,6 @@ public class AllPackagesIndexWriter extends HtmlDocletWriter {
             }
         }
         HtmlTree li = HtmlTree.LI(HtmlStyle.blockList, table.toContent());
-        content.addContent(HtmlTree.UL(HtmlStyle.blockList, li));
+        content.add(HtmlTree.UL(HtmlStyle.blockList, li));
     }
 }

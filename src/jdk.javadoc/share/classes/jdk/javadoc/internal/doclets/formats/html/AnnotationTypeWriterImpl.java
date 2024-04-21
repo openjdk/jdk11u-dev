@@ -190,23 +190,23 @@ public class AnnotationTypeWriterImpl extends SubWriterHolderWriter
     @Override
     public void addAnnotationTypeSignature(String modifiers, Content annotationInfoTree) {
         Content hr = new HtmlTree(HtmlTag.HR);
-        annotationInfoTree.addContent(hr);
+        annotationInfoTree.add(hr);
         Content pre = new HtmlTree(HtmlTag.PRE);
         addAnnotationInfo(annotationType, pre);
-        pre.addContent(modifiers);
+        pre.add(modifiers);
         LinkInfoImpl linkInfo = new LinkInfoImpl(configuration,
                 LinkInfoImpl.Kind.CLASS_SIGNATURE, annotationType);
         Content annotationName = new StringContent(utils.getSimpleName(annotationType));
         Content parameterLinks = getTypeParameterLinks(linkInfo);
         if (configuration.linksource) {
             addSrcLink(annotationType, annotationName, pre);
-            pre.addContent(parameterLinks);
+            pre.add(parameterLinks);
         } else {
             Content span = HtmlTree.SPAN(HtmlStyle.memberNameLabel, annotationName);
-            span.addContent(parameterLinks);
-            pre.addContent(span);
+            span.add(parameterLinks);
+            pre.add(span);
         }
-        annotationInfoTree.addContent(pre);
+        annotationInfoTree.add(pre);
     }
 
     /**
@@ -248,7 +248,7 @@ public class AnnotationTypeWriterImpl extends SubWriterHolderWriter
                     addInlineDeprecatedComment(annotationType, deprs.get(0), div);
                 }
             }
-            annotationInfoTree.addContent(div);
+            annotationInfoTree.add(div);
         }
     }
 

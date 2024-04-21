@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2003, 2019, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -40,7 +40,6 @@ import javax.lang.model.element.Element;
 
 import jdk.javadoc.internal.doclets.formats.html.Contents;
 import jdk.javadoc.internal.doclets.toolkit.Content;
-import jdk.javadoc.internal.doclets.toolkit.util.DocletConstants;
 
 /**
  * A builder for HTML tables, such as the summary tables for various
@@ -406,7 +405,7 @@ public class Table {
 
         if (stripedStyles != null) {
             int rowIndex = bodyRows.size();
-            row.addAttr(HtmlAttr.CLASS, stripedStyles.get(rowIndex % 2).name());
+            row.put(HtmlAttr.CLASS, stripedStyles.get(rowIndex % 2).name());
         }
         int colIndex = 0;
         for (Content c : contents) {

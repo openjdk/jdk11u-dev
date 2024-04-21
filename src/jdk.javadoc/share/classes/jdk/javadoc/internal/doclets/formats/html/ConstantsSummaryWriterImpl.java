@@ -145,13 +145,13 @@ public class ConstantsSummaryWriterImpl extends HtmlDocletWriter implements Cons
         } else {
             String parsedPackageName = utils.parsePackageName(pkg);
             Content packageNameContent = getPackageLabel(parsedPackageName);
-            packageNameContent.addContent(".*");
+            packageNameContent.add(".*");
             link = links.createLink(DocLink.fragment(parsedPackageName),
                     packageNameContent, "", "");
             PackageElement abbrevPkg = configuration.workArounds.getAbbreviatedPackageElement(pkg);
             printedPackageHeaders.add(abbrevPkg);
         }
-        contentListTree.addContent(HtmlTree.LI(link));
+        contentListTree.add(HtmlTree.LI(link));
     }
 
     /**
@@ -255,10 +255,10 @@ public class ConstantsSummaryWriterImpl extends HtmlDocletWriter implements Cons
         PackageElement enclosingPackage  = utils.containingPackage(typeElement);
         Content caption = new ContentBuilder();
         if (!enclosingPackage.isUnnamed()) {
-            caption.addContent(enclosingPackage.getQualifiedName());
-            caption.addContent(".");
+            caption.add(enclosingPackage.getQualifiedName());
+            caption.add(".");
         }
-        caption.addContent(classlink);
+        caption.add(classlink);
 
         Table table = new Table(configuration.htmlVersion, HtmlStyle.constantsSummary)
                 .setSummary(constantsTableSummary)
@@ -271,7 +271,7 @@ public class ConstantsSummaryWriterImpl extends HtmlDocletWriter implements Cons
             table.addRow(getTypeColumn(field), getNameColumn(field), getValue(field));
         }
         Content li = HtmlTree.LI(HtmlStyle.blockList, table.toContent());
-        classConstantTree.addContent(li);
+        classConstantTree.add(li);
     }
 
     /**
@@ -284,17 +284,17 @@ public class ConstantsSummaryWriterImpl extends HtmlDocletWriter implements Cons
         Content anchor = links.createAnchor(
                 currentTypeElement.getQualifiedName() + "." + member.getSimpleName());
         Content typeContent = new ContentBuilder();
-        typeContent.addContent(anchor);
+        typeContent.add(anchor);
         Content code = new HtmlTree(HtmlTag.CODE);
         for (Modifier mod : member.getModifiers()) {
             Content modifier = new StringContent(mod.toString());
-            code.addContent(modifier);
-            code.addContent(Contents.SPACE);
+            code.add(modifier);
+            code.add(Contents.SPACE);
         }
         Content type = getLink(new LinkInfoImpl(configuration,
                 LinkInfoImpl.Kind.CONSTANT_SUMMARY, member.asType()));
-        code.addContent(type);
-        typeContent.addContent(code);
+        code.add(type);
+        typeContent.add(code);
         return typeContent;
     }
 

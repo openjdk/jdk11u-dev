@@ -142,8 +142,8 @@ public class AnnotationTypeRequiredMemberWriterImpl extends AbstractMemberWriter
         Content link =
                 writer.getLink(new LinkInfoImpl(configuration,
                         LinkInfoImpl.Kind.MEMBER, getType(member)));
-        pre.addContent(link);
-        pre.addContent(Contents.SPACE);
+        pre.add(link);
+        pre.add(Contents.SPACE);
         if (configuration.linksource) {
             Content memberName = new StringContent(name(member));
             writer.addSrcLink(member, memberName, pre);
@@ -199,7 +199,7 @@ public class AnnotationTypeRequiredMemberWriterImpl extends AbstractMemberWriter
     public void addSummaryLabel(Content memberTree) {
         Content label = HtmlTree.HEADING(HtmlConstants.SUMMARY_HEADING,
                 contents.annotateTypeRequiredMemberSummaryLabel);
-        memberTree.addContent(label);
+        memberTree.add(label);
     }
 
     /**
@@ -250,7 +250,7 @@ public class AnnotationTypeRequiredMemberWriterImpl extends AbstractMemberWriter
      * {@inheritDoc}
      */
     public void addSummaryAnchor(TypeElement typeElement, Content memberTree) {
-        memberTree.addContent(links.createAnchor(
+        memberTree.add(links.createAnchor(
                 SectionName.ANNOTATION_TYPE_REQUIRED_ELEMENT_SUMMARY));
     }
 
@@ -274,7 +274,7 @@ public class AnnotationTypeRequiredMemberWriterImpl extends AbstractMemberWriter
         Content memberLink = HtmlTree.SPAN(HtmlStyle.memberNameLink,
                 writer.getDocLink(context, member, name(member), false));
         Content code = HtmlTree.CODE(memberLink);
-        tdSummary.addContent(code);
+        tdSummary.add(code);
     }
 
     /**

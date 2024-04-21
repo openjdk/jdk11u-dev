@@ -187,7 +187,7 @@ public class HtmlSerialFieldWriter extends FieldWriterImpl
         if (!description.isEmpty()) {
             Content serialFieldContent = new RawHtml(ch.getText(description));
             Content div = HtmlTree.DIV(HtmlStyle.block, serialFieldContent);
-            contentTree.addContent(div);
+            contentTree.add(div);
         }
     }
 
@@ -203,8 +203,8 @@ public class HtmlSerialFieldWriter extends FieldWriterImpl
                 configuration.tagletManager.getBlockTaglets(field),
                 writer.getTagletWriterInstance(false), tagContent);
         Content dlTags = new HtmlTree(HtmlTag.DL);
-        dlTags.addContent(tagContent);
-        contentTree.addContent(dlTags);  // TODO: what if empty?
+        dlTags.add(tagContent);
+        contentTree.add(dlTags);  // TODO: what if empty?
     }
 
     /**

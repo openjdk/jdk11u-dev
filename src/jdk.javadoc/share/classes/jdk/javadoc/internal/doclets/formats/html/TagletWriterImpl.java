@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2003, 2019, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -28,8 +28,6 @@ package jdk.javadoc.internal.doclets.formats.html;
 import java.util.List;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ModuleElement;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
@@ -179,29 +177,29 @@ public class TagletWriterImpl extends TagletWriter {
         List<? extends DocTree> deprs = utils.getBlockTags(element, DocTree.Kind.DEPRECATED);
         if (utils.isTypeElement(element)) {
             if (utils.isDeprecated(element)) {
-                result.addContent(HtmlTree.SPAN(HtmlStyle.deprecatedLabel,
+                result.add(HtmlTree.SPAN(HtmlStyle.deprecatedLabel,
                         htmlWriter.getDeprecatedPhrase(element)));
                 if (!deprs.isEmpty()) {
                     List<? extends DocTree> commentTags = ch.getDescription(configuration, deprs.get(0));
                     if (!commentTags.isEmpty()) {
-                        result.addContent(commentTagsToOutput(null, element, commentTags, false));
+                        result.add(commentTagsToOutput(null, element, commentTags, false));
                     }
                 }
             }
         } else {
             if (utils.isDeprecated(element)) {
-                result.addContent(HtmlTree.SPAN(HtmlStyle.deprecatedLabel,
+                result.add(HtmlTree.SPAN(HtmlStyle.deprecatedLabel,
                         htmlWriter.getDeprecatedPhrase(element)));
                 if (!deprs.isEmpty()) {
                     List<? extends DocTree> bodyTags = ch.getBody(configuration, deprs.get(0));
                     Content body = commentTagsToOutput(null, element, bodyTags, false);
                     if (!body.isEmpty())
-                        result.addContent(HtmlTree.DIV(HtmlStyle.deprecationComment, body));
+                        result.add(HtmlTree.DIV(HtmlStyle.deprecationComment, body));
                 }
             } else {
                 Element ee = utils.getEnclosingTypeElement(element);
                 if (utils.isDeprecated(ee)) {
-                    result.addContent(HtmlTree.SPAN(HtmlStyle.deprecatedLabel,
+                    result.add(HtmlTree.SPAN(HtmlStyle.deprecatedLabel,
                         htmlWriter.getDeprecatedPhrase(ee)));
                 }
             }
@@ -247,10 +245,10 @@ public class TagletWriterImpl extends TagletWriter {
     public Content propertyTagOutput(Element element, DocTree tag, String prefix) {
         Content body = new ContentBuilder();
         CommentHelper ch = utils.getCommentHelper(element);
-        body.addContent(new RawHtml(prefix));
-        body.addContent(" ");
-        body.addContent(HtmlTree.CODE(new RawHtml(ch.getText(tag))));
-        body.addContent(".");
+        body.add(new RawHtml(prefix));
+        body.add(" ");
+        body.add(HtmlTree.CODE(new RawHtml(ch.getText(tag))));
+        body.add(".");
         Content result = HtmlTree.P(body);
         return result;
     }
@@ -275,7 +273,7 @@ public class TagletWriterImpl extends TagletWriter {
         ContentBuilder body = new ContentBuilder();
         for (DocTree dt : seeTags) {
             appendSeparatorIfNotEmpty(body);
-            body.addContent(htmlWriter.seeTagToContent(holder, dt));
+            body.add(htmlWriter.seeTagToContent(holder, dt));
         }
         if (utils.isVariableElement(holder) && ((VariableElement)holder).getConstantValue() != null &&
                 htmlWriter instanceof ClassWriterImpl) {

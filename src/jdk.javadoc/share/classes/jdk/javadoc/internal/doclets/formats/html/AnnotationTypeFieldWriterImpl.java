@@ -137,8 +137,8 @@ public class AnnotationTypeFieldWriterImpl extends AbstractMemberWriter
         Content link =
                 writer.getLink(new LinkInfoImpl(configuration,
                         LinkInfoImpl.Kind.MEMBER, getType(member)));
-        pre.addContent(link);
-        pre.addContent(Contents.SPACE);
+        pre.add(link);
+        pre.add(Contents.SPACE);
         if (configuration.linksource) {
             Content memberName = new StringContent(name(member));
             writer.addSrcLink(member, memberName, pre);
@@ -194,7 +194,7 @@ public class AnnotationTypeFieldWriterImpl extends AbstractMemberWriter
     public void addSummaryLabel(Content memberTree) {
         Content label = HtmlTree.HEADING(HtmlConstants.SUMMARY_HEADING,
                 contents.fieldSummaryLabel);
-        memberTree.addContent(label);
+        memberTree.add(label);
     }
 
     /**
@@ -230,7 +230,7 @@ public class AnnotationTypeFieldWriterImpl extends AbstractMemberWriter
      */
     @Override
     public void addSummaryAnchor(TypeElement typeElement, Content memberTree) {
-        memberTree.addContent(links.createAnchor(
+        memberTree.add(links.createAnchor(
                 SectionName.ANNOTATION_TYPE_FIELD_SUMMARY));
     }
 
@@ -257,7 +257,7 @@ public class AnnotationTypeFieldWriterImpl extends AbstractMemberWriter
         Content memberLink = HtmlTree.SPAN(HtmlStyle.memberNameLink,
                 writer.getDocLink(context, member, name(member), false));
         Content code = HtmlTree.CODE(memberLink);
-        tdSummary.addContent(code);
+        tdSummary.add(code);
     }
 
     /**

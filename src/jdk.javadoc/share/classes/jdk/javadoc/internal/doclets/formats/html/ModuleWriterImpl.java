@@ -531,7 +531,7 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
                 Table table = getTable3(caption, tableSummary, HtmlStyle.requiresSummary,
                             requiresTableHeader);
                 addModulesList(requires, table);
-                li.addContent(table.toContent());
+                li.add(table.toContent());
             }
             // Display indirect modules table in both "api" and "all" mode.
             if (display(indirectModules)) {
@@ -543,10 +543,10 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
                 Table amrTable = getTable3(amrCaption, amrTableSummary, HtmlStyle.requiresSummary,
                             requiresTableHeader);
                 addModulesList(indirectModules, amrTable);
-                li.addContent(amrTable.toContent());
+                li.add(amrTable.toContent());
             }
             HtmlTree ul = HtmlTree.UL(HtmlStyle.blockList, li);
-            summaryContentTree.addContent(ul);
+            summaryContentTree.add(ul);
         }
     }
 
@@ -692,7 +692,7 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
             table.addRow(pkg, row);
         }
 
-        li.addContent(table.toContent());
+        li.add(table.toContent());
         if (table.needsScript()) {
             mainBodyScript.append(table.getScript());
         }
@@ -722,9 +722,9 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
             Content list = new ContentBuilder();
             for (ModuleElement m : modules) {
                 if (!list.isEmpty()) {
-                    list.addContent(new StringContent(", "));
+                    list.add(new StringContent(", "));
                 }
-                list.addContent(getModuleLink(m, new StringContent(m.getQualifiedName())));
+                list.add(getModuleLink(m, new StringContent(m.getQualifiedName())));
             }
             return list;
         }
@@ -744,8 +744,8 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
             Content list = new ContentBuilder();
             String sep = "";
             for (PackageElement pkg : pkgList) {
-                list.addContent(sep);
-                list.addContent(getPackageLink(pkg, new StringContent(utils.getPackageName(pkg))));
+                list.add(sep);
+                list.add(getPackageLink(pkg, new StringContent(utils.getPackageName(pkg))));
                 sep = " ";
             }
             table.addRow(moduleLinkContent, list);
@@ -777,7 +777,7 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
                         usesProvidesTableHeader);
                 addProvidesList(table);
                 if (!table.isEmpty()) {
-                    li.addContent(table.toContent());
+                    li.add(table.toContent());
                 }
             }
             if (haveUses){
@@ -789,11 +789,11 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
                         usesProvidesTableHeader);
                 addUsesList(table);
                 if (!table.isEmpty()) {
-                    li.addContent(table.toContent());
+                    li.add(table.toContent());
                 }
             }
             HtmlTree ul = HtmlTree.UL(HtmlStyle.blockList, li);
-            summaryContentTree.addContent(ul);
+            summaryContentTree.add(ul);
         }
     }
 
@@ -814,12 +814,12 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
             if (display(usesTrees)) {
                 description = usesTrees.get(t);
                 if (description != null && !description.isEmpty()) {
-                    summary.addContent(HtmlTree.DIV(HtmlStyle.block, description));
+                    summary.add(HtmlTree.DIV(HtmlStyle.block, description));
                 } else {
                     addSummaryComment(t, summary);
                 }
             } else {
-                summary.addContent(Contents.SPACE);
+                summary.add(Contents.SPACE);
             }
             table.addRow(typeLinkContent, summary);
         }
@@ -843,26 +843,26 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
             Content desc = new ContentBuilder();
             if (display(providesTrees)) {
                 description = providesTrees.get(srv);
-                desc.addContent((description != null && !description.isEmpty())
+                desc.add((description != null && !description.isEmpty())
                         ? HtmlTree.DIV(HtmlStyle.block, description)
                         : Contents.SPACE);
             } else {
-                desc.addContent(Contents.SPACE);
+                desc.add(Contents.SPACE);
                 }
             // Only display the implementation details in the "all" mode.
             if (moduleMode == ModuleMode.ALL && !implSet.isEmpty()) {
-                desc.addContent(new HtmlTree(HtmlTag.BR));
-                desc.addContent("(");
+                desc.add(new HtmlTree(HtmlTag.BR));
+                desc.add("(");
                 HtmlTree implSpan = HtmlTree.SPAN(HtmlStyle.implementationLabel, contents.implementation);
-                desc.addContent(implSpan);
-                desc.addContent(Contents.SPACE);
+                desc.add(implSpan);
+                desc.add(Contents.SPACE);
                 String sep = "";
                 for (TypeElement impl : implSet) {
-                    desc.addContent(sep);
-                    desc.addContent(getLink(new LinkInfoImpl(configuration, LinkInfoImpl.Kind.PACKAGE, impl)));
+                    desc.add(sep);
+                    desc.add(getLink(new LinkInfoImpl(configuration, LinkInfoImpl.Kind.PACKAGE, impl)));
                     sep = ", ";
                 }
-                desc.addContent(")");
+                desc.add(")");
             }
             table.addRow(srvLinkContent, desc);
         }
@@ -880,14 +880,14 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
             HtmlTree deprDiv = new HtmlTree(HtmlTag.DIV);
             deprDiv.setStyle(HtmlStyle.deprecationBlock);
             Content deprPhrase = HtmlTree.SPAN(HtmlStyle.deprecatedLabel, getDeprecatedPhrase(mdle));
-            deprDiv.addContent(deprPhrase);
+            deprDiv.add(deprPhrase);
             if (!deprs.isEmpty()) {
                 List<? extends DocTree> commentTags = ch.getDescription(configuration, deprs.get(0));
                 if (!commentTags.isEmpty()) {
                     addInlineDeprecatedComment(mdle, deprs.get(0), deprDiv);
                 }
             }
-            div.addContent(deprDiv);
+            div.add(deprDiv);
         }
     }
 
@@ -975,7 +975,7 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
             HtmlTree deprDiv = new HtmlTree(HtmlTag.DIV);
             deprDiv.setStyle(HtmlStyle.deprecationBlock);
             Content deprPhrase = HtmlTree.SPAN(HtmlStyle.deprecatedLabel, getDeprecatedPhrase(pkg));
-            deprDiv.addContent(deprPhrase);
+            deprDiv.add(deprPhrase);
             if (!deprs.isEmpty()) {
                 CommentHelper ch = utils.getCommentHelper(pkg);
                 List<? extends DocTree> commentTags = ch.getDescription(configuration, deprs.get(0));
@@ -983,7 +983,7 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
                     addInlineDeprecatedComment(pkg, deprs.get(0), deprDiv);
                 }
             }
-            li.addContent(deprDiv);
+            li.add(deprDiv);
         }
     }
 }

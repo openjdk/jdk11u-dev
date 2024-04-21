@@ -142,17 +142,17 @@ public class SingleIndexWriter extends AbstractIndexWriter {
     protected void addLinksForIndexes(Content contentTree) {
         for (Object ch : elements) {
             String unicode = ch.toString();
-            contentTree.addContent(
+            contentTree.add(
                     links.createLink(getNameForIndex(unicode),
                             new StringContent(unicode)));
-            contentTree.addContent(Contents.SPACE);
+            contentTree.add(Contents.SPACE);
         }
-        contentTree.addContent(new HtmlTree(HtmlTag.BR));
-        contentTree.addContent(links.createLink(DocPaths.ALLCLASSES_INDEX,
+        contentTree.add(new HtmlTree(HtmlTag.BR));
+        contentTree.add(links.createLink(DocPaths.ALLCLASSES_INDEX,
                 contents.allClassesLabel));
         if (!configuration.packages.isEmpty()) {
-            contentTree.addContent(Contents.SPACE);
-            contentTree.addContent(links.createLink(DocPaths.ALLPACKAGES_INDEX,
+            contentTree.add(Contents.SPACE);
+            contentTree.add(links.createLink(DocPaths.ALLPACKAGES_INDEX,
                     contents.allPackagesLabel));
     }
 }
