@@ -195,7 +195,7 @@ public class SourceToHTMLConverter {
             }
             addBlankLines(pre);
             Content div = HtmlTree.DIV(HtmlStyle.sourceContainer, pre);
-            body.addContent((configuration.allowTag(HtmlTag.MAIN)) ? HtmlTree.MAIN(div) : div);
+            body.add((configuration.allowTag(HtmlTag.MAIN)) ? HtmlTree.MAIN(div) : div);
             writeToFile(body, outputdir.resolve(configuration.docPaths.forClass(te)));
         } catch (IOException e) {
             String message = resources.getText("doclet.exception.read.file", fo.getName());

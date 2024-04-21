@@ -120,8 +120,8 @@ public class HtmlSerialMethodWriter extends MethodWriterImpl implements
      * @param methodsContentTree the content tree to which the member header will be added
      */
     public void addMemberHeader(ExecutableElement member, Content methodsContentTree) {
-        methodsContentTree.addContent(getHead(member));
-        methodsContentTree.addContent(getSignature(member));
+        methodsContentTree.add(getHead(member));
+        methodsContentTree.add(getSignature(member));
     }
 
     /**

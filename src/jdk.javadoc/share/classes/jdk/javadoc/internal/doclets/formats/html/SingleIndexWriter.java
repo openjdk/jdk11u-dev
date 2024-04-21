@@ -98,9 +98,9 @@ public class SingleIndexWriter extends AbstractIndexWriter {
                 : body;
         addTop(htmlTree);
         navBar.setUserHeader(getUserHeaderFooter(true));
-        htmlTree.addContent(navBar.getContent(true));
+        htmlTree.add(navBar.getContent(true));
         if (configuration.allowTag(HtmlTag.HEADER)) {
-            body.addContent(htmlTree);
+            body.add(htmlTree);
         }
         HtmlTree divTree = new HtmlTree(HtmlTag.DIV);
         divTree.setStyle(HtmlStyle.contentContainer);
@@ -118,17 +118,17 @@ public class SingleIndexWriter extends AbstractIndexWriter {
             }
         }
         addLinksForIndexes(divTree);
-        body.addContent((configuration.allowTag(HtmlTag.MAIN))
+        body.add((configuration.allowTag(HtmlTag.MAIN))
                 ? HtmlTree.MAIN(divTree)
                 : divTree);
         if (configuration.allowTag(HtmlTag.FOOTER)) {
             htmlTree = HtmlTree.FOOTER();
         }
         navBar.setUserFooter(getUserHeaderFooter(false));
-        htmlTree.addContent(navBar.getContent(false));
+        htmlTree.add(navBar.getContent(false));
         addBottom(htmlTree);
         if (configuration.allowTag(HtmlTag.FOOTER)) {
-            body.addContent(htmlTree);
+            body.add(htmlTree);
         }
         createSearchIndexFiles();
         printHtmlDocument(null, true, body);

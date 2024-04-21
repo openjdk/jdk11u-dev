@@ -308,11 +308,11 @@ public class HtmlTree extends Content {
      */
     public static HtmlTree A(HtmlVersion htmlVersion, String attr, Content body) {
         HtmlTree htmltree = new HtmlTree(HtmlTag.A);
-        htmltree.addAttr((htmlVersion == HtmlVersion.HTML4)
+        htmltree.put((htmlVersion == HtmlVersion.HTML4)
                 ? HtmlAttr.NAME
                 : HtmlAttr.ID,
                 nullCheck(attr));
-        htmltree.addContent(nullCheck(body));
+        htmltree.add(nullCheck(body));
         return htmltree;
     }
 

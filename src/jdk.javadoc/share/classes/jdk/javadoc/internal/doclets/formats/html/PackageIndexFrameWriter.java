@@ -131,7 +131,7 @@ public class PackageIndexFrameWriter extends AbstractPackageIndexWriter {
         }
         Content heading = HtmlTree.HEADING(HtmlConstants.TITLE_HEADING, true,
                 HtmlStyle.bar, headerContent);
-        header.addContent(heading);
+        header.add(heading);
     }
 
     /**

@@ -29,6 +29,7 @@ import jdk.javadoc.internal.doclets.formats.html.markup.Head;
 import jdk.javadoc.internal.doclets.formats.html.markup.TableHeader;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,6 +69,7 @@ import com.sun.source.doctree.TextTree;
 import com.sun.source.util.SimpleDocTreeVisitor;
 
 import jdk.javadoc.internal.doclets.formats.html.markup.ContentBuilder;
+import jdk.javadoc.internal.doclets.formats.html.markup.DocType;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlDocument;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlTag;
@@ -1514,7 +1516,7 @@ public class HtmlDocletWriter {
                 @Override
                 public Boolean visitText(TextTree node, Content c) {
                     String text = node.getBody();
-                    result.addContent(new RawHtml(textCleanup(text, isLastNode, commentRemoved)));
+                    result.add(new RawHtml(textCleanup(text, isLastNode, commentRemoved)));
                     return false;
                 }
 

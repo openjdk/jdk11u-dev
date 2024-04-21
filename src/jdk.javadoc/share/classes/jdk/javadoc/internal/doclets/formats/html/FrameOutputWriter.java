@@ -25,6 +25,7 @@
 
 package jdk.javadoc.internal.doclets.formats.html;
 
+import jdk.javadoc.internal.doclets.formats.html.markup.DocType;
 import jdk.javadoc.internal.doclets.formats.html.markup.Head;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlAttr;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlDocument;
@@ -95,21 +96,21 @@ public class FrameOutputWriter extends HtmlDocletWriter {
     protected void generateFrameFile() throws DocFileIOException {
         Content frame = getFrameDetails();
         HtmlTree body = new HtmlTree(HtmlTag.BODY);
-        body.addAttr(HtmlAttr.ONLOAD, "loadFrames()");
+        body.put(HtmlAttr.ONLOAD, "loadFrames()");
         String topFilePath = configuration.topFile.getPath();
         Script script = new Script(
                 "\nif (targetPage == \"\" || targetPage == \"undefined\")\n" +
                 "     window.location.replace(")
                 .appendStringLiteral(topFilePath, '\'')
                 .append(");\n");
-        body.addContent(script.asContent());
+        body.add(script.asContent());
         Content noScript = HtmlTree.NOSCRIPT(contents.noScriptMessage);
-        body.addContent(noScript);
+        body.add(noScript);
         if (configuration.allowTag(HtmlTag.MAIN)) {
             HtmlTree main = HtmlTree.MAIN(frame);
-            body.addContent(main);
+            body.add(main);
         } else {
-            body.addContent(frame);
+            body.add(frame);
         }
         if (configuration.windowtitle.length() > 0) {
             printFramesDocument(configuration.windowtitle, body);

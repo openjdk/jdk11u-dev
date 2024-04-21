@@ -123,13 +123,13 @@ public abstract class AbstractTreeWriter extends HtmlDocletWriter {
             if (configuration.allowTag(HtmlTag.SECTION)) {
                 htmlTree = HtmlTree.SECTION(sectionHeading);
             } else {
-                div.addContent(sectionHeading);
+                div.add(sectionHeading);
                 htmlTree = div;
             }
             addLevelInfo(!utils.isInterface(firstTypeElement) ? firstTypeElement : null,
                     sset, isEnums, htmlTree);
             if (configuration.allowTag(HtmlTag.SECTION)) {
-                div.addContent(htmlTree);
+                div.add(htmlTree);
             }
         }
     }

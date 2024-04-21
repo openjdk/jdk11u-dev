@@ -322,24 +322,24 @@ public abstract class AbstractMemberWriter implements MemberSummaryWriter {
      */
     private void addModifier(Element member, Content code) {
         if (utils.isProtected(member)) {
-            code.addContent("protected ");
+            code.add("protected ");
         } else if (utils.isPrivate(member)) {
-            code.addContent("private ");
+            code.add("private ");
         } else if (!utils.isPublic(member)) { // Package private
-            code.addContent(configuration.getText("doclet.Package_private"));
-            code.addContent(" ");
+            code.add(configuration.getText("doclet.Package_private"));
+            code.add(" ");
         }
         boolean isAnnotatedTypeElement = utils.isAnnotationType(member.getEnclosingElement());
         if (!isAnnotatedTypeElement && utils.isMethod(member)) {
             if (!utils.isInterface(member.getEnclosingElement()) && utils.isAbstract(member)) {
-                code.addContent("abstract ");
+                code.add("abstract ");
             }
             if (utils.isDefault(member)) {
-                code.addContent("default ");
+                code.add("default ");
             }
         }
         if (utils.isStatic(member)) {
-            code.addContent("static ");
+            code.add("static ");
         }
     }
 

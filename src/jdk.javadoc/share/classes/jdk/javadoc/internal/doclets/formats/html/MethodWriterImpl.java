@@ -87,7 +87,7 @@ public class MethodWriterImpl extends AbstractExecutableMemberWriter
      */
     @Override
     public Content getMemberSummaryHeader(TypeElement typeElement, Content memberSummaryTree) {
-        memberSummaryTree.addContent(HtmlConstants.START_OF_METHOD_SUMMARY);
+        memberSummaryTree.add(HtmlConstants.START_OF_METHOD_SUMMARY);
         Content memberTree = writer.getMemberTreeHeader();
         writer.addSummaryHeader(this, typeElement, memberTree);
         return memberTree;
@@ -106,12 +106,12 @@ public class MethodWriterImpl extends AbstractExecutableMemberWriter
      */
     @Override
     public Content getMethodDetailsTreeHeader(TypeElement typeElement, Content memberDetailsTree) {
-        memberDetailsTree.addContent(HtmlConstants.START_OF_METHOD_DETAILS);
+        memberDetailsTree.add(HtmlConstants.START_OF_METHOD_DETAILS);
         Content methodDetailsTree = writer.getMemberTreeHeader();
-        methodDetailsTree.addContent(links.createAnchor(SectionName.METHOD_DETAIL));
+        methodDetailsTree.add(links.createAnchor(SectionName.METHOD_DETAIL));
         Content heading = HtmlTree.HEADING(HtmlConstants.DETAILS_HEADING,
                 contents.methodDetailLabel);
-        methodDetailsTree.addContent(heading);
+        methodDetailsTree.add(heading);
         return methodDetailsTree;
     }
 
@@ -122,13 +122,13 @@ public class MethodWriterImpl extends AbstractExecutableMemberWriter
     public Content getMethodDocTreeHeader(ExecutableElement method, Content methodDetailsTree) {
         String erasureAnchor;
         if ((erasureAnchor = getErasureAnchor(method)) != null) {
-            methodDetailsTree.addContent(links.createAnchor((erasureAnchor)));
+            methodDetailsTree.add(links.createAnchor((erasureAnchor)));
         }
-        methodDetailsTree.addContent(links.createAnchor(writer.getAnchor(method)));
+        methodDetailsTree.add(links.createAnchor(writer.getAnchor(method)));
         Content methodDocTree = writer.getMemberTreeHeader();
         Content heading = new HtmlTree(HtmlConstants.MEMBER_HEADING);
-        heading.addContent(name(method));
-        methodDocTree.addContent(heading);
+        heading.add(name(method));
+        methodDocTree.add(heading);
         return methodDocTree;
     }
 

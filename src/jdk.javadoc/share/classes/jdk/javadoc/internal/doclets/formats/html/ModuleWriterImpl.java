@@ -206,27 +206,27 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
                 || display(indirectOpenPackages));
         navBar.setDisplaySummaryServicesLink(displayServices(uses, usesTrees) || displayServices(provides.keySet(), providesTrees));
         navBar.setUserHeader(getUserHeaderFooter(true));
-        htmlTree.addContent(navBar.getContent(true));
+        htmlTree.add(navBar.getContent(true));
         if (configuration.allowTag(HtmlTag.HEADER)) {
-            bodyTree.addContent(htmlTree);
+            bodyTree.add(htmlTree);
         }
         HtmlTree div = new HtmlTree(HtmlTag.DIV);
         div.setStyle(HtmlStyle.header);
         Content annotationContent = new HtmlTree(HtmlTag.P);
         addAnnotationInfo(mdle, annotationContent);
-        div.addContent(annotationContent);
+        div.add(annotationContent);
         Content label = mdle.isOpen() && (configuration.docEnv.getModuleMode() == ModuleMode.ALL)
                 ? contents.openModuleLabel : contents.moduleLabel;
         Content tHeading = HtmlTree.HEADING(HtmlConstants.TITLE_HEADING, true,
                 HtmlStyle.title, label);
-        tHeading.addContent(Contents.SPACE);
+        tHeading.add(Contents.SPACE);
         Content moduleHead = new RawHtml(heading);
-        tHeading.addContent(moduleHead);
-        div.addContent(tHeading);
+        tHeading.add(moduleHead);
+        div.add(tHeading);
         if (configuration.allowTag(HtmlTag.MAIN)) {
-            mainTree.addContent(div);
+            mainTree.add(div);
         } else {
-            bodyTree.addContent(div);
+            bodyTree.add(div);
         }
         return bodyTree;
     }
@@ -467,9 +467,9 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
      */
     public void addSummaryHeader(Content startMarker, SectionName markerAnchor, Content heading,
             Content htmltree) {
-        htmltree.addContent(startMarker);
-        htmltree.addContent(links.createAnchor(markerAnchor));
-        htmltree.addContent(HtmlTree.HEADING(HtmlTag.H3, heading));
+        htmltree.add(startMarker);
+        htmltree.add(links.createAnchor(markerAnchor));
+        htmltree.add(HtmlTree.HEADING(HtmlTag.H3, heading));
     }
 
     /**
@@ -591,7 +591,7 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
                 Table aepTable = getTable2(new StringContent(aepText), aepTableSummary,
                         HtmlStyle.packagesSummary, indirectPackagesHeader);
                 addIndirectPackages(aepTable, indirectPackages);
-                li.addContent(aepTable.toContent());
+                li.add(aepTable.toContent());
             }
             if (display(indirectOpenPackages)) {
                 String aopText = resources.getText("doclet.Indirect_Opens_Summary");
@@ -602,10 +602,10 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
                 Table aopTable = getTable2(new StringContent(aopText), aopTableSummary,
                         HtmlStyle.packagesSummary, indirectPackagesHeader);
                 addIndirectPackages(aopTable, indirectOpenPackages);
-                li.addContent(aopTable.toContent());
+                li.add(aopTable.toContent());
             }
             HtmlTree ul = HtmlTree.UL(HtmlStyle.blockList, li);
-            summaryContentTree.addContent(ul);
+            summaryContentTree.add(ul);
         }
     }
 
@@ -899,11 +899,11 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
         if (!utils.getFullBody(mdle).isEmpty()) {
             Content tree = configuration.allowTag(HtmlTag.SECTION) ? HtmlTree.SECTION() : moduleContentTree;
             addDeprecationInfo(tree);
-            tree.addContent(HtmlConstants.START_OF_MODULE_DESCRIPTION);
-            tree.addContent(links.createAnchor(SectionName.MODULE_DESCRIPTION));
+            tree.add(HtmlConstants.START_OF_MODULE_DESCRIPTION);
+            tree.add(links.createAnchor(SectionName.MODULE_DESCRIPTION));
             addInlineComment(mdle, tree);
             if (configuration.allowTag(HtmlTag.SECTION)) {
-                moduleContentTree.addContent(tree);
+                moduleContentTree.add(tree);
             }
         }
     }
@@ -918,7 +918,7 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
                 : moduleContentTree;
         addTagsInfo(mdle, tree);
         if (configuration.allowTag(HtmlTag.SECTION)) {
-            moduleContentTree.addContent(tree);
+            moduleContentTree.add(tree);
         }
     }
 
@@ -928,10 +928,10 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
     @Override
     public void addModuleContent(Content contentTree, Content moduleContentTree) {
         if (configuration.allowTag(HtmlTag.MAIN)) {
-            mainTree.addContent(moduleContentTree);
-            contentTree.addContent(mainTree);
+            mainTree.add(moduleContentTree);
+            contentTree.add(mainTree);
         } else {
-            contentTree.addContent(moduleContentTree);
+            contentTree.add(moduleContentTree);
         }
     }
 
@@ -944,10 +944,10 @@ public class ModuleWriterImpl extends HtmlDocletWriter implements ModuleSummaryW
                 ? HtmlTree.FOOTER()
                 : contentTree;
         navBar.setUserFooter(getUserHeaderFooter(false));
-        htmlTree.addContent(navBar.getContent(false));
+        htmlTree.add(navBar.getContent(false));
         addBottom(htmlTree);
         if (configuration.allowTag(HtmlTag.FOOTER)) {
-            contentTree.addContent(htmlTree);
+            contentTree.add(htmlTree);
         }
     }
 

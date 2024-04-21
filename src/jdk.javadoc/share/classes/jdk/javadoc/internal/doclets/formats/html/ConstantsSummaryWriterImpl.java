@@ -116,9 +116,9 @@ public class ConstantsSummaryWriterImpl extends HtmlDocletWriter implements Cons
                 : bodyTree;
         addTop(htmlTree);
         navBar.setUserHeader(getUserHeaderFooter(true));
-        htmlTree.addContent(navBar.getContent(true));
+        htmlTree.add(navBar.getContent(true));
         if (configuration.allowTag(HtmlTag.HEADER)) {
-            bodyTree.addContent(htmlTree);
+            bodyTree.add(htmlTree);
         }
         return bodyTree;
     }
@@ -168,13 +168,13 @@ public class ConstantsSummaryWriterImpl extends HtmlDocletWriter implements Cons
                 headingContent);
         if (configuration.allowTag(HtmlTag.SECTION)) {
             HtmlTree section = HtmlTree.SECTION(heading);
-            section.addContent(contentListTree);
-            div.addContent(section);
-            mainTree.addContent(div);
+            section.add(contentListTree);
+            div.add(section);
+            mainTree.add(div);
         } else {
-            div.addContent(heading);
-            div.addContent(contentListTree);
-            contentTree.addContent(div);
+            div.add(heading);
+            div.add(contentListTree);
+            contentTree.add(div);
         }
     }
 
@@ -195,24 +195,24 @@ public class ConstantsSummaryWriterImpl extends HtmlDocletWriter implements Cons
     public void addPackageName(PackageElement pkg, Content summariesTree, boolean first) {
         Content pkgNameContent;
         if (!first && configuration.allowTag(HtmlTag.SECTION)) {
-            summariesTree.addContent(summaryTree);
+            summariesTree.add(summaryTree);
         }
         if (pkg.isUnnamed()) {
-            summariesTree.addContent(links.createAnchor(SectionName.UNNAMED_PACKAGE_ANCHOR));
+            summariesTree.add(links.createAnchor(SectionName.UNNAMED_PACKAGE_ANCHOR));
             pkgNameContent = contents.defaultPackageLabel;
         } else {
             String parsedPackageName = utils.parsePackageName(pkg);
-            summariesTree.addContent(links.createAnchor(parsedPackageName));
+            summariesTree.add(links.createAnchor(parsedPackageName));
             pkgNameContent = getPackageLabel(parsedPackageName);
         }
         Content headingContent = new StringContent(".*");
         Content heading = HtmlTree.HEADING(HtmlConstants.PACKAGE_HEADING, true,
                 pkgNameContent);
-        heading.addContent(headingContent);
+        heading.add(headingContent);
         if (configuration.allowTag(HtmlTag.SECTION)) {
             summaryTree = HtmlTree.SECTION(heading);
         } else {
-            summariesTree.addContent(heading);
+            summariesTree.add(heading);
         }
     }
 
@@ -232,9 +232,9 @@ public class ConstantsSummaryWriterImpl extends HtmlDocletWriter implements Cons
     @Override
     public void addClassConstant(Content summariesTree, Content classConstantTree) {
         if (configuration.allowTag(HtmlTag.SECTION)) {
-            summaryTree.addContent(classConstantTree);
+            summaryTree.add(classConstantTree);
         } else {
-            summariesTree.addContent(classConstantTree);
+            summariesTree.add(classConstantTree);
         }
     }
 
@@ -328,13 +328,13 @@ public class ConstantsSummaryWriterImpl extends HtmlDocletWriter implements Cons
     @Override
     public void addConstantSummaries(Content contentTree, Content summariesTree) {
         if (configuration.allowTag(HtmlTag.SECTION) && summaryTree != null) {
-            summariesTree.addContent(summaryTree);
+            summariesTree.add(summaryTree);
         }
         if (configuration.allowTag(HtmlTag.MAIN)) {
-            mainTree.addContent(summariesTree);
-            contentTree.addContent(mainTree);
+            mainTree.add(summariesTree);
+            contentTree.add(mainTree);
         } else {
-            contentTree.addContent(summariesTree);
+            contentTree.add(summariesTree);
         }
     }
 
@@ -347,10 +347,10 @@ public class ConstantsSummaryWriterImpl extends HtmlDocletWriter implements Cons
                 ? HtmlTree.FOOTER()
                 : contentTree;
         navBar.setUserFooter(getUserHeaderFooter(false));
-        htmlTree.addContent(navBar.getContent(false));
+        htmlTree.add(navBar.getContent(false));
         addBottom(htmlTree);
         if (configuration.allowTag(HtmlTag.FOOTER)) {
-            contentTree.addContent(htmlTree);
+            contentTree.add(htmlTree);
         }
     }
 

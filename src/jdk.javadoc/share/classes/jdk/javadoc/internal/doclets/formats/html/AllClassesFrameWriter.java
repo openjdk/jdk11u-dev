@@ -118,13 +118,13 @@ public class AllClassesFrameWriter extends HtmlDocletWriter {
         Content htmlTree = createTagIfAllowed(HtmlTag.MAIN, HtmlTree::MAIN, ContentBuilder::new);
         Content heading = HtmlTree.HEADING(HtmlConstants.TITLE_HEADING,
                 HtmlStyle.bar, contents.allClassesLabel);
-        htmlTree.addContent(heading);
+        htmlTree.add(heading);
         Content ul = new HtmlTree(HtmlTag.UL);
         // Generate the class links and add it to the tdFont tree.
         addAllClasses(ul, wantFrames);
         HtmlTree div = HtmlTree.DIV(HtmlStyle.indexContainer, ul);
-        htmlTree.addContent(div);
-        body.addContent(htmlTree);
+        htmlTree.add(div);
+        body.add(htmlTree);
         printHtmlDocument(null, false, body);
     }
 

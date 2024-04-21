@@ -196,10 +196,10 @@ public abstract class SubWriterHolderWriter extends HtmlDocletWriter {
      */
     public void addClassContentTree(Content contentTree, Content classContentTree) {
         if (configuration.allowTag(HtmlTag.MAIN)) {
-            mainTree.addContent(classContentTree);
-            contentTree.addContent(mainTree);
+            mainTree.add(classContentTree);
+            contentTree.add(mainTree);
         } else {
-            contentTree.addContent(classContentTree);
+            contentTree.add(classContentTree);
         }
     }
 
@@ -233,9 +233,9 @@ public abstract class SubWriterHolderWriter extends HtmlDocletWriter {
     public void addMemberTree(Content memberSummaryTree, Content memberTree) {
         if (configuration.allowTag(HtmlTag.SECTION)) {
             HtmlTree htmlTree = HtmlTree.SECTION(getMemberTree(memberTree));
-            memberSummaryTree.addContent(htmlTree);
+            memberSummaryTree.add(htmlTree);
         } else {
-            memberSummaryTree.addContent(getMemberTree(memberTree));
+            memberSummaryTree.add(getMemberTree(memberTree));
         }
     }
 

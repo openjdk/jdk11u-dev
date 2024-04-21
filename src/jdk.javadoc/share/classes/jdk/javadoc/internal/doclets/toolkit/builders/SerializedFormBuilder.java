@@ -292,18 +292,18 @@ public class SerializedFormBuilder extends AbstractBuilder {
                 buildDeprecatedMethodInfo(methodsContentTree);
                 buildMethodInfo(methodsContentTree);
 
-                serializableMethodTree.addContent(methodsContentTree);
+                serializableMethodTree.add(methodsContentTree);
             }
         }
         if (!utils.serializationMethods(currentTypeElement).isEmpty()) {
-            classContentTree.addContent(methodWriter.getSerializableMethods(
+            classContentTree.add(methodWriter.getSerializableMethods(
                     configuration.getText("doclet.Serialized_Form_methods"),
                     serializableMethodTree));
             if (utils.isSerializable(currentTypeElement) && !utils.isExternalizable(currentTypeElement)) {
                 if (utils.serializationMethods(currentTypeElement).isEmpty()) {
                     Content noCustomizationMsg = methodWriter.getNoCustomizationMsg(
                             configuration.getText("doclet.Serializable_no_customization"));
-                    classContentTree.addContent(methodWriter.getSerializableMethods(
+                    classContentTree.add(methodWriter.getSerializableMethods(
                     configuration.getText("doclet.Serialized_Form_methods"),
                     noCustomizationMsg));
                 }
@@ -402,8 +402,8 @@ public class SerializedFormBuilder extends AbstractBuilder {
                     fieldWriter.addMemberDescription(ve, fieldsOverviewContentTree);
                     fieldWriter.addMemberTags(ve, fieldsOverviewContentTree);
                 }
-                serializableFieldsTree.addContent(fieldsOverviewContentTree);
-                classContentTree.addContent(fieldWriter.getSerializableFields(
+                serializableFieldsTree.add(fieldsOverviewContentTree);
+                classContentTree.add(fieldWriter.getSerializableFields(
                         configuration.getText("doclet.Serialized_Form_class"),
                         serializableFieldsTree));
             }
@@ -431,12 +431,12 @@ public class SerializedFormBuilder extends AbstractBuilder {
                     buildFieldDeprecationInfo(fieldsContentTree);
                     buildFieldInfo(fieldsContentTree);
 
-                    serializableFieldsTree.addContent(fieldsContentTree);
+                    serializableFieldsTree.add(fieldsContentTree);
                 } else {
                     buildSerialFieldTagsInfo(serializableFieldsTree);
                 }
             }
-            classContentTree.addContent(fieldWriter.getSerializableFields(
+            classContentTree.add(fieldWriter.getSerializableFields(
                     configuration.getText("doclet.Serialized_Form_fields"),
                     serializableFieldsTree));
         }

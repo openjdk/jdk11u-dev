@@ -71,7 +71,7 @@ public class AnnotationTypeFieldWriterImpl extends AbstractMemberWriter
      */
     public Content getMemberSummaryHeader(TypeElement typeElement,
             Content memberSummaryTree) {
-        memberSummaryTree.addContent(
+        memberSummaryTree.add(
                 HtmlConstants.START_OF_ANNOTATION_TYPE_FIELD_SUMMARY);
         Content memberTree = writer.getMemberTreeHeader();
         writer.addSummaryHeader(this, typeElement, memberTree);
@@ -96,7 +96,7 @@ public class AnnotationTypeFieldWriterImpl extends AbstractMemberWriter
      * {@inheritDoc}
      */
     public void addAnnotationFieldDetailsMarker(Content memberDetails) {
-        memberDetails.addContent(HtmlConstants.START_OF_ANNOTATION_TYPE_FIELD_DETAILS);
+        memberDetails.add(HtmlConstants.START_OF_ANNOTATION_TYPE_FIELD_DETAILS);
     }
 
     /**
@@ -105,11 +105,11 @@ public class AnnotationTypeFieldWriterImpl extends AbstractMemberWriter
     public void addAnnotationDetailsTreeHeader(TypeElement typeElement,
             Content memberDetailsTree) {
         if (!writer.printedAnnotationFieldHeading) {
-            memberDetailsTree.addContent(links.createAnchor(
+            memberDetailsTree.add(links.createAnchor(
                     SectionName.ANNOTATION_TYPE_FIELD_DETAIL));
             Content heading = HtmlTree.HEADING(HtmlConstants.DETAILS_HEADING,
                     contents.fieldDetailsLabel);
-            memberDetailsTree.addContent(heading);
+            memberDetailsTree.add(heading);
             writer.printedAnnotationFieldHeading = true;
         }
     }
@@ -119,11 +119,11 @@ public class AnnotationTypeFieldWriterImpl extends AbstractMemberWriter
      */
     public Content getAnnotationDocTreeHeader(Element member,
             Content annotationDetailsTree) {
-        annotationDetailsTree.addContent(links.createAnchor(name(member)));
+        annotationDetailsTree.add(links.createAnchor(name(member)));
         Content annotationDocTree = writer.getMemberTreeHeader();
         Content heading = new HtmlTree(HtmlConstants.MEMBER_HEADING);
-        heading.addContent(name(member));
-        annotationDocTree.addContent(heading);
+        heading.add(name(member));
+        annotationDocTree.add(heading);
         return annotationDocTree;
     }
 

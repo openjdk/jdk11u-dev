@@ -107,41 +107,41 @@ public class TestHtmlDocument extends JavadocTester {
                 "subclasses, subinterfaces, nested classes, nested interfaces," +
                 "inheriting from other packages, constructors, fields," +
                 "methods, and so forth. ");
-        p.addContent(bodyContent);
+        p.add(bodyContent);
         StringContent anchorContent = new StringContent("Click Here");
-        p.addContent(HtmlTree.A("testLink.html", anchorContent));
+        p.add(HtmlTree.A("testLink.html", anchorContent));
         StringContent pContent = new StringContent(" to <test> out a link.");
-        p.addContent(pContent);
-        body.addContent(p);
+        p.add(pContent);
+        body.add(p);
         HtmlTree p1 = new HtmlTree(HtmlTag.P);
         // Test another version of A tag.
         HtmlTree anchor = new HtmlTree(HtmlTag.A);
-        anchor.addAttr(HtmlAttr.HREF, "testLink.html");
-        anchor.addAttr(HtmlAttr.ID, "Another version of a tag");
-        p1.addContent(anchor);
-        body.addContent(p1);
+        anchor.put(HtmlAttr.HREF, "testLink.html");
+        anchor.put(HtmlAttr.ID, "Another version of a tag");
+        p1.add(anchor);
+        body.add(p1);
         // Test for empty tags.
         HtmlTree dl = new HtmlTree(HtmlTag.DL);
-        html.addContent(dl);
+        html.add(dl);
         // Test for empty nested tags.
         HtmlTree dlTree = new HtmlTree(HtmlTag.DL);
-        dlTree.addContent(new HtmlTree(HtmlTag.DT));
-        dlTree.addContent(new HtmlTree (HtmlTag.DD));
-        html.addContent(dlTree);
+        dlTree.add(new HtmlTree(HtmlTag.DT));
+        dlTree.add(new HtmlTree (HtmlTag.DD));
+        html.add(dlTree);
         HtmlTree dlDisplay = new HtmlTree(HtmlTag.DL);
-        dlDisplay.addContent(new HtmlTree(HtmlTag.DT));
+        dlDisplay.add(new HtmlTree(HtmlTag.DT));
         HtmlTree dd = new HtmlTree (HtmlTag.DD);
         StringContent ddContent = new StringContent("Test DD");
-        dd.addContent(ddContent);
-        dlDisplay.addContent(dd);
-        body.addContent(dlDisplay);
+        dd.add(ddContent);
+        dlDisplay.add(dd);
+        body.add(dlDisplay);
         StringContent emptyString = new StringContent("");
-        body.addContent(emptyString);
+        body.add(emptyString);
         Comment emptyComment = new Comment("");
-        body.addContent(emptyComment);
+        body.add(emptyComment);
         HtmlTree hr = new HtmlTree(HtmlTag.HR);
-        body.addContent(hr);
-        html.addContent(body);
+        body.add(hr);
+        html.add(body);
         HtmlDocument htmlDoc = new HtmlDocument(htmlDocType, html);
         return htmlDoc.toString();
     }

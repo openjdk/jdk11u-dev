@@ -71,7 +71,7 @@ public class EnumConstantWriterImpl extends AbstractMemberWriter
     @Override
     public Content getMemberSummaryHeader(TypeElement typeElement,
             Content memberSummaryTree) {
-        memberSummaryTree.addContent(HtmlConstants.START_OF_ENUM_CONSTANT_SUMMARY);
+        memberSummaryTree.add(HtmlConstants.START_OF_ENUM_CONSTANT_SUMMARY);
         Content memberTree = writer.getMemberTreeHeader();
         writer.addSummaryHeader(this, typeElement, memberTree);
         return memberTree;
@@ -91,13 +91,13 @@ public class EnumConstantWriterImpl extends AbstractMemberWriter
     @Override
     public Content getEnumConstantsDetailsTreeHeader(TypeElement typeElement,
             Content memberDetailsTree) {
-        memberDetailsTree.addContent(HtmlConstants.START_OF_ENUM_CONSTANT_DETAILS);
+        memberDetailsTree.add(HtmlConstants.START_OF_ENUM_CONSTANT_DETAILS);
         Content enumConstantsDetailsTree = writer.getMemberTreeHeader();
-        enumConstantsDetailsTree.addContent(links.createAnchor(
+        enumConstantsDetailsTree.add(links.createAnchor(
                 SectionName.ENUM_CONSTANT_DETAIL));
         Content heading = HtmlTree.HEADING(HtmlConstants.DETAILS_HEADING,
                 contents.enumConstantDetailLabel);
-        enumConstantsDetailsTree.addContent(heading);
+        enumConstantsDetailsTree.add(heading);
         return enumConstantsDetailsTree;
     }
 
@@ -107,11 +107,11 @@ public class EnumConstantWriterImpl extends AbstractMemberWriter
     @Override
     public Content getEnumConstantsTreeHeader(VariableElement enumConstant,
             Content enumConstantsDetailsTree) {
-        enumConstantsDetailsTree.addContent(links.createAnchor(name(enumConstant)));
+        enumConstantsDetailsTree.add(links.createAnchor(name(enumConstant)));
         Content enumConstantsTree = writer.getMemberTreeHeader();
         Content heading = new HtmlTree(HtmlConstants.MEMBER_HEADING);
-        heading.addContent(name(enumConstant));
-        enumConstantsTree.addContent(heading);
+        heading.add(name(enumConstant));
+        enumConstantsTree.add(heading);
         return enumConstantsTree;
     }
 

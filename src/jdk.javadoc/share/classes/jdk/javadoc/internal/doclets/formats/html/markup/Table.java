@@ -400,7 +400,7 @@ public class Table {
 
         if (putIdFirst && tabMap != null) {
             int index = bodyRows.size();
-            row.addAttr(HtmlAttr.ID, (rowIdPrefix + index));
+            row.put(HtmlAttr.ID, (rowIdPrefix + index));
         }
 
         if (stripedStyles != null) {
@@ -415,7 +415,7 @@ public class Table {
             HtmlTree cell = (colIndex == rowScopeColumnIndex)
                     ? HtmlTree.TH(cellStyle, "row", c)
                     : HtmlTree.TD(cellStyle, c);
-            row.addContent(cell);
+            row.add(cell);
             colIndex++;
         }
         bodyRows.add(row);
@@ -423,7 +423,7 @@ public class Table {
         if (tabMap != null) {
             if (!putIdFirst) {
                 int index = bodyRows.size() - 1;
-                row.addAttr(HtmlAttr.ID, (rowIdPrefix + index));
+                row.put(HtmlAttr.ID, (rowIdPrefix + index));
             }
             int mask = 0;
             int maskBit = 1;
@@ -459,21 +459,21 @@ public class Table {
         HtmlTree table = new HtmlTree(HtmlTag.TABLE);
         table.setStyle(tableStyle);
         if (summary != null) {
-            table.addAttr(HtmlAttr.SUMMARY, summary);
+            table.put(HtmlAttr.SUMMARY, summary);
         }
         if (tabMap != null) {
             if (tabs.size() == 1) {
                 String tabName = tabs.iterator().next();
-                table.addContent(getCaption(new StringContent(tabName)));
+                table.add(getCaption(new StringContent(tabName)));
             } else {
                 ContentBuilder cb = new ContentBuilder();
                 int tabIndex = 0;
                 HtmlTree defaultTabSpan = new HtmlTree(HtmlTag.SPAN,
                             HtmlTree.SPAN(new StringContent(defaultTab)),
                             HtmlTree.SPAN(tabEnd, Contents.SPACE))
-                        .addAttr(HtmlAttr.ID, tabId.apply(tabIndex))
+                        .put(HtmlAttr.ID, tabId.apply(tabIndex))
                         .setStyle(activeTabStyle);
-                cb.addContent(defaultTabSpan);
+                cb.add(defaultTabSpan);
                 for (String tabName : tabMap.keySet()) {
                     tabIndex++;
                     if (tabs.contains(tabName)) {
@@ -481,23 +481,23 @@ public class Table {
                         HtmlTree link = HtmlTree.A(script, new StringContent(tabName));
                         HtmlTree tabSpan = new HtmlTree(HtmlTag.SPAN,
                                     HtmlTree.SPAN(link), HtmlTree.SPAN(tabEnd, Contents.SPACE))
-                                .addAttr(HtmlAttr.ID, tabId.apply(tabIndex))
+                                .put(HtmlAttr.ID, tabId.apply(tabIndex))
                                 .setStyle(tabStyle);
-                        cb.addContent(tabSpan);
+                        cb.add(tabSpan);
                     }
                 }
-                table.addContent(HtmlTree.CAPTION(cb));
+                table.add(HtmlTree.CAPTION(cb));
             }
         } else {
-            table.addContent(caption);
+            table.add(caption);
         }
-        table.addContent(header.toContent());
+        table.add(header.toContent());
         if (useTBody) {
             Content tbody = new HtmlTree(HtmlTag.TBODY);
-            bodyRows.forEach(row -> tbody.addContent(row));
-            table.addContent(tbody);
+            bodyRows.forEach(row -> tbody.add(row));
+            table.add(tbody);
         } else {
-            bodyRows.forEach(row -> table.addContent(row));
+            bodyRows.forEach(row -> table.add(row));
         }
         return table;
     }

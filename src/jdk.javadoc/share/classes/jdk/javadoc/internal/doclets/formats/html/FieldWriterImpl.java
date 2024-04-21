@@ -75,7 +75,7 @@ public class FieldWriterImpl extends AbstractMemberWriter
     @Override
     public Content getMemberSummaryHeader(TypeElement typeElement,
             Content memberSummaryTree) {
-        memberSummaryTree.addContent(HtmlConstants.START_OF_FIELD_SUMMARY);
+        memberSummaryTree.add(HtmlConstants.START_OF_FIELD_SUMMARY);
         Content memberTree = writer.getMemberTreeHeader();
         writer.addSummaryHeader(this, typeElement, memberTree);
         return memberTree;
@@ -94,13 +94,13 @@ public class FieldWriterImpl extends AbstractMemberWriter
      */
     @Override
     public Content getFieldDetailsTreeHeader(TypeElement typeElement, Content memberDetailsTree) {
-        memberDetailsTree.addContent(HtmlConstants.START_OF_FIELD_DETAILS);
+        memberDetailsTree.add(HtmlConstants.START_OF_FIELD_DETAILS);
         Content fieldDetailsTree = writer.getMemberTreeHeader();
-        fieldDetailsTree.addContent(links.createAnchor(
+        fieldDetailsTree.add(links.createAnchor(
                 SectionName.FIELD_DETAIL));
         Content heading = HtmlTree.HEADING(HtmlConstants.DETAILS_HEADING,
                 contents.fieldDetailsLabel);
-        fieldDetailsTree.addContent(heading);
+        fieldDetailsTree.add(heading);
         return fieldDetailsTree;
     }
 
@@ -109,11 +109,11 @@ public class FieldWriterImpl extends AbstractMemberWriter
      */
     @Override
     public Content getFieldDocTreeHeader(VariableElement field, Content fieldDetailsTree) {
-        fieldDetailsTree.addContent(links.createAnchor(name(field)));
+        fieldDetailsTree.add(links.createAnchor(name(field)));
         Content fieldTree = writer.getMemberTreeHeader();
         Content heading = new HtmlTree(HtmlConstants.MEMBER_HEADING);
-        heading.addContent(name(field));
-        fieldTree.addContent(heading);
+        heading.add(name(field));
+        fieldTree.add(heading);
         return fieldTree;
     }
 

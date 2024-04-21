@@ -163,16 +163,16 @@ public class AbstractIndexWriter extends HtmlDocletWriter {
                 i++;
             }
         }
-        contentTree.addContent(dl);
+        contentTree.add(dl);
     }
 
     protected void addHeading(Character uc, Content contentTree) {
         String unicode = uc.toString();
-        contentTree.addContent(getMarkerAnchorForIndex(unicode));
+        contentTree.add(getMarkerAnchorForIndex(unicode));
         Content headContent = new StringContent(unicode);
         Content heading = HtmlTree.HEADING(HtmlConstants.CONTENT_HEADING, false,
                 HtmlStyle.title, headContent);
-        contentTree.addContent(heading);
+        contentTree.add(heading);
     }
 
     protected void addDescription(Content dl, Element element) {

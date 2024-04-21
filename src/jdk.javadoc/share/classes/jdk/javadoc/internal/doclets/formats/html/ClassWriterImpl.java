@@ -106,31 +106,31 @@ public class ClassWriterImpl extends SubWriterHolderWriter implements ClassWrite
         navBar.setNavLinkModule(linkContent);
         navBar.setMemberSummaryBuilder(configuration.getBuilderFactory().getMemberSummaryBuilder(this));
         navBar.setUserHeader(getUserHeaderFooter(true));
-        htmlTree.addContent(navBar.getContent(true));
+        htmlTree.add(navBar.getContent(true));
         if (configuration.allowTag(HtmlTag.HEADER)) {
-            bodyTree.addContent(htmlTree);
+            bodyTree.add(htmlTree);
         }
-        bodyTree.addContent(HtmlConstants.START_OF_CLASS_DATA);
+        bodyTree.add(HtmlConstants.START_OF_CLASS_DATA);
         HtmlTree div = new HtmlTree(HtmlTag.DIV);
         div.setStyle(HtmlStyle.header);
         if (configuration.showModules) {
             ModuleElement mdle = configuration.docEnv.getElementUtils().getModuleOf(typeElement);
             Content classModuleLabel = HtmlTree.SPAN(HtmlStyle.moduleLabelInType, contents.moduleLabel);
             Content moduleNameDiv = HtmlTree.DIV(HtmlStyle.subTitle, classModuleLabel);
-            moduleNameDiv.addContent(Contents.SPACE);
-            moduleNameDiv.addContent(getModuleLink(mdle,
+            moduleNameDiv.add(Contents.SPACE);
+            moduleNameDiv.add(getModuleLink(mdle,
                     new StringContent(mdle.getQualifiedName())));
-            div.addContent(moduleNameDiv);
+            div.add(moduleNameDiv);
         }
         PackageElement pkg = utils.containingPackage(typeElement);
         if (!pkg.isUnnamed()) {
             Content classPackageLabel = HtmlTree.SPAN(HtmlStyle.packageLabelInType, contents.packageLabel);
             Content pkgNameDiv = HtmlTree.DIV(HtmlStyle.subTitle, classPackageLabel);
-            pkgNameDiv.addContent(Contents.SPACE);
+            pkgNameDiv.add(Contents.SPACE);
             Content pkgNameContent = getPackageLink(pkg,
                     new StringContent(utils.getPackageName(pkg)));
-            pkgNameDiv.addContent(pkgNameContent);
-            div.addContent(pkgNameDiv);
+            pkgNameDiv.add(pkgNameContent);
+            div.add(pkgNameDiv);
         }
         LinkInfoImpl linkInfo = new LinkInfoImpl(configuration,
                 LinkInfoImpl.Kind.CLASS_HEADER, typeElement);
@@ -139,12 +139,12 @@ public class ClassWriterImpl extends SubWriterHolderWriter implements ClassWrite
         Content headerContent = new StringContent(header);
         Content heading = HtmlTree.HEADING(HtmlConstants.CLASS_PAGE_HEADING, true,
                 HtmlStyle.title, headerContent);
-        heading.addContent(getTypeParameterLinks(linkInfo));
-        div.addContent(heading);
+        heading.add(getTypeParameterLinks(linkInfo));
+        div.add(heading);
         if (configuration.allowTag(HtmlTag.MAIN)) {
-            mainTree.addContent(div);
+            mainTree.add(div);
         } else {
-            bodyTree.addContent(div);
+            bodyTree.add(div);
         }
         return bodyTree;
     }
@@ -162,15 +162,15 @@ public class ClassWriterImpl extends SubWriterHolderWriter implements ClassWrite
      */
     @Override
     public void addFooter(Content contentTree) {
-        contentTree.addContent(HtmlConstants.END_OF_CLASS_DATA);
+        contentTree.add(HtmlConstants.END_OF_CLASS_DATA);
         Content htmlTree = (configuration.allowTag(HtmlTag.FOOTER))
                 ? HtmlTree.FOOTER()
                 : contentTree;
         navBar.setUserFooter(getUserHeaderFooter(false));
-        htmlTree.addContent(navBar.getContent(false));
+        htmlTree.add(navBar.getContent(false));
         addBottom(htmlTree);
         if (configuration.allowTag(HtmlTag.FOOTER)) {
-            contentTree.addContent(htmlTree);
+            contentTree.add(htmlTree);
         }
     }
 

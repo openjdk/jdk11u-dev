@@ -68,7 +68,7 @@ public class PropertyWriterImpl extends AbstractMemberWriter
      */
     @Override
     public Content getMemberSummaryHeader(TypeElement typeElement, Content memberSummaryTree) {
-        memberSummaryTree.addContent(HtmlConstants.START_OF_PROPERTY_SUMMARY);
+        memberSummaryTree.add(HtmlConstants.START_OF_PROPERTY_SUMMARY);
         Content memberTree = writer.getMemberTreeHeader();
         writer.addSummaryHeader(this, typeElement, memberTree);
         return memberTree;
@@ -88,12 +88,12 @@ public class PropertyWriterImpl extends AbstractMemberWriter
     @Override
     public Content getPropertyDetailsTreeHeader(TypeElement typeElement,
             Content memberDetailsTree) {
-        memberDetailsTree.addContent(HtmlConstants.START_OF_PROPERTY_DETAILS);
+        memberDetailsTree.add(HtmlConstants.START_OF_PROPERTY_DETAILS);
         Content propertyDetailsTree = writer.getMemberTreeHeader();
-        propertyDetailsTree.addContent(links.createAnchor(SectionName.PROPERTY_DETAIL));
+        propertyDetailsTree.add(links.createAnchor(SectionName.PROPERTY_DETAIL));
         Content heading = HtmlTree.HEADING(HtmlConstants.DETAILS_HEADING,
                 contents.propertyDetailsLabel);
-        propertyDetailsTree.addContent(heading);
+        propertyDetailsTree.add(heading);
         return propertyDetailsTree;
     }
 
@@ -103,11 +103,11 @@ public class PropertyWriterImpl extends AbstractMemberWriter
     @Override
     public Content getPropertyDocTreeHeader(ExecutableElement property,
             Content propertyDetailsTree) {
-        propertyDetailsTree.addContent(links.createAnchor(name(property)));
+        propertyDetailsTree.add(links.createAnchor(name(property)));
         Content propertyDocTree = writer.getMemberTreeHeader();
         Content heading = new HtmlTree(HtmlConstants.MEMBER_HEADING);
-        heading.addContent(utils.getPropertyLabel(name(property)));
-        propertyDocTree.addContent(heading);
+        heading.add(utils.getPropertyLabel(name(property)));
+        propertyDocTree.add(heading);
         return propertyDocTree;
     }
 
