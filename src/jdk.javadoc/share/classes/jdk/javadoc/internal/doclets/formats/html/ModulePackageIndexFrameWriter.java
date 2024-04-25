@@ -33,6 +33,7 @@ import java.util.Set;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.PackageElement;
 
+import jdk.javadoc.internal.doclets.formats.html.markup.Entity;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlConstants;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlTag;
@@ -88,7 +89,7 @@ public class ModulePackageIndexFrameWriter extends AbstractModuleIndexWriter {
         Content profNameContent = new StringContent(mdle.getQualifiedName().toString());
         Content heading = HtmlTree.HEADING(HtmlConstants.PACKAGE_HEADING, true,
                 getTargetModuleLink("classFrame", profNameContent, mdle));
-        heading.add(Contents.SPACE);
+        heading.add(Entity.NO_BREAK_SPACE);
         heading.add(contents.packagesLabel);
         HtmlTree htmlTree = HtmlTree.DIV(HtmlStyle.indexContainer, heading);
         HtmlTree ul = new HtmlTree(HtmlTag.UL);
@@ -111,7 +112,7 @@ public class ModulePackageIndexFrameWriter extends AbstractModuleIndexWriter {
         Content moduleNameContent = new StringContent(mdle.getQualifiedName().toString());
         Content heading = HtmlTree.HEADING(HtmlConstants.PACKAGE_HEADING, true,
                 getTargetModuleLink("classFrame", moduleNameContent, mdle));
-        heading.add(Contents.SPACE);
+        heading.add(Entity.NO_BREAK_SPACE);
         heading.add(contents.packagesLabel);
         HtmlTree htmlTree = (configuration.allowTag(HtmlTag.MAIN))
                 ? HtmlTree.MAIN(HtmlStyle.indexContainer, heading)
@@ -231,7 +232,7 @@ public class ModulePackageIndexFrameWriter extends AbstractModuleIndexWriter {
      * {@inheritDoc}
      */
     protected void addNavigationBarFooter(Content footer) {
-        Content p = HtmlTree.P(Contents.SPACE);
+        Content p = HtmlTree.P(Entity.NO_BREAK_SPACE);
         footer.add(p);
     }
 }

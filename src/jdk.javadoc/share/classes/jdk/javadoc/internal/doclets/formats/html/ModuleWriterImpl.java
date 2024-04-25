@@ -43,6 +43,7 @@ import javax.lang.model.util.ElementFilter;
 import com.sun.source.doctree.DocTree;
 import jdk.javadoc.doclet.DocletEnvironment.ModuleMode;
 import jdk.javadoc.internal.doclets.formats.html.markup.ContentBuilder;
+import jdk.javadoc.internal.doclets.formats.html.markup.Entity;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlConstants;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlTag;

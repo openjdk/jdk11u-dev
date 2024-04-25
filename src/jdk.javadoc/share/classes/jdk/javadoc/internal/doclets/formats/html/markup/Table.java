@@ -470,7 +470,7 @@ public class Table {
                 int tabIndex = 0;
                 HtmlTree defaultTabSpan = new HtmlTree(HtmlTag.SPAN,
                             HtmlTree.SPAN(new StringContent(defaultTab)),
-                            HtmlTree.SPAN(tabEnd, Contents.SPACE))
+                            HtmlTree.SPAN(tabEnd, Entity.NO_BREAK_SPACE))
                         .put(HtmlAttr.ID, tabId.apply(tabIndex))
                         .setStyle(activeTabStyle);
                 cb.add(defaultTabSpan);
@@ -480,7 +480,7 @@ public class Table {
                         String script = "javascript:" + tabScript.apply(1 << (tabIndex - 1));
                         HtmlTree link = HtmlTree.A(script, new StringContent(tabName));
                         HtmlTree tabSpan = new HtmlTree(HtmlTag.SPAN,
-                                    HtmlTree.SPAN(link), HtmlTree.SPAN(tabEnd, Contents.SPACE))
+                                    HtmlTree.SPAN(link), HtmlTree.SPAN(tabEnd, Entity.NO_BREAK_SPACE))
                                 .put(HtmlAttr.ID, tabId.apply(tabIndex))
                                 .setStyle(tabStyle);
                         cb.add(tabSpan);

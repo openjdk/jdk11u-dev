@@ -27,6 +27,7 @@ package jdk.javadoc.internal.doclets.formats.html;
 
 import javax.lang.model.element.PackageElement;
 
+import jdk.javadoc.internal.doclets.formats.html.markup.Entity;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlConstants;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlTag;
@@ -174,7 +175,7 @@ public class PackageIndexFrameWriter extends AbstractPackageIndexWriter {
      */
     @Override
     protected void addNavigationBarFooter(Content footer) {
-        Content p = HtmlTree.P(Contents.SPACE);
+        Content p = HtmlTree.P(Entity.NO_BREAK_SPACE);
         footer.add(p);
     }
 }

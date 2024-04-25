@@ -34,6 +34,7 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import jdk.javadoc.internal.doclets.formats.html.markup.Entity;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlConstants;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlTree;
@@ -163,7 +164,7 @@ public class NestedClassWriterImpl extends AbstractMemberWriter
         }
         Content labelHeading = HtmlTree.HEADING(HtmlConstants.INHERITED_SUMMARY_HEADING,
                 label);
-        labelHeading.add(Contents.SPACE);
+        labelHeading.add(Entity.NO_BREAK_SPACE);
         labelHeading.add(classLink);
         inheritedTree.add(labelHeading);
     }

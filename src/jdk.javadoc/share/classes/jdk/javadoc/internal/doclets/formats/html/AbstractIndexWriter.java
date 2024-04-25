@@ -42,6 +42,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.SimpleElementVisitor9;
 
 import com.sun.source.doctree.DocTree;
+import jdk.javadoc.internal.doclets.formats.html.markup.Entity;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlConstants;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlTag;

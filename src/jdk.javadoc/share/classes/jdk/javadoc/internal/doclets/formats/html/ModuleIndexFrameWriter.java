@@ -31,6 +31,7 @@ import java.util.Set;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.PackageElement;
 
+import jdk.javadoc.internal.doclets.formats.html.markup.Entity;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlAttr;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlConstants;
 import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle;
@@ -172,7 +173,7 @@ public class ModuleIndexFrameWriter extends AbstractModuleIndexWriter {
      * {@inheritDoc}
      */
     protected void addNavigationBarFooter(Content footer) {
-        Content p = HtmlTree.P(Contents.SPACE);
+        Content p = HtmlTree.P(Entity.NO_BREAK_SPACE);
         footer.add(p);
     }
 
