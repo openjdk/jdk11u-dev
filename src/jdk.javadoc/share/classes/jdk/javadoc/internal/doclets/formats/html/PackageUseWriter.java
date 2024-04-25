@@ -189,7 +189,7 @@ public class PackageUseWriter extends SubWriterHolderWriter {
             if (pkg != null && !pkg.isUnnamed()) {
                 addSummaryComment(pkg, summary);
             } else {
-                summary.add(Contents.SPACE);
+                summary.add(Entity.NO_BREAK_SPACE);
             }
             table.addRow(packageLink, summary);
         }

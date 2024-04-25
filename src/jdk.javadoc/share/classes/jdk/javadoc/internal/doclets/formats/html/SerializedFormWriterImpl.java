@@ -137,7 +137,7 @@ public class SerializedFormWriterImpl extends SubWriterHolderWriter
     public Content getPackageHeader(String packageName) {
         Content heading = HtmlTree.HEADING(HtmlConstants.PACKAGE_HEADING, true,
                 contents.packageLabel);
-        heading.add(Contents.SPACE);
+        heading.add(Entity.NO_BREAK_SPACE);
         heading.add(packageName);
         return heading;
     }

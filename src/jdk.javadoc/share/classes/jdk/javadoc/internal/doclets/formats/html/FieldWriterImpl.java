@@ -259,7 +259,7 @@ public class FieldWriterImpl extends AbstractMemberWriter
         }
         Content labelHeading = HtmlTree.HEADING(HtmlConstants.INHERITED_SUMMARY_HEADING,
                 label);
-        labelHeading.add(Contents.SPACE);
+        labelHeading.add(Entity.NO_BREAK_SPACE);
         labelHeading.add(classLink);
         inheritedTree.add(labelHeading);
     }

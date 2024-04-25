@@ -25,9 +25,13 @@
 
 package jdk.javadoc.internal.doclets.formats.html;
 
-import java.io.*;
-import java.util.*;
-import java.util.zip.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.util.Collection;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -340,7 +344,7 @@ public class AbstractIndexWriter extends HtmlDocletWriter {
         dlTree.add(dt);
         Content dd = new HtmlTree(HtmlTag.DD);
         if (sii.getDescription().isEmpty()) {
-            dd.add(Contents.SPACE);
+            dd.add(Entity.NO_BREAK_SPACE);
         } else {
             dd.add(sii.getDescription());
         }

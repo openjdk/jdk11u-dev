@@ -306,7 +306,7 @@ public class ConstructorWriterImpl extends AbstractExecutableMemberWriter
             } else if (utils.isPrivate(member)) {
                 code.add("private ");
             } else if (utils.isPublic(member)) {
-                code.add(Contents.SPACE);
+                code.add(Entity.NO_BREAK_SPACE);
             } else {
                 code.add(
                         configuration.getText("doclet.Package_private"));

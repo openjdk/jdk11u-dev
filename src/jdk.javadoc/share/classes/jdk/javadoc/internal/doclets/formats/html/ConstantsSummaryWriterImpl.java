@@ -25,10 +25,8 @@
 
 package jdk.javadoc.internal.doclets.formats.html;
 
-import jdk.javadoc.internal.doclets.formats.html.markup.Table;
-import jdk.javadoc.internal.doclets.formats.html.markup.TableHeader;
-
-import java.util.*;
+import java.util.Collection;
+import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
@@ -289,7 +287,7 @@ public class ConstantsSummaryWriterImpl extends HtmlDocletWriter implements Cons
         for (Modifier mod : member.getModifiers()) {
             Content modifier = new StringContent(mod.toString());
             code.add(modifier);
-            code.add(Contents.SPACE);
+            code.add(Entity.NO_BREAK_SPACE);
         }
         Content type = getLink(new LinkInfoImpl(configuration,
                 LinkInfoImpl.Kind.CONSTANT_SUMMARY, member.asType()));

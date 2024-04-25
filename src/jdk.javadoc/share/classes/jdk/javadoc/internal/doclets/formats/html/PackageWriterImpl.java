@@ -25,10 +25,8 @@
 
 package jdk.javadoc.internal.doclets.formats.html;
 
-import jdk.javadoc.internal.doclets.formats.html.markup.Table;
-import jdk.javadoc.internal.doclets.formats.html.markup.TableHeader;
-
-import java.util.*;
+import java.util.List;
+import java.util.SortedSet;
 
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.PackageElement;
@@ -125,7 +123,7 @@ public class PackageWriterImpl extends HtmlDocletWriter
             ModuleElement mdle = configuration.docEnv.getElementUtils().getModuleOf(packageElement);
             Content classModuleLabel = HtmlTree.SPAN(HtmlStyle.moduleLabelInPackage, contents.moduleLabel);
             Content moduleNameDiv = HtmlTree.DIV(HtmlStyle.subTitle, classModuleLabel);
-            moduleNameDiv.add(Contents.SPACE);
+            moduleNameDiv.add(Entity.NO_BREAK_SPACE);
             moduleNameDiv.add(getModuleLink(mdle,
                     new StringContent(mdle.getQualifiedName().toString())));
             div.add(moduleNameDiv);
@@ -135,7 +133,7 @@ public class PackageWriterImpl extends HtmlDocletWriter
         div.add(annotationContent);
         Content tHeading = HtmlTree.HEADING(HtmlConstants.TITLE_HEADING, true,
                 HtmlStyle.title, contents.packageLabel);
-        tHeading.add(Contents.SPACE);
+        tHeading.add(Entity.NO_BREAK_SPACE);
         Content packageHead = new StringContent(heading);
         tHeading.add(packageHead);
         div.add(tHeading);

@@ -25,10 +25,10 @@
 
 package jdk.javadoc.internal.doclets.formats.html;
 
-import jdk.javadoc.internal.doclets.formats.html.markup.Table;
-import jdk.javadoc.internal.doclets.formats.html.markup.TableHeader;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javax.lang.model.element.Element;
@@ -258,7 +258,7 @@ public abstract class AbstractMemberWriter implements MemberSummaryWriter {
         if (!set.isEmpty()) {
             String mods = set.stream().map(Modifier::toString).collect(Collectors.joining(" "));
             htmltree.add(mods);
-            htmltree.add(Contents.SPACE);
+            htmltree.add(Entity.NO_BREAK_SPACE);
         }
     }
 
@@ -286,7 +286,7 @@ public abstract class AbstractMemberWriter implements MemberSummaryWriter {
         addModifier(member, code);
         if (type == null) {
             code.add(utils.isClass(member) ? "class" : "interface");
-            code.add(Contents.SPACE);
+            code.add(Entity.NO_BREAK_SPACE);
         } else {
             List<? extends TypeParameterElement> list = utils.isExecutableElement(member)
                     ? ((ExecutableElement)member).getTypeParameters()
@@ -299,7 +299,7 @@ public abstract class AbstractMemberWriter implements MemberSummaryWriter {
                 if (typeParameters.charCount() > 10) {
                     code.add(new HtmlTree(HtmlTag.BR));
                 } else {
-                    code.add(Contents.SPACE);
+                    code.add(Entity.NO_BREAK_SPACE);
                 }
                 code.add(
                         writer.getLink(new LinkInfoImpl(configuration,

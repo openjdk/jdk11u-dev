@@ -78,6 +78,7 @@ import jdk.javadoc.internal.doclets.formats.html.markup.Links;
 import jdk.javadoc.internal.doclets.formats.html.markup.RawHtml;
 import jdk.javadoc.internal.doclets.formats.html.markup.Script;
 import jdk.javadoc.internal.doclets.formats.html.markup.StringContent;
+import jdk.javadoc.internal.doclets.formats.html.markup.TableHeader;
 import jdk.javadoc.internal.doclets.toolkit.AnnotationTypeWriter;
 import jdk.javadoc.internal.doclets.toolkit.ClassWriter;
 import jdk.javadoc.internal.doclets.toolkit.Content;
@@ -96,7 +97,12 @@ import jdk.javadoc.internal.doclets.toolkit.util.DocletConstants;
 import jdk.javadoc.internal.doclets.toolkit.util.Utils;
 import jdk.javadoc.internal.doclets.toolkit.util.VisibleMemberTable;
 
-import static com.sun.source.doctree.DocTree.Kind.*;
+import static com.sun.source.doctree.DocTree.Kind.CODE;
+import static com.sun.source.doctree.DocTree.Kind.COMMENT;
+import static com.sun.source.doctree.DocTree.Kind.LINK;
+import static com.sun.source.doctree.DocTree.Kind.LINK_PLAIN;
+import static com.sun.source.doctree.DocTree.Kind.SEE;
+import static com.sun.source.doctree.DocTree.Kind.TEXT;
 import static jdk.javadoc.internal.doclets.toolkit.util.CommentHelper.SPACER;
 
 
@@ -508,7 +514,7 @@ public class HtmlDocletWriter {
      */
     public Content getTableCaption(Content title) {
         Content captionSpan = HtmlTree.SPAN(title);
-        Content space = Contents.SPACE;
+        Content space = Entity.NO_BREAK_SPACE;
         Content tabSpan = HtmlTree.SPAN(HtmlStyle.tabEnd, space);
         Content caption = HtmlTree.CAPTION(captionSpan);
         caption.add(tabSpan);
@@ -1231,7 +1237,7 @@ public class HtmlDocletWriter {
             htmltree.add(div);
         }
         if (tags.isEmpty()) {
-            htmltree.add(Contents.SPACE);
+            htmltree.add(Entity.NO_BREAK_SPACE);
         }
     }
 

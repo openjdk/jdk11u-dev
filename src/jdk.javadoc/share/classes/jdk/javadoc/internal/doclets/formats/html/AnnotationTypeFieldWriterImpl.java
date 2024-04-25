@@ -138,7 +138,7 @@ public class AnnotationTypeFieldWriterImpl extends AbstractMemberWriter
                 writer.getLink(new LinkInfoImpl(configuration,
                         LinkInfoImpl.Kind.MEMBER, getType(member)));
         pre.add(link);
-        pre.add(Contents.SPACE);
+        pre.add(Entity.NO_BREAK_SPACE);
         if (configuration.linksource) {
             Content memberName = new StringContent(name(member));
             writer.addSrcLink(member, memberName, pre);
