@@ -44,6 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.Arrays;
 
 import jdk.internal.misc.JavaNetInetAddressAccess;
 import jdk.internal.misc.SharedSecrets;
@@ -1115,22 +1116,6 @@ class InetAddress implements java.io.Serializable {
                 }
             }
             return hostAddr;
-        }
-
-        /**
-         * IP Address to host mapping
-         * use first host alias in list
-         */
-        private String extractHost(String hostEntry, String addrString) {
-            String[] mapping = hostEntry.split("\\s+");
-            String host = null;
-
-            if (mapping.length >= 2) {
-                if (mapping[0].equalsIgnoreCase(addrString)) {
-                    host = mapping[1];
-                }
-            }
-            return host;
         }
     }
 
