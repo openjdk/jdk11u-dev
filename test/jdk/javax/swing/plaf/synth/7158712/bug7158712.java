@@ -106,6 +106,7 @@ public class bug7158712 {
             @Override
             public void run() {
                 BasicComboPopup popup = (BasicComboPopup) comboBox.getAccessibleContext().getAccessibleChild(0);
+                popup.show();
 
                 Point popupPoint = popup.getLocationOnScreen();
                 Point comboBoxPoint = comboBox.getLocationOnScreen();
