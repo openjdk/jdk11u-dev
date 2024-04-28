@@ -1375,38 +1375,23 @@ class ZipFile implements ZipConstants, Closeable {
         private int[] table;                 // Hash chain heads: indexes into entries
         private int tablelen;                // number of hash heads
 
-        /**
-         * A class representing a key to a ZIP file. A key is based
-         * on the file key if available, or the path value if the
-         * file key is not available. The key is also based on the
-         * file's last modified time to allow for cases where a ZIP
-         * file is re-opened after it has been modified.
-         */
         private static class Key {
-            final BasicFileAttributes attrs;
+            BasicFileAttributes attrs;
             File file;
-            final boolean utf8;
 
-            public Key(File file, BasicFileAttributes attrs, ZipCoder zc) {
+            public Key(File file, BasicFileAttributes attrs) {
                 this.attrs = attrs;
                 this.file = file;
-                this.utf8 = zc.isUTF8();
             }
 
             public int hashCode() {
-                long t = utf8 ? 0 : Long.MAX_VALUE;
-                t += attrs.lastModifiedTime().toMillis();
-                Object fk = attrs.fileKey();
-                return Long.hashCode(t) +
-                        (fk != null ? fk.hashCode() : file.hashCode());
+                long t = attrs.lastModifiedTime().toMillis();
+                return ((int)(t ^ (t >>> 32))) + file.hashCode();
             }
 
             public boolean equals(Object obj) {
                 if (obj instanceof Key) {
-                    Key key = (Key) obj;
-                    if (key.utf8 != utf8) {
-                        return false;
-                    }
+                    Key key = (Key)obj;
                     if (!attrs.lastModifiedTime().equals(key.attrs.lastModifiedTime())) {
                         return false;
                     }
@@ -1433,7 +1418,7 @@ class ZipFile implements ZipConstants, Closeable {
             try {
                 key = new Key(file,
                         Files.readAttributes(builtInFS.getPath(file.getPath()),
-                                BasicFileAttributes.class), zc);
+                                BasicFileAttributes.class));
             } catch (InvalidPathException ipe) {
                 throw new IOException(ipe);
             }
