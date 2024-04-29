@@ -39,7 +39,7 @@ public class ThreadTracker {
      * The hashCode/equals methods do not invoke the Thread hashCode/equals method
      * as they may run arbitrary code and/or leak references to Thread objects.
      */
-    private class ThreadRef {
+    private final class ThreadRef {
         private final Thread thread;
 
         ThreadRef(Thread thread) {
