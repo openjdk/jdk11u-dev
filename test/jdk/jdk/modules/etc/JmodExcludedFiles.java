@@ -25,6 +25,7 @@
  * @test
  * @bug 8159927
  * @modules java.base/jdk.internal.util
+ * @library /test/lib
  * @run main JmodExcludedFiles
  * @summary Test that JDK JMOD files do not include native debug symbols
  */
@@ -35,6 +36,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import jdk.test.lib.Platform;
 
 public class JmodExcludedFiles {
     private static String javaHome = System.getProperty("java.home");
@@ -68,7 +70,7 @@ public class JmodExcludedFiles {
             }
             String section = name.substring(0, index);
             if (section.equals("lib") || section.equals("bin")) {
-                if (System.getProperty("os.name").toLowerCase().contains("os x")) {
+                if (Platform.isOSX()) {
                     String n = name.substring(index + 1);
                     int i = n.indexOf("/");
                     if (i != -1) {
@@ -78,7 +80,7 @@ public class JmodExcludedFiles {
                         }
                     }
                 }
-                if (System.getProperty("os.name").toLowerCase().contains("win") && name.endsWith(".pdb")) {
+                if (Platform.isWindows() && name.endsWith(".pdb")) {
                     // on Windows we check if we should have public symbols through --with-external-symbols-in-bundles=public (JDK-8237192)
                     String strippedpdb = javaHome + "/bin/" + name.substring(index + 1, name.length() - 4) + ".stripped.pdb";
                     if (!Files.exists(Paths.get(strippedpdb))) {
