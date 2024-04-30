@@ -54,15 +54,21 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Random;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import javax.net.ssl.SSLContext;
 
@@ -106,14 +112,14 @@ public class ManyRequests {
     }
 
     //static final int REQUESTS = 1000;
-    static final int REQUESTS = 20;
+    static final int REQUESTS = MAX_COUNT;
     static final boolean INSERT_DELAY = Boolean.getBoolean("test.insertDelay");
     static final int CHUNK_SIZE = Math.max(0,
            Integer.parseInt(System.getProperty("test.chunkSize", "0")));
     static final boolean XFIXED = Boolean.getBoolean("test.XFixed");
 
     static class TestEchoHandler extends EchoHandler {
-        final Random rand = new Random();
+        final Random rand = RANDOM;
         @Override
         public void handle(HttpExchange e) throws IOException {
             System.out.println("Server: received " + e.getRequestURI());

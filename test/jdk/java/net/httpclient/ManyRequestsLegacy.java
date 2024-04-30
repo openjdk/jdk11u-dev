@@ -80,11 +80,20 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+
+import jdk.test.lib.Platform;
+import jdk.test.lib.RandomFactory;
 import jdk.test.lib.net.SimpleSSLContext;
 
 public class ManyRequestsLegacy {
 
     volatile static int counter = 0;
+    static final int MAX_COUNT = 20;
+    static final int MAX_LIMIT = 40;
+    static final AtomicInteger COUNT = new AtomicInteger();
+    static final AtomicInteger LIMIT = new AtomicInteger(MAX_LIMIT);
+    static final Random RANDOM = RandomFactory.getRandom();
+
 
     public static void main(String[] args) throws Exception {
         Logger logger = Logger.getLogger("com.sun.net.httpserver");
