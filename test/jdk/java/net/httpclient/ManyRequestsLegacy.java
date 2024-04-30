@@ -368,7 +368,16 @@ public class ManyRequestsLegacy {
         return sb.toString();
     }
 
-    record Pair<T,U>(T t, U u) { }
+    static final class Pair<T,U> {
+        private final T t;
+        private final U u;
+
+        Pair(T t, U u) {
+            this.t = t;
+            this.u = u;
+        }
+    }
+
 
     /**
      * A simple limiter for controlling the number of requests to be run in
