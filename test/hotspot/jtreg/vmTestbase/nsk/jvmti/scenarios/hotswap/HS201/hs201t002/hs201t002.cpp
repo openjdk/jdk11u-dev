@@ -188,7 +188,6 @@ callbackClassLoad(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread,
                         jclass klass) {
 
     char *className;
-    char *generic;
 
     if (!NSK_JVMTI_VERIFY(jvmti_env->GetClassSignature(klass, &className, NULL))) {
         nsk_jvmti_setFailStatus();
