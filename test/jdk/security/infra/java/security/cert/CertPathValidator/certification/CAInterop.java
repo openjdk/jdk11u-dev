@@ -654,11 +654,11 @@ public class CAInterop {
             case "certainlyroote1":
                     return new CATestURLs("https://valid.root-e1.certainly.com",
                             "https://revoked.root-e1.certainly.com");
-            case "globalsignr46" ->
-                    new CATestURLs("https://valid.r46.roots.globalsign.com",
+            case "globalsignr46":
+                    return new CATestURLs("https://valid.r46.roots.globalsign.com",
                             "https://revoked.r46.roots.globalsign.com");
-            case "globalsigne46" ->
-                    new CATestURLs("https://valid.e46.roots.globalsign.com",
+            case "globalsigne46":
+                    return new CATestURLs("https://valid.e46.roots.globalsign.com",
                             "https://revoked.e46.roots.globalsign.com");
 
             default: throw new RuntimeException("No test setup found for: " + alias);
