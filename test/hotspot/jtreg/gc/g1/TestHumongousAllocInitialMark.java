@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -28,6 +28,7 @@ package gc.g1;
  * @bug 7168848
  * @summary G1: humongous object allocations should initiate marking cycles when necessary
  * @requires vm.gc.G1
+ * @requires vm.flagless
  * @library /test/lib
  * @modules java.base/jdk.internal.misc
  *          java.management
@@ -54,7 +55,7 @@ public class TestHumongousAllocInitialMark {
             "-Xlog:gc",
             HumongousObjectAllocator.class.getName());
 
-        OutputAnalyzer output = new OutputAnalyzer(pb.start());
+        OutputAnalyzer output = ProcessTools.executeProcess(pb);
         output.shouldContain("Pause Young (Concurrent Start) (G1 Humongous Allocation)");
         output.shouldNotContain("Full GC");
         output.shouldHaveExitValue(0);
