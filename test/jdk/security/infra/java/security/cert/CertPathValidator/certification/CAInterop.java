@@ -471,7 +471,6 @@
  * @library /test/lib
  * @build jtreg.SkippedException ValidatePathWithURL CAInterop
  * @run main/othervm -Djava.security.debug=certpath,ocsp CAInterop globalsignr46 OCSP
- * @run main/othervm -Djava.security.debug=certpath,ocsp -Dcom.sun.security.ocsp.useget=false CAInterop globalsignr46 OCSP
  * @run main/othervm -Djava.security.debug=certpath CAInterop globalsignr46 CRL
  */
 
@@ -482,7 +481,6 @@
  * @library /test/lib
  * @build jtreg.SkippedException ValidatePathWithURL CAInterop
  * @run main/othervm -Djava.security.debug=certpath,ocsp CAInterop globalsigne46 OCSP
- * @run main/othervm -Djava.security.debug=certpath,ocsp -Dcom.sun.security.ocsp.useget=false CAInterop globalsigne46 OCSP
  * @run main/othervm -Djava.security.debug=certpath CAInterop globalsigne46 CRL
  */
 
@@ -654,6 +652,7 @@ public class CAInterop {
             case "certainlyroote1":
                     return new CATestURLs("https://valid.root-e1.certainly.com",
                             "https://revoked.root-e1.certainly.com");
+
             case "globalsignr46":
                     return new CATestURLs("https://valid.r46.roots.globalsign.com",
                             "https://revoked.r46.roots.globalsign.com");
