@@ -143,6 +143,7 @@ java/awt/Frame/UnfocusableMaximizedFrameResizablity/UnfocusableMaximizedFrameRes
 java/awt/grab/EmbeddedFrameTest1/EmbeddedFrameTest1.java 7080150 macosx-all
 java/awt/event/InputEvent/EventWhenTest/EventWhenTest.java 8168646 generic-all
 java/awt/KeyboardFocusmanager/TypeAhead/TestDialogTypeAhead.java 8198626 macosx-all
+java/awt/KeyboardFocusmanager/ConsumeNextMnemonicKeyTypedTest/ConsumeNextMnemonicKeyTypedTest.java 8321303 linux-all
 java/awt/Mixing/AWT_Mixing/HierarchyBoundsListenerMixingTest.java 8049405 macosx-all
 java/awt/Mixing/AWT_Mixing/OpaqueOverlappingChoice.java 8048171 generic-all
 java/awt/Mixing/AWT_Mixing/JMenuBarOverlapping.java 8159451 linux-all,windows-all,macosx-all
@@ -566,7 +567,7 @@ java/nio/file/WatchService/Basic.java                           7158947 solaris-
 java/nio/file/WatchService/MayFlies.java                        7158947 solaris-all Solaris 11
 java/nio/file/WatchService/LotsOfCancels.java                   8188039 solaris-all Solaris 11
 java/nio/file/WatchService/LotsOfEvents.java                    7158947 solaris-all Solaris 11
-
+java/nio/file/Files/probeContentType/Basic.java                 8320943 windows-all
 
 ############################################################################
 
@@ -636,6 +637,8 @@ sun/security/provider/PolicyParser/PrincipalExpansionError.java 8039280 generic-
 
 sun/security/tools/keytool/NssTest.java                         8204203 linux-all,windows-all
 
+security/infra/java/security/cert/CertPathValidator/certification/CAInterop.java#teliasonerarootcav1  8333640 generic-all
+
 ############################################################################
 
 # jdk_sound
@@ -665,6 +668,7 @@ javax/swing/plaf/basic/BasicTextUI/8001470/bug8001470.java 8233177 linux-all,win
 javax/swing/JComponent/7154030/bug7154030.java 7190978 generic-all
 javax/swing/JComboBox/ConsumedKeyTest/ConsumedKeyTest.java 8067986 generic-all
 javax/swing/JComponent/6683775/bug6683775.java 8172337 generic-all
+javax/swing/JFrame/MaximizeWindowTest.java 8321289 linux-all
 javax/swing/JComboBox/6236162/bug6236162.java 8028707 windows-all,macosx-all
 javax/swing/JButton/8151303/PressedIconTest.java 8198689 macosx-all
 javax/swing/JWindow/ShapedAndTranslucentWindows/PerPixelTranslucentCanvas.java 8081476 windows-all,macosx-all
@@ -686,6 +690,7 @@ javax/swing/JComboBox/8072767/bug8072767.java 8196093 windows-all,macosx-all
 javax/swing/JComponent/4337267/bug4337267.java 8146451 windows-all
 javax/swing/JFileChooser/8002077/bug8002077.java 8196094 windows-all,macosx-all
 javax/swing/JFileChooser/6396844/TwentyThousandTest.java 8058231 generic-all
+javax/swing/JFileChooser/8194044/FileSystemRootTest.java 8320944 windows-all
 javax/swing/JList/6462008/bug6462008.java 7156347 generic-all
 javax/swing/JPopupMenu/6580930/bug6580930.java 7124313 macosx-all
 javax/swing/JPopupMenu/6800513/bug6800513.java 7184956 macosx-all
