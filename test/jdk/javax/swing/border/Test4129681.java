@@ -39,11 +39,9 @@ import javax.swing.JLabel;
 
 public class Test4129681 {
     public static void main(String[] args) throws Exception {
-        String testInstructions = """
-                Click the checkbox to disable the label.
-                The test passes if the title of the border
-                is disabled as well as the label.
-                """;
+        String testInstructions = "Click the checkbox to disable the label.\n" +
+                                  "The test passes if the title of the border\n" +
+                                  "is disabled as well as the label.\n";
 
         PassFailJFrame.builder()
                 .title("Test Instructions")
