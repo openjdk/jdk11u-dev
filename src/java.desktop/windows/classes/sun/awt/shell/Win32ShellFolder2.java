@@ -1077,10 +1077,10 @@ final class Win32ShellFolder2 extends ShellFolder {
                             long hIcon = extractIcon(getParentIShellFolder(),
                                     getRelativePIDL(), getLargeIcon, false);
                             // E_PENDING: loading can take time so get the default
-                            if(hIcon <= 0) {
+                            if (hIcon == E_PENDING || hIcon == 0) {
                                 hIcon = extractIcon(getParentIShellFolder(),
                                          getRelativePIDL(), getLargeIcon, true);
-                                if(hIcon <= 0) {
+                                if (hIcon == 0) {
                                     if (isDirectory()) {
                                         return getShell32Icon(4, getLargeIcon);
                                     } else {
@@ -1329,6 +1329,7 @@ final class Win32ShellFolder2 extends ShellFolder {
         final Image resolutionVariant;
 
         public MultiResolutionIconImage(int baseSize, Image resolutionVariant) {
+            assert resolutionVariant != null : "Null icon passed as the base image for MRI";
             this.baseSize = baseSize;
             this.resolutionVariant = resolutionVariant;
         }

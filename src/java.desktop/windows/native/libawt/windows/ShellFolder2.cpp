@@ -957,10 +957,14 @@ JNIEXPORT jlong JNICALL Java_sun_awt_shell_Win32ShellFolder2_extractIcon
                 } else {
                     fn_DestroyIcon((HICON)hIconLarge);
                 }
+            } else {
+                hIcon = NULL;
             }
         } else if (hres == E_PENDING) {
             pIcon->Release();
-            return E_PENDING;
+            return (unsigned) E_PENDING;
+        } else {
+            hIcon = NULL;
         }
         pIcon->Release();
     }
