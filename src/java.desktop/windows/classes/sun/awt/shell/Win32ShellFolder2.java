@@ -1141,6 +1141,14 @@ final class Win32ShellFolder2 extends ShellFolder {
     }
 
     /**
+     * The data is not available yet.
+     * @see
+     * <a href="https://learn.microsoft.com/en-us/windows/win32/com/com-error-codes-1">COM
+     * Error Codes</a>.
+     */
+    private static final long E_PENDING = 0x8000000AL;
+
+    /**
      * Returns the canonical form of this abstract pathname.  Equivalent to
      * <code>new&nbsp;Win32ShellFolder2(getParentFile(), this.{@link java.io.File#getCanonicalPath}())</code>.
      *
