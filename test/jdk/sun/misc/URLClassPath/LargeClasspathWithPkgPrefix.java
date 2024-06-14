@@ -44,21 +44,22 @@ public class LargeClasspathWithPkgPrefix {
 
     private static final Path CWD = Path.of(".");
 
-    private static final String JAVA_MAIN_CONTENT = "public class Foo {\n" +
-            "public static void main(String[] args) throws Exception {\n" +
-            "if (args.length != 0) {\n" +
-            "System.out.println(\"unexpected args: \" + java.util.Arrays.toString(args));\n" +
-            "System.exit(1);\n" +
-            "}\n" +
-            "System.out.println(\"Running application on Java version: \"\n" +
-            "System.getProperty(\"java.version\"));\n" +
-            "System.out.println(\"Application launched with java.protocol.handler.pkgs=\"\n" +
-            "System.getProperty(\"java.protocol.handler.pkgs\"));\n" +
-            "System.out.println(\"Application launched with classpath: \"\n" +
-            "System.getProperty(\"java.class.path\"));\n" +
-            "System.out.println(\"Hello World\");\n" +
-            "}\n" +
-            "}\n";
+    private static final String JAVA_MAIN_CONTENT =
+        "public class Foo {\n" +
+        "    public static void main(String[] args) throws Exception {\n" +
+        "        if (args.length != 0) {\n" +
+        "            System.out.println(\"unexpected args: \" + java.util.Arrays.toString(args));\n" +
+        "            System.exit(1);\n" +
+        "        }\n" +
+        "        System.out.println(\"Running application on Java version: \"\n" +
+        "                + System.getProperty(\"java.version\"));\n" +
+        "        System.out.println(\"Application launched with java.protocol.handler.pkgs=\"\n" +
+        "                + System.getProperty(\"java.protocol.handler.pkgs\"));\n" +
+        "        System.out.println(\"Application launched with classpath: \"\n" +
+        "                + System.getProperty(\"java.class.path\"));\n" +
+        "        System.out.println(\"Hello World\");\n" +
+        "    }\n" +
+        "}\n";
 
     public static void main(final String[] args) throws Exception {
         // dir to which the application main's .class file will be compiled to
