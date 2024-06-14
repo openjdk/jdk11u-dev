@@ -26,9 +26,9 @@
   * @bug 8253700
   * @summary spurious "extends Throwable" at end of method declaration
   * throws section.  Make sure that the link is below a Throws heading.
-  * @library /tools/lib ../../lib
+  * @library /tools/lib ../lib
   * @modules jdk.javadoc/jdk.javadoc.internal.tool
-  * @build javadoc.tester.* toolbox.ToolBox
+  * @build JavadocTester toolbox.ToolBox
   * @run main TestThrows
   */
 
@@ -36,8 +36,6 @@
  import java.nio.file.Path;
 
  import toolbox.ToolBox;
-
- import javadoc.tester.JavadocTester;
 
  public class TestThrows extends JavadocTester {
 
@@ -52,41 +50,40 @@
      public void testThrowsWithBound(Path base) throws IOException {
          Path src = base.resolve("src");
          tb.writeJavaFiles(src,
-                 """
-                     /**
-                      * This is interface C.
-                      */
-                     public interface C {
-                         /**
-                          * Method m.
-                          * @param <T> the throwable
-                          * @throws T if a specific error occurs
-                          * @throws Exception if an exception occurs
-                          */
-                         <T extends Throwable> void m() throws T, Exception;
-                     }
-                     """);
+                String.join(System.lineSeparator(),
+                     "/**",
+                     " * This is interface C.",
+                     " */",
+                     "public interface C {",
+                     "    /**",
+                     "     * Method m.",
+                     "     * @param <T> the throwable",
+                     "     * @throws T if a specific error occurs",
+                     "     * @throws Exception if an exception occurs",
+                     "     */",
+                     "    <T extends Throwable> void m() throws T, Exception;",
+                     "}"
+                     ));
 
          javadoc("-d", base.resolve("out").toString(),
                  src.resolve("C.java").toString());
          checkExit(Exit.OK);
 
          checkOutput("C.html", true,
-                 """
-                     <div class="member-signature"><span class="type-parameters">&lt;T extends java\
-                     .lang.Throwable&gt;</span>&nbsp;<span class="return-type">void</span>&nbsp;<sp\
-                     an class="member-name">m</span>()
-                                                     throws <span class="exceptions">T,
-                     java.lang.Exception</span></div>
-                     """,
-                 """
-                     <dl class="notes">
-                     <dt>Type Parameters:</dt>
-                     <dd><code>T</code> - the throwable</dd>
-                     <dt>Throws:</dt>
-                     <dd><code>T</code> - if a specific error occurs</dd>
-                     <dd><code>java.lang.Exception</code> - if an exception occurs</dd>
-                     </dl>
-                     """);
+                 String.join(System.lineSeparator(),
+                     "<pre class=\"methodSignature\">&lt;T extends java.lang.Throwable&gt;&nbsp;void&nbsp;m()",
+                     "                                throws T,",
+                     "                                       java.lang.Exception</pre>"
+                     ),
+                 String.join(System.lineSeparator(),
+                     "<dl>",
+                     "<dt><span class=\"paramLabel\">Type Parameters:</span></dt>",
+                     "<dd><code>T</code> - the throwable</dd>",
+                     "<dt><span class=\"throwsLabel\">Throws:</span></dt>",
+                     "<dd><code>T</code> - if a specific error occurs</dd>",
+                     "<dd><code>java.lang.Exception</code> - if an exception occurs</dd>",
+                     "<dd><code>T extends java.lang.Throwable</code></dd>",
+                     "</dl>"
+                     ));
      }
 }

@@ -275,13 +275,13 @@ public abstract class AbstractExecutableMemberWriter extends AbstractMemberWrite
             htmltree.add(indent);
             htmltree.add("throws ");
             indent = makeSpace(indentSize + 1);
-            Content link = writer.getLink(new LinkInfoImpl(configuration, MEMBER, exceptions.get(0)));
+            Content link = writer.getLink(new LinkInfoImpl(configuration, THROWS_TYPE, exceptions.get(0)));
             htmltree.add(link);
             for(int i = 1; i < exceptions.size(); i++) {
                 htmltree.add(",");
                 htmltree.add(DocletConstants.NL);
                 htmltree.add(indent);
-                Content exceptionLink = writer.getLink(new LinkInfoImpl(configuration, MEMBER,
+                Content exceptionLink = writer.getLink(new LinkInfoImpl(configuration, THROWS_TYPE,
                         exceptions.get(i)));
                 htmltree.add(exceptionLink);
             }

@@ -213,9 +213,19 @@ public class LinkInfoImpl extends LinkInfo {
         PROPERTY_COPY,
 
         /**
-         * A receiver type
+         * A receiver type.
          */
-        RECEIVER_TYPE
+        RECEIVER_TYPE,
+
+        /**
+         * A record component within a class signature.
+         */
+        RECORD_COMPONENT,
+
+        /**
+         * A type thrown from a method.
+         */
+        THROWS_TYPE
     }
 
     public final HtmlConfiguration configuration;
