@@ -36,7 +36,7 @@ import jdk.lib.testlibrary.java.util.jar.JarBuilder;
  * @bug 8308184
  * @summary Verify that an application can be launched when the classpath contains large number of
  *          jars and the java.protocol.handler.pkgs system property is set
- * @library /test/lib/
+ * @library /lib/testlibrary/java/util/jar /test/lib/
  * @build jdk.lib.testlibrary.java.util.jar.JarBuilder jdk.test.lib.compiler.CompilerUtils
  *        jdk.test.lib.process.ProcessTools
  * @run driver LargeClasspathWithPkgPrefix
