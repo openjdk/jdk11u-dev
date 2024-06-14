@@ -322,7 +322,7 @@ public abstract class AbstractExecutableMemberWriter extends AbstractMemberWrite
                 buf.append(",");
             }
             TypeMirror t = parameters.get(i).asType();
-            SimpleTypeVisitor9<Boolean, Void> stv = new SimpleTypeVisitor9<Boolean, Void>() {
+            SimpleTypeVisitor9<Boolean, Void> stv = new SimpleTypeVisitor9<>() {
                 boolean foundTypeVariable = false;
 
                 @Override

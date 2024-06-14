@@ -398,9 +398,8 @@ public class LinkInfoImpl extends LinkInfo {
 
             case RETURN_TYPE:
             case SUMMARY_RETURN_TYPE:
-                excludeTypeBounds = true;
-                break;
             case EXECUTABLE_MEMBER_PARAM:
+            case THROWS_TYPE:
                 excludeTypeBounds = true;
                 break;
         }
