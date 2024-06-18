@@ -70,12 +70,9 @@
          checkExit(Exit.OK);
 
          checkOutput("C.html", true,
-                 String.join(System.lineSeparator(),
                      "<pre class=\"methodSignature\">&lt;T extends java.lang.Throwable&gt;&nbsp;void&nbsp;m()",
                      "                                throws T,",
-                     "                                       java.lang.Exception</pre>"
-                     ),
-                 String.join(System.lineSeparator(),
+                     "                                       java.lang.Exception</pre>",
                      "<dl>",
                      "<dt><span class=\"paramLabel\">Type Parameters:</span></dt>",
                      "<dd><code>T</code> - the throwable</dd>",
@@ -84,6 +81,6 @@
                      "<dd><code>java.lang.Exception</code> - if an exception occurs</dd>",
                      "<dd><code>T extends java.lang.Throwable</code></dd>",
                      "</dl>"
-                     ));
+                     );
      }
 }
