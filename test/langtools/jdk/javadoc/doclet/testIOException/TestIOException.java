@@ -37,7 +37,6 @@ import java.nio.file.Path;
 import java.nio.file.Files;
 import java.util.Map;
 
-// import JavadocTester;
 import jtreg.SkippedException;
 
 /**
