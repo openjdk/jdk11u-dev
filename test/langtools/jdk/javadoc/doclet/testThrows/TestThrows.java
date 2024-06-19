@@ -65,7 +65,7 @@
                      "}"
                      ));
 
-         javadoc("-d", base.resolve("out").toString(),
+         javadoc("-encoding", "utf-8", "-d", base.resolve("out").toString(),
                  src.resolve("C.java").toString());
          checkExit(Exit.OK);
 
