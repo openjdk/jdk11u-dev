@@ -165,7 +165,7 @@ public final class LoaderThreadCount extends ThreadGroup {
             System.out.println("  = 1: " + ones);
             System.out.println("  = 2: " + twos);
             System.out.println("  > 2: " + count);
-            if (count > loaderCount.size() / 2) {
+            if (count > 0) {
                 throw new RuntimeException("Detected " + count + " snapshots "
                                            + "with several loading threads");
             }
@@ -229,8 +229,13 @@ public final class LoaderThreadCount extends ThreadGroup {
     }
 
 
-    private record Scanner(JFileChooser fileChooser)
-            implements Runnable {
+    private static class Scanner implements Runnable {
+
+        private JFileChooser fileChooser;
+
+	private Scanner(JFileChooser fileChooser) {
+            this.fileChooser = fileChooser;
+        }
 
         @Override
         public void run() {
