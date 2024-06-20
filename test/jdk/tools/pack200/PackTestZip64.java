@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2024, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,13 +23,14 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 /*
  * @test
  * @bug 8029646
@@ -103,25 +104,26 @@ public class PackTestZip64 {
             throw new IOException("File " + dst.getName() + " does not exist!");
         }
 
-        BufferedInputStream srcis, dstis;
-        srcis = new BufferedInputStream(new FileInputStream(src));
-        dstis = new BufferedInputStream(new FileInputStream(dst));
+        ZipFile zSrc = new ZipFile(src);
+        ZipFile zDst = new ZipFile(dst);
 
-        int s = 0, d, pos = 0;
-        while (s != -1) { // Checking of just one result for EOF is enough
-            s = srcis.read();
-            d = dstis.read();
+        Map<String, Long> srcCRCs = zSrc.stream().collect(Collectors.toMap(ZipEntry::getName, ZipEntry::getCrc));
+        Map<String, Long> dstCRCs = zDst.stream().collect(Collectors.toMap(ZipEntry::getName, ZipEntry::getCrc));
 
-            if (s != d) {
-                throw new IOException("Files are differ starting at position: "
-                + Integer.toHexString(pos));
+        for(Map.Entry<String, Long> srcCRC: srcCRCs.entrySet()) {
+            ZipEntry dstEntry = zDst.getEntry(srcCRC.getKey());
+            if (dstEntry.getCrc() != srcCRC.getValue()) {
+                throw new IOException("CRC mismatch in entry " + srcCRC.getKey());
             }
-
-            pos++;
+            dstCRCs.remove(srcCRC.getKey());
         }
 
-        srcis.close();
-        dstis.close();
+        if (! dstCRCs.isEmpty()) {
+            throw new IOException("Destination file " + dst.getAbsolutePath() + " has more zip entries than source file " + src.getAbsolutePath());
+        }
+
+        zSrc.close();
+        zDst.close();
     }
 
     static void generateLargeJar(File result, File source) throws IOException {
