@@ -233,7 +233,7 @@ public final class LoaderThreadCount extends ThreadGroup {
 
         private JFileChooser fileChooser;
 
-	private Scanner(JFileChooser fileChooser) {
+        private Scanner(JFileChooser fileChooser) {
             this.fileChooser = fileChooser;
         }
 
