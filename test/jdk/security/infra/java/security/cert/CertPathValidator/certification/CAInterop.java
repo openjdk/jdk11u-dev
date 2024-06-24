@@ -49,7 +49,7 @@
  * @summary Interoperability tests with Amazon's CA2
  * @library /test/lib
  * @build jtreg.SkippedException ValidatePathWithURL CAInterop
- * @run main/othervm//manual -Djava.security.debug=certpath CAInterop amazonrootca2 CRL
+ * @run main/othervm/manual -Djava.security.debug=certpath CAInterop amazonrootca2 CRL
  */
 
 /*
