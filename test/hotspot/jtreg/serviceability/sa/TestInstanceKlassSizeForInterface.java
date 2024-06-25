@@ -23,6 +23,7 @@
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 import sun.jvm.hotspot.HotSpotAgent;
 import sun.jvm.hotspot.utilities.SystemDictionaryHelper;
@@ -38,7 +39,6 @@ import jdk.test.lib.process.ProcessTools;
 import jdk.test.lib.process.OutputAnalyzer;
 import jdk.test.lib.SA.SATestUtils;
 import jdk.test.lib.Utils;
-import java.util.Arrays;
 
 /**
  * @test
