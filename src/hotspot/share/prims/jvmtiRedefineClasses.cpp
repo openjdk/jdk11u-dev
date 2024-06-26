@@ -3488,7 +3488,6 @@ void VM_RedefineClasses::AdjustAndCleanMetadata::do_klass(Klass* k) {
     // update is done unconditionally. It should result in doing nothing for
     // classes being redefined by the current VM_RedefineClasses operation.
     // Method entries in the previous version(s) are adjusted as well.
-    constantPoolHandle other_cp;
     ConstantPoolCache* cp_cache;
 
     // this klass' constant pool cache may need adjustment
