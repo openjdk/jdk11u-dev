@@ -971,15 +971,6 @@ class Method : public Metadata {
   // Return if true if not all classes references in signature, including return type, has been loaded
   static bool has_unloaded_classes_in_signature(const methodHandle& m, TRAPS);
 
-  Method* get_new_method() const {
-    InstanceKlass* holder = method_holder();
-    Method* new_method = holder->method_with_idnum(orig_method_idnum());
-
-    assert(new_method != NULL, "method_with_idnum() should not be NULL");
-    assert(this != new_method, "sanity check");
-    return new_method;
-  }
-
   // Printing
   void print_short_name(outputStream* st = tty); // prints as klassname::methodname; Exposed so field engineers can debug VM
 #if INCLUDE_JVMTI
