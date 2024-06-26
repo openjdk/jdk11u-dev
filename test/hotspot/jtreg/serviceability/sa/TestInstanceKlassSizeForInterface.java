@@ -22,8 +22,8 @@
  */
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 import sun.jvm.hotspot.HotSpotAgent;
 import sun.jvm.hotspot.utilities.SystemDictionaryHelper;
