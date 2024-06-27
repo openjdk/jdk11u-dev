@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2003, 2023, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -20,41 +20,26 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+/*
+  @test
+  @bug 4704042
+  @summary Unit tests for Insets.set()
+  @run main SetInsetsTest
+*/
+import java.awt.Insets;
+import java.awt.EventQueue;
 
-/**
- * @test
- * @requires vm.debug
- * @bug 8168712
- *
- * @run main/othervm -XX:CompileCommand=compileonly,Test8168712.* -XX:CompileCommand=compileonly,*Object.* -XX:+DTraceMethodProbes -XX:-UseOnStackReplacement -XX:+DeoptimizeRandom compiler.runtime.Test8168712
- */
-package compiler.runtime;
-
-import java.lang.ref.Cleaner;
-import java.util.*;
-
-public class Test8168712 {
-    static HashSet<Test8168712> m = new HashSet<>();
-
-    // One cleaner thread for cleaning all the instances. Otherwise, we get OOME.
-    static Cleaner cleaner = Cleaner.create();
-
-    public Test8168712() {
-        cleaner.register(this, () -> cleanup());
+public class SetInsetsTest {
+    public static void main(String[] args) throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            Insets insets = new Insets(0,0,0,0);
+            insets.set(100,100,100,100);
+            if (insets.top != 100 ||
+                insets.bottom != 100 ||
+                insets.left != 100 ||
+                insets.right != 100) {
+                throw new RuntimeException("Test Failed!  Insets=" + insets);
+            }
+        });
     }
-
-    public static void main(String args[]) {
-        int i = 0;
-        while (i++<15000) {
-            test();
-        }
-    }
-
-    static Test8168712 test() {
-        return new Test8168712();
-    }
-
-    public void cleanup() {
-        m.add(this);
-    }
-}
+}// class SetInsetsTest

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2001, 2023, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,40 +21,30 @@
  * questions.
  */
 
-/**
+/*
  * @test
- * @requires vm.debug
- * @bug 8168712
- *
- * @run main/othervm -XX:CompileCommand=compileonly,Test8168712.* -XX:CompileCommand=compileonly,*Object.* -XX:+DTraceMethodProbes -XX:-UseOnStackReplacement -XX:+DeoptimizeRandom compiler.runtime.Test8168712
+ * @bug 4148154
+ * @summary Tests that menu items created by JMenu.add(Action) method
+           have right HorizontalTextPosition.
+ * @run main bug4148154
  */
-package compiler.runtime;
 
-import java.lang.ref.Cleaner;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
-public class Test8168712 {
-    static HashSet<Test8168712> m = new HashSet<>();
+public class bug4148154
+{
+    public static void main(String[] args) {
+        JMenu menu = new JMenu();
+        JMenuItem mi = menu.add(new AbstractAction() {
+                public void actionPerformed(ActionEvent ev) {}
+            });
+        if (mi.getHorizontalTextPosition() != JMenu.LEADING &&
+            mi.getHorizontalTextPosition() != JMenu.TRAILING) {
 
-    // One cleaner thread for cleaning all the instances. Otherwise, we get OOME.
-    static Cleaner cleaner = Cleaner.create();
-
-    public Test8168712() {
-        cleaner.register(this, () -> cleanup());
-    }
-
-    public static void main(String args[]) {
-        int i = 0;
-        while (i++<15000) {
-            test();
+            throw new RuntimeException("Failed:");
         }
-    }
-
-    static Test8168712 test() {
-        return new Test8168712();
-    }
-
-    public void cleanup() {
-        m.add(this);
     }
 }

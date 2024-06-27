@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1999, 2023, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,40 +21,29 @@
  * questions.
  */
 
-/**
+/*
  * @test
- * @requires vm.debug
- * @bug 8168712
- *
- * @run main/othervm -XX:CompileCommand=compileonly,Test8168712.* -XX:CompileCommand=compileonly,*Object.* -XX:+DTraceMethodProbes -XX:-UseOnStackReplacement -XX:+DeoptimizeRandom compiler.runtime.Test8168712
+ * @bug 4143592
+ * @summary Tests the method add(Component, int) of JMenu for insertion
+            the given component to a specified position of menu
+ * @run main bug4143592
  */
-package compiler.runtime;
 
-import java.lang.ref.Cleaner;
-import java.util.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
-public class Test8168712 {
-    static HashSet<Test8168712> m = new HashSet<>();
+public class bug4143592 {
 
-    // One cleaner thread for cleaning all the instances. Otherwise, we get OOME.
-    static Cleaner cleaner = Cleaner.create();
-
-    public Test8168712() {
-        cleaner.register(this, () -> cleanup());
-    }
-
-    public static void main(String args[]) {
-        int i = 0;
-        while (i++<15000) {
-            test();
+    public static void main(String[] argv) {
+        JMenuBar mb = new JMenuBar();
+        JMenu m = mb.add(new JMenu("Order"));
+        m.add("beginning");
+        m.add("middle");
+        m.add("end");
+        m.add(new JMenuItem("in between"), 1);
+        if (!m.getItem(1).getText().equals("in between")) {
+            throw new RuntimeException("Item was inserted incorrectly.");
         }
-    }
-
-    static Test8168712 test() {
-        return new Test8168712();
-    }
-
-    public void cleanup() {
-        m.add(this);
     }
 }
