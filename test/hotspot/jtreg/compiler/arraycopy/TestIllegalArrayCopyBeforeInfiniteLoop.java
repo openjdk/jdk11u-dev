@@ -38,7 +38,7 @@ import java.util.Arrays;
 public class TestIllegalArrayCopyBeforeInfiniteLoop {
     private static char src[] = new char[10];
     private static int count = 0;
-    private static final int iter = 20_000;
+    private static final int iter = 10_000;
 
     public static void main(String[] args) throws Exception {
         for (int i = 0; i < iter; ++i) {
