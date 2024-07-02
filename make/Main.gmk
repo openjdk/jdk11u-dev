@@ -109,6 +109,17 @@ ALL_TARGETS += generate-exported-symbols
 # When creating a BUILDJDK, the java targets have already been built and copied
 # into the buildjdk so no need to generate sources.
 ifneq ($(CREATING_BUILDJDK), true)
+  GENERATE_BUILDJDK_SOURCES := true
+else ifeq ($(OPENJDK_TARGET_OS)+$(COMPILE_TYPE), windows+cross)
+ # Windows AArch64 is built by cross compiling. Therefore, the buildjdk sources
+ # need to be generated unconditionally to avoid a 'No rule to make target
+ # windows/conf/tzmappings' error
+  GENERATE_BUILDJDK_SOURCES := true
+else
+  GENERATE_BUILDJDK_SOURCES :=
+endif
+
+ifeq ($(GENERATE_BUILDJDK_SOURCES), true)
   $(eval $(call DeclareRecipesForPhase, GENSRC, \
       TARGET_SUFFIX := gensrc-src, \
       FILE_PREFIX := Gensrc, \
@@ -765,7 +776,7 @@ else
   # Skip modules that do not have java source.
   # When creating a BUILDJDK, the java compilation has already been done by the
   # normal build and copied in.
-  ifneq ($(CREATING_BUILDJDK), true)
+  ifeq ($(GENERATE_BUILDJDK_SOURCES), true)
     $(foreach m, $(filter $(JAVA_MODULES), $(LIBS_MODULES)), $(eval $m-libs: $m-java))
   endif
 
