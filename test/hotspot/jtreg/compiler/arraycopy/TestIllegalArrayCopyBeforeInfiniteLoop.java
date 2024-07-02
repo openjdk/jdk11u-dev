@@ -27,7 +27,7 @@
  * @requires vm.compiler2.enabled
  * @summary ArrayCopy with negative index before infinite loop
  * @run main/othervm -Xbatch -XX:-TieredCompilation
- *                   -XX:CompileCommand=compileonly,"*TestIllegalArrayCopyBeforeInfiniteLoop::foo"
+ *                   -XX:CompileCommand=compileonly,compiler.arraycopy.TestIllegalArrayCopyBeforeInfiniteLoop::foo
  *                   compiler.arraycopy.TestIllegalArrayCopyBeforeInfiniteLoop
  */
 
