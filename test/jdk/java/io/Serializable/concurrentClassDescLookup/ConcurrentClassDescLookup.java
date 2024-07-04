@@ -31,6 +31,8 @@ import java.io.*;
 import java.util.concurrent.CountDownLatch;
 
 class Good implements Serializable {
+    private static final long serialVersionUID = 6319710844400051132L;
+
     static {
         try { Thread.sleep(1000); } catch (InterruptedException ex) {}
     }
@@ -48,7 +50,7 @@ class Bad implements Serializable {
 }
 
 class SuccessfulLookup extends Thread {
-    Class cl;
+    Class<?> cl;
     long suid;
     final CountDownLatch lookupLatch;
     boolean ok;
@@ -74,7 +76,7 @@ class SuccessfulLookup extends Thread {
 }
 
 class FailingLookup extends Thread {
-    Class cl;
+    Class<?> cl;
     final CountDownLatch lookupLatch;
     boolean ok;
 
@@ -102,7 +104,7 @@ class FailingLookup extends Thread {
 public class ConcurrentClassDescLookup {
     public static void main(String[] args) throws Exception {
         ClassLoader loader = ConcurrentClassDescLookup.class.getClassLoader();
-        Class cl = Class.forName("Good", false, loader);
+        Class<?> cl = Class.forName("Good", false, loader);
         int numSuccessfulLookups = 50;
         CountDownLatch sLookupLatch = new CountDownLatch(numSuccessfulLookups);
         SuccessfulLookup[] slookups = new SuccessfulLookup[numSuccessfulLookups];
