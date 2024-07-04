@@ -44,11 +44,11 @@ import javax.swing.SwingUtilities;
 
 public class PaintTest {
 
-    private static final String INSTRUCTIONS = """
-        Click the paint button.
-        If half of the second line is erased,
-        that is you can only see the bottom half of the second line
-        with the top half painted over in white, click fail, else click pass.""";
+    private static final String INSTRUCTIONS =
+        "Click the paint button.\n" +
+        "If half of the second line is erased,\n" +
+        "that is you can only see the bottom half of the second line\n" +
+        "with the top half painted over in white, click fail, else click pass.";
 
 
     public static void main(String[] args) throws Exception {
