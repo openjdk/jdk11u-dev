@@ -41,15 +41,13 @@ import javax.swing.text.html.HTMLEditorKit;
 
 public class bug4803145 {
 
-    private static final String INSTRUCTIONS = """
-        A JEditorPane with some html list in Hebrew appears.
-        The bullets should be on the left side of the list items.
-        Press the "switch text orientation" button.
-        After the text relayouts:
-
-            - If the bullets are to the right of the list items then test PASSED.
-
-            - If the bullets remained on the left side then test FAILED.""";
+    private static final String INSTRUCTIONS =
+        "A JEditorPane with some html list in Hebrew appears.\n" +
+        "The bullets should be on the left side of the list items.\n" +
+        "Press the \"switch text orientation\" button.\n" +
+        "After the text relayouts:\n" +
+            "- If the bullets are to the right of the list items then test PASSED.\n" +
+            "- If the bullets remained on the left side then test FAILED.";
 
     public static void main(String[] args) throws Exception {
          PassFailJFrame.builder()
