@@ -37,17 +37,11 @@ import javax.swing.JFrame;
 import java.util.Locale;
 
 public class bug4419914 {
-    private static final String INSTRUCTIONS = """
-        1. You will see a frame with five buttons.
-        2. Confirm that each button is placed as follows:
-             NORTH
-        END  CENTER  START
-             SOUTH
-        3. Press the "NORTH" button and confirm the button is focused.
-        4. Press TAB repeatedly and confirm that the TAB focus moves from right to left.
-             (NORTH - START - CENTER - END - SOUTH - NORTH - START - CENTER - ...)
-
-            If there's anything different from the above items, click Fail else click Pass.""";
+    private static final String INSTRUCTIONS =
+        "Put the cursor at the beginning of the first text line and move the\n" +
+        "cursor to the right using arrow key.\n" +
+        "If the text is not corrupted then click Pass\n" +
+        "If the text disappear while cursor moves click Fail.";
 
     public static void main(String[] args) throws Exception {
         PassFailJFrame.builder()
