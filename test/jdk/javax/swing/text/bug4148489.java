@@ -48,11 +48,11 @@ public class bug4148489 {
     static StyleContext sc;
     static DefaultStyledDocument doc;
 
-    private static final String INSTRUCTIONS = """
-        Put the cursor at the beginning of the first text line and move the
-        cursor to the right using arrow key.
-        If the text is not corrupted then click Pass
-        If the text disappear while cursor moves click Fail.""";
+    private static final String INSTRUCTIONS =
+        "Put the cursor at the beginning of the first text line and move the\n" +
+        "cursor to the right using arrow key.\n" +
+        "If the text is not corrupted then click Pass\n" +
+        "If the text disappear while cursor moves click Fail.";
 
     public static void main(String[] args) throws Exception {
         PassFailJFrame.builder()
