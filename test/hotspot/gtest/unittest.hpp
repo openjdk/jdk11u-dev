@@ -29,6 +29,7 @@
 
 #define GTEST_DONT_DEFINE_TEST 1
 #include "gtest/gtest.h"
+#include "utilities/vmassert_reinstall.hpp"
 
 // gtest/gtest.h includes assert.h which will define the assert macro, but hotspot has its
 // own standards incompatible assert macro that takes two parameters.
