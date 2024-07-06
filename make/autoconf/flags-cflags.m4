@@ -192,6 +192,12 @@ AC_DEFUN([FLAGS_SETUP_WARNINGS],
       DISABLE_WARNING_PREFIX="-Wno-"
       BUILD_CC_DISABLE_WARNING_PREFIX="-Wno-"
       CFLAGS_WARNINGS_ARE_ERRORS="-Werror"
+
+      WARNINGS_ENABLE_ALL="-Wall -Wextra -Wformat=2"
+      WARNINGS_ENABLE_ADDITIONAL_JVM="-Wpointer-arith -Wsign-compare -Wunused-function -Wundef -Wunused-value -Woverloaded-virtual -Wreturn-type"
+
+      DISABLED_WARNINGS="unused-parameter unused"
+
       ;;
 
     clang)
@@ -199,7 +205,7 @@ AC_DEFUN([FLAGS_SETUP_WARNINGS],
       CFLAGS_WARNINGS_ARE_ERRORS="-Werror"
 
       WARNINGS_ENABLE_ALL="-Wall -Wextra -Wformat=2"
-      WARNINGS_ENABLE_ADDITIONAL_JVM="-Wpointer-arith -Wsign-compare -Wunused-function -Wundef -Wunused-value -Woverloaded-virtual -Wreorder"
+      WARNINGS_ENABLE_ADDITIONAL_JVM="-Wpointer-arith -Wsign-compare -Wunused-function -Wundef -Wunused-value -Woverloaded-virtual"
 
       DISABLED_WARNINGS="unused-parameter unused"
       ;;
@@ -556,7 +562,7 @@ AC_DEFUN([FLAGS_SETUP_CFLAGS_HELPER],
     TOOLCHAIN_CFLAGS="-errshort=tags"
 
     TOOLCHAIN_CFLAGS_JDK="-mt $TOOLCHAIN_FLAGS"
-    TOOLCHAIN_CFLAGS_JDK_CONLY="-xc99=%none -xCC -Xa -W0,-noglobal $TOOLCHAIN_CFLAGS" # C only
+    TOOLCHAIN_CFLAGS_JDK_CONLY="-xCC -Xa -W0,-noglobal $TOOLCHAIN_CFLAGS" # C only
     TOOLCHAIN_CFLAGS_JDK_CXXONLY="-features=no%except -norunpath -xnolib" # CXX only
     TOOLCHAIN_CFLAGS_JVM="-template=no%extdef -features=no%split_init \
         -library=stlport4 -mt -features=no%except $TOOLCHAIN_FLAGS"
