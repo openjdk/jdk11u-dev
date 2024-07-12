@@ -160,10 +160,10 @@ void band::dump() {
   if (b_name == null) {
     char* bp = &b_name_buf[0];
     b_name = bp;
-    sprintf(bp, "#%d/%d", bn, le_kind); bp += strlen(bp);
-    if (le_bci != 0)  { sprintf(bp, "/bci%d",  le_bci);  bp += strlen(bp); }
-    if (le_back != 0) { sprintf(bp, "/back%d", le_back); bp += strlen(bp); }
-    if (le_len != 0)  { sprintf(bp, "/len%d",  le_len);  bp += strlen(bp); }
+    int nbytes = snprintf(bp, sizeof(b_name_buf), "#%d/%d", bn, le_kind); bp += nbytes;
+    if (le_bci != 0)  { nbytes += snprintf(bp, sizeof(b_name_buf) - nbytes, "/bci%d",  le_bci);  bp += nbytes; }
+    if (le_back != 0) { nbytes += snprintf(bp, sizeof(b_name_buf) - nbytes, "/back%d", le_back); bp += nbytes; }
+    if (le_len != 0)  { nbytes += snprintf(bp, sizeof(b_name_buf) - nbytes, "/len%d",  le_len);  bp += nbytes; }
   }
   fprintf(u->errstrm, "band %s[%d]%s", b_name, length, (length==0?"\n":" {"));
   if (length > 0) {
