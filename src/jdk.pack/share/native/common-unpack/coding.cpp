@@ -976,13 +976,14 @@ coding* coding::findByIndex(int idx) {
 const char* coding::string() {
   CODING_PRIVATE(spec);
   bytes buf;
-  buf.malloc(100);
+  int buf_len = 100;
+  buf.malloc(buf_len);
   char maxS[20], minS[20];
-  sprintf(maxS, "%d", max);
-  sprintf(minS, "%d", min);
-  if (max == INT_MAX_VALUE)  strcpy(maxS, "max");
-  if (min == INT_MIN_VALUE)  strcpy(minS, "min");
-  sprintf((char*)buf.ptr, "(%d,%d,%d,%d) L=%d r=[%s,%s]",
+  int nmax = snprintf(maxS, sizeof(maxS), "%d", max);
+  int nmin = snprintf(minS, sizeof(minS), "%d", min);
+  if (max == INT_MAX_VALUE)  snprintf(maxS + nmax, sizeof(maxS) - nmax, "max");
+  if (min == INT_MIN_VALUE)  snprintf(minS + nmin, sizeof(minS) - nmin, "min");
+  snprintf((char*)buf.ptr, buf_len, "(%d,%d,%d,%d) L=%d r=[%s,%s]",
           B,H,S,D,L,minS,maxS);
   return (const char*) buf.ptr;
 }

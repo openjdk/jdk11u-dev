@@ -418,7 +418,7 @@ struct unpacker {
   void         saveTo(bytes& b, bytes& data) { saveTo(b, data.ptr, data.len); }
   void         saveTo(bytes& b, byte* ptr, size_t len); //{ b.ptr = U_NEW...}
   const char*  saveStr(const char* str) { bytes buf; saveTo(buf, str); return buf.strval(); }
-  const char*  saveIntStr(int num) { char buf[30]; sprintf(buf, "%d", num); return saveStr(buf); }
+  const char*  saveIntStr(int num) { char buf[30]; snprintf(buf, 30, "%d", num); return saveStr(buf); }
 #ifndef PRODUCT
   int printcr_if_verbose(int level, const char* fmt,...);
 #endif

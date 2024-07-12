@@ -82,7 +82,7 @@ void mkdirs(int oklen, char* path) {
 void breakpoint() { }  // hook for debugger
 int assert_failed(const char* p) {
   char message[1<<12];
-  sprintf(message, "@assert failed: %s\n", p);
+  snprintf(message, sizeof(message), "@assert failed: %s\n", p);
   fprintf(stdout, "%s", 1+message);
   breakpoint();
   unpack_abort(message);
@@ -126,7 +126,7 @@ void mtrace(char c, void* ptr, size_t size) {
       return;
     }
     char fname[1024];
-    sprintf(fname, "mtr%d.txt", getpid());
+    snprintf(fname, sizeof(fname), "mtr%d.txt", getpid());
     mtfp = fopen(fname, "w");
     if (mtfp == null)
       mtfp = stdout;

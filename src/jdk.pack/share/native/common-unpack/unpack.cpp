@@ -671,7 +671,7 @@ void unpacker::read_file_header() {
   }
   if (majminfound == null) {
     char message[200];
-    sprintf(message, "@" ERROR_FORMAT ": magic/ver = "
+    snprintf(message, sizeof(message), "@" ERROR_FORMAT ": magic/ver = "
             "%08X/%d.%d should be %08X/%d.%d OR %08X/%d.%d OR %08X/%d.%d OR %08X/%d.%d\n",
             magic, majver, minver,
             JAVA_PACKAGE_MAGIC, JAVA5_PACKAGE_MAJOR_VERSION, JAVA5_PACKAGE_MINOR_VERSION,
@@ -3720,12 +3720,12 @@ const char* entry::string() {
   case CONSTANT_Integer:
   case CONSTANT_Float:
     buf = getbuf(12);
-    sprintf((char*)buf.ptr, "0x%08x", value.i);
+    snprintf((char*)buf.ptr, 12, "0x%08x", value.i);
     break;
   case CONSTANT_Long:
   case CONSTANT_Double:
     buf = getbuf(24);
-    sprintf((char*)buf.ptr, "0x" LONG_LONG_HEX_FORMAT, value.l);
+    snprintf((char*)buf.ptr, 24, "0x" LONG_LONG_HEX_FORMAT, value.l);
     break;
   default:
     if (nrefs == 0) {
