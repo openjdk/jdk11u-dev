@@ -24,12 +24,13 @@
 #include "precompiled.hpp"
 #include "gc/shared/memset_with_concurrent_readers.hpp"
 #include "utilities/globalDefinitions.hpp"
-#include "unittest.hpp"
 
 #include "utilities/vmassert_uninstall.hpp"
 #include <string.h>
 #include <sstream>
 #include "utilities/vmassert_reinstall.hpp"
+
+#include "unittest.hpp"
 
 static unsigned line_byte(const char* line, size_t i) {
   return unsigned(line[i]) & 0xFF;

@@ -42,13 +42,13 @@
 #include "utilities/globalDefinitions.hpp"
 #include "utilities/growableArray.hpp"
 
-#include "unittest.hpp"
-
 #include "utilities/vmassert_uninstall.hpp"
 #include <vector>
 #include <list>
 #include <map>
 #include "utilities/vmassert_reinstall.hpp"
+
+#include "unittest.hpp"
 
 namespace {
 
