@@ -589,7 +589,7 @@ public class VMProps implements Callable<Map<String, String>> {
             return "" + "true".equalsIgnoreCase(flagless);
         }
 
-        List<String> allFlags = allFlags().toList();
+        List<String> allFlags = allFlags().collect(Collectors.toList());
 
         // check -XX flags
         var ignoredXXFlags = Set.of(
@@ -648,7 +648,11 @@ public class VMProps implements Callable<Map<String, String>> {
         return allFlags()
             .filter(s -> s.startsWith("-X") && !s.startsWith("-XX:") && !s.equals("-X"))
             .map(s -> s.replaceFirst("-", ""))
-            .map(flag -> flag.splitWithDelimiters("[:0123456789]", 2))
+            .map(flag -> {
+                String[] split = flag.split("[:0123456789]", 2);
+                return split.length == 2 ? new String[] {split[0], flag.substring(split[0].length(), flag.length() - split[1].length()), split[1]}
+                    : split;
+            })
             .collect(Collectors.toMap(a -> "vm.opt.x." + a[0],
                                       a -> (a.length == 1)
                                       ? "true" // -Xnoclassgc
