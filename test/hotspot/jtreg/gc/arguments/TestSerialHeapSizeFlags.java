@@ -25,10 +25,9 @@ package gc.arguments;
 
 /*
  * @test TestSerialHeapSizeFlags
- * @key gc
  * @bug 8006088
  * @summary Tests argument processing for initial and maximum heap size for the Serial collector
- * @key flag-sensitive
+ * @key gc flag-sensitive
  * @requires vm.gc.Serial & vm.opt.x.Xmx == null & vm.opt.x.Xms == null & vm.opt.MinHeapSize == null & vm.opt.MaxHeapSize == null & vm.opt.InitialHeapSize == null
  * @library /test/lib
  * @library /

@@ -31,7 +31,7 @@
 # cgroups:              test uses cgroups
 # external-dep:         test requires external dependencies to work
 # flag-sensitive:       test is sensitive to certain flags and might fail when flags are passed using -vmoptions and -javaoptions
-keys=stress headful intermittent randomness cgroups flag-sensitive
+keys=cte_test jcmd nmt regression gc stress metaspace headful intermittent randomness cgroups external-dep flag-sensitive
 
 groups=TEST.groups TEST.quick-groups
 
