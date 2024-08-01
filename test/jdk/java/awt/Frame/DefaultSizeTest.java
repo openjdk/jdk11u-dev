@@ -48,6 +48,7 @@ public class DefaultSizeTest {
                 .testTimeOut(5)
                 .rows(10)
                 .columns(45)
+                .screenCapture()
                 .build();
 
         EventQueue.invokeAndWait(() -> {
