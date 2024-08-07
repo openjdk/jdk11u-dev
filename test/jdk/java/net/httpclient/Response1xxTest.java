@@ -443,8 +443,7 @@ public class Response1xxTest implements HttpServerAdapters {
         final HttpRequest request = HttpRequest.newBuilder(requestURI).build();
         System.out.println("Issuing request to " + requestURI);
         // we expect the request to fail because the server sent an unexpected 101
-        // to check - we get here an IOException not a ProtocalException (compared to 17 or 21)
-        //Assert.assertThrows(ProtocolException.class,
+        // Backport note: Later JDK versions (e.g. 17 or 21) throw a ProtocolException.
         Assert.assertThrows(IOException.class,
                 () -> client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8)));
     }
