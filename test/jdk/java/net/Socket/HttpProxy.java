@@ -24,6 +24,7 @@
 /*
  * @test
  * @bug 6370908
+ * @library /test/lib
  * @summary Add support for HTTP_CONNECT proxy in Socket class
  * @modules java.base/sun.net.www
  * @run main HttpProxy
@@ -40,6 +41,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.ServerSocket;
 import java.net.Socket;
+import jdk.test.lib.net.IPSupport;
 import sun.net.www.MessageHeader;
 
 public class HttpProxy {
@@ -48,6 +50,8 @@ public class HttpProxy {
     static final int SO_TIMEOUT = 15000;
 
     public static void main(String[] args) throws Exception {
+        IPSupport.skipIfCurrentConfigurationIsInvalid();
+
         String host;
         int port;
         if (args.length == 0) {

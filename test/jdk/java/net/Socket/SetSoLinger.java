@@ -24,6 +24,7 @@
 /*
  * @test
  * @bug 4151834
+ * @library /test/lib
  * @summary Test Socket.setSoLinger
  * @run main SetSoLinger
  * @run main/othervm -Djava.net.preferIPv4Stack=true SetSoLinger
@@ -31,11 +32,14 @@
  */
 
 import java.net.*;
+import jdk.test.lib.net.IPSupport;
 
 public class SetSoLinger {
     static final int LINGER = 65546;
 
     public static void main(String args[]) throws Exception {
+        IPSupport.skipIfCurrentConfigurationIsInvalid();
+
         int value;
         InetAddress addr = InetAddress.getLocalHost();
         ServerSocket ss = new ServerSocket();
