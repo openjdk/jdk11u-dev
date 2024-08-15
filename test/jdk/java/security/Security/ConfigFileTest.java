@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -62,10 +62,6 @@ public class ConfigFileTest {
             copyJDK(jdkTestDir, copyJdkDir);
             String extraPropsFile = Path.of(System.getProperty("test.src"), "override.props").toString();
 
-            // sanity test -XshowSettings:security option
-            exerciseShowSettingsSecurity(copiedJava.toString(), "-cp", System.getProperty("test.classes"),
-                    "-Djava.security.debug=all", "-XshowSettings:security", "ConfigFileTest", "runner");
-
             // exercise some debug flags while we're here
             // regular JDK install - should expect success
             exerciseSecurity(0, "java",
@@ -110,16 +106,6 @@ public class ConfigFileTest {
         ProcessBuilder process = new ProcessBuilder(args);
         OutputAnalyzer oa = ProcessTools.executeProcess(process);
         oa.shouldHaveExitValue(exitCode).shouldContain(output);
-    }
-
-    // exercise the -XshowSettings:security launcher
-    private static void exerciseShowSettingsSecurity(String... args) throws Exception {
-        ProcessBuilder process = new ProcessBuilder(args);
-        OutputAnalyzer oa = ProcessTools.executeProcess(process);
-        oa.shouldHaveExitValue(0)
-                .shouldContain("Security properties:")
-                .shouldContain("Security provider static configuration:")
-                .shouldContain("Security TLS configuration");
     }
 
     private static void copyJDK(Path src, Path dst) throws Exception {
