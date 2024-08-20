@@ -40,7 +40,7 @@ public class CloseAvailable implements Runnable {
     static int port;
 
     public static void main(String[] args) throws Exception {
-        IPSupport.skipIfCurrentConfigurationIsInvalid();
+        IPSupport.throwSkippedExceptionIfNonOperational();
 
         boolean error = true;
         addr = InetAddress.getLocalHost();

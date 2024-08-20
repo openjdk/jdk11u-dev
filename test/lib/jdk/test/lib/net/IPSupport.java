@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,7 +29,6 @@ import java.io.PrintStream;
 import java.io.UncheckedIOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -47,6 +46,7 @@ public class IPSupport {
     private static final boolean hasIPv4;
     private static final boolean hasIPv6;
     private static final boolean preferIPv4Stack;
+    private static final boolean preferIPv6Addresses;
 
     static {
         try {
@@ -64,6 +64,8 @@ public class IPSupport {
         }
         preferIPv4Stack = runPrivilegedAction(() -> Boolean.parseBoolean(
                 System.getProperty("java.net.preferIPv4Stack")));
+        preferIPv6Addresses = runPrivilegedAction(() -> Boolean.parseBoolean(
+                System.getProperty("java.net.preferIPv6Addresses")));
         if (!preferIPv4Stack && !hasIPv4 && !hasIPv6) {
             throw new AssertionError("IPv4 and IPv6 both not available and java.net.preferIPv4Stack is not true");
         }
@@ -112,6 +114,13 @@ public class IPSupport {
         return preferIPv4Stack;
     }
 
+    /**
+     * Whether or not the "java.net.preferIPv6Addresses" system property is set.
+     */
+    public static final boolean preferIPv6Addresses() {
+        return preferIPv6Addresses;
+    }
+
 
     /**
      * Whether or not the current networking configuration is valid or not.
@@ -123,9 +132,19 @@ public class IPSupport {
     }
 
     /**
-     * Throws a jtreg.SkippedException if the current networking configuration is invalid.
+     * Ensures that the platform supports the ability to create a
+     * minimally-operational socket whose protocol is either one of IPv4
+     * or IPv6.
+     *
+     * <p> A minimally-operation socket is one that can be created and
+     * bound to an IP-specific loopback address. IP support is
+     * considered non-operational if a socket cannot be bound to either
+     * one of, an IPv4 loopback address, or the IPv6 loopback address.
+     *
+     * @throws SkippedException if the current networking configuration
+     *         is non-operational
      */
-    public static void skipIfCurrentConfigurationIsInvalid() throws SkippedException {
+    public static void throwSkippedExceptionIfNonOperational() throws SkippedException {
         if (!currentConfigurationIsValid()) {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             PrintStream ps = new PrintStream(os);
@@ -142,6 +161,7 @@ public class IPSupport {
         out.println("IPSupport - IPv4: " + hasIPv4());
         out.println("IPSupport - IPv6: " + hasIPv6());
         out.println("preferIPv4Stack: " + preferIPv4Stack());
+        out.println("preferIPv6Addresses: " + preferIPv6Addresses());
     }
 
 }

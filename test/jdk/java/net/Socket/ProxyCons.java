@@ -82,7 +82,7 @@ public class ProxyCons {
     }
 
     public static void main(String[] args) throws Exception {
-        IPSupport.skipIfCurrentConfigurationIsInvalid();
+        IPSupport.throwSkippedExceptionIfNonOperational();
 
         ProxyCons c = new ProxyCons();
         c.test();
