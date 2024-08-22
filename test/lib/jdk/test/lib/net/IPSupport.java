@@ -55,7 +55,7 @@ public class IPSupport {
 
             InetAddress loopbackIPv6 = InetAddress.getByAddress(
                     new byte[] {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01});
+                                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01});
 
             hasIPv4 = runPrivilegedAction(() -> hasAddress(loopbackIPv4));
             hasIPv6 = runPrivilegedAction(() -> hasAddress(loopbackIPv6));
@@ -63,9 +63,9 @@ public class IPSupport {
             throw new AssertionError(e);
         }
         preferIPv4Stack = runPrivilegedAction(() -> Boolean.parseBoolean(
-                System.getProperty("java.net.preferIPv4Stack")));
+            System.getProperty("java.net.preferIPv4Stack")));
         preferIPv6Addresses = runPrivilegedAction(() -> Boolean.parseBoolean(
-                System.getProperty("java.net.preferIPv6Addresses")));
+            System.getProperty("java.net.preferIPv6Addresses")));
         if (!preferIPv4Stack && !hasIPv4 && !hasIPv6) {
             throw new AssertionError("IPv4 and IPv6 both not available and java.net.preferIPv4Stack is not true");
         }
