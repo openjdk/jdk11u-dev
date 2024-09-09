@@ -56,7 +56,7 @@ public class SecurityDialogTest {
                     "all the dialogs where it was present.\n" +
                     "Otherwise, press the Fail button.\n" +
                     "\n" +
-                    "The dialogs should be displayed even when " +
+                    "The dialogs should be displayed even when \n" +
                     "there is no queuePrintJob permission.";
 
     private static JLabel dialogType;
