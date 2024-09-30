@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -32,18 +32,6 @@
 #include "utilities/vmassert_uninstall.hpp"
 #include "gtest/gtest.h"
 #include "utilities/vmassert_reinstall.hpp"
-
-// gtest/gtest.h includes assert.h which will define the assert macro, but hotspot has its
-// own standards incompatible assert macro that takes two parameters.
-// The workaround is to undef assert and then re-define it. The re-definition
-// must unfortunately be copied since debug.hpp might already have been
-// included and a second include wouldn't work due to the header guards in debug.hpp.
-#ifdef assert
-  #undef assert
-  #ifdef vmassert
-    #define assert(p, ...) vmassert(p, __VA_ARGS__)
-  #endif
-#endif
 
 #define CONCAT(a, b) a ## b
 
