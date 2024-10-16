@@ -2062,6 +2062,8 @@ public final class System {
         if (cn != null) {
             if (cn.isEmpty() || "default".equals(cn)) {
                 System.setSecurityManager(new SecurityManager());
+            } else if ("allow".equals(cn) || "disallow".equals(cn)) {
+                // ignore allow/disallow options
             } else {
                 try {
                     Class<?> c = Class.forName(cn, false, ClassLoader.getBuiltinAppClassLoader());
