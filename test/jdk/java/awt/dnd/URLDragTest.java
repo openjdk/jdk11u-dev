@@ -40,14 +40,13 @@ import java.awt.dnd.DropTargetDropEvent;
 */
 
 public class URLDragTest {
-    private static final String INSTRUCTIONS = """
-            1) When the test starts, open any browser.
-            2) Drag any image from the browser page onto the RED window.
-            3) When the image is dropped you should see the list of available
-               DataFlavors in the log area below the instruction window.
-            4) If you see application/x-java-url and text/uri-list flavors in
-               the logs then please press PASS, else FAIL.
-            """;
+    private static final String INSTRUCTIONS =
+            "1) When the test starts, open any browser.\n" +
+            "2) Drag any image from the browser page onto the RED window.\n" +
+            "3) When the image is dropped you should see the list of available\n" +
+            "   DataFlavors in the log area below the instruction window.\n" +
+            "4) If you see application/x-java-url and text/uri-list flavors in\n" +
+            "   the logs then please press PASS, else FAIL.\n";
 
     public static void main(String[] args) throws Exception {
         PassFailJFrame.builder()
