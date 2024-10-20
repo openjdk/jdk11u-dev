@@ -40,7 +40,7 @@
 package  p7;
 
 super public class c7
-	version 61:0
+	version 55:0
 {
   public Method "<init>":"()V"
 	stack 1 locals 1
