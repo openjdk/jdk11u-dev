@@ -208,6 +208,11 @@ ifeq ($(call isTargetOs, linux), true)
   LIBAWT_CFLAGS += $(EXPORT_ALL_SYMBOLS)
 endif
 
+ifeq ($(call isBuildOs, macosx), true)
+  # macos-13 JDK-8343786
+  LIBAWT_CFLAGS += -Wno-deprecated-non-prototype
+endif
+
 # Turn off all warnings for debug_mem.c This is needed because the specific warning
 # about initializing a declared 'extern' cannot be turned off individually. Only
 # applies to debug builds.
@@ -931,7 +936,7 @@ ifeq ($(call isTargetOs, macosx), true)
       libosxapp \
       #
 
-  LIBAWT_LWAWT_CFLAGS := $(X_CFLAGS) $(X_LIBS)
+  LIBAWT_LWAWT_CFLAGS := $(X_CFLAGS) $(X_LIBS)  -Wno-deprecated-non-prototype
 
   LIBAWT_LWAWT_EXFILES := fontpath.c awt_Font.c X11Color.c
   LIBAWT_LWAWT_EXCLUDES := $(TOPDIR)/src/$(MODULE)/unix/native/common/awt/medialib
