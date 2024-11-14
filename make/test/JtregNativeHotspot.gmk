@@ -146,6 +146,11 @@ endif
 
 JVMTI_COMMON_INCLUDES=-I$(TOPDIR)/test/lib/jdk/test/lib/jvmti
 
+ifeq ($(call isBuildOs, macosx), true)
+   NSK_AOD_INCLUDES += -Wno-deprecated-declarations
+   JVMTI_COMMON_INCLUDES += -Wno-deprecated-declarations
+endif
+
 BUILD_HOTSPOT_JTREG_LIBRARIES_CFLAGS_libNoFramePointer := $(NO_FRAMEPOINTER_CFLAGS)
 # Optimization -O3 needed, HIGH == -O3
 BUILD_HOTSPOT_JTREG_LIBRARIES_OPTIMIZATION_libNoFramePointer := HIGH

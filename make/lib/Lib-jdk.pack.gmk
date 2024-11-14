@@ -35,6 +35,7 @@ $(eval $(call SetupJdkLibrary, BUILD_LIBUNPACK, \
     CFLAGS := $(CXXFLAGS_JDKLIB) \
         -DNO_ZLIB -DUNPACK_JNI -DFULL, \
     CFLAGS_release := -DPRODUCT, \
+    CFLAGS_macosx := -Wno-deprecated-declarations, \
     EXTRA_HEADER_DIRS := $(call GetJavaHeaderDir, java.base), \
     DISABLED_WARNINGS_gcc := implicit-fallthrough, \
     LDFLAGS := $(LDFLAGS_JDKLIB) $(LDFLAGS_CXX_JDK) \
