@@ -142,6 +142,23 @@ AC_DEFUN([FLAGS_SETUP_DEBUG_SYMBOLS],
 
 AC_DEFUN([FLAGS_SETUP_WARNINGS],
 [
+  AC_ARG_ENABLE([xcode14], [AS_HELP_STRING([--enable-xcode14],
+      [add additional CFLAGS for compiling with XCode 14 toolset @<:@enabled@:>@])])
+
+  # Set default values
+  CFLAGS_XCODE14_DEPR_DECLARATIONS=""
+  CFLAGS_XCODE14_DEPR_NON_PROTOTYPE=""
+  if test "x$enable_xcode14" = "xyes"; then
+    if test "x$OPENJDK_BUILD_OS" != "xmacosx"; then
+      AC_MSG_ERROR([--enable-xcode14 can only be set if building on macosx])
+    fi
+    CFLAGS_XCODE14_DEPR_DECLARATIONS="-Wno-deprecated-declarations"
+    CFLAGS_XCODE14_DEPR_NON_PROTOTYPE="-Wno-deprecated-non-prototype"
+    AC_MSG_RESULT([Building on macosx with XCode 14 flags])
+  fi
+  AC_SUBST(CFLAGS_XCODE14_DEPR_DECLARATIONS)
+  AC_SUBST(CFLAGS_XCODE14_DEPR_NON_PROTOTYPE)
+
   AC_ARG_ENABLE([warnings-as-errors], [AS_HELP_STRING([--disable-warnings-as-errors],
       [do not consider native warnings to be an error @<:@enabled@:>@])])
 

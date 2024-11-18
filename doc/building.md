@@ -355,6 +355,8 @@ Build Environment](#problems-with-the-build-environment), and [Getting
 Help](#getting-help) to find out if there are any recent, non-merged patches
 available for this update.
 
+Experimental support for XCode 14 can be enabled using the `--enable-xcode14` configuration flag.
+
 ### Oracle Solaris Studio
 
 The minimum accepted version of the Solaris Studio compilers is 5.13
