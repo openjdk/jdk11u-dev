@@ -43,6 +43,8 @@ ifeq ($(call check-jvm-feature, compiler2), true)
   else ifeq ($(call isBuildOs, aix), true)
     ADLC_LDFLAGS := -q64
     ADLC_CFLAGS := -qnortti -qeh -q64 -DAIX
+  else ifeq ($(call isBuildOs, macosx), true)
+    ADLC_CFLAGS := $(CFLAGS_XCODE14_DEPR_DECLARATIONS)
   else ifeq ($(call isBuildOs, windows), true)
     ADLC_LDFLAGS := -nologo
     ADLC_CFLAGS := -nologo -EHsc
