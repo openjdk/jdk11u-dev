@@ -34,12 +34,12 @@
 package compiler.controldependency;
 
 public class TestAntiDependencyForPinnedLoads {
-  public static void main(String[] args) {
-    for(int i = 0; i < 50_000; i++) {
-      String str = "YYYY年MM月DD日";
-      StringBuffer strBuffer = new StringBuffer(str);
-      String revStr = strBuffer.reverse().toString();
-      if (!revStr.equals("日DD月MM年YYYY")) throw new InternalError("FAIL");
+    public static void main(String[] args) {
+        for(int i = 0; i < 50_000; i++) {
+            String str = "YYYY年MM月DD日";
+            StringBuffer strBuffer = new StringBuffer(str);
+            String revStr = strBuffer.reverse().toString();
+            if (!revStr.equals("日DD月MM年YYYY")) throw new InternalError("FAIL");
+        }
     }
-  }
 }
