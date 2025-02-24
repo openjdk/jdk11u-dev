@@ -67,7 +67,19 @@ jobs:
       windows-aarch64: ${{ steps.include.outputs.windows-aarch64 }}
 
     steps:
-        # This function must be inlined in main.yml, or we'd be forced to checkout the repo
+      - name: 'Checkout the scripts'
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github
+            make/conf/github-actions.conf
+
+      - name: 'Build JTReg'
+        id: jtreg
+        uses: ./.github/actions/build-jtreg
+
+      # TODO: Now that we are checking out the repo scripts, we can put the following code
+      # into a separate file
       - name: 'Check what jobs to run'
         id: include
         run: |
