@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2024, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,6 +23,7 @@
 
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 import jdk.internal.net.http.frame.DataFrame;
 
@@ -60,6 +61,10 @@ class BodyOutputStream extends OutputStream {
         // first wait for the connection window
         conn.obtainConnectionWindow(demand);
         // now wait for the stream window
+        waitForStreamWindow(demand);
+    }
+
+    public void waitForStreamWindow(int demand) throws InterruptedException {
         synchronized (this) {
             while (demand > 0) {
                 int n = Math.min(demand, window);
@@ -78,6 +83,7 @@ class BodyOutputStream extends OutputStream {
 
     @Override
     public void write(byte[] buf, int offset, int len) throws IOException {
+        Objects.checkFromIndexSize(offset, len, buf.length);
         if (closed) {
             throw new IOException("closed");
         }
@@ -96,6 +102,34 @@ class BodyOutputStream extends OutputStream {
             }
         } catch (InterruptedException ex) {
             throw new IOException(ex);
+        }
+    }
+
+    /**
+     * This method pushes frames onto the stack without checking
+     * for flow control, allowing the sender to bypass flow
+     * control for testing purposes
+     * @param buf     data to send
+     * @param offset  offset at which the data starts
+     * @param len     length of the data to send
+     * @throws IOException if an I/O error occurs
+     */
+    public void writeUncontrolled(byte[] buf, int offset, int len)
+            throws IOException {
+        Objects.checkFromIndexSize(offset, len, buf.length);
+        if (closed) {
+            throw new IOException("closed");
+        }
+
+        if (!goodToGo) {
+            throw new IllegalStateException("sendResponseHeaders must be called first");
+        }
+        int max = conn.getMaxFrameSize();
+        while (len > 0) {
+            int n = len > max ? max : len;
+            send(buf, offset, n, 0);
+            offset += n;
+            len -= n;
         }
     }
 
