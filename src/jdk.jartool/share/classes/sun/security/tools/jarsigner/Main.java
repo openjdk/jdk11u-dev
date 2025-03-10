@@ -1256,6 +1256,7 @@ public class Main {
                 (hasExpiringTsaCert  && expireDate != null) ||
                 (noTimestamp && expireDate != null) ||
                 (hasExpiredTsaCert && signerNotExpired) ||
+                hasNonexistentEntries ||
                 extraAttrsDetected) {
 
             if (hasExpiredTsaCert && signerNotExpired) {
