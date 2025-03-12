@@ -81,5 +81,11 @@ public interface Http2TestExchange {
      * with the number of milliseconds it took to get a valid response.
      * It may also complete exceptionally
      */
+
     CompletableFuture<Long> sendPing();
+    /**
+     * {@return the identification of the connection on which this exchange is being
+     * processed}
+     */
+    String getConnectionKey();
 }
