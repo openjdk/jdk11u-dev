@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2023, Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2023, 2024, Oracle and/or its affiliates. All rights reserved.
 # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 #
 # This code is free software; you can redistribute it and/or modify it
@@ -23,12 +23,8 @@
 # questions.
 #
 
-name: 'Get JTReg'
-description: 'Download JTReg from cache or source location'
-outputs:
-  path:
-    description: 'Path to the installed JTReg'
-    value: ${{ steps.path-name.outputs.path }}
+name: 'Build JTReg'
+description: 'Build JTReg'
 
 runs:
   using: composite
@@ -39,11 +35,10 @@ runs:
       with:
         var: JTREG_VERSION
 
-    - name: 'Check cache for JTReg'
-      id: get-cached-jtreg
+    - name: 'Check cache for already built JTReg'
+      id: get-cached
       uses: actions/cache@v4
       with:
-        name: bundles-jtreg-${{ steps.version.outputs.value }}
         path: jtreg/installed
         key: jtreg-${{ steps.version.outputs.value }}
 
@@ -53,7 +48,7 @@ runs:
         repository: openjdk/jtreg
         ref: jtreg-${{ steps.version.outputs.value }}
         path: jtreg/src
-      if: steps.get-cached-jtreg.outputs.cache-hit != 'true'
+      if: (steps.get-cached.outputs.cache-hit != 'true')
 
     - name: 'Build JTReg'
       run: |
@@ -63,11 +58,11 @@ runs:
         mv build/images/jtreg/* ../installed
       working-directory: jtreg/src
       shell: bash
-      if: steps.get-cached-jtreg.outputs.cache-hit != 'true'
+      if: (steps.get-cached.outputs.cache-hit != 'true')
 
-    - name: 'Export path to where JTReg is installed'
-      id: path-name
-      run: |
-        # Export the path
-        echo 'path=jtreg/installed' >> $GITHUB_OUTPUT
-      shell: bash
+    - name: 'Upload JTReg artifact'
+      uses: actions/upload-artifact@v4
+      with:
+        name: bundles-jtreg-${{ steps.version.outputs.value }}
+        path: jtreg/installed
+        retention-days: 1
