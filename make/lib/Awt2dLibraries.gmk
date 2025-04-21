@@ -573,16 +573,22 @@ else
    # parentheses          -> GCC 6
    # range-loop-analysis  -> clang on Xcode12
 
-  HARFBUZZ_DISABLED_WARNINGS_gcc := type-limits missing-field-initializers strict-aliasing \
-       array-bounds
-  # noexcept-type required for GCC 7 builds. Not required for GCC 8+.
-  # expansion-to-defined required for GCC 9 builds. Not required for GCC 10+.
-  HARFBUZZ_DISABLED_WARNINGS_CXX_gcc := reorder delete-non-virtual-dtor strict-overflow \
-       maybe-uninitialized class-memaccess unused-result extra noexcept-type expansion-to-defined
-  HARFBUZZ_DISABLED_WARNINGS_clang := unused-value incompatible-pointer-types \
-       tautological-constant-out-of-range-compare int-to-pointer-cast \
-       undef missing-field-initializers deprecated-declarations c++11-narrowing range-loop-analysis
-  HARFBUZZ_DISABLED_WARNINGS_microsoft := 4267 4244 4090 4146 4334 4819 4101 4068 4805 4138
+   HARFBUZZ_DISABLED_WARNINGS_gcc := type-limits missing-field-initializers strict-aliasing \
+        array-bounds parentheses dangling-pointer
+   # noexcept-type required for GCC 7 builds. Not required for GCC 8+.
+   # expansion-to-defined required for GCC 9 builds. Not required for GCC 10+.
+   # maybe-uninitialized required for GCC 8 builds. Not required for GCC 9+.
+   # calloc-transposed-args required for GCC 14 builds. (fixed upstream in Harfbuzz 032c931e1c0cfb20f18e5acb8ba005775242bd92)
+   HARFBUZZ_DISABLED_WARNINGS_CXX_gcc := reorder delete-non-virtual-dtor strict-overflow \
+        maybe-uninitialized class-memaccess unused-result extra use-after-free noexcept-type \
+        expansion-to-defined dangling-reference maybe-uninitialized \
+        calloc-transposed-args
+   HARFBUZZ_DISABLED_WARNINGS_clang := unused-value incompatible-pointer-types \
+        tautological-constant-out-of-range-compare int-to-pointer-cast \
+        undef missing-field-initializers range-loop-analysis \
+        deprecated-declarations c++11-narrowing
+   HARFBUZZ_DISABLED_WARNINGS_microsoft := 4267 4244 4090 4146 4334 4819 4101 4068 4805 4138
+
   HARFBUZZ_DISABLED_WARNINGS_C_solstudio := \
         E_INTEGER_OVERFLOW_DETECTED \
         E_ARG_INCOMPATIBLE_WITH_ARG_L \
