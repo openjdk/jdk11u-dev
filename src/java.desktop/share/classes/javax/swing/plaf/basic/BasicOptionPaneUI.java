@@ -89,6 +89,7 @@ public class BasicOptionPaneUI extends OptionPaneUI {
     public static final int MinimumHeight = 90;
 
     private static String newline;
+    private static int recursionCount;
 
     /**
      * {@code JOptionPane} that the receiver is providing the
@@ -455,7 +456,7 @@ public class BasicOptionPaneUI extends OptionPaneUI {
                     @SuppressWarnings("serial") // anonymous class
                     JPanel breakPanel = new JPanel() {
                         public Dimension getPreferredSize() {
-                            Font       f = getFont();
+                            Font f = getFont();
 
                             if (f != null) {
                                 return new Dimension(1, f.getSize() + 2);
@@ -470,8 +471,14 @@ public class BasicOptionPaneUI extends OptionPaneUI {
                     addMessageComponents(container, cons, s.substring(0, nl),
                                       maxll, false);
                 }
+                // Prevent recursion of more than
+                // 200 successive newlines in a message
+                if (recursionCount++ > 200) {
+                    recursionCount = 0;
+                    return;
+                }
                 addMessageComponents(container, cons, s.substring(nl + nll), maxll,
-                                  false);
+                                     false);
 
             } else if (len > maxll) {
                 Container c = Box.createVerticalBox();
