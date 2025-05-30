@@ -23,7 +23,7 @@
 
 /*
  * @test
- * @bug 8160286 8243666
+ * @bug 8160286 8243666 8217527
  * @summary Test the recording and checking of module hashes
  * @library /test/lib
  * @modules java.base/jdk.internal.misc
@@ -450,22 +450,29 @@ public class HashesTest {
      * a ModuleHashes class file attribute.
      */
     private Map<String, ModuleHashes> runJmodHash() {
-        runJmod(List.of("hash",
+        runJmod("hash",
                 "--module-path", lib.toString(),
-                "--hash-modules", ".*"));
-        HashesTest ht = this;
+                "--hash-modules", ".*");
+        return moduleHashes();
+    }
+
+    private Map<String, ModuleHashes> moduleHashes() {
         return ModulePath.of(Runtime.version(), true, lib)
                 .findAll()
                 .stream()
                 .map(ModuleReference::descriptor)
                 .map(ModuleDescriptor::name)
-                .filter(mn -> ht.hashes(mn) != null)
-                .collect(Collectors.toMap(mn -> mn, ht::hashes));
+                .filter(mn -> hashes(mn) != null)
+                .collect(Collectors.toMap(mn -> mn, this::hashes));
     }
 
     private static void runJmod(List<String> args) {
-        int rc = JMOD_TOOL.run(System.out, System.out, args.toArray(new String[args.size()]));
-        System.out.println("jmod " + args.stream().collect(Collectors.joining(" ")));
+        runJmod(args.toArray(new String[args.size()]));
+    }
+
+    private static void runJmod(String... args) {
+        int rc = JMOD_TOOL.run(System.out, System.out, args);
+        System.out.println("jmod " + Arrays.stream(args).collect(Collectors.joining(" ")));
         if (rc != 0) {
             throw new AssertionError("jmod failed: rc = " + rc);
         }
