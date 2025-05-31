@@ -276,7 +276,7 @@ public class HashesTest {
     }
 
     @Test
-    private void testReproducibibleHash() throws Exception {
+    public void testReproducibibleHash() throws Exception {
         makeModule("m4");
         makeModule("m3", "m4");
         makeModule("m2");
@@ -295,6 +295,48 @@ public class HashesTest {
 
         // hashes should be equal
         assertEquals(hashes1, hashes2);
+    }
+
+    @Test
+    public void testHashModulesPattern() throws IOException {
+        // create modules for test cases
+        makeModule("m1");
+        makeModule("m2", "m1");
+        makeModule("m3");
+        makeModule("m4", "m1", "m3");
+        List.of("m1", "m2", "m3", "m4").forEach(this::makeJmod);
+
+        // compute hash for the target jmod (m1.jmod) with different regex
+        // 1) --hash-module "m2"
+        Path jmod = lib.resolve("m1.jmod");
+        runJmod("hash",
+                "--module-path", lib.toString(),
+                "--hash-modules", "m2", jmod.toString());
+        assertEquals(moduleHashes().keySet(), Set.of("m1"));
+        checkHashes("m1", Set.of("m2"));
+
+        // 2) --hash-module "m2|m4"
+        runJmod("hash",
+                "--module-path", lib.toString(),
+                "--hash-modules", "m2|m4", jmod.toString());
+        assertEquals(moduleHashes().keySet(), Set.of("m1"));
+        checkHashes("m1", Set.of("m2", "m4"));
+
+        // 3) --hash-module ".*"
+        runJmod("hash",
+                "--module-path", lib.toString(),
+                "--hash-modules", ".*", jmod.toString());
+        assertEquals(moduleHashes().keySet(), Set.of("m1"));
+        checkHashes("m1", Set.of("m2", "m4"));
+
+        // target jmod is not specified
+        // compute hash for all modules in the library
+        runJmod("hash",
+                "--module-path", lib.toString(),
+                "--hash-modules", ".*");
+        assertEquals(moduleHashes().keySet(), Set.of("m1", "m3"));
+        checkHashes("m1", Set.of("m2", "m4"));
+        checkHashes("m3", Set.of("m4"));
     }
 
     private void validateImageJmodsTest(Path mpath)
