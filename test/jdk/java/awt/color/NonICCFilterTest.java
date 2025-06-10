@@ -97,16 +97,18 @@ public final class NonICCFilterTest {
     }
 
     private static ColorSpace createCS(ColorSpaceSelector selector) {
-        return switch (selector) {
-            case GRAY -> ColorSpace.getInstance(ColorSpace.CS_GRAY);
-            case WRAPPED_GRAY -> new TestColorSpace(ColorSpace.getInstance(ColorSpace.CS_GRAY));
+        switch (selector) {
+            case GRAY: return ColorSpace.getInstance(ColorSpace.CS_GRAY);
+            case WRAPPED_GRAY: return new TestColorSpace(ColorSpace.getInstance(ColorSpace.CS_GRAY));
 
-            case RGB -> ColorSpace.getInstance(ColorSpace.CS_sRGB);
-            case WRAPPED_RGB -> new TestColorSpace(ColorSpace.getInstance(ColorSpace.CS_sRGB));
+            case RGB: return ColorSpace.getInstance(ColorSpace.CS_sRGB);
+            case WRAPPED_RGB: return new TestColorSpace(ColorSpace.getInstance(ColorSpace.CS_sRGB));
 
-            case PYCC -> ColorSpace.getInstance(ColorSpace.CS_PYCC);
-            case WRAPPED_PYCC -> new TestColorSpace(ColorSpace.getInstance(ColorSpace.CS_PYCC));
-        };
+            case PYCC: return ColorSpace.getInstance(ColorSpace.CS_PYCC);
+            case WRAPPED_PYCC: return new TestColorSpace(ColorSpace.getInstance(ColorSpace.CS_PYCC));
+
+            default: throw new IllegalArgumentException();
+        }
     }
 
     private static boolean areImagesEqual(BufferedImage destTest, BufferedImage destGold) {
