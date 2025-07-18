@@ -556,7 +556,10 @@ else
     HARFBUZZ_CFLAGS += -DHAVE_SOLARIS_ATOMIC_OPS
   endif
   # hb-ft.cc is not presently needed, and requires freetype 2.4.2 or later.
-  LIBFONTMANAGER_EXCLUDE_FILES += libharfbuzz/hb-ft.cc
+  # hb-subset and hb-style APIs are not needed, excluded to cut on compilation time.
+  LIBFONTMANAGER_EXCLUDE_FILES += hb-ft.cc hb-subset-cff-common.cc \
+      hb-subset-cff1.cc hb-subset-cff2.cc hb-subset-input.cc hb-subset-plan.cc \
+      hb-subset.cc hb-subset-instancer-solver.cc gsubgpos-context.cc hb-style.cc
 
    # list of disabled warnings and the compilers for which it was specifically added.
    # array-bounds         -> GCC 12 on Alpine Linux
@@ -564,11 +567,14 @@ else
    # range-loop-analysis  -> clang on Xcode12
 
   HARFBUZZ_DISABLED_WARNINGS_gcc := type-limits missing-field-initializers strict-aliasing \
-       array-bounds
+       array-bounds dangling-pointer
   # noexcept-type required for GCC 7 builds. Not required for GCC 8+.
   # expansion-to-defined required for GCC 9 builds. Not required for GCC 10+.
+  # maybe-uninitialized required for GCC 8 builds. Not required for GCC 9+.
+  # calloc-transposed-args required for GCC 14 builds. (fixed upstream in Harfbuzz 032c931e1c0cfb20f18e5acb8ba005775242bd92)
   HARFBUZZ_DISABLED_WARNINGS_CXX_gcc := reorder delete-non-virtual-dtor strict-overflow \
-       maybe-uninitialized class-memaccess unused-result extra noexcept-type expansion-to-defined
+       maybe-uninitialized class-memaccess unused-result extra noexcept-type expansion-to-defined \
+       dangling-reference maybe-uninitialized calloc-transposed-args attributes
   HARFBUZZ_DISABLED_WARNINGS_clang := unused-value incompatible-pointer-types \
        tautological-constant-out-of-range-compare int-to-pointer-cast \
        undef missing-field-initializers deprecated-declarations c++11-narrowing range-loop-analysis
