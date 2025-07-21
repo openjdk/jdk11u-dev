@@ -56,7 +56,7 @@ import static org.testng.Assert.assertTrue;
  * @bug 8277072
  * @library /test/lib/
  * @summary ObjectStreamClass caches keep ClassLoaders alive (Z GC)
- * @run testng/othervm -Xmx64m -XX:+UseZGC ObjectStreamClassCaching
+ * @run testng/othervm -Xmx256m -XX:+UnlockExperimentalVMOptions -XX:+UseZGC ObjectStreamClassCaching
  */
 
 /*
@@ -65,7 +65,7 @@ import static org.testng.Assert.assertTrue;
  * @bug 8277072
  * @library /test/lib/
  * @summary ObjectStreamClass caches keep ClassLoaders alive (Shenandoah GC)
- * @run testng/othervm -Xmx64m -XX:+UseShenandoahGC ObjectStreamClassCaching
+ * @run testng/othervm -Xmx64m -XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC ObjectStreamClassCaching
  */
 
 /*
@@ -89,7 +89,7 @@ public class ObjectStreamClassCaching {
         var ref2 = newWeakRef();
         boolean oome = false;
         try {
-            while (!ref2.refersTo(null)) {
+            while (ref2.get() != null) {
                 list.add(new byte[1024 * 1024 * 1]); // 1 MiB chunks
                 System.out.println("1MiB allocated...");
                 Thread.sleep(5L);
@@ -100,7 +100,7 @@ public class ObjectStreamClassCaching {
             oome = true;
         }
         assertFalse(oome, "WeakReference was not cleared although memory was pressed hard");
-        assertFalse(ref1.refersTo(null),
+        assertNotNull(ref1.get(), 
                     "Cache lost entry together with WeakReference being cleared although memory was not under pressure");
         System.gc();
         Thread.sleep(100L);
@@ -111,7 +111,7 @@ public class ObjectStreamClassCaching {
         var list = new ArrayList<>();
         var ref = lookupObjectStreamClass(TestClass2.class);
         try {
-            while (!ref.refersTo(null)) {
+            while (ref.get() != null) {
                 list.add(new byte[1024 * 1024 * 4]); // 4 MiB chunks
                 System.out.println("4MiB allocated...");
             }
