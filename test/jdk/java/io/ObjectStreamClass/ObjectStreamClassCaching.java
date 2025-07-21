@@ -100,7 +100,7 @@ public class ObjectStreamClassCaching {
             oome = true;
         }
         assertFalse(oome, "WeakReference was not cleared although memory was pressed hard");
-        assertNotNull(ref1.get(), 
+        assertNotNull(ref1.get(),
                     "Cache lost entry together with WeakReference being cleared although memory was not under pressure");
         System.gc();
         Thread.sleep(100L);
