@@ -567,7 +567,7 @@ else
    # range-loop-analysis  -> clang on Xcode12
 
   HARFBUZZ_DISABLED_WARNINGS_gcc := type-limits missing-field-initializers strict-aliasing \
-       array-bounds
+       array-bounds dangling-pointer
   # noexcept-type required for GCC 7 builds. Not required for GCC 8+.
   # expansion-to-defined required for GCC 9 builds. Not required for GCC 10+.
   HARFBUZZ_DISABLED_WARNINGS_CXX_gcc := reorder delete-non-virtual-dtor strict-overflow \
