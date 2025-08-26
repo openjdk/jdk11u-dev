@@ -636,6 +636,7 @@ public class CAInterop {
 
             case "teliarootcav2":
                     return new CATestURLs("https://juolukka.cover.telia.fi:10600",
+                            "https://juolukka.cover.telia.fi:10601");
 
             case "emsignrootcag1":
                     return new CATestURLs("https://testovg1.emsign.com/RootOVG1.html",
