@@ -107,6 +107,12 @@ public class ICC_Profile implements Serializable {
     private static ICC_Profile GRAYprofile;
     private static ICC_Profile LINEAR_RGBprofile;
 
+    /**
+     * Set to {@code true} for {@code BuiltInProfile}, {@code false} otherwise.
+     * This flag is used in {@link #setData(int, byte[])} to prevent modifying
+     * built-in profiles.
+     */
+    private final transient boolean builtIn;
 
     /**
      * Profile class is input.
@@ -729,15 +735,21 @@ public class ICC_Profile implements Serializable {
      */
     ICC_Profile(Profile p) {
         cmmProfile = p;
+        builtIn = false;
     }
 
 
     /**
      * Constructs an ICC_Profile object whose loading will be deferred.
      * The ID will be 0 until the profile is loaded.
+     *
+     * <p>
+     * Note: {@code ProfileDeferralInfo} is used for built-in profile
+     * creation only, and all built-in profiles should be constructed using it.
      */
     ICC_Profile(ProfileDeferralInfo pdi) {
         deferralInfo = pdi;
+        builtIn = true;
     }
 
 
@@ -1348,17 +1360,34 @@ public class ICC_Profile implements Serializable {
      * This method is useful for advanced applets or applications which need to
      * access profile data directly.
      *
-     * @param tagSignature The ICC tag signature for the data element
-     * you want to set.
-     * @param tagData the data to set for the specified tag signature
-     * @throws IllegalArgumentException if {@code tagSignature} is not a signature
-     *         as defined in the ICC specification.
-     * @throws IllegalArgumentException if a content of the {@code tagData}
-     *         array can not be interpreted as valid tag data, corresponding
-     *         to the {@code tagSignature}.
+     * <p>
+     * Note: JDK built-in ICC Profiles cannot be updated using this method
+     * as it will result in {@code IllegalArgumentException}. JDK built-in
+     * profiles are those obtained by {@code ICC_Profile.getInstance(int colorSpaceID)}
+     * where {@code colorSpaceID} is one of the following:
+     * {@link ColorSpace#CS_sRGB}, {@link ColorSpace#CS_LINEAR_RGB},
+     * {@link ColorSpace#CS_PYCC}, {@link ColorSpace#CS_GRAY} or
+     * {@link ColorSpace#CS_CIEXYZ}.
+     *
+     * @param  tagSignature the ICC tag signature for the data element you want
+     *         to set
+     * @param  tagData the data to set for the specified tag signature
+     * @throws IllegalArgumentException if {@code tagSignature} is not a
+     *         signature as defined in the ICC specification.
+     * @throws IllegalArgumentException if the content of the {@code tagData}
+     *         array can not be interpreted as valid tag data, corresponding to
+     *         the {@code tagSignature}
+     * @throws IllegalArgumentException if this is a built-in profile for one
+     *         of the pre-defined color spaces, that is those which can be obtained
+     *         by calling {@code ICC_Profile.getInstance(int colorSpaceID)}
      * @see #getData
+     * @see ColorSpace
      */
     public void setData(int tagSignature, byte[] tagData) {
+        if (builtIn) {
+            throw new IllegalArgumentException("Built-in profile cannot be modified");
+        }
+
         if (tagSignature == ICC_Profile.icSigHead) {
             verifyHeader(tagData);
         }
