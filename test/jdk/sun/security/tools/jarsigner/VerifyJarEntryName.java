@@ -38,12 +38,13 @@ import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import jdk.test.lib.SecurityTools;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class VerifyJarEntryName {
 
@@ -85,7 +86,7 @@ public class VerifyJarEntryName {
      */
     @Test
     void verifyManifestEntryName() throws Exception {
-        modifyJarEntryName(ORIGINAL_JAR, MODIFIED_JAR, "MANIFEST.MF");
+        modifyJarEntryName(ORIGINAL_JAR, MODIFIED_JAR, "META-INF/MANIFEST.MF");
         SecurityTools.jarsigner("-verify -verbose " + MODIFIED_JAR)
                 .shouldContain("This JAR file contains internal " +
                         "inconsistencies that may result in different " +
@@ -101,7 +102,7 @@ public class VerifyJarEntryName {
      */
     @Test
     void verifySignatureEntryName() throws Exception {
-        modifyJarEntryName(ORIGINAL_JAR, MODIFIED_JAR, "MYKEY.SF");
+        modifyJarEntryName(ORIGINAL_JAR, MODIFIED_JAR, "META-INF/MYKEY.SF");
         SecurityTools.jarsigner("-verify -verbose " + MODIFIED_JAR)
                 .shouldContain("This JAR file contains internal " +
                         "inconsistencies that may result in different " +
@@ -127,9 +128,14 @@ public class VerifyJarEntryName {
     private void modifyJarEntryName(Path origJar, Path modifiedJar,
             String entryName) throws Exception {
         byte[] jarBytes = Files.readAllBytes(origJar);
-        var jarString = new String(jarBytes, StandardCharsets.UTF_8);
-        var pos = jarString.indexOf(entryName);
-        assertTrue(pos != -1, entryName + " is not present in the JAR");
+        byte[] entryNameBytes = entryName.getBytes(StandardCharsets.UTF_8);
+        int pos = 0;
+        try {
+            while (!Arrays.equals(jarBytes, pos, pos + entryNameBytes.length,
+                    entryNameBytes, 0, entryNameBytes.length)) pos++;
+        } catch (ArrayIndexOutOfBoundsException ignore) {
+            fail(entryName + " is not present in the JAR");
+        }
         jarBytes[pos] = 'X';
         Files.write(modifiedJar, jarBytes);
     }
