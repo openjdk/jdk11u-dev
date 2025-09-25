@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1999, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1999, 2014, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -146,27 +146,34 @@ public final class StandardMidiFileReader extends MidiFileReader {
 
     @Override
     public MidiFileFormat getMidiFileFormat(URL url) throws InvalidMidiDataException, IOException {
-        try (InputStream urlStream = url.openStream(); // throws IOException
-             BufferedInputStream bis = new BufferedInputStream(urlStream, bisBufferSize))
-        {
-            MidiFileFormat fileFormat = getMidiFileFormat(bis); // throws InvalidMidiDataException
-            return fileFormat;
+        InputStream urlStream = url.openStream(); // throws IOException
+        BufferedInputStream bis = new BufferedInputStream( urlStream, bisBufferSize );
+        MidiFileFormat fileFormat = null;
+        try {
+            fileFormat = getMidiFileFormat( bis ); // throws InvalidMidiDataException
+        } finally {
+            bis.close();
         }
+        return fileFormat;
     }
 
     @Override
     public MidiFileFormat getMidiFileFormat(File file) throws InvalidMidiDataException, IOException {
-        try (FileInputStream fis = new FileInputStream(file); // throws IOException
-             BufferedInputStream bis = new BufferedInputStream(fis, bisBufferSize))
-        {
-            // $$fb 2002-04-17: part of fix for 4635286: MidiSystem.getMidiFileFormat() returns format having invalid length
-            long length = file.length();
-            if (length > Integer.MAX_VALUE) {
-                length = MidiFileFormat.UNKNOWN_LENGTH;
-            }
-            MidiFileFormat fileFormat = getMidiFileFormatFromStream(bis, (int) length, null);
-            return fileFormat;
+        FileInputStream fis = new FileInputStream(file); // throws IOException
+        BufferedInputStream bis = new BufferedInputStream(fis, bisBufferSize);
+
+        // $$fb 2002-04-17: part of fix for 4635286: MidiSystem.getMidiFileFormat() returns format having invalid length
+        long length = file.length();
+        if (length > Integer.MAX_VALUE) {
+            length = MidiFileFormat.UNKNOWN_LENGTH;
         }
+        MidiFileFormat fileFormat = null;
+        try {
+            fileFormat = getMidiFileFormatFromStream(bis, (int) length, null);
+        } finally {
+            bis.close();
+        }
+        return fileFormat;
     }
 
     @Override
@@ -197,22 +204,28 @@ public final class StandardMidiFileReader extends MidiFileReader {
 
     @Override
     public Sequence getSequence(URL url) throws InvalidMidiDataException, IOException {
-        try (InputStream is = url.openStream(); // throws IOException
-             BufferedInputStream bis = new BufferedInputStream(is, bisBufferSize))
-        {
-            Sequence seq = getSequence(bis);
-            return seq;
+        InputStream is = url.openStream();  // throws IOException
+        is = new BufferedInputStream(is, bisBufferSize);
+        Sequence seq = null;
+        try {
+            seq = getSequence(is);
+        } finally {
+            is.close();
         }
+        return seq;
     }
 
     @Override
     public Sequence getSequence(File file) throws InvalidMidiDataException, IOException {
-        try (InputStream is = new FileInputStream(file); // throws IOException
-             BufferedInputStream bis = new BufferedInputStream(is, bisBufferSize))
-        {
-            Sequence seq = getSequence(bis);
-            return seq;
+        InputStream is = new FileInputStream(file); // throws IOException
+        is = new BufferedInputStream(is, bisBufferSize);
+        Sequence seq = null;
+        try {
+            seq = getSequence(is);
+        } finally {
+            is.close();
         }
+        return seq;
     }
 }
 

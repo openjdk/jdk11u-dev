@@ -660,9 +660,18 @@ public class PNGImageReader extends ImageReader {
 
     private static byte[] inflate(byte[] b) throws IOException {
         InputStream bais = new ByteArrayInputStream(b);
-        try (InputStream iis = new InflaterInputStream(bais)) {
-            return iis.readAllBytes();
+        InputStream iis = new InflaterInputStream(bais);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        int c;
+        try {
+            while ((c = iis.read()) != -1) {
+                baos.write(c);
+            }
+        } finally {
+            iis.close();
         }
+        return baos.toByteArray();
     }
 
     private void parse_zTXt_chunk(int chunkLength) throws IOException {

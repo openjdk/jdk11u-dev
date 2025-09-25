@@ -48,8 +48,10 @@ public final class AudioFileSoundbankReader extends SoundbankReader {
     @Override
     public Soundbank getSoundbank(URL url)
             throws InvalidMidiDataException, IOException {
-        try (AudioInputStream ais = AudioSystem.getAudioInputStream(url)) {
+        try {
+            AudioInputStream ais = AudioSystem.getAudioInputStream(url);
             Soundbank sbk = getSoundbank(ais);
+            ais.close();
             return sbk;
         } catch (UnsupportedAudioFileException e) {
             return null;

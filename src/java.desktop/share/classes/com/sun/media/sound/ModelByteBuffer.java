@@ -319,13 +319,11 @@ public final class ModelByteBuffer {
                     "No file associated with this ByteBuffer!");
         }
 
-        try (InputStream is = getInputStream();
-             DataInputStream dis = new DataInputStream(is))
-        {
-            buffer = new byte[(int) capacity()];
-            offset = 0;
-            dis.readFully(buffer);
-        }
+        DataInputStream is = new DataInputStream(getInputStream());
+        buffer = new byte[(int) capacity()];
+        offset = 0;
+        is.readFully(buffer);
+        is.close();
 
     }
 

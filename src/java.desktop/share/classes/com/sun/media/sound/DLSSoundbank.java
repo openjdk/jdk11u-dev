@@ -191,16 +191,22 @@ public final class DLSSoundbank implements Soundbank {
     }
 
     public DLSSoundbank(URL url) throws IOException {
-        try (InputStream is = url.openStream()) {
+        InputStream is = url.openStream();
+        try {
             readSoundbank(is);
+        } finally {
+            is.close();
         }
     }
 
     public DLSSoundbank(File file) throws IOException {
         largeFormat = true;
         sampleFile = file;
-        try (InputStream is = new FileInputStream(file)) {
+        InputStream is = new FileInputStream(file);
+        try {
             readSoundbank(is);
+        } finally {
+            is.close();
         }
     }
 
@@ -869,21 +875,15 @@ public final class DLSSoundbank implements Soundbank {
     }
 
     public void save(String name) throws IOException {
-        try (RIFFWriter writer = new RIFFWriter(name, "DLS ")) {
-            writeSoundbank(writer);
-        }
+        writeSoundbank(new RIFFWriter(name, "DLS "));
     }
 
     public void save(File file) throws IOException {
-        try (RIFFWriter writer = new RIFFWriter(file, "DLS ")) {
-            writeSoundbank(writer);
-        }
+        writeSoundbank(new RIFFWriter(file, "DLS "));
     }
 
     public void save(OutputStream out) throws IOException {
-        try (RIFFWriter writer = new RIFFWriter(out, "DLS ")) {
-            writeSoundbank(writer);
-        }
+        writeSoundbank(new RIFFWriter(out, "DLS "));
     }
 
     private void writeSoundbank(RIFFWriter writer) throws IOException {
@@ -923,6 +923,8 @@ public final class DLSSoundbank implements Soundbank {
         writer.seek(bak);
 
         writeInfo(writer.writeList("INFO"), info);
+
+        writer.close();
     }
 
     private void writeSample(RIFFWriter writer, DLSSample sample)
