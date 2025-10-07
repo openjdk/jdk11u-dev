@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2017, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2025, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -722,6 +722,7 @@ public class ICC_Profile implements Serializable {
      */
     public static final int icXYZNumberX       = 8;    /* XYZNumber X */
 
+    private static final int HEADER_SIZE = 128;
 
     /**
      * Constructs an ICC_Profile object with a given ID.
@@ -773,6 +774,10 @@ public class ICC_Profile implements Serializable {
         ProfileDataVerifier.verify(data);
 
         try {
+            byte[] theHeader = new byte[HEADER_SIZE];
+            System.arraycopy(data, 0, theHeader, 0, HEADER_SIZE);
+            verifyHeader(theHeader);
+
             p = CMSManager.getModule().loadProfile(data);
         } catch (CMMException c) {
             throw new IllegalArgumentException("Invalid ICC Profile Data");
@@ -1092,16 +1097,18 @@ public class ICC_Profile implements Serializable {
      * @return One of the predefined profile class constants.
      */
     public int getProfileClass() {
-    byte[] theHeader;
-    int theClassSig, theClass;
 
         ProfileDeferralInfo info = deferralInfo;
         if (info != null) {
             return info.profileClass;
         }
 
-        theHeader = getData(icSigHead);
+        byte[] theHeader = getData(icSigHead);
+        return getProfileClass(theHeader);
+    }
 
+    private static int getProfileClass(byte[] theHeader) {
+        int theClassSig, theClass;
         theClassSig = intFromBigEndian (theHeader, icHdrDeviceClass);
 
         switch (theClassSig) {
@@ -1171,6 +1178,11 @@ public class ICC_Profile implements Serializable {
         return theColorSpace;
     }
 
+    private static int getColorSpaceType(byte[] theHeader) {
+        int theColorSpaceSig = intFromBigEndian(theHeader, icHdrColorSpace);
+        return iccCStoJCS(theColorSpaceSig);
+    }
+
     /**
      * Returns the color space type of the Profile Connection Space (PCS).
      * Returns one of the color space type constants defined by the
@@ -1199,6 +1211,29 @@ public class ICC_Profile implements Serializable {
         return thePCS;
     }
 
+
+    private static int getPCSType(byte[] theHeader) {
+        int thePCSSig = intFromBigEndian(theHeader, icHdrPcs);
+        int theDeviceClass = intFromBigEndian(theHeader, icHdrDeviceClass);
+        int thePCSType;
+
+        if (theDeviceClass == icSigLinkClass) {
+            return iccCStoJCS(thePCSSig);
+        } else {
+            switch (thePCSSig) {
+                case icSigXYZData:
+                    thePCSType = ColorSpace.TYPE_XYZ;
+                    break;
+                case icSigLabData:
+                    thePCSType = ColorSpace.TYPE_Lab;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unexpected PCS type");
+            };
+        }
+
+        return thePCSType;
+    }
 
     /**
      * Write this ICC_Profile to a file.
@@ -1324,10 +1359,47 @@ public class ICC_Profile implements Serializable {
      * @see #getData
      */
     public void setData(int tagSignature, byte[] tagData) {
+        if (tagSignature == ICC_Profile.icSigHead) {
+            verifyHeader(tagData);
+        }
 
         activate();
 
         CMSManager.getModule().setTagData(cmmProfile, tagSignature, tagData);
+    }
+
+    private static void verifyHeader(byte[] data) {
+        if (data == null || data.length < HEADER_SIZE) {
+            throw new IllegalArgumentException("Invalid header data");
+        }
+        getProfileClass(data);
+        getColorSpaceType(data);
+        getPCSType(data);
+        checkRenderingIntent(data);
+    }
+
+    private static boolean checkRenderingIntent(byte[] header) {
+        int index = ICC_Profile.icHdrRenderingIntent;
+
+        /* According to ICC spec, only the least-significant 16 bits shall be
+         * used to encode the rendering intent. The most significant 16 bits
+         * shall be set to zero. Thus, we are ignoring two most significant
+         * bytes here. Please refer ICC Spec Document for more details.
+         */
+        int renderingIntent = ((header[index+2] & 0xff) <<  8) |
+                              (header[index+3] & 0xff);
+
+        switch (renderingIntent) {
+            case icPerceptual:
+            case icMediaRelativeColorimetric:
+            case icSaturation:
+            case icAbsoluteColorimetric:
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown Rendering Intent");
+        }
+
+        return true;
     }
 
     /**
