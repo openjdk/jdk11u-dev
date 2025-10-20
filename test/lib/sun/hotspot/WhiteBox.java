@@ -404,6 +404,11 @@ public class WhiteBox {
   // Force Full GC
   public native void fullGC();
 
+  // Returns true if the current GC supports control of its concurrent
+  // phase via requestConcurrentGCPhase().  If false, a request will
+  // always fail.
+  public native boolean supportsConcurrentGCPhaseControl();
+
   // Infrastructure for waitForReferenceProcessing()
   private static volatile Method waitForReferenceProcessingMethod = null;
 
@@ -450,9 +455,6 @@ public class WhiteBox {
       }
     }
   }
-
-  // Returns true if the current GC supports concurrent collection control.
-  public native boolean supportsConcurrentGCBreakpoints();
 
   // Returns an array of concurrent phase names provided by this
   // collector.  These are the names recognized by
