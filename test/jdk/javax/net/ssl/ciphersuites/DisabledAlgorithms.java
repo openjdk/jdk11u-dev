@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,7 +23,7 @@
 
 /*
  * @test
- * @bug 8076221 8211883 8279164
+ * @bug 8076221 8211883 8279164 8245545
  * @summary Check if weak cipher suites are disabled
  * @modules jdk.crypto.ec
  * @run main/othervm DisabledAlgorithms default
@@ -61,52 +61,58 @@ public class DisabledAlgorithms {
                 "/" + trustStoreFile;
 
     // disabled RC4, NULL, anon, and ECDH cipher suites
-    private static final String[] disabled_ciphersuites
-        = new String[] {
-        "TLS_ECDHE_ECDSA_WITH_RC4_128_SHA",
-        "TLS_ECDHE_RSA_WITH_RC4_128_SHA",
-        "SSL_RSA_WITH_RC4_128_SHA",
-        "TLS_ECDH_ECDSA_WITH_RC4_128_SHA",
-        "TLS_ECDH_RSA_WITH_RC4_128_SHA",
-        "SSL_RSA_WITH_RC4_128_MD5",
-        "TLS_ECDH_anon_WITH_RC4_128_SHA",
-        "SSL_DH_anon_WITH_RC4_128_MD5",
-        "SSL_RSA_WITH_NULL_MD5",
-        "SSL_RSA_WITH_NULL_SHA",
-        "TLS_RSA_WITH_NULL_SHA256",
-        "TLS_ECDH_ECDSA_WITH_NULL_SHA",
-        "TLS_ECDHE_ECDSA_WITH_NULL_SHA",
-        "TLS_ECDH_RSA_WITH_NULL_SHA",
-        "TLS_ECDHE_RSA_WITH_NULL_SHA",
-        "TLS_ECDH_anon_WITH_NULL_SHA",
-        "SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA",
-        "SSL_DH_anon_EXPORT_WITH_RC4_40_MD5",
-        "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA",
-        "SSL_DH_anon_WITH_DES_CBC_SHA",
-        "SSL_DH_anon_WITH_RC4_128_MD5",
-        "TLS_DH_anon_WITH_AES_128_CBC_SHA",
-        "TLS_DH_anon_WITH_AES_128_CBC_SHA256",
-        "TLS_DH_anon_WITH_AES_128_GCM_SHA256",
-        "TLS_DH_anon_WITH_AES_256_CBC_SHA",
-        "TLS_DH_anon_WITH_AES_256_CBC_SHA256",
-        "TLS_DH_anon_WITH_AES_256_GCM_SHA384",
-        "TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA",
-        "TLS_ECDH_anon_WITH_AES_128_CBC_SHA",
-        "TLS_ECDH_anon_WITH_AES_256_CBC_SHA",
-        "TLS_ECDH_anon_WITH_NULL_SHA",
-        "TLS_ECDH_anon_WITH_RC4_128_SHA",
-        "TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384",
-        "TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384",
-        "TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256",
-        "TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256",
-        "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384",
-        "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384",
-        "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256",
-        "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256",
-        "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA",
-        "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA",
-        "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA",
-        "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA"
+    public static final String[] DISABLED_CIPHERSUITES
+            = new String[]{
+            "TLS_ECDHE_ECDSA_WITH_RC4_128_SHA",
+            "TLS_ECDHE_RSA_WITH_RC4_128_SHA",
+            "SSL_RSA_WITH_RC4_128_SHA",
+            "TLS_ECDH_ECDSA_WITH_RC4_128_SHA",
+            "TLS_ECDH_RSA_WITH_RC4_128_SHA",
+            "SSL_RSA_WITH_RC4_128_MD5",
+            "TLS_ECDH_anon_WITH_RC4_128_SHA",
+            "SSL_DH_anon_WITH_RC4_128_MD5",
+            "SSL_RSA_WITH_NULL_MD5",
+            "SSL_RSA_WITH_NULL_SHA",
+            "TLS_RSA_WITH_NULL_SHA256",
+            "TLS_ECDH_ECDSA_WITH_NULL_SHA",
+            "TLS_ECDHE_ECDSA_WITH_NULL_SHA",
+            "TLS_ECDH_RSA_WITH_NULL_SHA",
+            "TLS_ECDHE_RSA_WITH_NULL_SHA",
+            "TLS_ECDH_anon_WITH_NULL_SHA",
+            "SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA",
+            "SSL_DH_anon_EXPORT_WITH_RC4_40_MD5",
+            "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA",
+            "SSL_DH_anon_WITH_DES_CBC_SHA",
+            "SSL_DH_anon_WITH_RC4_128_MD5",
+            "TLS_DH_anon_WITH_AES_128_CBC_SHA",
+            "TLS_DH_anon_WITH_AES_128_CBC_SHA256",
+            "TLS_DH_anon_WITH_AES_128_GCM_SHA256",
+            "TLS_DH_anon_WITH_AES_256_CBC_SHA",
+            "TLS_DH_anon_WITH_AES_256_CBC_SHA256",
+            "TLS_DH_anon_WITH_AES_256_GCM_SHA384",
+            "TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA",
+            "TLS_ECDH_anon_WITH_AES_128_CBC_SHA",
+            "TLS_ECDH_anon_WITH_AES_256_CBC_SHA",
+            "TLS_ECDH_anon_WITH_NULL_SHA",
+            "TLS_ECDH_anon_WITH_RC4_128_SHA",
+            "TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384",
+            "TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384",
+            "TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256",
+            "TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256",
+            "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384",
+            "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384",
+            "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256",
+            "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256",
+            "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA",
+            "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA",
+            "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA",
+            "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA",
+            "TLS_RSA_WITH_AES_256_GCM_SHA384",
+            "TLS_RSA_WITH_AES_128_GCM_SHA256",
+            "TLS_RSA_WITH_AES_256_CBC_SHA256",
+            "TLS_RSA_WITH_AES_128_CBC_SHA256",
+            "TLS_RSA_WITH_AES_256_CBC_SHA",
+            "TLS_RSA_WITH_AES_128_CBC_SHA"
     };
 
     public static void main(String[] args) throws Exception {
