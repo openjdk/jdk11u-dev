@@ -327,13 +327,13 @@ public class SigAlgosExtTestWithTLS12 extends SSLEngineTemplate {
                 // Slice the buffer such that it contains the entire
                 // handshake message (less the handshake header).
                 int bufPos = tlsRecord.position();
-                ByteBuffer buf = tlsRecord.slice(bufPos, msgLen);
+                ByteBuffer buf = slice(tlsRecord, bufPos, msgLen);
 
                 // Replace the signature scheme with an unknown value
                 twistSigSchemesCertReq(buf, (short) 0x0000);
                 byte[] bufBytes = new byte[buf.limit()];
                 buf.get(bufBytes);
-                tlsRecord.put(bufPos, bufBytes);
+                tlsRecord.position(bufPos).put(bufBytes);
 
                 break;
             } else {
@@ -343,6 +343,18 @@ public class SigAlgosExtTestWithTLS12 extends SSLEngineTemplate {
         }
 
         tlsRecord.reset();
+    }
+
+    /* Implementation of ByteBuffer.slice(int, int) for JDK11 */
+    private static final ByteBuffer slice(ByteBuffer buffer, int index, int length) {
+        final int limit = buffer.limit();
+        final int position = buffer.position();
+        buffer.position(index);
+        buffer.limit(index + length);
+        ByteBuffer slice = buffer.slice();
+        buffer.limit(limit);
+        buffer.position(position);
+        return slice;
     }
 
     /**
