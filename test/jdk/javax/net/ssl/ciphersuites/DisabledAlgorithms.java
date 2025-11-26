@@ -61,7 +61,7 @@ public class DisabledAlgorithms {
                 "/" + trustStoreFile;
 
     // disabled RC4, NULL, anon, and ECDH cipher suites
-    public static final String[] DISABLED_CIPHERSUITES
+    public static final String[] disabled_ciphersuites
             = new String[]{
             "TLS_ECDHE_ECDSA_WITH_RC4_128_SHA",
             "TLS_ECDHE_RSA_WITH_RC4_128_SHA",
