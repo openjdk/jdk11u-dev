@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2003, 2024, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -63,10 +63,9 @@ public class Basics {
         runTest("TLSv1.2", "TLS_RSA_WITH_AES_256_GCM_SHA384");
         runTest("TLSv1.1", "TLS_DHE_DSS_WITH_AES_128_CBC_SHA");
     }
-
+ 
     private static void runTest(String protocol, String cipherSuite) throws Exception {
         System.out.printf("Testing %s with %s%n", protocol, cipherSuite);
-
         KeyStore ks = KeyStore.getInstance("JKS");
         KeyStore ts = KeyStore.getInstance("JKS");
         char[] passphrase = "passphrase".toCharArray();
