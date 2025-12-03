@@ -30,7 +30,7 @@
 //---------------------------------------------------------------------------------
 //
 //  Little Color Management System
-//  Copyright (c) 1998-2023 Marti Maria Saguer
+//  Copyright (c) 1998-2024 Marti Maria Saguer
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the "Software"),
@@ -305,6 +305,11 @@ cmsIOHANDLER* CMSEXPORT cmsOpenIOhandlerFromMem(cmsContext ContextID, void *Buff
     case 'w':
         fm = (FILEMEM*) _cmsMallocZero(ContextID, sizeof(FILEMEM));
         if (fm == NULL) goto Error;
+
+        if (Buffer == NULL) {
+            cmsSignalError(ContextID, cmsERROR_WRITE, "Couldn't write profile to NULL pointer");
+            goto Error;
+        }
 
         fm ->Block = (cmsUInt8Number*) Buffer;
         fm ->FreeBlockOnClose = FALSE;
@@ -1660,7 +1665,7 @@ cmsBool IsTypeSupported(cmsTagDescriptor* TagDescriptor, cmsTagTypeSignature Typ
 void* CMSEXPORT cmsReadTag(cmsHPROFILE hProfile, cmsTagSignature sig)
 {
     _cmsICCPROFILE* Icc = (_cmsICCPROFILE*) hProfile;
-    cmsIOHANDLER* io = Icc ->IOhandler;
+    cmsIOHANDLER* io;
     cmsTagTypeHandler* TypeHandler;
     cmsTagTypeHandler LocalTypeHandler;
     cmsTagDescriptor*  TagDescriptor;
@@ -1704,6 +1709,8 @@ void* CMSEXPORT cmsReadTag(cmsHPROFILE hProfile, cmsTagSignature sig)
     TagSize   = Icc -> TagSizes[n];
 
     if (TagSize < 8) goto Error;
+
+    io = Icc ->IOhandler;
 
     if (io == NULL) { // This is a built-in profile that has been manipulated, abort early
 
