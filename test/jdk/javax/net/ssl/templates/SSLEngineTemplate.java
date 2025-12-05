@@ -259,6 +259,18 @@ public class SSLEngineTemplate implements SSLContextTemplate {
         b.limit(b.capacity());
     }
 
+    /* Implementation of ByteBuffer.slice(int, int) for JDK11 */
+    protected static final ByteBuffer slice(ByteBuffer buffer, int index, int length) {
+        final int limit = buffer.limit();
+        final int position = buffer.position();
+        buffer.position(index);
+        buffer.limit(index + length);
+        ByteBuffer slice = buffer.slice();
+        buffer.limit(limit);
+        buffer.position(position);
+        return slice;
+    }
+
     /**
      * Given a TLS record containing one or more handshake messages, return
      * the specific handshake message as a ByteBuffer (a slice of the record)
@@ -317,7 +329,7 @@ public class SSLEngineTemplate implements SSLContextTemplate {
             if (msgType == hsMsgId) {
                 // Slice the buffer such that it contains the entire
                 // handshake message (less the handshake header).
-                ByteBuffer buf = tlsRecord.slice(tlsRecord.position(), msgLen);
+                ByteBuffer buf = slice(tlsRecord, tlsRecord.position(), msgLen);
                 tlsRecord.reset();
                 return buf;
             } else {

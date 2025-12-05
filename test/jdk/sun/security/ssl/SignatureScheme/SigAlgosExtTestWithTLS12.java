@@ -345,18 +345,6 @@ public class SigAlgosExtTestWithTLS12 extends SSLEngineTemplate {
         tlsRecord.reset();
     }
 
-    /* Implementation of ByteBuffer.slice(int, int) for JDK11 */
-    private static final ByteBuffer slice(ByteBuffer buffer, int index, int length) {
-        final int limit = buffer.limit();
-        final int position = buffer.position();
-        buffer.position(index);
-        buffer.limit(index + length);
-        ByteBuffer slice = buffer.slice();
-        buffer.limit(limit);
-        buffer.position(position);
-        return slice;
-    }
-
     /**
      * Replace the signature schemes in CertificateRequest message with an
      * alternative value.  It is assumed that the provided ByteBuffer has its
