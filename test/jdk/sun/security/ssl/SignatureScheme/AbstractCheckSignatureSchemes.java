@@ -97,12 +97,12 @@ public abstract class AbstractCheckSignatureSchemes extends SSLEngineTemplate {
     }
 
     @Override
-    protected ContextParameters getServerContextParameters() {
+    public ContextParameters getServerContextParameters() {
         return new ContextParameters(getProtocol(), "PKIX", "NewSunX509");
     }
 
     @Override
-    protected ContextParameters getClientContextParameters() {
+    public ContextParameters getClientContextParameters() {
         return new ContextParameters(getProtocol(), "PKIX", "NewSunX509");
     }
 
