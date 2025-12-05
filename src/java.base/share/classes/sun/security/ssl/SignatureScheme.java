@@ -456,7 +456,7 @@ enum SignatureScheme {
             ProtocolVersion version) {
 
         for (SignatureScheme ss : schemes) {
-            if (keyAlgorithm.equalsIgnoreCase(ss.keyAlgorithm)
+            if (certScheme.keyAlgorithm.equalsIgnoreCase(ss.keyAlgorithm)
                     && ss.isAllowed(constraints, version, HANDSHAKE_SCOPE)) {
                 return ss;
             }
