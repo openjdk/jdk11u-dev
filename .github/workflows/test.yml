@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2022, 2023, Oracle and/or its affiliates. All rights reserved.
 # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 #
 # This code is free software; you can redistribute it and/or modify it
@@ -127,9 +127,16 @@ jobs:
         run: |
           # On macOS we need to install some dependencies for testing
           brew install make
-          sudo xcode-select --switch /Applications/Xcode_11.7.app/Contents/Developer
+          sudo xcode-select --switch /Applications/Xcode_16.4.app/Contents/Developer
           # This will make GNU make available as 'make' and not only as 'gmake'
           echo '/usr/local/opt/make/libexec/gnubin' >> $GITHUB_PATH
+        if: runner.os == 'macOS'
+
+      # Fixes JDK-8336451
+      - name: 'Update /etc/hosts on macos'
+        run: |
+          echo -e "127.0.0.1     $(hostname -f) $(hostname -s)" | sudo tee -a /etc/hosts
+          echo -e "" | sudo tee -a /etc/hosts
         if: runner.os == 'macOS'
 
       - name: 'Set PATH'
@@ -143,6 +150,16 @@ jobs:
             echo "value=$PATH" >> $GITHUB_OUTPUT
           fi
 
+      - name: 'Set JTReg Options'
+        id: jtreg-options
+        run: |
+          if [[ '${{ runner.os }}' == 'Windows' ]]; then
+            # JTReg option for 'ProgramFiles(x86)' environment variable
+            echo 'value=-e:ProgramFiles\(x86\)=C:\\Program\ Files\ \(x86\)' >> $GITHUB_OUTPUT
+          else
+            echo 'value=' >> $GITHUB_OUTPUT
+          fi
+
       - name: 'Run tests'
         id: run-tests
         run: >
@@ -153,7 +170,7 @@ jobs:
           JDK_IMAGE_DIR=${{ steps.bundles.outputs.jdk-path }}
           SYMBOLS_IMAGE_DIR=${{ steps.bundles.outputs.symbols-path }}
           TEST_IMAGE_DIR=${{ steps.bundles.outputs.tests-path }}
-          JTREG='JAVA_OPTIONS=-XX:-CreateCoredumpOnCrash;VERBOSE=fail,error,time;KEYWORDS=!headful'
+          JTREG='OPTIONS=${{ steps.jtreg-options.outputs.value }};JAVA_OPTIONS=-XX:-CreateCoredumpOnCrash;VERBOSE=fail,error,time;KEYWORDS=!headful'
           && bash ./.github/scripts/gen-test-summary.sh "$GITHUB_STEP_SUMMARY" "$GITHUB_OUTPUT"
         env:
           PATH: ${{ steps.path.outputs.value }}
@@ -191,7 +208,7 @@ jobs:
         if: always()
 
       - name: 'Upload test results'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: results
           name: ${{ steps.package.outputs.artifact-name }}
@@ -199,7 +216,7 @@ jobs:
 
         # This is the best way I found to abort the job with an error message
       - name: 'Notify about test failures'
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: core.setFailed('${{ steps.run-tests.outputs.error-message }}')
         if: steps.run-tests.outputs.failure == 'true'

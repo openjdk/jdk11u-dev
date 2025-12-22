@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
+ * Copyright (C) 2022, Tencent. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -47,6 +47,7 @@ public final class CheckCleanerBound {
         // Wait to trigger the cleanup.
         for (int i = 0; i < 10 && weakHashMap.size() != 0; i++) {
             System.gc();
+            Thread.sleep(100);
         }
 
         // Check if the object has been collected.  The collection will not
@@ -58,4 +59,3 @@ public final class CheckCleanerBound {
         }
     }
 }
-

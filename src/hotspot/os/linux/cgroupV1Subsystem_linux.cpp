@@ -198,6 +198,17 @@ jlong CgroupV1Subsystem::memory_max_usage_in_bytes() {
   return memmaxusage;
 }
 
+jlong CgroupV1Subsystem::rss_usage_in_bytes() {
+  GET_CONTAINER_INFO_LINE(julong, _memory->controller(), "/memory.stat",
+                          "rss", JULONG_FORMAT, JULONG_FORMAT, rss);
+  return rss;
+}
+
+jlong CgroupV1Subsystem::cache_usage_in_bytes() {
+  GET_CONTAINER_INFO_LINE(julong, _memory->controller(), "/memory.stat",
+                          "cache", JULONG_FORMAT, JULONG_FORMAT, cache);
+  return cache;
+}
 
 jlong CgroupV1Subsystem::kernel_memory_usage_in_bytes() {
   GET_CONTAINER_INFO(jlong, _memory->controller(), "/memory.kmem.usage_in_bytes",
@@ -225,9 +236,9 @@ void CgroupV1Subsystem::print_version_specific_info(outputStream* st) {
   jlong kmem_limit = kernel_memory_limit_in_bytes();
   jlong kmem_max_usage = kernel_memory_max_usage_in_bytes();
 
+  OSContainer::print_container_helper(st, kmem_limit, "kernel_memory_limit_in_bytes");
   OSContainer::print_container_helper(st, kmem_usage, "kernel_memory_usage_in_bytes");
-  OSContainer::print_container_helper(st, kmem_limit, "kernel_memory_max_usage_in_bytes");
-  OSContainer::print_container_helper(st, kmem_max_usage, "kernel_memory_limit_in_bytes");
+  OSContainer::print_container_helper(st, kmem_max_usage, "kernel_memory_max_usage_in_bytes");
 }
 
 char * CgroupV1Subsystem::cpu_cpuset_cpus() {

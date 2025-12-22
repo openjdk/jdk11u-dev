@@ -27,6 +27,8 @@ package sun.security.tools.jarsigner;
 
 import java.io.*;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.PKIXBuilderParameters;
 import java.util.*;
@@ -175,6 +177,7 @@ public class Main {
     private boolean hasExpiringCert = false;
     private boolean hasExpiringTsaCert = false;
     private boolean noTimestamp = true;
+    private boolean hasNonexistentEntries = false;
 
     // Expiration date. The value could be null if signed by a trusted cert.
     private Date expireDate = null;
@@ -215,6 +218,8 @@ public class Main {
 
     private Throwable chainNotValidatedReason = null;
     private Throwable tsaChainNotValidatedReason = null;
+
+    private List<String> crossChkWarnings = new ArrayList<>();
 
     PKIXBuilderParameters pkixParameters;
     Set<X509Certificate> trustedCerts = new HashSet<>();
@@ -695,6 +700,7 @@ public class Main {
         Map<String,PKCS7> sigMap = new HashMap<>();
         Map<String,String> sigNameMap = new HashMap<>();
         Map<String,String> unparsableSignatures = new HashMap<>();
+        Map<String,Set<String>> entriesInSF = new HashMap<>();
 
         try {
             jf = new JarFile(jarName, true);
@@ -731,6 +737,7 @@ public class Main {
                                         break;
                                     }
                                 }
+                                entriesInSF.put(alias, sf.getEntries().keySet());
                                 if (!found) {
                                     unparsableSignatures.putIfAbsent(alias,
                                         String.format(
@@ -828,6 +835,9 @@ public class Main {
                                 sb.append(si);
                                 sb.append('\n');
                             }
+                        }
+                        for (var signed : entriesInSF.values()) {
+                            signed.remove(name);
                         }
                     } else if (showcerts && !verbose.equals("all")) {
                         // Print no info for unsigned entries when -verbose:all,
@@ -1020,6 +1030,13 @@ public class Main {
                         if (verbose != null) {
                             System.out.println(history);
                         }
+                        var signed = entriesInSF.get(s);
+                        if (!signed.isEmpty()) {
+                            if (verbose != null) {
+                                System.out.println(rb.getString("history.nonexistent.entries") + signed);
+                            }
+                            hasNonexistentEntries = true;
+                        }
                     } else {
                         unparsableSignatures.putIfAbsent(s, String.format(
                                 rb.getString("history.nobk"), s));
@@ -1032,6 +1049,7 @@ public class Main {
                 }
             }
             System.out.println();
+            crossCheckEntries(jarName);
 
             if (!anySigned) {
                 if (disabledAlgFound) {
@@ -1064,6 +1082,143 @@ public class Main {
         }
 
         System.exit(1);
+    }
+
+    private void crossCheckEntries(String jarName) throws Exception {
+        Set<String> locEntries = new HashSet<>();
+
+        try (JarFile jarFile = new JarFile(jarName);
+             JarInputStream jis = new JarInputStream(
+                     Files.newInputStream(Path.of(jarName)))) {
+
+            Manifest cenManifest = jarFile.getManifest();
+            Manifest locManifest = jis.getManifest();
+            compareManifest(cenManifest, locManifest);
+
+            JarEntry locEntry;
+            while ((locEntry = jis.getNextJarEntry()) != null) {
+                String entryName = locEntry.getName();
+                locEntries.add(entryName);
+
+                JarEntry cenEntry = jarFile.getJarEntry(entryName);
+                if (cenEntry == null) {
+                    crossChkWarnings.add(String.format(rb.getString(
+                            "entry.1.present.when.reading.jarinputstream.but.missing.via.jarfile"),
+                            entryName));
+                    continue;
+                }
+
+                try {
+                    readEntry(jis);
+                } catch (SecurityException e) {
+                    crossChkWarnings.add(String.format(rb.getString(
+                            "signature.verification.failed.on.entry.1.when.reading.via.jarinputstream"),
+                            entryName));
+                    continue;
+                }
+
+                try (InputStream cenInputStream = jarFile.getInputStream(cenEntry)) {
+                    if (cenInputStream == null) {
+                        crossChkWarnings.add(String.format(rb.getString(
+                                "entry.1.present.in.jarfile.but.unreadable"),
+                                entryName));
+                        continue;
+                    } else {
+                        try {
+                            readEntry(cenInputStream);
+                        } catch (SecurityException e) {
+                            crossChkWarnings.add(String.format(rb.getString(
+                                    "signature.verification.failed.on.entry.1.when.reading.via.jarfile"),
+                                    entryName));
+                            continue;
+                        }
+                    }
+                }
+
+                compareSigners(cenEntry, locEntry);
+            }
+
+            jarFile.stream()
+                    .map(JarEntry::getName)
+                    .filter(n -> !locEntries.contains(n) && !n.equals(JarFile.MANIFEST_NAME))
+                    .forEach(n -> crossChkWarnings.add(String.format(rb.getString(
+                            "entry.1.present.when.reading.jarfile.but.missing.via.jarinputstream"), n)));
+        }
+    }
+
+    private void readEntry(InputStream is) throws IOException {
+        is.transferTo(OutputStream.nullOutputStream());
+    }
+
+    private void compareManifest(Manifest cenManifest, Manifest locManifest) {
+        if (cenManifest == null) {
+            crossChkWarnings.add(rb.getString(
+                    "manifest.missing.when.reading.jarfile"));
+            return;
+        }
+        if (locManifest == null) {
+            crossChkWarnings.add(rb.getString(
+                    "manifest.missing.when.reading.jarinputstream"));
+            return;
+        }
+
+        Attributes cenMainAttrs = cenManifest.getMainAttributes();
+        Attributes locMainAttrs = locManifest.getMainAttributes();
+
+        for (Object key : cenMainAttrs.keySet()) {
+            Object cenValue = cenMainAttrs.get(key);
+            Object locValue = locMainAttrs.get(key);
+
+            if (locValue == null) {
+                crossChkWarnings.add(String.format(rb.getString(
+                        "manifest.attribute.1.present.when.reading.jarfile.but.missing.via.jarinputstream"),
+                        key));
+            } else if (!cenValue.equals(locValue)) {
+                crossChkWarnings.add(String.format(rb.getString(
+                        "manifest.attribute.1.differs.jarfile.value.2.jarinputstream.value.3"),
+                        key, cenValue, locValue));
+            }
+        }
+
+        for (Object key : locMainAttrs.keySet()) {
+            if (!cenMainAttrs.containsKey(key)) {
+                crossChkWarnings.add(String.format(rb.getString(
+                        "manifest.attribute.1.present.when.reading.jarinputstream.but.missing.via.jarfile"),
+                        key));
+            }
+        }
+    }
+
+    private void compareSigners(JarEntry cenEntry, JarEntry locEntry) {
+        CodeSigner[] cenSigners = cenEntry.getCodeSigners();
+        CodeSigner[] locSigners = locEntry.getCodeSigners();
+
+        boolean cenHasSigners = cenSigners != null;
+        boolean locHasSigners = locSigners != null;
+
+        if (cenHasSigners && locHasSigners) {
+            if (!Arrays.equals(cenSigners, locSigners)) {
+                crossChkWarnings.add(String.format(rb.getString(
+                        "codesigners.different.for.entry.1.when.reading.jarfile.and.jarinputstream"),
+                        cenEntry.getName()));
+            }
+        } else if (cenHasSigners) {
+            crossChkWarnings.add(String.format(rb.getString(
+                    "entry.1.is.signed.in.jarfile.but.is.not.signed.in.jarinputstream"),
+                    cenEntry.getName()));
+        } else if (locHasSigners) {
+            crossChkWarnings.add(String.format(rb.getString(
+                    "entry.1.is.signed.in.jarinputstream.but.is.not.signed.in.jarfile"),
+                    locEntry.getName()));
+        }
+    }
+
+    private void displayCrossChkWarnings() {
+        System.out.println();
+        // First is a summary warning
+        System.out.println(rb.getString("jar.contains.internal.inconsistencies.result.in.different.contents.via.jarfile.and.jarinputstream"));
+        // each warning message with prefix "- "
+        crossChkWarnings.forEach(warning -> System.out.println("- " + warning));
     }
 
     private void displayMessagesAndResult(boolean isSigning) {
@@ -1243,6 +1398,7 @@ public class Main {
                 (hasExpiringTsaCert  && expireDate != null) ||
                 (noTimestamp && expireDate != null) ||
                 (hasExpiredTsaCert && signerNotExpired) ||
+                hasNonexistentEntries ||
                 extraAttrsDetected) {
 
             if (hasExpiredTsaCert && signerNotExpired) {
@@ -1280,6 +1436,9 @@ public class Main {
                             : "no.timestamp.verifying"), expireDate));
                 }
             }
+            if (hasNonexistentEntries) {
+                warnings.add(rb.getString("nonexistent.entries.found"));
+            }
             if (extraAttrsDetected) {
                 warnings.add(rb.getString("extra.attributes.detected"));
             }
@@ -1297,12 +1456,18 @@ public class Main {
                 System.out.println(rb.getString("Warning."));
                 warnings.forEach(System.out::println);
             }
+            if (!crossChkWarnings.isEmpty()) {
+                displayCrossChkWarnings();
+            }
         } else {
             if (!errors.isEmpty() || !warnings.isEmpty()) {
                 System.out.println();
                 System.out.println(rb.getString("Warning."));
                 errors.forEach(System.out::println);
                 warnings.forEach(System.out::println);
+            }
+            if (!crossChkWarnings.isEmpty()) {
+                displayCrossChkWarnings();
             }
         }
         if (!isSigning && (!errors.isEmpty() || !warnings.isEmpty())) {

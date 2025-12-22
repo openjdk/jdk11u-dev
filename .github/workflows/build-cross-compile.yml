@@ -59,23 +59,23 @@ jobs:
             gnu-arch: aarch64
             debian-arch: arm64
             debian-repository: https://httpredir.debian.org/debian/
-            debian-version: bullseye
+            debian-version: bookworm
           - target-cpu: arm
             gnu-arch: arm
             debian-arch: armhf
             debian-repository: https://httpredir.debian.org/debian/
-            debian-version: bullseye
+            debian-version: bookworm
             gnu-abi: eabihf
           - target-cpu: s390x
             gnu-arch: s390x
             debian-arch: s390x
             debian-repository: https://httpredir.debian.org/debian/
-            debian-version: bullseye
+            debian-version: bookworm
           - target-cpu: ppc64le
             gnu-arch: powerpc64le
             debian-arch: ppc64el
             debian-repository: https://httpredir.debian.org/debian/
-            debian-version: bullseye
+            debian-version: bookworm
 
     steps:
       - name: 'Checkout the JDK source'
@@ -84,13 +84,6 @@ jobs:
       - name: 'Get the BootJDK'
         id: bootjdk
         uses: ./.github/actions/get-bootjdk
-        with:
-          platform: linux-x64
-
-        # Use linux-x64 JDK bundle as build JDK
-      - name: 'Get build JDK'
-        id: buildjdk
-        uses: ./.github/actions/get-bundles
         with:
           platform: linux-x64
 
@@ -110,7 +103,7 @@ jobs:
 
       - name: 'Check cache for sysroot'
         id: get-cached-sysroot
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: sysroot
           key: sysroot-${{ matrix.debian-arch }}-${{ hashFiles('./.github/workflows/build-cross-compile.yml') }}
@@ -154,7 +147,6 @@ jobs:
           --disable-precompiled-headers
           --openjdk-target=${{ matrix.gnu-arch }}-linux-gnu${{ matrix.gnu-abi}}
           --with-sysroot=sysroot
-          --with-build-jdk=${{ steps.buildjdk.outputs.jdk-path }}
           CC=${{ matrix.gnu-arch }}-linux-gnu${{ matrix.gnu-abi}}-gcc-${{ inputs.gcc-major-version }}
           CXX=${{ matrix.gnu-arch }}-linux-gnu${{ matrix.gnu-abi}}-g++-${{ inputs.gcc-major-version }}
           ${{ inputs.extra-conf-options }} ${{ inputs.configure-arguments }} || (
