@@ -67,6 +67,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
@@ -402,6 +403,7 @@ public final class PassFailJFrame {
         frame.add(createInstructionUIPanel(instructions,
                                            testTimeOut,
                                            rows, columns,
+                                           null,
                                            enableScreenCapture,
                                            false, 0),
                   BorderLayout.CENTER);
@@ -420,6 +422,7 @@ public final class PassFailJFrame {
                 createInstructionUIPanel(builder.instructions,
                                          builder.testTimeOut,
                                          builder.rows, builder.columns,
+                                         builder.hyperlinkListener,
                                          builder.screenCapture,
                                          builder.addLogArea,
                                          builder.logAreaRows);
@@ -441,6 +444,7 @@ public final class PassFailJFrame {
     private static JComponent createInstructionUIPanel(String instructions,
                                                        long testTimeOut,
                                                        int rows, int columns,
+                                                       HyperlinkListener hyperlinkListener,
                                                        boolean enableScreenCapture,
                                                        boolean addLogArea,
                                                        int logAreaRows) {
@@ -453,6 +457,9 @@ public final class PassFailJFrame {
         JTextComponent text = instructions.startsWith("<html>")
                               ? configureHTML(instructions, rows, columns)
                               : configurePlainText(instructions, rows, columns);
+        if (hyperlinkListener != null && text instanceof JEditorPane) {
+            ((JEditorPane) text).addHyperlinkListener(hyperlinkListener);
+        }
         text.setEditable(false);
 
         main.add(new JScrollPane(text), BorderLayout.CENTER);
@@ -517,7 +524,7 @@ public final class PassFailJFrame {
         // Reduce the default margins
         styles.addRule("ol, ul { margin-left-ltr: 20; margin-left-rtl: 20 }");
         // Make the size of code blocks the same as other text
-        styles.addRule("code { font-size: inherit }");
+        styles.addRule("code { font-size: inherit; background: #DDD; }");
 
         return text;
     }
@@ -1111,6 +1118,7 @@ public final class PassFailJFrame {
         private int rows;
         private int columns;
         private boolean screenCapture;
+        private HyperlinkListener hyperlinkListener;
         private boolean addLogArea;
         private int logAreaRows = 10;
 
@@ -1146,6 +1154,18 @@ public final class PassFailJFrame {
 
         public Builder columns(int columns) {
             this.columns = columns;
+            return this;
+        }
+
+        /**
+         * Sets a {@link HyperlinkListener} for navigating links inside
+         * the instructions pane.
+         *
+         * @param hyperlinkListener the listener
+         * @return this builder
+         */
+        public Builder hyperlinkListener(HyperlinkListener hyperlinkListener) {
+            this.hyperlinkListener = hyperlinkListener;
             return this;
         }
 
