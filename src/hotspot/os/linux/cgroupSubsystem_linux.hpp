@@ -89,12 +89,12 @@ template <typename T> int subsystem_file_line_contents(CgroupController* c,
                                               const char *key,
                                               const char *scan_fmt,
                                               T returnval) {
-  if (c == nullptr) {
-    log_debug(os, container)("subsystem_file_line_contents: CgroupController* is nullptr");
+  if (c == NULL) {
+    log_debug(os, container)("subsystem_file_line_contents: CgroupController* is NULL");
     return OSCONTAINER_ERROR;
   }
-  if (c->subsystem_path() == nullptr) {
-    log_debug(os, container)("subsystem_file_line_contents: subsystem path is nullptr");
+  if (c->subsystem_path() == NULL) {
+    log_debug(os, container)("subsystem_file_line_contents: subsystem path is NULL");
     return OSCONTAINER_ERROR;
   }
 
@@ -110,7 +110,7 @@ template <typename T> int subsystem_file_line_contents(CgroupController* c,
   log_trace(os, container)("Path to %s is %s", filename, absolute_path);
 
   FILE* fp = fopen(absolute_path, "r");
-  if (fp == nullptr) {
+  if (fp == NULL) {
     log_debug(os, container)("Open of file %s failed, %s", absolute_path, os::strerror(errno));
     return OSCONTAINER_ERROR;
   }
@@ -118,14 +118,14 @@ template <typename T> int subsystem_file_line_contents(CgroupController* c,
   const int buf_len = MAXPATHLEN+1;
   char buf[buf_len];
   char* line = fgets(buf, buf_len, fp);
-  if (line == nullptr) {
+  if (line == NULL) {
     log_debug(os, container)("Empty file %s", absolute_path);
     fclose(fp);
     return OSCONTAINER_ERROR;
   }
 
   bool found_match = false;
-  if (key == nullptr) {
+  if (key == NULL) {
     // File consists of a single line according to caller, with only a value
     int matched = sscanf(line, scan_fmt, returnval);
     found_match = matched == 1;
@@ -133,7 +133,7 @@ template <typename T> int subsystem_file_line_contents(CgroupController* c,
     // File consists of multiple lines in a "key value"
     // fashion, we have to find the key.
     const int key_len = strlen(key);
-    for (; line != nullptr; line = fgets(buf, buf_len, fp)) {
+    for (; line != NULL; line = fgets(buf, buf_len, fp)) {
       char* key_substr = strstr(line, key);
       char after_key = line[key_len];
       if (key_substr == line
@@ -154,7 +154,7 @@ template <typename T> int subsystem_file_line_contents(CgroupController* c,
     return 0;
   }
   log_debug(os, container)("Type %s (key == %s) not found in file %s", scan_fmt,
-                           (key == nullptr ? "null" : key), absolute_path);
+                           (key == NULL ? "null" : key), absolute_path);
   return OSCONTAINER_ERROR;
 }
 PRAGMA_DIAG_POP

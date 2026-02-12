@@ -192,7 +192,7 @@ class ttyUnlocker: StackObj {
 // for writing to strings; buffer will expand automatically.
 // Buffer will always be zero-terminated.
 class stringStream : public outputStream {
-  DEBUG_ONLY(bool _is_frozen = false);
+  DEBUG_ONLY(bool _is_frozen);
   char*  _buffer;
   size_t _written;  // Number of characters written, excluding termin. zero
   size_t _capacity;

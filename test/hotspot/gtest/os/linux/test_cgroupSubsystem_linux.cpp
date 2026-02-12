@@ -46,7 +46,7 @@ char* temp_file(const char* prefix) {
   path.print_raw(os::file_separator());
   path.print("%s-test-jdk.pid%d.%s.%s", prefix, os::current_process_id(),
              test_info->test_case_name(), test_info->name());
-  return path.as_string(true);
+  return path.as_string();
 }
 
 void delete_file(const char* filename) {
@@ -60,7 +60,7 @@ void delete_file(const char* filename) {
 
 class TestController : public CgroupController {
 public:
-  char* subsystem_path() override {
+  char* subsystem_path() {
     // The real subsystem is in /tmp/, generaed by temp_file()
     return (char*)"/";
   };
@@ -69,17 +69,17 @@ public:
 void fill_file(const char* path, const char* content) {
   delete_file(path);
   FILE* fp = os::fopen(path, "w");
-  if (fp == nullptr) {
+  if (fp == NULL) {
     return;
   }
-  if (content != nullptr) {
+  if (content != NULL) {
     fprintf(fp, "%s", content);
   }
   fclose(fp);
 }
 
 TEST(cgroupTest, SubSystemFileLineContentsMultipleLinesErrorCases) {
-  TestController my_controller{};
+  TestController my_controller;
   const char* test_file = temp_file("cgroups");
   int x = 0;
   char s[1024];
@@ -102,7 +102,7 @@ TEST(cgroupTest, SubSystemFileLineContentsMultipleLinesErrorCases) {
 }
 
 TEST(cgroupTest, SubSystemFileLineContentsMultipleLinesSuccessCases) {
-  TestController my_controller{};
+  TestController my_controller;
   const char* test_file = temp_file("cgroups");
   int x = 0;
   char s[1024];
@@ -140,54 +140,54 @@ TEST(cgroupTest, SubSystemFileLineContentsMultipleLinesSuccessCases) {
 
   s[0] = '\0';
   fill_file(test_file, "max 10000");
-  err = subsystem_file_line_contents(&my_controller, test_file, nullptr, "%s %*d", &s);
+  err = subsystem_file_line_contents(&my_controller, test_file, NULL, "%s %*d", &s);
   EXPECT_EQ(err, 0);
   EXPECT_STREQ(s, "max");
 
   x = -3;
   fill_file(test_file, "max 10001");
-  err = subsystem_file_line_contents(&my_controller, test_file, nullptr, "%*s %d", &x);
+  err = subsystem_file_line_contents(&my_controller, test_file, NULL, "%*s %d", &x);
   EXPECT_EQ(err, 0);
   EXPECT_EQ(x, 10001);
 }
 
 TEST(cgroupTest, SubSystemFileLineContentsSingleLine) {
-  TestController my_controller{};
+  TestController my_controller;
   const char* test_file = temp_file("cgroups");
   int x = 0;
   char s[1024];
   int err = 0;
 
   fill_file(test_file, "foo");
-  err = subsystem_file_line_contents(&my_controller, test_file, nullptr, "%s", &s);
+  err = subsystem_file_line_contents(&my_controller, test_file, NULL, "%s", &s);
   EXPECT_EQ(err, 0);
   EXPECT_STREQ(s, "foo");
 
   fill_file(test_file, "1337");
-  err = subsystem_file_line_contents(&my_controller, test_file, nullptr, "%d", &x);
+  err = subsystem_file_line_contents(&my_controller, test_file, NULL, "%d", &x);
   EXPECT_EQ(err, 0);
   EXPECT_EQ(x, 1337) << "Wrong value for x";
 
   s[0] = '\0';
   fill_file(test_file, "1337");
-  err = subsystem_file_line_contents(&my_controller, test_file, nullptr, "%s", &s);
+  err = subsystem_file_line_contents(&my_controller, test_file, NULL, "%s", &s);
   EXPECT_EQ(err, 0);
   EXPECT_STREQ(s, "1337");
 
   x = -1;
-  fill_file(test_file, nullptr);
-  err = subsystem_file_line_contents(&my_controller, test_file, nullptr, "%d", &x);
+  fill_file(test_file, NULL);
+  err = subsystem_file_line_contents(&my_controller, test_file, NULL, "%d", &x);
   EXPECT_NE(err, 0) << "Empty file should've failed";
   EXPECT_EQ(x, -1) << "x was altered";
 
   jlong y;
   fill_file(test_file, "1337");
-  err = subsystem_file_line_contents(&my_controller, test_file, nullptr, JLONG_FORMAT, &y);
+  err = subsystem_file_line_contents(&my_controller, test_file, NULL, JLONG_FORMAT, &y);
   EXPECT_EQ(err, 0);
   EXPECT_EQ(y, 1337) << "Wrong value for y";
   julong z;
   fill_file(test_file, "1337");
-  err = subsystem_file_line_contents(&my_controller, test_file, nullptr, JULONG_FORMAT, &z);
+  err = subsystem_file_line_contents(&my_controller, test_file, NULL, JULONG_FORMAT, &z);
   EXPECT_EQ(err, 0);
   EXPECT_EQ(z, (julong)1337) << "Wrong value for z";
 }
