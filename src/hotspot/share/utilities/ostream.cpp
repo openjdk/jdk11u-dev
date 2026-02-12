@@ -312,9 +312,9 @@ stringStream::stringStream(size_t initial_capacity) :
   _buffer(_small_buffer),
   _written(0),
   _capacity(sizeof(_small_buffer)),
-  _is_fixed(false),
-  DEBUG_ONLY(_is_frozen(false))
+  _is_fixed(false)
 {
+  DEBUG_ONLY(_is_frozen = false);
   if (initial_capacity > _capacity) {
     grow(initial_capacity);
   }
@@ -327,9 +327,9 @@ stringStream::stringStream(char* fixed_buffer, size_t fixed_buffer_size) :
   _buffer(fixed_buffer),
   _written(0),
   _capacity(fixed_buffer_size),
-  _is_fixed(true),
-  DEBUG_ONLY(_is_frozen(false))
+  _is_fixed(true)
 {
+  DEBUG_ONLY(_is_frozen = false);
   zero_terminate();
 }
 
