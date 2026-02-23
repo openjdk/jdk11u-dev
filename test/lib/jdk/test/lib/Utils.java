@@ -804,10 +804,10 @@ public final class Utils {
     /**
      * Implementation of ByteBuffer.slice(int, int) for JDK11.
      * @param buffer The ByteBuffer to operate with (read only).
-     * @param index The position in this buffer at which the content of the 
-     * new buffer will start; must be non-negative and no 
+     * @param index The position in this buffer at which the content of the
+     * new buffer will start; must be non-negative and no
      * larger than buffer.limit()
-     * @param length The number of elements the new buffer will contain; must 
+     * @param length The number of elements the new buffer will contain; must
      * be non-negative and no larger than buffer.limit() - index
      * @return The new ByteBuffer.
      */
@@ -820,6 +820,6 @@ public final class Utils {
         buffer.limit(limit);
         buffer.position(position);
         return slice;
-    }   
+    }
 
 }
