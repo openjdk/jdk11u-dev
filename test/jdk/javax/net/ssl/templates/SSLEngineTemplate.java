@@ -28,7 +28,8 @@
  * @test
  * @bug 8250839
  * @summary Improve test template SSLEngineTemplate with SSLContextTemplate
- * @build SSLContextTemplate
+ * @library /test/lib
+ * @build SSLContextTemplate jdk.test.lib.Utils
  * @run main/othervm SSLEngineTemplate
  */
 
@@ -36,6 +37,7 @@ import java.util.Objects;
 import javax.net.ssl.*;
 import javax.net.ssl.SSLEngineResult.HandshakeStatus;
 import java.nio.ByteBuffer;
+import jdk.test.lib.Utils;
 
 /**
  * A SSLEngine usage example which simplifies the presentation
@@ -259,18 +261,6 @@ public class SSLEngineTemplate extends SSLContextTemplate {
         b.limit(b.capacity());
     }
 
-    /* Implementation of ByteBuffer.slice(int, int) for JDK11 */
-    protected static final ByteBuffer slice(ByteBuffer buffer, int index, int length) {
-        final int limit = buffer.limit();
-        final int position = buffer.position();
-        buffer.position(index);
-        buffer.limit(index + length);
-        ByteBuffer slice = buffer.slice();
-        buffer.limit(limit);
-        buffer.position(position);
-        return slice;
-    }
-
     /**
      * Given a TLS record containing one or more handshake messages, return
      * the specific handshake message as a ByteBuffer (a slice of the record)
@@ -329,7 +319,7 @@ public class SSLEngineTemplate extends SSLContextTemplate {
             if (msgType == hsMsgId) {
                 // Slice the buffer such that it contains the entire
                 // handshake message (less the handshake header).
-                ByteBuffer buf = slice(tlsRecord, tlsRecord.position(), msgLen);
+                ByteBuffer buf = Utils.slice(tlsRecord, tlsRecord.position(), msgLen);
                 tlsRecord.reset();
                 return buf;
             } else {
