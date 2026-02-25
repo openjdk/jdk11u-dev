@@ -3056,9 +3056,7 @@ void os::large_page_init() {
 
   const size_t default_page_size = (size_t) vm_page_size();
   if (success && _large_page_size > default_page_size) {
-    _page_sizes[0] = _large_page_size;
-    _page_sizes[1] = default_page_size;
-    _page_sizes[2] = 0;
+    _page_sizes.add(_large_page_size);
   }
 
   cleanup_after_large_page_init();
@@ -4192,7 +4190,7 @@ void os::init(void) {
 
   win32::initialize_system_info();
   win32::setmode_streams();
-  init_page_sizes((size_t) win32::vm_page_size());
+  _page_sizes.add(win32::vm_page_size());
 
   // This may be overridden later when argument processing is done.
   FLAG_SET_ERGO(bool, UseLargePagesIndividualAllocation, false);
