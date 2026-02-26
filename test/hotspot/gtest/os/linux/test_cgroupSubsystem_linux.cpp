@@ -46,7 +46,7 @@ char* temp_file(const char* prefix) {
   path.print_raw(os::file_separator());
   path.print("%s-test-jdk.pid%d.%s.%s", prefix, os::current_process_id(),
              test_info->test_case_name(), test_info->name());
-  return path.as_string();
+  return os::strdup(path.freeze());
 }
 
 void delete_file(const char* filename) {
