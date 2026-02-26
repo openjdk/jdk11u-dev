@@ -228,7 +228,6 @@ class stringStream : public outputStream {
     return _buffer;
   };
   void  reset();
-  // Copy to a resource, or C-heap, array as requested
   char* as_string() const;
 };
 
