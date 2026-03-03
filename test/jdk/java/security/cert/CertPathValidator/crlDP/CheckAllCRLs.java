@@ -53,7 +53,7 @@ import sun.security.x509.URIName;
 import sun.security.x509.X500Name;
 import sun.security.x509.X509CRLEntryImpl;
 import sun.security.x509.X509CRLImpl;
-import jdk.test.lib.security.CertificateBuilder;
+import sun.security.testlibrary.CertificateBuilder;
 
 /*
  * @test
@@ -64,8 +64,8 @@ import jdk.test.lib.security.CertificateBuilder;
  *          fresh or stale.
  * @modules java.base/sun.security.x509
  *          java.base/sun.security.util
- * @library /test/lib
- * @build CheckAllCRLs
+ * @library ../../../testlibrary
+ * @build CertificateBuilder CheckAllCRLs
  * @run main/othervm -Dcom.sun.security.enableCRLDP=true CheckAllCRLs
  */
 public class CheckAllCRLs {
