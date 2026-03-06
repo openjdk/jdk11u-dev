@@ -25,8 +25,7 @@
  * @test
  * @summary Test SSLEngine.begineHandshake() triggers a KeyUpdate handshake
  * in TLSv1.3
- * @library /javax/net/ssl/templates /test/lib
- * @build jdk.test.lib.Utils
+ * @library /javax/net/ssl/templates
  * @run main/othervm TLS13BeginHandshake
  */
 

@@ -29,8 +29,7 @@
  * @bug 8207317
  * @summary SSLEngine negotiation fail Exception behavior changed from
  *          fail-fast to fail-lazy
- * @library /javax/net/ssl/templates /test/lib
- * @build jdk.test.lib.Utils
+ * @library /javax/net/ssl/templates
  * @run main/othervm SSLEngineFailedALPN
  */
 /**
