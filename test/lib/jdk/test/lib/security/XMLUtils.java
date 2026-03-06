@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -201,6 +201,7 @@ public class XMLUtils {
         String dm = DigestMethod.SHA256;
         String cm = CanonicalizationMethod.EXCLUSIVE;
         String tr = Transform.ENVELOPED;
+        Map<String, Object> props = new HashMap<>();
 
         public Signer(PrivateKey privateKey) {
             this.privateKey = Objects.requireNonNull(privateKey);
@@ -250,6 +251,11 @@ public class XMLUtils {
             return sm(method, null);
         }
 
+        public Signer prop(String name, Object o) {
+            props.put(name, o);
+            return this;
+        }
+
         // Signs different sources
 
         // Signs an XML file in detached mode
@@ -257,7 +263,7 @@ public class XMLUtils {
             Document newDocument = DocumentBuilderFactory.newInstance()
                     .newDocumentBuilder().newDocument();
             FAC.newXMLSignature(buildSignedInfo(uri.toString()), buildKeyInfo()).sign(
-                    new DOMSignContext(privateKey, newDocument));
+                    withProps(new DOMSignContext(privateKey, newDocument)));
             return newDocument;
         }
 
@@ -267,7 +273,8 @@ public class XMLUtils {
                     .newDocumentBuilder().newDocument();
             DOMSignContext ctxt = new DOMSignContext(privateKey, newDocument);
             ctxt.setBaseURI(base.toString());
-            FAC.newXMLSignature(buildSignedInfo(ref.toString()), buildKeyInfo()).sign(ctxt);
+            FAC.newXMLSignature(buildSignedInfo(ref.toString()), buildKeyInfo())
+                    .sign(withProps(ctxt));
             return newDocument;
         }
 
@@ -278,7 +285,7 @@ public class XMLUtils {
                     .transform(new DOMSource(document), result);
             Document newDocument = (Document) result.getNode();
             FAC.newXMLSignature(buildSignedInfo(""), buildKeyInfo()).sign(
-                    new DOMSignContext(privateKey, newDocument.getDocumentElement()));
+                    withProps(new DOMSignContext(privateKey, newDocument.getDocumentElement())));
             return newDocument;
         }
 
@@ -293,7 +300,7 @@ public class XMLUtils {
                             id, null, null)),
                     null,
                     null)
-                    .sign(new DOMSignContext(privateKey, newDocument));
+                    .sign(withProps(new DOMSignContext(privateKey, newDocument)));
             return newDocument;
         }
 
@@ -311,7 +318,7 @@ public class XMLUtils {
                             "object", null, null)),
                     null,
                     null)
-                    .sign(new DOMSignContext(privateKey, newDocument));
+                    .sign(withProps(new DOMSignContext(privateKey, newDocument)));
             return newDocument;
         }
 
@@ -328,8 +335,16 @@ public class XMLUtils {
                             "object", null, null)),
                     null,
                     null)
-                    .sign(new DOMSignContext(privateKey, newDocument));
+                    .sign(withProps(new DOMSignContext(privateKey, newDocument)));
             return newDocument;
+        }
+
+        // Add props to a context
+        private DOMSignContext withProps(DOMSignContext ctxt) {
+            for (var e : props.entrySet()) {
+                ctxt.setProperty(e.getKey(), e.getValue());
+            }
+            return ctxt;
         }
 
         // Builds a SignedInfo for a string reference
@@ -443,6 +458,7 @@ public class XMLUtils {
         private Boolean secureValidation = null;
         private String baseURI = null;
         private final KeyStore ks;
+        Map<String, Object> props = new HashMap<>();
 
         public Validator(KeyStore ks) {
             this.ks = ks;
@@ -455,6 +471,11 @@ public class XMLUtils {
 
         public Validator baseURI(String base) {
             this.baseURI = base;
+            return this;
+        }
+
+        public Validator prop(String name, Object o) {
+            props.put(name, o);
             return this;
         }
 
@@ -488,10 +509,19 @@ public class XMLUtils {
                                 secureValidation);
                     }
                     return XMLSignatureFactory.getInstance("DOM")
-                            .unmarshalXMLSignature(valContext).validate(valContext);
+                            .unmarshalXMLSignature(valContext)
+                            .validate(withProps(valContext));
                 }
             }
             return false;
+        }
+
+        // Add props to a context
+        private DOMValidateContext withProps(DOMValidateContext ctxt) {
+            for (var e : props.entrySet()) {
+                ctxt.setProperty(e.getKey(), e.getValue());
+            }
+            return ctxt;
         }
 
         // Find public key from KeyInfo, ks will be used if it's KeyName
