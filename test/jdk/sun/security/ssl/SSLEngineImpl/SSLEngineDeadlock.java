@@ -28,7 +28,8 @@
  * @test
  * @bug 6492872
  * @summary Deadlock in SSLEngine
- * @library /javax/net/ssl/templates
+ * @library /javax/net/ssl/templates /test/lib
+ * @build jdk.test.lib.Utils
  * @run main/othervm SSLEngineDeadlock
  * @author Brad R. Wetmore
  */
