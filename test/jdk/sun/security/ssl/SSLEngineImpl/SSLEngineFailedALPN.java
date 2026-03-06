@@ -31,7 +31,7 @@
  *          fail-fast to fail-lazy
  * @library /javax/net/ssl/templates
  * @library /test/lib
- * @build jdk.test.lib.Utils 
+ * @build jdk.test.lib.Utils
  * @run main/othervm SSLEngineFailedALPN
  */
 /**

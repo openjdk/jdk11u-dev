@@ -32,7 +32,7 @@
  * @summary Delegated tasks are not reflecting the subclasses of SSLException
  * @library /javax/net/ssl/templates
  * @library /test/lib
- * @build jdk.test.lib.Utils 
+ * @build jdk.test.lib.Utils
  * @run main/othervm DelegatedTaskWrongException
  */
 
