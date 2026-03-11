@@ -162,7 +162,7 @@ class HugePageConfiguration {
 
     private static long parseSIUnit(String num, String unit) {
         long n = Long.parseLong(num);
-		long result;
+        long result;
 
         switch (unit) {
             case "K":
