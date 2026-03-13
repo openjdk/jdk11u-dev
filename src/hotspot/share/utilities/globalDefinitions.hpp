@@ -1096,6 +1096,11 @@ inline bool is_power_of_2_long(jlong x) {
   return ((x != NoLongBits) && (mask_long_bits(x, x - 1) == NoLongBits));
 }
 
+inline size_t max_power_of_2_size_t() {
+  size_t max_val = (size_t)-1;
+  return max_val - (max_val >> 1);
+}
+
 // Returns largest i such that 2^i <= x.
 // If x == 0, the function returns -1.
 inline int log2_intptr(uintptr_t x) {
@@ -1159,6 +1164,18 @@ inline int exact_log2(intptr_t x) {
 inline int exact_log2_long(jlong x) {
   assert(is_power_of_2_long(x), "x must be a power of 2: " JLONG_FORMAT, x);
   return log2_long(x);
+}
+
+inline int log2_size_t(size_t x) {
+  STATIC_ASSERT(sizeof(size_t) <= sizeof(uintptr_t));
+  return log2_intptr((uintptr_t)x);
+}
+
+// Round down to the closest power of two less than or equal to the given value.
+// precondition: value > 0.
+inline size_t round_down_power_of_2_size_t(size_t value) {
+  assert(value > 0, "Invalid value");
+  return (size_t)1 << log2_size_t(value);
 }
 
 inline bool is_odd (intx x) { return x & 1;      }

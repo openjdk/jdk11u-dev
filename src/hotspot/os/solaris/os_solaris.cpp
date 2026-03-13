@@ -4162,7 +4162,7 @@ void os::init(void) {
   if (page_size == -1) {
     fatal("os_solaris.cpp: os::init: sysconf failed (%s)", os::strerror(errno));
   }
-  init_page_sizes((size_t) page_size);
+  _page_sizes.add(page_size);
 
   Solaris::initialize_system_info();
 
