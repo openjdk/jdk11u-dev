@@ -201,7 +201,7 @@ bool CgroupSubsystemFactory::determine_type(CgroupInfo* cg_infos,
 
   // If cgroups v2 is enabled, open /sys/fs/cgroup/cgroup.controllers. If not, open /proc/cgroups.
   controllers = os::fopen(controllers_file, "r");
-  if (controllers == nullptr) {
+  if (controllers == NULL) {
     log_debug(os, container)("Can't open %s, %s", controllers_file, os::strerror(errno));
     *flags = INVALID_CGROUPS_GENERIC;
     return false;
@@ -212,10 +212,10 @@ bool CgroupSubsystemFactory::determine_type(CgroupInfo* cg_infos,
      * cgroups v2 is enabled.  For cgroups v2 (unified hierarchy), the cpu and memory
      * controllers must be enabled.
      */
-    if ((p = fgets(buf, MAXPATHLEN, controllers)) != nullptr) {
-      char* controller = nullptr;
+    if ((p = fgets(buf, MAXPATHLEN, controllers)) != NULL) {
+      char* controller = NULL;
       #define ISSPACE_CHARS " \n\t\r\f\v"
-      while ((controller = strsep(&p, ISSPACE_CHARS)) != nullptr) {
+      while ((controller = strsep(&p, ISSPACE_CHARS)) != NULL) {
         int i;
         if ((i = cg_v2_controller_index(controller)) != -1) {
           cg_infos[i]._name = os::strdup(controller);
