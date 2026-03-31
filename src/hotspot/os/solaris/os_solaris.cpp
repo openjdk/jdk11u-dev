@@ -2273,9 +2273,10 @@ size_t os::Solaris::page_size_for_alignment(size_t alignment) {
          SIZE_FORMAT " is not aligned to " SIZE_FORMAT,
          alignment, (size_t) vm_page_size());
 
-  for (int i = 0; _page_sizes[i] != 0; i++) {
-    if (is_aligned(alignment, _page_sizes[i])) {
-      return _page_sizes[i];
+  for (size_t page_size = page_sizes().largest(); page_size != 0;
+       page_size = page_sizes().next_smaller(page_size)) {
+    if (is_aligned(alignment, page_size)) {
+      return page_size;
     }
   }
 
@@ -2787,17 +2788,30 @@ bool os::Solaris::mpss_sanity_check(bool warn, size_t* page_size) {
   }
 
   // Fill the array of page sizes.
-  int n = (*gps_func)(_page_sizes, page_sizes_max);
+  size_t raw_os_page_sizes[os::Solaris::page_sizes_max];
+  int n = (*gps_func)(raw_os_page_sizes, os::Solaris::page_sizes_max);
   assert(n > 0, "Solaris bug?");
 
-  if (n == page_sizes_max) {
+  for (int i = 0; i < n; ++i) {
+    _page_sizes.add(raw_os_page_sizes[i]);
+  }
+
+  if (n == os::Solaris::page_sizes_max) {
     // Add a sentinel value (necessary only if the array was completely filled
     // since it is static (zeroed at initialization)).
-    _page_sizes[--n] = 0;
-    DEBUG_ONLY(warning("increase the size of the os::_page_sizes array.");)
+    raw_os_page_sizes[--n] = 0;
+    DEBUG_ONLY(warning("increase the size of the raw_os_page_sizes array.");)
   }
-  assert(_page_sizes[n] == 0, "missing sentinel");
-  trace_page_sizes("available page sizes", _page_sizes, n);
+  assert(raw_os_page_sizes[n] == 0, "missing sentinel");
+
+  // Log the initially available page sizes.
+  LogTarget(Info, pagesize) log_available;
+  if (log_available.is_enabled()) {
+    LogStream out(log_available);
+    out.print("available page sizes: ");
+    _page_sizes.print_on(&out);
+    out.cr();
+  }
 
   if (n == 1) return false;     // Only one page size available.
 
@@ -2809,25 +2823,38 @@ bool os::Solaris::mpss_sanity_check(bool warn, size_t* page_size) {
   // A better policy could get rid of the 4M limit by taking the sizes of the
   // important VM memory regions (java heap and possibly the code cache) into
   // account.
-  insertion_sort_descending(_page_sizes, n);
+  insertion_sort_descending(raw_os_page_sizes, n);
   const size_t size_limit =
     FLAG_IS_DEFAULT(LargePageSizeInBytes) ? 4 * M : LargePageSizeInBytes;
   int beg;
-  for (beg = 0; beg < n && _page_sizes[beg] > size_limit; ++beg) /* empty */;
+  for (beg = 0; beg < n && raw_os_page_sizes[beg] > size_limit; ++beg) /* empty */;
   const int end = MIN2((int)usable_count, n) - 1;
   for (int cur = 0; cur < end; ++cur, ++beg) {
-    _page_sizes[cur] = _page_sizes[beg];
+    raw_os_page_sizes[cur] = raw_os_page_sizes[beg];
   }
-  _page_sizes[end] = vm_page_size();
-  _page_sizes[end + 1] = 0;
+  raw_os_page_sizes[end] = vm_page_size();
+  raw_os_page_sizes[end + 1] = 0;
 
-  if (_page_sizes[end] > _page_sizes[end - 1]) {
+  if (raw_os_page_sizes[end] > raw_os_page_sizes[end - 1]) {
     // Default page size is not the smallest; sort again.
-    insertion_sort_descending(_page_sizes, end + 1);
+    insertion_sort_descending(raw_os_page_sizes, end + 1);
   }
-  *page_size = _page_sizes[0];
 
-  trace_page_sizes("usable page sizes", _page_sizes, end + 1);
+  _page_sizes = os::PageSizes();
+  for (int i = 0; i < (end + 1); ++i) {
+    _page_sizes.add(raw_os_page_sizes[i]);
+  }
+
+  *page_size = raw_os_page_sizes[0];
+
+  // Log the final usable page sizes.
+  LogTarget(Info, pagesize) log_usable;
+  if (log_usable.is_enabled()) {
+    LogStream out(log_usable);
+    out.print("usable page sizes: ");
+    _page_sizes.print_on(&out);
+    out.cr();
+  }
   return true;
 }
 
@@ -2842,12 +2869,7 @@ void os::large_page_init() {
 }
 
 bool os::Solaris::is_valid_page_size(size_t bytes) {
-  for (int i = 0; _page_sizes[i] != 0; i++) {
-    if (_page_sizes[i] == bytes) {
-      return true;
-    }
-  }
-  return false;
+  return _page_sizes.contains(bytes);
 }
 
 bool os::Solaris::setup_large_pages(caddr_t start, size_t bytes, size_t align) {

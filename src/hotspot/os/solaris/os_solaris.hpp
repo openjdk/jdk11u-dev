@@ -64,6 +64,7 @@ class Solaris {
   static int_fnP_cond_tP_i_vP _cond_init;
   static int_fnP_cond_tP _cond_destroy;
   static int _cond_scope;
+  static const int page_sizes_max = 9;
 
   static bool _synchronization_initialized;
 
