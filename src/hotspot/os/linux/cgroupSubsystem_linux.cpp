@@ -200,7 +200,7 @@ bool CgroupSubsystemFactory::determine_type(CgroupInfo* cg_infos,
   bool all_required_controllers_enabled = true;
 
   // If cgroups v2 is enabled, open /sys/fs/cgroup/cgroup.controllers. If not, open /proc/cgroups.
-  controllers = os::fopen(controllers_file, "r");
+  controllers = fopen(controllers_file, "r");
   if (controllers == NULL) {
     log_debug(os, container)("Can't open %s, %s", controllers_file, os::strerror(errno));
     *flags = INVALID_CGROUPS_GENERIC;
