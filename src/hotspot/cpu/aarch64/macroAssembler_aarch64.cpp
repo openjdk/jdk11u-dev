@@ -1953,6 +1953,17 @@ void MacroAssembler::store_sized_value(Address dst, Register src, size_t size_in
   }
 }
 
+void MacroAssembler::narrow_subword_type(Register reg, BasicType bt) {
+  assert(is_subword_type(bt), "required");
+  switch (bt) {
+  case T_BOOLEAN: andw(reg, reg, 1); break;
+  case T_BYTE:    sxtbw(reg, reg); break;
+  case T_CHAR:    uxthw(reg, reg); break;
+  case T_SHORT:   sxthw(reg, reg); break;
+  default:        ShouldNotReachHere();
+  }
+}
+
 void MacroAssembler::decrementw(Register reg, int value)
 {
   if (value < 0)  { incrementw(reg, -value);      return; }
@@ -2206,7 +2217,7 @@ void MacroAssembler::wrap_add_sub_imm_insn(Register Rd, Register Rn, unsigned im
   if (operand_valid_for_add_sub_immediate((int)imm)) {
     (this->*insn1)(Rd, Rn, imm);
   } else {
-    if (uabs(imm) < (1 << 24)) {
+    if (g_uabs(imm) < (1 << 24)) {
        (this->*insn1)(Rd, Rn, imm & -(1 << 12));
        (this->*insn1)(Rd, Rd, imm & ((1 << 12)-1));
     } else {
