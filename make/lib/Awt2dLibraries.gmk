@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2011, 2022, Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2011, 2026, Oracle and/or its affiliates. All rights reserved.
 # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 #
 # This code is free software; you can redistribute it and/or modify it
@@ -570,7 +570,8 @@ else
   # noexcept-type required for GCC 7 builds. Not required for GCC 8+.
   # expansion-to-defined required for GCC 9 builds. Not required for GCC 10+.
   HARFBUZZ_DISABLED_WARNINGS_CXX_gcc := reorder delete-non-virtual-dtor strict-overflow \
-       maybe-uninitialized class-memaccess unused-result extra noexcept-type expansion-to-defined
+       maybe-uninitialized class-memaccess unused-result extra use-after-free noexcept-type \
+       expansion-to-defined
   HARFBUZZ_DISABLED_WARNINGS_clang := unused-value incompatible-pointer-types \
        tautological-constant-out-of-range-compare int-to-pointer-cast \
        undef missing-field-initializers deprecated-declarations c++11-narrowing range-loop-analysis
@@ -895,7 +896,7 @@ ifeq ($(ENABLE_HEADLESS_ONLY), false)
           unused-function $(LIBZ_DISABLED_WARNINGS_CLANG), \
       DISABLED_WARNINGS_solstudio := E_NEWLINE_NOT_LAST E_DECLARATION_IN_CODE \
           E_STATEMENT_NOT_REACHED, \
-      DISABLED_WARNINGS_microsoft := 4018 4244 4267, \
+      DISABLED_WARNINGS_microsoft := 4018 4146 4244 4267, \
       LDFLAGS := $(LDFLAGS_JDKLIB) \
           $(call SET_SHARED_LIBRARY_ORIGIN), \
       LDFLAGS_macosx := -L$(INSTALL_LIBRARIES_HERE), \
