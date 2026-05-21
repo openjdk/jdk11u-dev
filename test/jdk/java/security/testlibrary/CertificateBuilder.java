@@ -34,6 +34,8 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.Extension;
 import javax.security.auth.x500.X500Principal;
 import java.math.BigInteger;
+import java.time.temporal.ChronoUnit;
+import java.time.Instant;
 
 import sun.security.util.DerOutputStream;
 import sun.security.util.DerValue;
@@ -188,6 +190,12 @@ public class CertificateBuilder {
     public void setValidity(Date nbDate, Date naDate) {
         setNotBefore(nbDate);
         setNotAfter(naDate);
+    }
+
+    public CertificateBuilder setOneHourValidity() {
+        setNotBefore(Date.from(Instant.now().minus(5, ChronoUnit.MINUTES)));
+        setNotAfter(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)));
+        return this;
     }
 
     /**
