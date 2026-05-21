@@ -159,15 +159,6 @@ public class SelectOneKeyOutOfMany {
     private static X509Certificate createSelfSignedCert(KeyPair caKeys,
                                                         String keyAlg)
             throws CertificateException, IOException, NoSuchAlgorithmException {
-        // return (new CertificateBuilder()
-        //         .setSubjectName("CN=dummy.example.com, OU=Dummy, " +
-        //                 "O=Dummy, L=Cupertino, ST=CA, C=US")
-        //         .setPublicKey(caKeys.getPublic())
-        //         .setOneHourValidity()
-        //         .setSerialNumber(BigInteger.valueOf(
-        //                 new SecureRandom().nextLong(1000000) + 1))
-        //         .addSubjectKeyIdExt(caKeys.getPublic())
-        // ).build(null, caKeys.getPrivate(), keyAlg);
         long randomSerial = (long) (new SecureRandom().nextDouble() * 1000000) + 1;
         CertificateBuilder certBuilder = new CertificateBuilder();
         certBuilder.setSubjectName("CN=://example.com, OU=Dummy, O=Dummy, L=Cupertino, ST=CA, C=US");
