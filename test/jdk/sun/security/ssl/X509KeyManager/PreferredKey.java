@@ -28,7 +28,8 @@
  *          preferable key
  * @modules java.base/sun.security.x509
  *          java.base/sun.security.util
- * @library /test/lib ../../../../java/security/testlibrary
+ * @library ../../../../java/security/testlibrary/
+ * @library /test/lib
  * @build CertificateBuilder
  * @run main PreferredKey
  */

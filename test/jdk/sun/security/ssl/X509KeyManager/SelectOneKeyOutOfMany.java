@@ -27,7 +27,8 @@
  * @summary Verify X509KeyManager selects the correct RSA or DSA key
  * @modules java.base/sun.security.x509
  *          java.base/sun.security.util
- * @library /test/lib ../../../../java/security/testlibrary
+ * @library /test/lib
+ * @library ../../../../java/security/testlibrary/
  * @build CertificateBuilder
  * @run main SelectOneKeyOutOfMany
  */
