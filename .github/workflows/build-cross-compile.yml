@@ -54,6 +54,7 @@ jobs:
           - arm
           - s390x
           - ppc64le
+          - riscv64
         include:
           - target-cpu: aarch64
             gnu-arch: aarch64
@@ -74,6 +75,11 @@ jobs:
           - target-cpu: ppc64le
             gnu-arch: powerpc64le
             debian-arch: ppc64el
+            debian-repository: https://httpredir.debian.org/debian/
+            debian-version: trixie
+          - target-cpu: riscv64
+            gnu-arch: riscv64
+            debian-arch: riscv64
             debian-repository: https://httpredir.debian.org/debian/
             debian-version: trixie
 
