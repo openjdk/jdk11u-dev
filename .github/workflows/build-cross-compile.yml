@@ -82,6 +82,7 @@ jobs:
             debian-arch: riscv64
             debian-repository: https://httpredir.debian.org/debian/
             debian-version: trixie
+            configure-arguments: --with-jvm-variants=zero
 
     steps:
       - name: 'Checkout the JDK source'
@@ -155,7 +156,7 @@ jobs:
           --with-sysroot=sysroot
           CC=${{ matrix.gnu-arch }}-linux-gnu${{ matrix.gnu-abi}}-gcc-${{ inputs.gcc-major-version }}
           CXX=${{ matrix.gnu-arch }}-linux-gnu${{ matrix.gnu-abi}}-g++-${{ inputs.gcc-major-version }}
-          ${{ inputs.extra-conf-options }} ${{ inputs.configure-arguments }} || (
+          ${{ matrix.configure-arguments }} ${{ inputs.extra-conf-options }} ${{ inputs.configure-arguments }} || (
           echo "Dumping config.log:" &&
           cat config.log &&
           exit 1)
