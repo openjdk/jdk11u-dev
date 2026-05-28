@@ -452,7 +452,7 @@
  * @library /test/lib
  * @build jtreg.SkippedException ValidatePathWithURL CAInterop
  * @run main/othervm/manual -Djava.security.debug=certpath,ocsp CAInterop ssltlsrootecc2022 DEFAULT
- * @run main/othervm/manual -Djava.security.debug=certpath,ocsp -Dcom.sun.security.ocsp.useget=false CAInterop ssltlsrootecc2022 DEFAULT
+ * @run main/othervm/manual -Djava.security.debug=certpath,ocsp CAInterop ssltlsrootecc2022 DEFAULT
  * @run main/othervm/manual -Djava.security.debug=certpath CAInterop ssltlsrootecc2022 CRL
  */
 
@@ -463,7 +463,7 @@
  * @library /test/lib
  * @build jtreg.SkippedException ValidatePathWithURL CAInterop
  * @run main/othervm/manual -Djava.security.debug=certpath,ocsp CAInterop ssltlsrootrsa2022 DEFAULT
- * @run main/othervm/manual -Djava.security.debug=certpath,ocsp -Dcom.sun.security.ocsp.useget=false CAInterop ssltlsrootrsa2022 DEFAULT
+ * @run main/othervm/manual -Djava.security.debug=certpath,ocsp CAInterop ssltlsrootrsa2022 DEFAULT
  * @run main/othervm/manual -Djava.security.debug=certpath CAInterop ssltlsrootrsa2022 CRL
  */
 
@@ -477,7 +477,7 @@
  * @run main/othervm/manual -Djava.security.debug=certpath,ocsp CAInterop
  * sectigotlsrootr46 OCSP
  * @run main/othervm/manual -Djava.security.debug=certpath,ocsp
- * -Dcom.sun.security.ocsp.useget=false CAInterop sectigotlsrootr46 OCSP
+ * CAInterop sectigotlsrootr46 OCSP
  * @run main/othervm/manual -Djava.security.debug=certpath CAInterop
  * sectigotlsrootr46 CRL
  */
@@ -492,7 +492,7 @@
  * @run main/othervm/manual -Djava.security.debug=certpath,ocsp CAInterop
  * sectigotlsroote46 OCSP
  * @run main/othervm/manual -Djava.security.debug=certpath,ocsp
- * -Dcom.sun.security.ocsp.useget=false CAInterop sectigotlsroote46 OCSP
+ * CAInterop sectigotlsroote46 OCSP
  * @run main/othervm/manual -Djava.security.debug=certpath CAInterop
  * sectigotlsroote46 CRL
  */
@@ -506,7 +506,7 @@
  * @run main/othervm/manual -Djava.security.debug=certpath,ocsp CAInterop
  * wisekeyglobalrootgbca OCSP
  * @run main/othervm/manual -Djava.security.debug=certpath,ocsp
- * -Dcom.sun.security.ocsp.useget=false CAInterop wisekeyglobalrootgbca OCSP
+ * CAInterop wisekeyglobalrootgbca OCSP
  * @run main/othervm/manual -Djava.security.debug=certpath CAInterop
  * wisekeyglobalrootgbca CRL
  */
@@ -520,7 +520,7 @@
  * @run main/othervm/manual -Djava.security.debug=certpath,ocsp CAInterop
  * wisekeyglobalrootgcca OCSP
  * @run main/othervm/manual -Djava.security.debug=certpath,ocsp
- * -Dcom.sun.security.ocsp.useget=false CAInterop wisekeyglobalrootgcca OCSP
+ * CAInterop wisekeyglobalrootgcca OCSP
  * @run main/othervm/manual -Djava.security.debug=certpath CAInterop
  * wisekeyglobalrootgcca CRL
  */
