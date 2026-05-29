@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2025, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -50,7 +50,16 @@ public abstract class AbstractAlgorithmConstraints
 
     // Get algorithm constraints from the specified security property.
     static Set<String> getAlgorithms(String propertyName) {
-        String property = AccessController.doPrivileged(
+        return getAlgorithms(propertyName, false);
+    }
+
+    // Get algorithm constraints from the specified security property or
+    // system property if allowSystemOverride == true.
+    static Set<String> getAlgorithms(String propertyName,
+            boolean allowSystemOverride) {
+        String property = allowSystemOverride ?
+            SecurityProperties.privilegedGetOverridable(propertyName) :
+            AccessController.doPrivileged(
                 new PrivilegedAction<String>() {
                     @Override
                     public String run() {
@@ -75,7 +84,8 @@ public abstract class AbstractAlgorithmConstraints
         if (algorithmsInProperty == null) {
             return Collections.emptySet();
         }
-        Set<String> algorithmsInPropertySet = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+        Set<String> algorithmsInPropertySet = new
+                TreeSet<>(String.CASE_INSENSITIVE_ORDER);
         algorithmsInPropertySet.addAll(Arrays.asList(algorithmsInProperty));
         return algorithmsInPropertySet;
     }
@@ -90,17 +100,17 @@ public abstract class AbstractAlgorithmConstraints
             return false;
         }
 
-        // decompose the algorithm into sub-elements
-        Set<String> elements = decomposer.decompose(algorithm);
+        if (decomposer != null) {
+            // decompose the algorithm into sub-elements
+            Set<String> elements = decomposer.decompose(algorithm);
 
-        // check the element of the elements
-        for (String element : elements) {
-            if (algorithms.contains(element)) {
-                return false;
+            // check the element of the elements
+            for (String element : elements) {
+                if (algorithms.contains(element)) {
+                    return false;
+                }
             }
         }
-
         return true;
     }
-
 }
