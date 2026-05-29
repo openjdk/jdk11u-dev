@@ -84,10 +84,10 @@
   diagnostic(bool, UseCpuAllocPath, false,                              \
              "Use CPU_ALLOC code path in os::active_processor_count ")  \
                                                                         \
-  diagnostic(bool, DisableTHPStackMitigation, false,                    \
+  diagnostic(bool, THPStackMitigation, true,                            \
           "If THPs are unconditionally enabled on the system (mode "    \
           "\"always\"), the JVM will prevent THP from forming in "      \
-          "thread stacks. This switch disables that mitigation and "    \
+          "thread stacks. When disabled, the absence of this mitigation"\
           "allows THPs to form in thread stacks.")                      \
                                                                         \
   develop(bool, DelayThreadStartALot, false,                            \
