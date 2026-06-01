@@ -29,7 +29,8 @@
  * @modules java.base/sun.security.x509
  *          java.base/sun.security.util
  * @library /javax/net/ssl/templates
- *          /test/lib
+ *          /test/lib ../../../../java/security/testlibrary
+ * @build CertificateBuilder
  * @run main/othervm MD5NotAllowedInTLS13CertificateSignature
  */
 
@@ -56,7 +57,7 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.TrustManagerFactory;
-import jdk.test.lib.security.CertificateBuilder;
+import sun.security.testlibrary.CertificateBuilder;
 import jdk.test.lib.security.SecurityUtils;
 import sun.security.x509.AuthorityKeyIdentifierExtension;
 import sun.security.x509.GeneralName;
@@ -173,17 +174,17 @@ public class MD5NotAllowedInTLS13CertificateSignature extends
 
         this.trustedCert = createTrustedCert(caKeys);
 
-        this.serverCert = customCertificateBuilder(
+        CertificateBuilder serverBuilder = customCertificateBuilder(
                 "O=Some-Org, L=Some-City, ST=Some-State, C=US",
-                serverKeys.getPublic(), caKeys.getPublic())
-                .addBasicConstraintsExt(false, false, -1)
-                .build(trustedCert, caKeys.getPrivate(), "MD5WithRSA");
+                serverKeys.getPublic(), caKeys.getPublic());
+        serverBuilder.addBasicConstraintsExt(false, false, -1);
+        this.serverCert = serverBuilder.build(trustedCert, caKeys.getPrivate(), "MD5WithRSA");
 
-        this.clientCert = customCertificateBuilder(
+        CertificateBuilder clientBuilder = customCertificateBuilder(
                 "CN=localhost, OU=SSL-Client, O=Some-Org, L=Some-City, ST=Some-State, C=US",
-                clientKeys.getPublic(), caKeys.getPublic())
-                .addBasicConstraintsExt(false, false, -1)
-                .build(trustedCert, caKeys.getPrivate(), "MD5WithRSA");
+                clientKeys.getPublic(), caKeys.getPublic());
+        clientBuilder.addBasicConstraintsExt(false, false, -1);
+        this.clientCert = clientBuilder.build(trustedCert, caKeys.getPrivate(), "MD5WithRSA");
     }
 
     private static X509Certificate createTrustedCert(KeyPair caKeys)
@@ -196,15 +197,15 @@ public class MD5NotAllowedInTLS13CertificateSignature extends
                 "O=Some-Org, L=Some-City, ST=Some-State, C=US"));
         gns.add(name);
         BigInteger serialNumber = BigInteger.valueOf(
-                random.nextLong(1000000) + 1);
-        return customCertificateBuilder(
+                nextLong(random, 1000000) + 1);
+        CertificateBuilder builder = customCertificateBuilder(
                 "O=Some-Org, L=Some-City, ST=Some-State, C=US",
-                caKeys.getPublic(), caKeys.getPublic())
-                .setSerialNumber(serialNumber)
-                .addExtension(new AuthorityKeyIdentifierExtension(kid, gns,
-                        new SerialNumber(serialNumber)))
-                .addBasicConstraintsExt(true, true, -1)
-                .build(null, caKeys.getPrivate(), "MD5WithRSA");
+                caKeys.getPublic(), caKeys.getPublic());
+        builder.setSerialNumber(serialNumber);
+        builder.addExtension(new AuthorityKeyIdentifierExtension(kid, gns,
+                             new SerialNumber(serialNumber)));
+        builder.addBasicConstraintsExt(true, true, -1);
+        return builder.build(null, caKeys.getPrivate(), "MD5WithRSA");
     }
 
     private static CertificateBuilder customCertificateBuilder(
@@ -212,20 +213,41 @@ public class MD5NotAllowedInTLS13CertificateSignature extends
             throws CertificateException, IOException {
         SecureRandom random = new SecureRandom();
 
-        CertificateBuilder builder = new CertificateBuilder()
-                .setSubjectName(subjectName)
-                .setPublicKey(publicKey)
-                .setNotBefore(
-                        Date.from(Instant.now().minus(1, ChronoUnit.HOURS)))
-                .setNotAfter(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
-                .setSerialNumber(
-                        BigInteger.valueOf(random.nextLong(1000000) + 1))
-                .addSubjectKeyIdExt(publicKey)
-                .addAuthorityKeyIdExt(caKey);
+        CertificateBuilder builder = new CertificateBuilder();
+        builder.setSubjectName(subjectName);
+        builder.setPublicKey(publicKey);
+        builder.setNotBefore(
+                       Date.from(Instant.now().minus(1, ChronoUnit.HOURS)));
+        builder.setNotAfter(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)));
+        builder.setSerialNumber(
+                       BigInteger.valueOf(nextLong(random, 1000000) + 1));
+        builder.addSubjectKeyIdExt(publicKey);
+        builder.addAuthorityKeyIdExt(caKey);
         builder.addKeyUsageExt(
                 new boolean[]{true, true, true, true, true, true});
 
         return builder;
+    }
+
+    private static long nextLong(SecureRandom rng, long bound) {
+        final long m = bound - 1;
+        long r = rng.nextLong();
+        if ((bound & m) == 0L) {
+            // The bound is a power of 2.
+            r &= m;
+        } else {
+            // Must reject over-represented candidates
+            /* This loop takes an unlovable form (but it works):
+               because the first candidate is already available,
+               we need a break-in-the-middle construction,
+               which is concisely but cryptically performed
+               within the while-condition of a body-less for loop. */
+            for (long u = r >>> 1;
+                 u + m - (r = u % bound) < 0L;
+                 u = rng.nextLong() >>> 1)
+                ;
+        }
+        return r;
     }
 
 }
