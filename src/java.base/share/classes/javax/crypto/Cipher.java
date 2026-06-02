@@ -529,7 +529,8 @@ public class Cipher {
 
         // throws NoSuchAlgorithmException if java.security disables it
         if (!CryptoAlgorithmConstraints.permits("Cipher", transformation)) {
-            throw new NoSuchAlgorithmException(transformation + " is disabled");
+            throw new NoSuchAlgorithmException(transformation +
+                " is disabled");
         }
 
         List<Transform> transforms = getTransforms(transformation);

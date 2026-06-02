@@ -84,8 +84,8 @@ public abstract class AbstractAlgorithmConstraints
         if (algorithmsInProperty == null) {
             return Collections.emptySet();
         }
-        Set<String> algorithmsInPropertySet = new
-                TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+        Set<String> algorithmsInPropertySet =
+            new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
         algorithmsInPropertySet.addAll(Arrays.asList(algorithmsInProperty));
         return algorithmsInPropertySet;
     }
