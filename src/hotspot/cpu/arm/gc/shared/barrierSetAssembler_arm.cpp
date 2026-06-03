@@ -35,12 +35,6 @@ void BarrierSetAssembler::load_at(MacroAssembler* masm, DecoratorSet decorators,
   case T_OBJECT:
   case T_ARRAY: {
     if (in_heap) {
-#ifdef AARCH64
-      if (UseCompressedOops) {
-        __ ldr_w(dst, src);
-        __ decode_heap_oop(dst);
-      } else
-#endif // AARCH64
       {
         __ ldr(dst, src);
       }
@@ -63,15 +57,6 @@ void BarrierSetAssembler::store_at(MacroAssembler* masm, DecoratorSet decorators
   case T_OBJECT:
   case T_ARRAY: {
     if (in_heap) {
-#ifdef AARCH64
-      if (UseCompressedOops) {
-        assert(!dst.uses(src), "not enough registers");
-        if (!is_null) {
-          __ encode_heap_oop(src);
-        }
-        __ str_w(val, obj);
-      } else
-#endif // AARCH64
       {
         __ str(val, obj);
       }
