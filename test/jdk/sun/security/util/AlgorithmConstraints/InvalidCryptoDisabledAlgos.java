@@ -27,7 +27,6 @@
  * @modules java.base/sun.security.util
  * @summary Check that invalid property values for
  *         "jdk.crypto.disabledAlgorithms" are rejected
- * @library /test/lib
  * @run main/othervm InvalidCryptoDisabledAlgos "*"
  * @run main/othervm InvalidCryptoDisabledAlgos "."
  * @run main/othervm InvalidCryptoDisabledAlgos ".AES"
@@ -38,10 +37,7 @@
  * @run main/othervm InvalidCryptoDisabledAlgos "KeyStore.MY,Cipher."
  * @run main/othervm InvalidCryptoDisabledAlgos "KeyStore.MY,A.B"
  */
-import java.security.MessageDigest;
 import java.security.Security;
-import jdk.test.lib.Asserts;
-import jdk.test.lib.Utils;
 import sun.security.util.CryptoAlgorithmConstraints;
 
 public class InvalidCryptoDisabledAlgos {
@@ -50,10 +46,19 @@ public class InvalidCryptoDisabledAlgos {
         System.out.println("Invalid Property Value = " + args[0]);
         Security.setProperty("jdk.crypto.disabledAlgorithms", args[0]);
         // Trigger the check to parse and validate property value
-        Utils.runAndCheckException(() -> CryptoAlgorithmConstraints.permits(
-                "x", "y"),
-                t -> Asserts.assertTrue(
-                        t instanceof ExceptionInInitializerError &&
-                        t.getCause() instanceof IllegalArgumentException));
+        try {
+            CryptoAlgorithmConstraints.permits("x", "y");
+            throw new AssertionError(
+                    "CryptoAlgorithmConstraints.permits() did not generate expected exception");
+        } catch (Throwable t) {
+            if (t instanceof ExceptionInInitializerError
+                    && t.getCause() instanceof IllegalArgumentException) {
+                // got expected
+                System.out.println("Received expected exception: " + t);
+                return;
+            } else {
+                throw t; // propagate the original exception
+            }
+        }
     }
 }
