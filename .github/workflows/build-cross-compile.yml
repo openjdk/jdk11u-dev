@@ -82,7 +82,8 @@ jobs:
             debian-arch: riscv64
             debian-repository: https://httpredir.debian.org/debian/
             debian-version: trixie
-            configure-arguments: --with-jvm-variants=zero
+            configure-arguments: '--with-jvm-variants=zero'
+            apt-extra-packages: ',libffi-dev'
 
     steps:
       - name: 'Checkout the JDK source'
@@ -124,7 +125,7 @@ jobs:
           sudo debootstrap
           --arch=${{ matrix.debian-arch }}
           --verbose
-          --include=fakeroot,symlinks,build-essential,libx11-dev,libxext-dev,libxrender-dev,libxrandr-dev,libxtst-dev,libxt-dev,libcups2-dev,libfontconfig1-dev,libasound2-dev,libfreetype-dev,libpng-dev
+          --include=fakeroot,symlinks,build-essential,libx11-dev,libxext-dev,libxrender-dev,libxrandr-dev,libxtst-dev,libxt-dev,libcups2-dev,libfontconfig1-dev,libasound2-dev,libfreetype-dev,libpng-dev${{ matrix.apt-extra-packages }}
           --resolve-deps
           --variant=minbase
           ${{ matrix.debian-version }}
