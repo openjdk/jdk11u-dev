@@ -4207,9 +4207,9 @@ void os::large_page_init() {
   // -XX:-THPStackMitigation.
   if (is_thp_always_mode()) {
     if (THPStackMitigation) {
-      log_info(pagesize)("JVM will *not* prevent THPs in thread stacks. This may cause high RSS.");
-    } else {
       log_info(pagesize)("JVM will attempt to prevent THPs in thread stacks.");
+    } else {
+      log_info(pagesize)("JVM will *not* prevent THPs in thread stacks. This may cause high RSS.");
     }
   } else {
     THPStackMitigation = false; // Mitigation not needed
