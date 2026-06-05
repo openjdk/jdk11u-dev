@@ -56,6 +56,7 @@ public class InvalidCryptoDisabledAlgos {
                 // unexpected exception, propagate it
                 throw t;
             }
+            // got expected
             System.out.println("Received expected exception: " + t);
         }
     }
