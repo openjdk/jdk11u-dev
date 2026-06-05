@@ -45,20 +45,18 @@ public class InvalidCryptoDisabledAlgos {
     public static void main(String[] args) throws Exception {
         System.out.println("Invalid Property Value = " + args[0]);
         Security.setProperty("jdk.crypto.disabledAlgorithms", args[0]);
-        // Trigger the check to parse and validate property value
         try {
+            // Trigger the check to parse and validate property value
             CryptoAlgorithmConstraints.permits("x", "y");
             throw new AssertionError(
                     "CryptoAlgorithmConstraints.permits() did not generate expected exception");
         } catch (Throwable t) {
-            if (t instanceof ExceptionInInitializerError
-                    && t.getCause() instanceof IllegalArgumentException) {
-                // got expected
-                System.out.println("Received expected exception: " + t);
-                return;
-            } else {
-                throw t; // propagate the original exception
+            if (!(t instanceof ExceptionInInitializerError)
+                    || !(t.getCause() instanceof IllegalArgumentException)) {
+                // unexpected exception, propagate it
+                throw t;
             }
+            System.out.println("Received expected exception: " + t);
         }
     }
 }
