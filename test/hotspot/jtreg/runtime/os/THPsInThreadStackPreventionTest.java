@@ -82,6 +82,19 @@ public class THPsInThreadStackPreventionTest {
     static final long acceptableRSSForAllThreadStacks = numThreads * acceptableRSSPerThreadStack;
     static final long acceptableRSSLimitMB = (acceptableRSSForAllThreadStacks / (1024 * 1024)) + basicRSSOverheadMB;
 
+    private static boolean isThpAlwaysMode() {
+        boolean result = false;
+        try (BufferedReader br = new BufferedReader(new FileReader("/sys/kernel/mm/transparent_hugepage/enabled"))) {
+            String line = br.readLine(); // Reads only the first line
+            if (line != null && line.contains("[always]")) {
+                result = true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     private static class TestMain {
 
         static class Sleeper extends Thread {
@@ -154,9 +167,8 @@ public class THPsInThreadStackPreventionTest {
 
     public static void main(String[] args) throws Exception {
 
-        HugePageConfiguration config = HugePageConfiguration.readFromOS();
         // This issue is bound to THP=always
-        if (config.getThpMode() != HugePageConfiguration.THPMode.always) {
+        if (!isThpAlwaysMode()) {
             throw new SkippedException("Test only makes sense in THP \"always\" mode");
         }
 
@@ -165,6 +177,9 @@ public class THPsInThreadStackPreventionTest {
             "-Xmx" + heapSizeMB + "m", "-Xms" + heapSizeMB + "m", "-XX:+AlwaysPreTouch", // stabilize RSS
             "-Xss" + threadStackSizeMB + "m",
             "-XX:-CreateCoredumpOnCrash",
+            // Limits the number of JVM-internal threads, which depends on the available cores of the
+            // machine. RSS+Swap could exceed acceptableRSSLimitMB when JVM creates many internal threads.
+            "-XX:ActiveProcessorCount=2",
             // This will delay the child threads before they create guard pages, thereby greatly increasing the
             // chance of large VMA formation + hugepage coalescation; see JDK-8312182
             "-XX:+DelayThreadStartALot"
