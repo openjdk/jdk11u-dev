@@ -58,7 +58,7 @@ public class CryptoAlgorithmConstraints extends AbstractAlgorithmConstraints {
 
     private static void debug(String msg) {
         if (debug != null) {
-            debug.println("CryptoAlgoConstraints: " + msg);
+            Debug.println("CryptoAlgoConstraints: ", msg);
         }
     }
 

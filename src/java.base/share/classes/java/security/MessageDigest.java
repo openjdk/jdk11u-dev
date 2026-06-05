@@ -303,6 +303,7 @@ public abstract class MessageDigest extends MessageDigestSpi {
         throws NoSuchAlgorithmException
     {
         Objects.requireNonNull(algorithm, "null algorithm name");
+
         if (provider == null) {
             throw new IllegalArgumentException("missing provider");
         }
