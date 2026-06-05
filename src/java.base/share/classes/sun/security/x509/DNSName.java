@@ -245,7 +245,6 @@ public class DNSName implements GeneralNameInterface {
             } else if (inName.endsWith(thisName)) {
                 int ndx = inName.lastIndexOf(thisName);
                 if (inName.charAt(ndx-1) == '.' ^ thisName.charAt(0) == '.')
-
                     constraintType = NAME_NARROWS;
                 else
                     constraintType = NAME_SAME_TYPE;
