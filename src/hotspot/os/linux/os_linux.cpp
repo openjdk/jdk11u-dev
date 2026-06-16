@@ -985,13 +985,24 @@ bool os::create_thread(Thread* thread, ThreadType thr_type,
   }
   assert(is_aligned(stack_size, os::vm_page_size()), "stack_size not aligned");
 
-  // Add an additional page to the stack size to reduce its chances of getting large page aligned
-  // so that the stack does not get backed by a transparent huge page.
-  size_t default_large_page_size = os::large_page_size();
-  if (default_large_page_size != 0 &&
-      stack_size >= default_large_page_size &&
-      is_aligned(stack_size, default_large_page_size)) {
-    stack_size += os::vm_page_size();
+  if (THPStackMitigation) {
+    // In addition to the glibc guard page that prevents inter-thread-stack hugepage
+    // coalescing (see comment in os::Linux::default_guard_size()), we also make
+    // sure the stack size itself is not huge-page-size aligned; that makes it much
+    // more likely for thread stack boundaries to be unaligned as well and hence
+    // protects thread stacks from being targeted by khugepaged.
+
+    // Note JDK 11/8: In order to minimize changes to these old releases, here we
+    // continue to assume that <static large page size> == <thp page size> (instead
+    // of querying THP page geometry from the OS). Outside of obscure corner cases
+    // (e.g. 1GB static pages set up as only variant on x64) this is not a problem,
+    // and these corner cases are served better with modern JVM variants.
+    size_t default_large_page_size = os::large_page_size();
+    if (default_large_page_size != 0 &&
+        stack_size >= default_large_page_size &&
+        is_aligned(stack_size, default_large_page_size)) {
+      stack_size += os::vm_page_size();
+    }
   }
 
   int status = pthread_attr_setstacksize(&attr, stack_size);
@@ -4212,7 +4223,7 @@ void os::large_page_init() {
       log_info(pagesize)("JVM will *not* prevent THPs in thread stacks. This may cause high RSS.");
     }
   } else {
-    THPStackMitigation = false; // Mitigation not needed
+    FLAG_SET_ERGO(bool, THPStackMitigation, false); // Mitigation not needed
   }
 
   // Handle the case where we do not want to use huge pages
