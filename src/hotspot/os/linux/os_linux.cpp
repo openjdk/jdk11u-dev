@@ -995,7 +995,7 @@ bool os::create_thread(Thread* thread, ThreadType thr_type,
     // Note JDK 11/8: In order to minimize changes to these old releases, here we
     // continue to assume that <static large page size> == <thp page size> (instead
     // of querying THP page geometry from the OS). Outside of obscure corner cases
-    // (e.g. 1GB static pages set up as only variant on x64) this is not a problem,
+    // (e.g. 1GB static huge pages set up as only variant on x64) this is not a problem,
     // and these corner cases are served better with modern JVM variants.
     size_t default_large_page_size = os::large_page_size();
     if (default_large_page_size != 0 &&
