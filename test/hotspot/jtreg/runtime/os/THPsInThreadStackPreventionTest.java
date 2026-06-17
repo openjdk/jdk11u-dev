@@ -90,7 +90,7 @@ public class THPsInThreadStackPreventionTest {
                 result = true;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Failed to read " + file);
         }
         return result;
     }
