@@ -90,7 +90,7 @@ public class THPsInThreadStackPreventionTest {
                 result = true;
             }
         } catch (IOException e) {
-            System.out.println("Failed to read " + file);
+            System.out.println("Failed to read /sys/kernel/mm/transparent_hugepage/enabled; Test will be skipped.");
         }
         return result;
     }
