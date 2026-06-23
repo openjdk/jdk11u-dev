@@ -82,15 +82,17 @@ public class THPsInThreadStackPreventionTest {
     static final long acceptableRSSForAllThreadStacks = numThreads * acceptableRSSPerThreadStack;
     static final long acceptableRSSLimitMB = (acceptableRSSForAllThreadStacks / (1024 * 1024)) + basicRSSOverheadMB;
 
+    /* JDK11-specific downporting helper */
     private static boolean isThpAlwaysMode() {
         boolean result = false;
-        try (BufferedReader br = new BufferedReader(new FileReader("/sys/kernel/mm/transparent_hugepage/enabled"))) {
+        String file = "/sys/kernel/mm/transparent_hugepage/enabled";
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line = br.readLine(); // Reads only the first line
             if (line != null && line.contains("[always]")) {
                 result = true;
             }
         } catch (IOException e) {
-            System.out.println("Failed to read /sys/kernel/mm/transparent_hugepage/enabled; Test will be skipped.");
+            System.out.println(String.format("Failed to read %s; Test will be skipped.", file));
         }
         return result;
     }
