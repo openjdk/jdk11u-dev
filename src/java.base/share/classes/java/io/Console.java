@@ -382,7 +382,9 @@ public final class Console implements Flushable
                             ioe.addSuppressed(x);
                     }
                     if (ioe != null) {
-                        Arrays.fill(passwd, ' ');
+                        if (passwd != null) {
+                            Arrays.fill(passwd, ' ');
+                        }
                         try {
                             if (reader instanceof LineReader) {
                                 LineReader lr = (LineReader)reader;
