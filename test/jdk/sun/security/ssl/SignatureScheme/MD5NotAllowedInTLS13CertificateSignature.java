@@ -37,6 +37,7 @@
 import static jdk.test.lib.Asserts.assertEquals;
 import static jdk.test.lib.Asserts.assertTrue;
 import static jdk.test.lib.Utils.runAndCheckException;
+import static jdk.test.lib.Utils.nextLong;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -227,27 +228,6 @@ public class MD5NotAllowedInTLS13CertificateSignature extends
                 new boolean[]{true, true, true, true, true, true});
 
         return builder;
-    }
-
-    private static long nextLong(SecureRandom rng, long bound) {
-        final long m = bound - 1;
-        long r = rng.nextLong();
-        if ((bound & m) == 0L) {
-            // The bound is a power of 2.
-            r &= m;
-        } else {
-            // Must reject over-represented candidates
-            /* This loop takes an unlovable form (but it works):
-               because the first candidate is already available,
-               we need a break-in-the-middle construction,
-               which is concisely but cryptically performed
-               within the while-condition of a body-less for loop. */
-            for (long u = r >>> 1;
-                 u + m - (r = u % bound) < 0L;
-                 u = rng.nextLong() >>> 1)
-                ;
-        }
-        return r;
     }
 
 }
