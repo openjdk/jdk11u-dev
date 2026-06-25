@@ -202,7 +202,7 @@ public class DNSName implements GeneralNameInterface {
      * </ul>.  These results are used in checking NameConstraints during
      * certification path verification.
      * <p>
-     * RFC5280: DNS name restrictions are expressed as host.example.com.
+     * RFC5280: For DNS names, restrictions MUST use the DNSName syntax in Section 4.2.1.6.
      * Any DNS name that can be constructed by simply adding zero or more
      * labels to the left-hand side of the name satisfies the name constraint.
      * For example, www.host.example.com would satisfy the constraint but
@@ -238,13 +238,13 @@ public class DNSName implements GeneralNameInterface {
                 constraintType = NAME_MATCH;
             else if (thisName.endsWith(inName)) {
                 int inNdx = thisName.lastIndexOf(inName);
-                if (thisName.charAt(inNdx-1) == '.' )
+                if (thisName.charAt(inNdx-1) == '.' ^ inName.charAt(0) == '.')
                     constraintType = NAME_WIDENS;
                 else
                     constraintType = NAME_SAME_TYPE;
             } else if (inName.endsWith(thisName)) {
                 int ndx = inName.lastIndexOf(thisName);
-                if (inName.charAt(ndx-1) == '.' )
+                if (inName.charAt(ndx-1) == '.' ^ thisName.charAt(0) == '.')
                     constraintType = NAME_NARROWS;
                 else
                     constraintType = NAME_SAME_TYPE;
