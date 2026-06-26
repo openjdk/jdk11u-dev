@@ -72,57 +72,57 @@ public class EchoPassword {
                 {"The password", nonASCII}
         };
 
-        final String message = String.format("""
-                <html>Open a terminal or Windows Command Prompt window, perform
-                the following steps, and record the final result. Each time you
-                click a link to copy something, make sure the status line at the
-                bottom shows the link has been successfully clicked.
-                <h3>Part I: Password Echoing Tests</h3>
-                <ol>
-                <li>Click <a href='c0'>Copy First Command</a> to copy the
-                following command into the system clipboard. Paste it into the
-                terminal window and execute the command.
-                <p><code>
-                %s
-                </code><p>
-                When prompted, enter "changeit" and press Enter. When prompted
-                again, enter "changeit" again and press Enter. Verify that the
-                two password prompts show up on different lines, both
-                passwords are hidden, and a key pair is generated successfully.
-
-                <li>Click <a href='c1'>Copy Second Command</a> to copy the
-                following command into the system clipboard. Paste it into the
-                terminal window and execute the command.
-                <p><code>
-                %s
-                </code><p>
-                When prompted, enter "changeit" and press Enter. When prompted
-                again, enter "changeit" again and press Enter. Verify that the
-                two password prompts show up on different lines, both
-                passwords are hidden, and a key pair is generated successfully.
-
-                <li>Click <a href='c2'>Copy Third Command</a> to copy the
-                following command into the system clipboard. Paste it into the
-                terminal window and execute the command.
-                <p><code>
-                %s
-                </code><p>
-                You will see a prompt but you don't need to enter anything.
-                Verify that the password "changeit" is not shown in the command
-                output and a key pair is generated successfully.
-
-                <li>Click <a href='c3'>Copy Fourth Command</a> to copy the
-                following command into the system clipboard. Paste it into the
-                terminal window and execute the command.
-                <p><code>
-                %s
-                </code><p>
-                When prompted, enter "changeit" and press Enter. Verify that the
-                password is hidden and a PEM certificate is correctly shown.
-                </ol>
-                Press "pass" if the behavior matches expectations;
-                otherwise, press "fail".
-                """, commands[0][1], commands[1][1], commands[2][1], commands[3][1],
+        final String message = String.format(
+                "<html>Open a terminal or Windows Command Prompt window, perform" +
+                "the following steps, and record the final result. Each time you" +
+                "click a link to copy something, make sure the status line at the" +
+                "bottom shows the link has been successfully clicked." +
+                "<h3>Part I: Password Echoing Tests</h3>" +
+                "<ol>" +
+                "<li>Click <a href='c0'>Copy First Command</a> to copy the" +
+                "following command into the system clipboard. Paste it into the" +
+                "terminal window and execute the command." +
+                "<p><code>" +
+                "%s" +
+                "</code><p>" +
+                "When prompted, enter \"changeit\" and press Enter. When prompted" +
+                "again, enter \"changeit\" again and press Enter. Verify that the" +
+                "two password prompts show up on different lines, both" +
+                "passwords are hidden, and a key pair is generated successfully." +
+                "" +
+                "<li>Click <a href='c1'>Copy Second Command</a> to copy the" +
+                "following command into the system clipboard. Paste it into the" +
+                "terminal window and execute the command." +
+                "<p><code>" +
+                "%s" +
+                "</code><p>" +
+                "When prompted, enter \"changeit\" and press Enter. When prompted" +
+                "again, enter \"changeit\" again and press Enter. Verify that the" +
+                "two password prompts show up on different lines, both" +
+                "passwords are hidden, and a key pair is generated successfully." +
+                "" +
+                "<li>Click <a href='c2'>Copy Third Command</a> to copy the" +
+                "following command into the system clipboard. Paste it into the" +
+                "terminal window and execute the command." +
+                "<p><code>" +
+                "%s" +
+                "</code><p>" +
+                "You will see a prompt but you don't need to enter anything." +
+                "Verify that the password \"changeit\" is not shown in the command" +
+                "output and a key pair is generated successfully." +
+                "" +
+                "<li>Click <a href='c3'>Copy Fourth Command</a> to copy the" +
+                "following command into the system clipboard. Paste it into the" +
+                "terminal window and execute the command." +
+                "<p><code>" +
+                "%s" +
+                "</code><p>" +
+                "When prompted, enter \"changeit\" and press Enter. Verify that the" +
+                "password is hidden and a PEM certificate is correctly shown." +
+                "</ol>" +
+                "Press \"pass\" if the behavior matches expectations;" +
+                "otherwise, press \"fail\".",
+                commands[0][1], commands[1][1], commands[2][1], commands[3][1],
                 commands[4][1]);
 
         PassFailJFrame.builder()
