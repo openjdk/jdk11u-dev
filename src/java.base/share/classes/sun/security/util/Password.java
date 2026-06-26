@@ -152,11 +152,12 @@ public class Password {
             Charset charset;
             if (c1 != null) {
                 c2 = null;
-                charset = c1.charset();
+                charset = SharedSecrets.getJavaIOAccess().charset(c1);
             } else {
                 c2 = SharedSecrets.getJavaIOAccess().passwordConsole()
                         .orElse(null);
-                charset = (c2 != null) ? c2.charset() : null;
+                charset = (c2 != null)
+                    ? SharedSecrets.getJavaIOAccess().charset(c2) : null;
             }
             enc = charset == null ? null : charset.newEncoder()
                     .onMalformedInput(CodingErrorAction.REPLACE)
