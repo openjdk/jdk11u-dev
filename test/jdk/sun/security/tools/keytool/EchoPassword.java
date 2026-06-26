@@ -128,17 +128,6 @@ public class EchoPassword {
         PassFailJFrame.builder()
                 .instructions(message)
                 .rows(40).columns(100)
-                .hyperlinkListener(e -> {
-                    if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                        int pos = Integer.parseInt(e.getDescription().substring(1));
-                        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
-                                new StringSelection(commands[pos][1]), null);
-                        label.setText(commands[pos][0] + " copied");
-                        if (e.getSource() instanceof JEditorPane ep) {
-                            ep.getCaret().setVisible(false);
-                        }
-                    }
-                })
                 .splitUIBottom(() -> {
                     label = new JLabel("Status");
                     return label;
