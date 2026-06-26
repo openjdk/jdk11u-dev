@@ -33,7 +33,6 @@
  */
 
 import javax.swing.JEditorPane;
-import javax.swing.JLabel;
 import javax.swing.event.HyperlinkEvent;
 
 import java.awt.Toolkit;
@@ -42,8 +41,6 @@ import java.io.File;
 import java.nio.file.Path;
 
 public class EchoPassword {
-
-    static JLabel label;
 
     public static void main(String[] args) throws Exception {
 
@@ -126,10 +123,6 @@ public class EchoPassword {
         PassFailJFrame.builder()
                 .instructions(message)
                 .rows(40).columns(100)
-                .splitUIBottom(() -> {
-                    label = new JLabel("Status");
-                    return label;
-                })
                 .build()
                 .awaitAndCheck();
     }
