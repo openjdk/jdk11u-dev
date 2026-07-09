@@ -52,7 +52,7 @@ public class ConfigShortPath {
             // re-try w/ SunPKCS11-Solaris
             p = Security.getProvider("SunPKCS11-Solaris");
             if (p == null) {
-				throw new SkippedException("Skipping test - no PKCS11 provider available");
+                throw new SkippedException("Skipping test - no PKCS11 provider available");
             }
         }
 
