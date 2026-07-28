@@ -30,8 +30,8 @@ import java.nio.charset.Charset;
 import java.util.Optional;
 
 public interface JavaIOAccess {
-    public Console console();
-    public Charset charset();
+    Console console();
+    Charset charset();
     Optional<Console> passwordConsole();
     char[] readPasswordNoNewLine(Console c);
 }
