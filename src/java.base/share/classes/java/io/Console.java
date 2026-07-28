@@ -460,9 +460,9 @@ public final class Console implements Flushable
     private boolean restoreEcho;
     private boolean shutdownHookInstalled;
     private static native String encoding();
-    @Native private static final int TTY_STDIN_MASK = 0x00000001;
-    @Native private static final int TTY_STDOUT_MASK = 0x00000002;
-    @Native private static final int TTY_STDERR_MASK = 0x00000004;
+    @Native static final int TTY_STDIN_MASK = 0x00000001;
+    @Native static final int TTY_STDOUT_MASK = 0x00000002;
+    @Native static final int TTY_STDERR_MASK = 0x00000004;
     // ttyStatus() returns bit patterns above, a bit is set if the corresponding file
     // descriptor is a character device
     private static final int ttyStatus = ttyStatus();
