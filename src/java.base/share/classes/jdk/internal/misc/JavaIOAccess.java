@@ -32,6 +32,6 @@ import java.util.Optional;
 public interface JavaIOAccess {
     public Console console();
     public Charset charset();
-    public Optional<Console> passwordConsole();
-    public char[] readPasswordNoNewLine(Console c);
+    Optional<Console> passwordConsole();
+    char[] readPasswordNoNewLine(Console c);
 }
