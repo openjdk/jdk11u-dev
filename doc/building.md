@@ -169,8 +169,10 @@ building on different platforms.
 
 ### Windows
 
-Windows XP is not a supported platform, but all newer Windows should be able to
-build the JDK.
+Windows 7 Service Pack 1, Windows Server 2008 R2 Service Pack 1, and all newer 
+Windows versions are supported. However, the minimum required Windows version 
+is usually determined by the compiler toolchain being used. Keeping the system 
+fully updated is recommended.
 
 On Windows, it is important that you pay attention to the instructions in the
 [Special Considerations](#special-considerations).
@@ -392,20 +394,14 @@ CC: Sun C++ 5.13 SunOS_i386 151846-10 2015/10/30
 
 ### Microsoft Visual Studio
 
-The minimum accepted version of Visual Studio is 2010. Older versions will not
-be accepted by `configure`. The maximum accepted version of Visual Studio is
-2019. Versions older than 2017 are unlikely to continue working for long.
+The minimum accepted version of Visual Studio is 2017 (version 15.8). 
+Older versions will not be accepted by `configure` or build successfully. 
+The maximum accepted version of Visual Studio is 2022. Versions older than 
+2017 are unlikely to continue working for long.
 
 If you have multiple versions of Visual Studio installed, `configure` will by
 default pick the latest. You can request a specific version to be used by
-setting `--with-toolchain-version`, e.g. `--with-toolchain-version=2015`.
-
-If you get `LINK: fatal error LNK1123: failure during conversion to COFF: file
-invalid` when building using Visual Studio 2010, you have encountered
-[KB2757355](http://support.microsoft.com/kb/2757355), a bug triggered by a
-specific installation order. However, the solution suggested by the KB article
-does not always resolve the problem. See [this stackoverflow discussion](
-https://stackoverflow.com/questions/10888391) for other suggestions.
+setting `--with-toolchain-version`, e.g. `--with-toolchain-version=2017`.
 
 If you have Visual Studio installed but `configure` fails to detect it, it may
 be because of [spaces in path](#spaces-in-path).
