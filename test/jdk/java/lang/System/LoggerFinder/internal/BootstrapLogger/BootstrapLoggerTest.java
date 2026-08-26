@@ -376,10 +376,10 @@ public class BootstrapLoggerTest {
                 LogStream.err.println("Not checking executor termination for " + test);
             }
         } finally {
+            Locale.setDefault(savedLocale);
             SimplePolicy.allowAll.set(Boolean.FALSE);
         }
         LogStream.err.println(test.name() + ": PASSED");
-        Locale.setDefault(savedLocale);
     }
 
     final static class SimplePolicy extends Policy {
