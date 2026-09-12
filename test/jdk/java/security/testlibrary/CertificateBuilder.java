@@ -35,6 +35,8 @@ import java.time.temporal.ChronoUnit;
 import java.time.Instant;
 import javax.security.auth.x500.X500Principal;
 import java.math.BigInteger;
+import java.time.temporal.ChronoUnit;
+import java.time.Instant;
 
 import jdk.test.lib.Utils;
 
@@ -313,6 +315,12 @@ public class CertificateBuilder {
     public CertificateBuilder setOneHourValidity() {
         return setNotBefore(Date.from(Instant.now().minus(5, ChronoUnit.MINUTES)))
                 .setNotAfter(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)));
+    }
+
+    public CertificateBuilder setOneHourValidity() {
+        setNotBefore(Date.from(Instant.now().minus(5, ChronoUnit.MINUTES)));
+        setNotAfter(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)));
+        return this;
     }
 
     /**
