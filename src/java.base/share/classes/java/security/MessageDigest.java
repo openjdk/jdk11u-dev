@@ -32,6 +32,7 @@ import java.nio.ByteBuffer;
 
 import sun.security.util.Debug;
 import sun.security.util.MessageDigestSpi2;
+import sun.security.util.CryptoAlgorithmConstraints;
 
 import javax.crypto.SecretKey;
 
@@ -173,10 +174,15 @@ public abstract class MessageDigest extends MessageDigestSpi {
     public static MessageDigest getInstance(String algorithm)
     throws NoSuchAlgorithmException {
         Objects.requireNonNull(algorithm, "null algorithm name");
+
+        if (!CryptoAlgorithmConstraints.permits("MessageDigest", algorithm)) {
+            throw new NoSuchAlgorithmException(algorithm + " is disabled");
+        }
+
         try {
-            MessageDigest md;
             Object[] objs = Security.getImpl(algorithm, "MessageDigest",
                                              (String)null);
+            MessageDigest md;
             if (objs[0] instanceof MessageDigest) {
                 md = (MessageDigest)objs[0];
             } else {
@@ -237,8 +243,15 @@ public abstract class MessageDigest extends MessageDigestSpi {
         throws NoSuchAlgorithmException, NoSuchProviderException
     {
         Objects.requireNonNull(algorithm, "null algorithm name");
-        if (provider == null || provider.isEmpty())
+
+        if (provider == null || provider.isEmpty()) {
             throw new IllegalArgumentException("missing provider");
+        }
+
+        if (!CryptoAlgorithmConstraints.permits("MessageDigest", algorithm)) {
+            throw new NoSuchAlgorithmException(algorithm + " is disabled");
+        }
+
         Object[] objs = Security.getImpl(algorithm, "MessageDigest", provider);
         if (objs[0] instanceof MessageDigest) {
             MessageDigest md = (MessageDigest)objs[0];
@@ -290,8 +303,15 @@ public abstract class MessageDigest extends MessageDigestSpi {
         throws NoSuchAlgorithmException
     {
         Objects.requireNonNull(algorithm, "null algorithm name");
-        if (provider == null)
+
+        if (provider == null) {
             throw new IllegalArgumentException("missing provider");
+        }
+
+        if (!CryptoAlgorithmConstraints.permits("MessageDigest", algorithm)) {
+            throw new NoSuchAlgorithmException(algorithm + " is disabled");
+        }
+
         Object[] objs = Security.getImpl(algorithm, "MessageDigest", provider);
         if (objs[0] instanceof MessageDigest) {
             MessageDigest md = (MessageDigest)objs[0];
