@@ -62,12 +62,6 @@ ifeq ($(call isTargetCpu, x86_64), true)
   OPENJDK_TARGET_CPU_VM_VERSION := amd64
 else ifeq ($(call isTargetCpu, sparcv9), true)
   OPENJDK_TARGET_CPU_VM_VERSION := sparc
-else ifeq ($(HOTSPOT_TARGET_CPU_ARCH), arm)
-  ifeq ($(OPENJDK_TARGET_CPU), aarch64)
-    # This sets the Oracle Aarch64 port to use arm64
-    # while the original Aarch64 port uses aarch64
-    OPENJDK_TARGET_CPU_VM_VERSION := arm64
-  endif
 else
   OPENJDK_TARGET_CPU_VM_VERSION := $(OPENJDK_TARGET_CPU)
 endif

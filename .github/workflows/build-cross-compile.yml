@@ -147,6 +147,8 @@ jobs:
           --disable-precompiled-headers
           --openjdk-target=${{ matrix.gnu-arch }}-linux-gnu${{ matrix.gnu-abi}}
           --with-sysroot=sysroot
+          --with-cpu-port=arm64
+          --with-abi-profile=arm64
           CC=${{ matrix.gnu-arch }}-linux-gnu${{ matrix.gnu-abi}}-gcc-${{ inputs.gcc-major-version }}
           CXX=${{ matrix.gnu-arch }}-linux-gnu${{ matrix.gnu-abi}}-g++-${{ inputs.gcc-major-version }}
           ${{ inputs.extra-conf-options }} ${{ inputs.configure-arguments }} || (
