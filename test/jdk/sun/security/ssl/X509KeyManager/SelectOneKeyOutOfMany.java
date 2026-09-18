@@ -27,11 +27,17 @@
  * @summary Verify X509KeyManager selects the correct RSA or DSA key
  * @modules java.base/sun.security.x509
  *          java.base/sun.security.util
+ *
+ * @library ../../../../java/security/testlibrary/
  * @library /test/lib
+ *
+ * @build CertificateBuilder
+ * @run main SelectOneKeyOutOfMany
  */
 
 import jdk.test.lib.Asserts;
-import jdk.test.lib.security.CertificateBuilder;
+import sun.security.testlibrary.CertificateBuilder;
+import jdk.test.lib.Utils;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.X509KeyManager;
@@ -62,12 +68,12 @@ public class SelectOneKeyOutOfMany {
                 "getClientAliases shouldn't return alias for unknown type");
 
         Asserts.assertTrue(Arrays.stream(km.getClientAliases(RSA,
-                                null)).toList().contains(RSA_ALIAS),
+                                null)).anyMatch(RSA_ALIAS::equals),
                 "getClientAliases should return RSA alias: " +
                         Arrays.toString(km.getClientAliases(RSA, null)));
 
         Asserts.assertTrue(Arrays.stream(km.getClientAliases(DSA,
-                                null)).toList().contains(DSA_ALIAS),
+                                null)).anyMatch(DSA_ALIAS::equals),
                 "getClientAliases should return DSA alias: " +
                         Arrays.toString(km.getClientAliases(DSA, null)));
 
@@ -77,12 +83,12 @@ public class SelectOneKeyOutOfMany {
                 "getServerAliases shouldn't return alias for unknown type");
 
         Asserts.assertTrue(Arrays.stream(km.getServerAliases(RSA,
-                                null)).toList().contains(RSA_ALIAS),
+                                null)).anyMatch(RSA_ALIAS::equals),
                 "getServerAliases should return RSA alias: " +
                         Arrays.toString(km.getServerAliases(RSA, null)));
 
         Asserts.assertTrue(Arrays.stream(km.getServerAliases(DSA,
-                                null)).toList().contains(DSA_ALIAS),
+                                null)).anyMatch(DSA_ALIAS::equals),
                 "getServerAliases should return DSA alias: " +
                         Arrays.toString(km.getServerAliases(DSA, null)));
 
@@ -163,7 +169,7 @@ public class SelectOneKeyOutOfMany {
                 .setPublicKey(caKeys.getPublic())
                 .setOneHourValidity()
                 .setSerialNumber(BigInteger.valueOf(
-                        new SecureRandom().nextLong(1000000) + 1))
+                        Utils.nextLong(new SecureRandom(), 1000000) + 1))
                 .addSubjectKeyIdExt(caKeys.getPublic())
         ).build(null, caKeys.getPrivate(), keyAlg);
     }

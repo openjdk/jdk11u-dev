@@ -28,10 +28,16 @@
  *          preferable key
  * @modules java.base/sun.security.x509
  *          java.base/sun.security.util
+ *
+ * @library ../../../../java/security/testlibrary/
  * @library /test/lib
+ *
+ * @build CertificateBuilder
+ * @run main PreferredKey
  */
 import jdk.test.lib.Asserts;
-import jdk.test.lib.security.CertificateBuilder;
+import sun.security.testlibrary.CertificateBuilder;
+import jdk.test.lib.Utils;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.X509KeyManager;
@@ -106,7 +112,7 @@ public class PreferredKey {
                 .setPublicKey(caKeys.getPublic())
                 .setOneHourValidity()
                 .setSerialNumber(BigInteger.valueOf(
-                        new SecureRandom().nextLong(1000000) + 1))
+                        Utils.nextLong(new SecureRandom(), 1000000) + 1))
                 .addSubjectKeyIdExt(caKeys.getPublic())
         ).build(null, caKeys.getPrivate(), keyAlg);
     }
