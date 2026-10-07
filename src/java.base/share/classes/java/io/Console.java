@@ -382,7 +382,9 @@ public final class Console implements Flushable
                             ioe.addSuppressed(x);
                     }
                     if (ioe != null) {
-                        Arrays.fill(passwd, ' ');
+                        if (passwd != null) {
+                            Arrays.fill(passwd, ' ');
+                        }
                         try {
                             if (reader instanceof LineReader) {
                                 LineReader lr = (LineReader)reader;
@@ -638,10 +640,10 @@ public final class Console implements Flushable
                 return null;
             }
 
-            public Charset charset() {
+            public Charset charset(Console c) {
                 // This method is called in sun.security.util.Password,
                 // cons already exists when this method is called
-                return cons.cs;
+                return c.cs;
             }
             public Optional<Console> passwordConsole() {
                 return Console.passwordConsole();
