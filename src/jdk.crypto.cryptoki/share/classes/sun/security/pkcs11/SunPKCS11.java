@@ -756,6 +756,8 @@ public final class SunPKCS11 extends AuthProvider {
                 m(CKM_ECDSA));
         d(SIG, "SHA512withECDSAinP1363Format", P11Signature,
                 m(CKM_ECDSA));
+        d(SIG, "NONEwithRSA",    "sun.security.pkcs11.RSACipherAdaptor",
+                m(CKM_RSA_PKCS));
         dA(SIG, "MD2withRSA",    P11Signature,
                 m(CKM_MD2_RSA_PKCS, CKM_RSA_PKCS, CKM_RSA_X_509));
         dA(SIG, "MD5withRSA",    P11Signature,
@@ -1140,6 +1142,8 @@ public final class SunPKCS11 extends AuthProvider {
             } else if (type == SIG) {
                 if (algorithm.indexOf("RSASSA-PSS") != -1) {
                     return new P11PSSSignature(token, algorithm, mechanism);
+                } else if (algorithm.equals("NONEwithRSA")) {
+                    return new RSACipherAdaptor(token, mechanism);
                 } else {
                     return new P11Signature(token, algorithm, mechanism);
                 }
