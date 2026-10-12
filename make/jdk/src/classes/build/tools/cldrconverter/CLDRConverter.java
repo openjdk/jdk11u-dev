@@ -1107,7 +1107,7 @@ public class CLDRConverter {
     private static Pattern OVERRIDE_PATTERN = Pattern.compile("(?<win>([^:]+:[^:]+)):(?<java>[^:]+):");
     private static void generateWindowsTZMappings() throws Exception {
         Files.createDirectories(Paths.get(DESTINATION_DIR, "windows", "conf"));
-        Path override = FileSystems.getDefault().getPath(tzDataDir, "tzmappings.override");
+        Path override = Paths.get(tzDataDir, "tzmappings.override");
         if (override.toFile().exists()) {
             Files.readAllLines(override).stream()
                 .map(String::trim)
