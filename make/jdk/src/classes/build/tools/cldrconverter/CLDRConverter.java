@@ -86,6 +86,7 @@ public class CLDRConverter {
     static final String EXEMPLAR_CITY_PREFIX = "timezone.excity.";
     static final String ZONE_NAME_PREFIX = "timezone.displayname.";
     static final String METAZONE_ID_PREFIX = "metazone.id.";
+    static final String METAZONE_DSTOFFSET_PREFIX = "metazone.dstoffset.";
     static final String PARENT_LOCALE_PREFIX = "parentLocale.";
     static final String META_EMPTY_ZONE_NAME = "EMPTY_ZONE";
     static final String[] EMPTY_ZONE = {"", "", "", "", "", ""};
@@ -113,6 +114,11 @@ public class CLDRConverter {
     private static String zoneNameTempFile;
     private static String tzDataDir;
     private static final Map<String, String> canonicalTZMap = new HashMap<>();
+
+    // Map of explicit dst offsets for metazones
+    // key: time zone ID
+    // value: explicit dstOffset for the corresponding metazone name
+    static final Map<String, String> explicitDstOffsets = new HashMap<>(32);
 
     static enum DraftType {
         UNCONFIRMED,
@@ -712,6 +718,12 @@ public class CLDRConverter {
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         names.putAll(exCities);
 
+        // Explicit metazone offsets
+        if (id.equals("root")) {
+            explicitDstOffsets.forEach((k, v) ->
+                names.put(METAZONE_DSTOFFSET_PREFIX + k, v));
+        }
+
         // If there's no UTC entry at this point, add an empty one
         if (!names.isEmpty() && !names.containsKey("UTC")) {
             names.putIfAbsent(METAZONE_ID_PREFIX + META_EMPTY_ZONE_NAME, EMPTY_ZONE);
@@ -1089,6 +1101,8 @@ public class CLDRConverter {
         Files.createDirectories(Paths.get(DESTINATION_DIR, "windows", "conf"));
         Files.write(Paths.get(DESTINATION_DIR, "windows", "conf", "tzmappings"),
             handlerWinZones.keySet().stream()
+                .filter(k -> k.endsWith(":001") ||
+                             !handlerWinZones.get(k).equals(handlerWinZones.get(k.replaceFirst(":\\w{2,3}$", ":001"))))
                 .map(k -> k + ":" + handlerWinZones.get(k) + ":")
                 .sorted(new Comparator<String>() {
                     public int compare(String t1, String t2) {
