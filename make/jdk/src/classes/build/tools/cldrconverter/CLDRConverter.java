@@ -1120,6 +1120,8 @@ public class CLDRConverter {
                         System.out.printf("Unrecognized tzmappings override: %s. Ignored%n", o);
                     }
                 });
+        } else {
+            System.out.printf("Note: Missing the tzmappings.override in %s.%n", tzDataDir);
         }
         Files.write(Paths.get(DESTINATION_DIR, "windows", "conf", "tzmappings"),
             handlerWinZones.keySet().stream()
