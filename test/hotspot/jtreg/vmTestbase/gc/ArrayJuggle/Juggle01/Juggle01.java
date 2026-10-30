@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2007, 2022, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -32,7 +32,12 @@
  * @library /vmTestbase
  *          /test/lib
  * @run driver jdk.test.lib.FileInstaller . .
- * @run main/othervm -Xlog:gc=debug:gc.log gc.ArrayJuggle.Juggle01.Juggle01 -gp byteArr -ms low
+ * @run main/othervm
+ *      -XX:+HeapDumpOnOutOfMemoryError
+ *      -Xlog:gc=debug:gc.log
+ *      gc.ArrayJuggle.Juggle01.Juggle01
+ *      -gp byteArr
+ *      -ms low
  */
 
 package gc.ArrayJuggle.Juggle01;
@@ -49,12 +54,15 @@ public class Juggle01 extends ThreadedGCTest implements GarbageProducerAware, Me
         private GarbageProducer garbageProducer;
         private MemoryStrategy memoryStrategy;
         private Object[] array;
+        private Object[] indexLocks;
         long objectSize;
 
         private class Juggler implements Runnable {
                 public void run() {
-                        synchronized (this) {
-                                int index = LocalRandom.nextInt(array.length);
+                        int index = LocalRandom.nextInt(array.length);
+                        // Synchronizing to prevent multiple object creation for the same index at the same time.
+                        synchronized (indexLocks[index]) {
+                                array[index] = null;
                                 array[index] = garbageProducer.create(objectSize);
                         }
                 }
@@ -73,6 +81,10 @@ public class Juggle01 extends ThreadedGCTest implements GarbageProducerAware, Me
                 log.debug("Object count: " + objectCount);
                 log.debug("Object size: " + objectSize);
                 array = new Object[objectCount - 1];
+                indexLocks = new Object[objectCount - 1];
+                for (int i = 0; i < indexLocks.length; i++) {
+                    indexLocks[i] = new Object();
+                }
                 super.run();
         }
 
