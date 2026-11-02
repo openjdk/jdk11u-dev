@@ -35,7 +35,6 @@
  * @run main/othervm
  *      -XX:+HeapDumpOnOutOfMemoryError
  *      -Xlog:gc=debug:gc.log
- *      -Djava.security.manager=allow
  *      gc.ArrayJuggle.Juggle01.Juggle01
  *      -gp charArr
  *      -ms medium
