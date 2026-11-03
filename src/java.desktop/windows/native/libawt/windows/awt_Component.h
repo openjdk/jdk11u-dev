@@ -807,6 +807,12 @@ private:
     // We also invalidate VK translation table for VK_OEM_* codes
     static HKL    m_hkl;
     static UINT   m_CodePage;
+
+    // 8377100: For fix the Right-Alt Key as Alt+AltGraph
+    // Some Windows keyboard layouts (e.g., US Standard) may not have an AltGr key.
+    // Microsoft provides no direct Win32 API to detect AltGr, and there is no
+    // dedicated key value for it, so this variable stores whether AltGr exists.
+    static BOOL   m_hasAltGrKey;
     static LANGID m_idLang;
 
     static BOOL sm_rtl;
@@ -881,6 +887,12 @@ private:
     void RemoveChild(UINT id) ;
     static BOOL IsNavigationKey(UINT wkey);
     static void BuildPrimaryDynamicTable();
+    // 8377100: For fix the Right-Alt Key as Alt+AltGraph
+    // Because some keyboard layout in Windows might not has AltGraph Key
+    // Like United States (Standard) Keyboard and so on.
+    // Due to the Microsoft might not has a direct Win32 API to check if it has
+    // AltGr Key, so We will use this function to check if it has AltGr key.
+    static void CheckIfHasAltGrKey();
 
     ChildListItem* m_childList;
 
