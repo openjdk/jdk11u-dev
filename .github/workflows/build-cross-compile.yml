@@ -54,6 +54,7 @@ jobs:
           - arm
           - s390x
           - ppc64le
+          - riscv64
         include:
           - target-cpu: aarch64
             gnu-arch: aarch64
@@ -76,6 +77,13 @@ jobs:
             debian-arch: ppc64el
             debian-repository: https://httpredir.debian.org/debian/
             debian-version: trixie
+          - target-cpu: riscv64
+            gnu-arch: riscv64
+            debian-arch: riscv64
+            debian-repository: https://httpredir.debian.org/debian/
+            debian-version: trixie
+            configure-arguments: '--with-jvm-variants=zero'
+            apt-extra-packages: ',libffi-dev'
 
     steps:
       - name: 'Checkout the JDK source'
@@ -117,7 +125,7 @@ jobs:
           sudo debootstrap
           --arch=${{ matrix.debian-arch }}
           --verbose
-          --include=fakeroot,symlinks,build-essential,libx11-dev,libxext-dev,libxrender-dev,libxrandr-dev,libxtst-dev,libxt-dev,libcups2-dev,libfontconfig1-dev,libasound2-dev,libfreetype-dev,libpng-dev
+          --include=fakeroot,symlinks,build-essential,libx11-dev,libxext-dev,libxrender-dev,libxrandr-dev,libxtst-dev,libxt-dev,libcups2-dev,libfontconfig1-dev,libasound2-dev,libfreetype-dev,libpng-dev${{ matrix.apt-extra-packages }}
           --resolve-deps
           --variant=minbase
           ${{ matrix.debian-version }}
@@ -149,7 +157,7 @@ jobs:
           --with-sysroot=sysroot
           CC=${{ matrix.gnu-arch }}-linux-gnu${{ matrix.gnu-abi}}-gcc-${{ inputs.gcc-major-version }}
           CXX=${{ matrix.gnu-arch }}-linux-gnu${{ matrix.gnu-abi}}-g++-${{ inputs.gcc-major-version }}
-          ${{ inputs.extra-conf-options }} ${{ inputs.configure-arguments }} || (
+          ${{ matrix.configure-arguments }} ${{ inputs.extra-conf-options }} ${{ inputs.configure-arguments }} || (
           echo "Dumping config.log:" &&
           cat config.log &&
           exit 1)
