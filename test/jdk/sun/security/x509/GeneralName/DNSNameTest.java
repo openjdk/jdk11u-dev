@@ -26,6 +26,7 @@ import static jdk.test.lib.Asserts.fail;
 import java.io.IOException;
 import java.net.IDN;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import sun.security.x509.DNSName;
 
@@ -60,7 +61,7 @@ public class DNSNameTest {
                             "*.domain.com", // wildcard in 1st level subdomain
                             "*.com"),
                     GOOD_NAMES.stream())
-            .toList();
+            .collect(Collectors.toList());
 
     private static final List<String> BAD_NAMES = List.of(
             // DNSName too long
@@ -94,7 +95,7 @@ public class DNSNameTest {
                             "*.domain.com*", // can't end with wildcard
                             "a*.com"), // only allow letter, digit, or hyphen
                     BAD_NAMES.stream().filter(n -> !n.contains("*")))
-            .toList();
+            .collect(Collectors.toList());
 
 
     public static void main(String[] args) {
