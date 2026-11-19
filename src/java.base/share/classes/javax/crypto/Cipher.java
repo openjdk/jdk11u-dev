@@ -30,7 +30,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.*;
 
-
 import java.security.*;
 import java.security.Provider.Service;
 import java.security.spec.AlgorithmParameterSpec;
@@ -45,6 +44,7 @@ import java.nio.ReadOnlyBufferException;
 
 import sun.security.util.Debug;
 import sun.security.jca.*;
+import sun.security.util.CryptoAlgorithmConstraints;
 
 /**
  * This class provides the functionality of a cryptographic cipher for
@@ -314,6 +314,7 @@ public class Cipher {
         if (transformation == null) {
             throw new NoSuchAlgorithmException("No transformation given");
         }
+
         /*
          * array containing the components of a Cipher transformation:
          *
@@ -525,6 +526,13 @@ public class Cipher {
         if ((transformation == null) || transformation.equals("")) {
             throw new NoSuchAlgorithmException("Null or empty transformation");
         }
+
+        // throws NoSuchAlgorithmException if java.security disables it
+        if (!CryptoAlgorithmConstraints.permits("Cipher", transformation)) {
+            throw new NoSuchAlgorithmException(transformation +
+                    " is disabled");
+        }
+
         List<Transform> transforms = getTransforms(transformation);
         List<ServiceId> cipherServices = new ArrayList<>(transforms.size());
         for (Transform transform : transforms) {
@@ -673,6 +681,13 @@ public class Cipher {
         if (provider == null) {
             throw new IllegalArgumentException("Missing provider");
         }
+
+        // throws NoSuchAlgorithmException if java.security disables it
+        if (!CryptoAlgorithmConstraints.permits("Cipher", transformation)) {
+            throw new NoSuchAlgorithmException(transformation +
+                    " is disabled");
+        }
+
         Exception failure = null;
         List<Transform> transforms = getTransforms(transformation);
         boolean providerChecked = false;
