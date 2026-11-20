@@ -195,6 +195,7 @@ HKL    AwtComponent::m_hkl = ::GetKeyboardLayout(0);
 LANGID AwtComponent::m_idLang = LOWORD(::GetKeyboardLayout(0));
 UINT   AwtComponent::m_CodePage
                        = AwtComponent::LangToCodePage(m_idLang);
+BOOL AwtComponent::m_hasAltGrKey = FALSE;
 
 jint *AwtComponent::masks;
 
@@ -265,6 +266,8 @@ AwtComponent::AwtComponent()
     if (!sm_PrimaryDynamicTableBuilt) {
         // do it once.
         AwtComponent::BuildPrimaryDynamicTable();
+        // 8377100: During initialization, check whether the user-selected keyboard has an AltGr key.
+        AwtComponent::CheckIfHasAltGrKey();
         sm_PrimaryDynamicTableBuilt = TRUE;
     }
 
@@ -2727,7 +2730,14 @@ AwtComponent::GetJavaModifiers()
     if (HIBYTE(::GetKeyState(VK_MENU)) != 0) {
         modifiers |= java_awt_event_InputEvent_ALT_DOWN_MASK;
     }
-    if (HIBYTE(::GetKeyState(VK_RMENU)) != 0) {
+    // 8377100: Some Right AltGr might shown as AltGr + Alt
+    // Due to some keyboard layout in windows does not has AltGr Key,
+    // So It needs to judge that if this keyboard has AltGr Key.
+    if (m_hasAltGrKey
+        && (HIBYTE(::GetKeyState(VK_RMENU)) != 0
+            || (HIBYTE(::GetKeyState(VK_CONTROL)) != 0
+                && HIBYTE(::GetKeyState(VK_MENU)) != 0
+        ))) {
         modifiers |= java_awt_event_InputEvent_ALT_GRAPH_DOWN_MASK;
     }
     if (HIBYTE(::GetKeyState(VK_MBUTTON)) != 0) {
@@ -3516,6 +3526,35 @@ AwtComponent::UpdateDynPrimaryKeymap(UINT wkey, UINT jkeyLegacy, jint keyLocatio
     }
 }
 
+
+// 8377100: Treat the Right-Alt key as Alt+AltGraph.
+// Some Windows keyboard layouts (e.g., US Standard) may not have an AltGr key.
+// Since Microsoft does not provide a direct Win32 API to check for AltGr,
+// this function determines whether the keyboard has an AltGr key.
+void
+AwtComponent::CheckIfHasAltGrKey() {
+
+    HKL hkl = GetKeyboardLayout();
+    UINT sc = 0;
+    BYTE kbdState[AwtToolkit::KB_STATE_SIZE];
+    memset(kbdState, 0, sizeof(kbdState));
+
+    kbdState[VK_CONTROL] = 0x80;
+    kbdState[VK_MENU] = 0x80;
+    m_hasAltGrKey = FALSE;
+    WCHAR wc[4];
+    for (UINT i = 0x20; i < 0x7F; i++) {
+        int k = ::ToUnicodeEx(i, sc, kbdState, wc, 16, 0, hkl);
+        if (k > 0) {
+            // This keyboard has an AltGr key (it contains a Unicode entry),
+            // so we can exit this function early.
+            m_hasAltGrKey = TRUE;
+            break;
+        }
+    }
+    resetKbdState(kbdState);
+}
+
 UINT AwtComponent::WindowsKeyToJavaChar(UINT wkey, UINT modifiers, TransOps ops, BOOL &isDeadKey)
 {
     static Hashtable transTable("VKEY translations");
@@ -3750,6 +3789,9 @@ MsgRouting AwtComponent::WmInputLangChange(UINT charset, HKL hKeyboardLayout)
     m_CodePage = LangToCodePage(m_idLang);
     BuildDynamicKeyMapTable();  // compute new mappings for VK_OEM
     BuildPrimaryDynamicTable();
+    // 8377100: After change keyboard layout, it needs check if there has
+    // a AltGr key.
+    CheckIfHasAltGrKey();
     return mrConsume;           // do not propagate to children
 }
 
