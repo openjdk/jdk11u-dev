@@ -43,11 +43,11 @@ import jdk.test.lib.Convert;
 public class SecKeyFacSunJCEPrf {
 
     // One of the PBKDF2 HMAC-SHA1 test vectors from RFC 6070
-    private static final byte[] SALT = "salt".getBytes();
+    private static final byte[] SALT = "16-byte salt val".getBytes();
     private static final char[] PASS = "password".toCharArray();
     private static final int ITER = 4096;
     private static final byte[] EXP_OUT = Convert.hexStringToByteArray(
-            "4B007901B765489ABEAD49D926F721D065A429C1");
+            "D2CACD3F1D44AF293C704F0B1005338D903C688C");
 
     public static void main(String[] args) throws Exception {
         // Instantiate the Evil Provider and insert it in the

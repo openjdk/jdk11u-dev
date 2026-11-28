@@ -50,9 +50,11 @@ import java.security.spec.RSAPrivateCrtKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
+import jdk.test.lib.security.SecurityUtils;
 
 /**
  * @test @bug 8242335
+ * @library /test/lib
  * @summary Test RSASSA-PSS serialized keys
  * @run main SerializedPSSKey
  */
@@ -61,7 +63,7 @@ public class SerializedPSSKey {
     private static final String ALGO = "RSASSA-PSS";
     private static final String OID = "1.2.840.113549.1.1.10";
     private static final String PROVIDER = "SunRsaSign";
-    private static final int KEY_SIZE = 2048;
+    private static final int KEY_SIZE = SecurityUtils.getTestKeySize("RSA");
     private static final byte[] DATA = "Test".getBytes();
     /**
      * Digest algorithms to test w/ RSASSA-PSS signature algorithms

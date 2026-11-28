@@ -38,6 +38,7 @@ import java.security.Provider;
 import java.util.Arrays;
 import javax.crypto.KeyAgreement;
 import javax.crypto.SecretKey;
+import jdk.test.lib.security.SecurityUtils;
 import jtreg.SkippedException;
 
 public class TestDH extends PKCS11Test {
@@ -47,8 +48,9 @@ public class TestDH extends PKCS11Test {
         if (p.getService("KeyAgreement", "DH") == null) {
             throw new SkippedException("DH not supported, skipping");
         }
-        KeyPairGenerator kpg = KeyPairGenerator.getInstance("DH", p);
-        kpg.initialize(512);
+        String kpgAlgorithm = "DH";
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance(kpgAlgorithm, p);
+        kpg.initialize(SecurityUtils.getTestKeySize(kpgAlgorithm));
         KeyPair kp1 = kpg.generateKeyPair();
         KeyPair kp2 = kpg.generateKeyPair();
 
