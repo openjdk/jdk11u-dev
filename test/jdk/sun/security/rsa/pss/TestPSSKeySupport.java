@@ -24,6 +24,7 @@
 /**
  * @test
  * @bug 8146293 8242556 8254717
+ * @library /test/lib
  * @summary Test RSASSA-PSS Key related support such as KeyPairGenerator
  * and KeyFactory of the SunRsaSign provider
  */
@@ -35,6 +36,7 @@ import java.math.BigInteger;
 import java.security.*;
 import java.security.interfaces.*;
 import java.security.spec.*;
+import jdk.test.lib.security.SecurityUtils;
 
 public class TestPSSKeySupport {
 
@@ -130,11 +132,12 @@ public class TestPSSKeySupport {
     }
 
     public static void main(String[] args) throws Exception {
+        int keySize = SecurityUtils.getTestKeySize("RSA");
         KeyPairGenerator kpg =
             KeyPairGenerator.getInstance(ALGO, "SunRsaSign");
 
         // Algorithm-Independent Initialization
-        kpg.initialize(2048);
+        kpg.initialize(keySize);
         KeyPair kp = kpg.generateKeyPair();
         checkKeyPair(kp);
         BigInteger pubExp = ((RSAPublicKey)kp.getPublic()).getPublicExponent();
@@ -142,7 +145,7 @@ public class TestPSSKeySupport {
         // Algorithm-specific Initialization
         PSSParameterSpec params = new PSSParameterSpec("SHA-256", "MGF1",
             MGF1ParameterSpec.SHA256, 32, 1);
-        kpg.initialize(new RSAKeyGenParameterSpec(2048, pubExp, params));
+        kpg.initialize(new RSAKeyGenParameterSpec(keySize, pubExp, params));
         KeyPair kp2 = kpg.generateKeyPair();
         checkKeyPair(kp2);
 

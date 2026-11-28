@@ -36,7 +36,7 @@
  *                  <keySize> <Curve*>
  * @library /test/lib
  * @build jdk.test.lib.Convert
- * @run main NegativeTest DiffieHellman SunJCE DiffieHellman 1024
+ * @run main NegativeTest DiffieHellman SunJCE DiffieHellman 2048
  * @run main NegativeTest ECDH SunEC EC 256
  * @run main NegativeTest XDH SunEC XDH 255 X25519
  * @run main NegativeTest XDH SunEC XDH 448 X448
@@ -60,6 +60,7 @@ import java.security.spec.XECPublicKeySpec;
 import java.util.Arrays;
 import javax.crypto.KeyAgreement;
 import jdk.test.lib.Convert;
+import jdk.test.lib.security.SecurityUtils;
 
 public class NegativeTest {
 
@@ -94,7 +95,7 @@ public class NegativeTest {
                 Security.getProvider(provider));
         switch (kpgInit) {
             case "DiffieHellman":
-                kpg.initialize(512);
+                kpg.initialize(SecurityUtils.getTestKeySize(kpgInit));
                 break;
             case "EC":
                 kpg.initialize(256);
